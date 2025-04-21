@@ -13,7 +13,7 @@ function build() {
   setProdUrl();
   updateIndexPage();
   execSync(
-    "npx live-server --host=192.168.1.210 --port=5500 --open=recipes/index.html",
+    "npx live-server --host=192.168.1.210 --port=5500 --open=rsite/index.html",
     { stdio: "inherit", shell: true }
   );
   console.log("Make sure to start recipes-cloudflare");
