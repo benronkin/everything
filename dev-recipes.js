@@ -23,7 +23,7 @@ function build() {
  *
  */
 function setProdUrl() {
-  const filePath = "./src/js/state.js";
+  const filePath = ".//js/state.js";
   let content = fs.readFileSync(filePath, "utf8");
   content = content.replace(/WEB_APP_URL:\s*prodUrl/, "WEB_APP_URL: devUrl");
   fs.writeFileSync(filePath, content, "utf8");
@@ -34,7 +34,7 @@ function setProdUrl() {
  *
  */
 function updateIndexPage() {
-  const indexPath = "./src/index.html";
+  const indexPath = ".//index.html";
   let content = fs.readFileSync(indexPath, "utf8");
 
   // Add the ronkinben@gmail.com placeholder

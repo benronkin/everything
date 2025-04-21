@@ -1,5 +1,5 @@
 import { handleTokenQueryParam, getWebApp } from "./io.js";
-import { initRecipes } from "./src.js";
+import { initRecipes } from "./.js";
 import { initShopping } from "./shopping.js";
 import { initUi, activateUi } from "./ui.js";
 
