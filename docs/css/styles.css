@@ -159,6 +159,11 @@ nav li.active::after {
 nav li:not(.active):hover {
   color: var(--purple4);
 }
+nav li a,
+nav li a:visited {
+  color: var(--purple4);
+  text-shadow: 0 0 3px var(--gray0);
+}
 nav ul,
 nav .container,
 nav .brand {
