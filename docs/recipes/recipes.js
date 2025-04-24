@@ -193,8 +193,8 @@ async function handleRecipeSearch(e) {
   } else {
     searchRecipesMessageEl.textContent = ''
   }
-  const openRecipes = getOpenRecipes()
-  state.setRecipes([...openRecipes, ...recipes])
+
+  state.setRecipes(recipes)
   populateRecipes()
 }
 

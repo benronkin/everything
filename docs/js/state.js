@@ -1,5 +1,5 @@
-// const devUrl = 'http://localhost:8787'
-const devUrl = 'http://192.168.1.193:5500'
+const devUrl = 'http://localhost:8787'
+// const devUrl = 'http://192.168.1.193:5500'
 const prodUrl = 'https://recipes-cloudflare.ba201220a.workers.dev'
 
 const stateObj = {
