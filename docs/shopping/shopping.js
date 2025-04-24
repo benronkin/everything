@@ -100,7 +100,7 @@ async function handleDOMContentLoaded() {
 
   populateNav({
     nav: document.querySelector('nav'),
-    title: 'Shopping list',
+    title: 'Shopping',
     active: 'shopping',
   })
   populateFooter()
