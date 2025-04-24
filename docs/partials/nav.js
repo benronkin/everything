@@ -15,7 +15,7 @@ const navString = `
     </div>
     <ul>
         <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
-        <li data-value="shopping"><a href="../shopping/index.html">Shopping list</a></li>
+        <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
     </ul>
 </div>
 `
