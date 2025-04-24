@@ -1,7 +1,5 @@
 import { handleTokenQueryParam, getWebApp } from "./io.js";
 import { initRecipes } from "./recipes.js";
-import { initShopping } from "./shopping.js";
-import { initUi, activateUi } from "./ui.js";
 
 // ----------------------
 // Globals
@@ -26,18 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Handle DOMContentLoaded
  */
 async function handleDOMContentLoaded() {
-  initUi();
-
-  handleTokenQueryParam();
-
-  const token = localStorage.getItem("authToken");
-  if (!token) {
-    console.log("handleDOMContentLoaded: no token");
-    loginContainer.classList.remove("hidden");
-    headerEl.classList.add("hidden");
-    return;
-  }
-
   const { recipes, shoppingList, shoppingSuggestions, error, warn } =
     await getWebApp(`${state.getWebAppUrl()}/session-opener`);
 
@@ -52,6 +38,4 @@ async function handleDOMContentLoaded() {
   }
 
   initRecipes(recipes);
-  initShopping(shoppingList, shoppingSuggestions);
-  activateUi();
 }

@@ -1,22 +1,23 @@
-import { getWebApp, postWebApp } from './io.js'
-import { resizeTextarea, isMobile } from './ui.js'
-import { state } from './state.js'
-import { filterIngredient, transformIngredient } from './ingredients.js'
-import { addItemsToShoppingList } from './shopping.js'
-import { MODAL, setDialog } from './modal.js'
+import { state } from '../js/state.js'
+import { populateNav } from '../partials/nav.js'
+import { populateFooter } from '../partials/footer.js'
+import { setMessage, initUi, resizeTextarea, isMobile } from '../js/ui.js'
+import { handleTokenQueryParam, getWebApp, postWebApp } from '../js/io.js'
+import { filterIngredient, transformIngredient } from '../js/ingredients.js'
+import { addItemsToShoppingList } from '../shopping/shopping.js'
+import { MODAL, setDialog } from '../js/modal.js'
 
 // ----------------------
 // Globals
 // ----------------------
 
 const switchEl = document.querySelector('#related-recipes-switch')
+const leftPanelToggle = document.querySelector('#left-panel-toggle')
 const addRecipeBtn = document.querySelector('#add-recipe')
 const shopIngredientsBtn = document.querySelector('#shop-ingredients')
 const searchRecipesEl = document.querySelector('#search-recipes')
 const searchRecipesMessageEl = document.querySelector('#search-recipes-message')
-const recipesContainer = document.querySelector('#recipes-container')
-const recipeLinksPanel = document.querySelector('#recipe-links-panel')
-const recipesPanel = document.querySelector('#recipes-panel')
+const recipeContainer = document.querySelector('#recipe-container')
 const recipesList = document.querySelector('#recipes-list')
 const recipeEl = document.querySelector('#recipe')
 const recipeTitleEl = document.querySelector('#recipe-title')
@@ -31,100 +32,90 @@ const recipeIdEl = document.querySelector('#recipe-id')
 const recipeDeleteBtn = document.querySelector('#bottom-btn-group .fa-trash')
 
 // ----------------------
-// Exported functions
+// Event handlers
 // ----------------------
 
-/**
- * Set recipe event listeners
- */
-export async function initRecipes(recipes) {
-  /* When related recipes switch is toggled */
-  switchEl.addEventListener('click', handleRelatedSwitchClick)
+/* When page is loaded */
+document.addEventListener('DOMContentLoaded', async () => {
+  handleDOMContentLoaded()
+})
 
-  /* When recipes container is populated */
-  recipesContainer.addEventListener(
-    'recipes-loaded',
-    handleRecipeContainerPopulated
-  )
+/* When related recipes switch is toggled */
+switchEl.addEventListener('click', handleRelatedSwitchClick)
 
-  /* When add recipe button is clicked */
-  addRecipeBtn.addEventListener('click', async () => {
-    await handleRecipeCreate()
+/* When recipes container is populated */
+recipeContainer.addEventListener('recipes-loaded', handleRecipeContainerPopulated)
+
+/* When the left panel toggle is clicked */
+leftPanelToggle.addEventListener('click', () => {
+  handleLeftPanelToggle()
+})
+
+/* When add recipe button is clicked */
+addRecipeBtn.addEventListener('click', async () => {
+  await handleRecipeCreate()
+})
+
+/* When shop ingredients button is clicked */
+shopIngredientsBtn.addEventListener('click', async () => {
+  handleShopIngredientsClick()
+})
+
+/* When search recipes input key down */
+searchRecipesEl.addEventListener('keydown', async (e) => {
+  await handleRecipeSearch(e)
+})
+
+/* When recipe field loses focus */
+document.querySelectorAll('.field').forEach((field) => {
+  field.addEventListener('change', (e) => {
+    handleFieldChange(e.target)
   })
+})
 
-  /* When shop ingredients button is clicked */
-  shopIngredientsBtn.addEventListener('click', async () => {
-    handleShopIngredientsClick()
-  })
+/* When related recipe is changed */
+recipeRelated.addEventListener('change', (e) => {
+  populateRelatedRecipes(e.target.value)
+})
 
-  /* When search recipes input key down */
-  searchRecipesEl.addEventListener('keydown', async (e) => {
-    await handleRecipeSearch(e)
-  })
+/* When the trash recipe button is clicked */
+recipeDeleteBtn.addEventListener('click', handleRecipeDeleteBtnClick)
 
-  /* When recipe field loses focus */
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', (e) => {
-      handleFieldChange(e.target)
-    })
-  })
-
-  /* When related recipe is changed */
-  recipeRelated.addEventListener('change', (e) => {
-    populateRelatedRecipes(e.target.value)
-  })
-
-  /* When the trash recipe button is clicked */
-  recipeDeleteBtn.addEventListener('click', handleRecipeDeleteBtnClick)
-
-  /* When a recipe is confirmed delete */
-  document.addEventListener('delete-recipe', handleDeleteRecipe)
-
-  /**
-   * Handle button click to show delete modal
-   */
-  function handleRecipeDeleteBtnClick() {
-    setDialog({
-      type: MODAL.DELETE_RECIPE,
-      header: 'Delete recipe',
-      body: `Delete the ${recipeTitleEl.value} recipe?`,
-      id: recipeIdEl.innerText
-    })
-    const dialog = document.querySelector('dialog')
-    dialog.showModal()
-  }
-
-  /**
-   * Handle delete recipe confirmation
-   */
-  async function handleDeleteRecipe(e) {
-    const modalMessageEl = document.querySelector('#modal-message')
-    modalMessageEl.innerText = ''
-    const id = e.detail.id
-    const password = document.querySelector('#modal-delete-input').value
-    const { error } = await getWebApp(
-      `${state.getWebAppUrl()}/recipe-delete?id=${id}&password=${password}`
-    )
-
-    if (error) {
-      modalMessageEl.innerText = error
-      return
-    }
-    state.delete('recipes', id)
-    const tab = document.querySelector('.tab.active')
-    handleTabCloseClick(tab)
-    document.querySelector(`.recipe-link[data-id="${id}"`).remove()
-    console.log(`handleDeleteRecipe message: ${message}`)
-    document.querySelector('dialog').close()
-  }
-
-  state.setRecipes(recipes)
-  populateRecipes()
-}
+/* When a recipe is confirmed delete */
+document.addEventListener('delete-recipe', handleDeleteRecipe)
 
 // ------------------------
 // Event handler functions
 // ------------------------
+
+/**
+ * Handle DOMContentLoaded
+ */
+async function handleDOMContentLoaded() {
+  handleTokenQueryParam()
+
+  const token = localStorage.getItem('authToken')
+  if (!token) {
+    window.location.href = '../index.html'
+    return
+  }
+
+  initUi()
+
+  const { recipes } = await getWebApp(`${state.getWebAppUrl()}/recipes-latest`)
+
+  setMessage('')
+
+  state.setRecipes(recipes)
+  populateRecipes()
+
+  populateNav({
+    nav: document.querySelector('nav'),
+    title: 'Recipes',
+    active: 'recipes',
+  })
+  populateFooter()
+}
 
 /**
  * Handle related switch click
@@ -148,11 +139,22 @@ function handleRecipeContainerPopulated() {
 }
 
 /**
+ * Handle left panel toggle
+ */
+function handleLeftPanelToggle() {
+  addRecipeBtn.classList.toggle('hidden')
+  shopIngredientsBtn.classList.toggle('hidden')
+  document.querySelector('#recipe-action-buttons-group').classList.toggle('collapsed')
+  searchRecipesEl.classList.toggle('hidden')
+  recipesList.classList.toggle('hidden')
+  document.querySelector('#recipe-left-sidebar').classList.toggle('collapsed')
+}
+
+/**
  * Handle recipe create
  */
 async function handleRecipeCreate() {
   addRecipeBtn.disabled = true
-  addRecipeBtn.textContent = 'Creating...'
   const { id } = await getWebApp(`${state.getWebAppUrl()}/recipe-create`)
 
   const newRecipe = {
@@ -163,7 +165,7 @@ async function handleRecipeCreate() {
     notes: '',
     category: '',
     tags: '',
-    related: ''
+    related: '',
   }
   state.push('recipes', newRecipe)
 
@@ -171,7 +173,6 @@ async function handleRecipeCreate() {
   recipesList.appendChild(li)
   li.click()
   addRecipeBtn.disabled = false
-  addRecipeBtn.textContent = 'New recipe'
 }
 
 /**
@@ -204,23 +205,17 @@ async function handleFieldChange(elem) {
   // const recipeSection = elem.id.replace('recipe-', '')
   const recipeSection = elem.name
   if (recipeSection === 'title') {
-    document
-      .querySelector('.tab.active')
-      .querySelector('.text-tab').textContent = elem.value
     document.querySelector('.recipe-link.active').textContent = elem.value
   }
   const id = recipeIdEl.textContent
   state.setRecipeSection(id, recipeSection, elem.value)
 
   try {
-    const { message, error } = await postWebApp(
-      `${state.getWebAppUrl()}/recipe-update`,
-      {
-        id,
-        value: elem.value,
-        section: recipeSection
-      }
-    )
+    const { message, error } = await postWebApp(`${state.getWebAppUrl()}/recipe-update`, {
+      id,
+      value: elem.value,
+      section: recipeSection,
+    })
     if (error) {
       throw new Error(error)
     }
@@ -246,88 +241,73 @@ async function handleRecipeLinkClick(elem) {
   // if this li is a related link then clicking it
   // needs to activate its li in the sidebar
   // so don't use: elem.classList.add('active')
-  document
-    .querySelector(`.recipe-link[data-id="${elem.dataset.id}"]`)
-    .classList.add('active')
+  document.querySelector(`.recipe-link[data-id="${elem.dataset.id}"]`).classList.add('active')
   const recipeId = elem.dataset.id
   const recipe = state.getRecipeById(recipeId)
   if (!recipe) {
-    console.log(
-      `handleRecipeLinkClick error: Recipe not found for id: ${recipeId}`
-    )
+    console.log(`handleRecipeLinkClick error: Recipe not found for id: ${recipeId}`)
     console.log('recipes:', state.getRecipes())
     return
   }
 
   loadRecipe(recipe)
   const resp = await postWebApp(`${state.getWebAppUrl()}/recipe-access`, {
-    id: recipeId
+    id: recipeId,
   })
   const { message } = resp
   console.log(message)
 }
 
 /**
- * Handle tab click
+ * Handle button click to show delete modal
  */
-function handleTabClick(elem) {
-  const recipeId = elem.id.replace('tab-', '')
-  const recipe = state.getRecipeById(recipeId)
-
-  document.querySelector('.recipe-link.active').classList.remove('active')
-  document
-    .querySelector(`.recipe-link[data-id="${recipeId}"]`)
-    .classList.add('active')
-
-  loadRecipe(recipe)
+function handleRecipeDeleteBtnClick() {
+  setDialog({
+    type: MODAL.DELETE_RECIPE,
+    header: 'Delete recipe',
+    body: `Delete the ${recipeTitleEl.value} recipe?`,
+    id: recipeIdEl.innerText,
+  })
+  const dialog = document.querySelector('dialog')
+  dialog.showModal()
 }
 
 /**
- * Handle tab close click
+ * Handle delete recipe confirmation
  */
-function handleTabCloseClick(tab) {
-  tab.remove()
-  const activeTab = document.querySelector('.tab.active')
-  if (!activeTab) {
-    document.querySelector('.recipe-link.active').classList.remove('active')
-    const firstTab = document.querySelector('.tab')
-    if (firstTab) {
-      const firstTabId = firstTab.id.replace('tab-', '')
-      document.querySelector(`.recipe-link[data-id="${firstTabId}"]`).click()
-    } else {
-      recipeEl.classList.add('hidden')
-      shopIngredientsBtn.classList.add('hidden')
-    }
+async function handleDeleteRecipe(e) {
+  const modalMessageEl = document.querySelector('#modal-message')
+  modalMessageEl.innerText = ''
+  const id = e.detail.id
+  const password = document.querySelector('#modal-delete-input').value
+  const { error } = await getWebApp(`${state.getWebAppUrl()}/recipe-delete?id=${id}&password=${password}`)
+
+  if (error) {
+    modalMessageEl.innerText = error
+    return
   }
+  state.delete('recipes', id)
+  document.querySelector(`.recipe-link[data-id="${id}"`).remove()
+  console.log(`handleDeleteRecipe message: ${message}`)
+  document.querySelector('dialog').close()
 }
 
 /**
  * Handle shop ingredients click
  */
-function handleShopIngredientsClick() {
+async function handleShopIngredientsClick() {
   shopIngredientsBtn.disabled = true
-  const shoppingArr = []
-
-  const tabs = [...document.querySelectorAll('.tab')]
-  let title
-  let tabId
-  let id
-  let recipe
-  let ingredients
-
-  for (const tab of tabs) {
-    title = tab.querySelector('.text-tab').textContent
-    tabId = tab.id
-    id = tabId.replace('tab-', '')
-    recipe = state.getRecipeById(id)
-    ingredients = recipe.ingredients
-      .split('\n')
-      .map((line) => line.trim().toLowerCase())
-      .filter(filterIngredient)
-      .map(transformIngredient)
-    shoppingArr.push(...ingredients)
-  }
-  addItemsToShoppingList(shoppingArr)
+  // get the recipe's ingredients
+  const newItems = recipeIngredients.value.split('\n').map((i) => i.trim().toLowerCase())
+  // get the server's shopping list
+  let { shoppingList } = await getWebApp(`${state.getWebAppUrl()}/shopping`)
+  // combine recipe ingredients with shopping list and dedup ingredients
+  shoppingList = shoppingList.split(',').map((i) => i.trim().toLowerCase())
+  const allItems = [...new Set([...newItems, ...shoppingList])].filter(Boolean)
+  // updat the server's shopping list
+  await postWebApp(`${state.getWebAppUrl()}/shopping-list-update`, {
+    value: allItems.join(','),
+  })
 }
 
 // ------------------------
@@ -340,13 +320,10 @@ function handleShopIngredientsClick() {
 function populateRecipes() {
   const recipes = state.getRecipes()
   if (!recipes) {
-    console.log(
-      `populateRecipes error: state does not have recipes: ${recipes}`
-    )
+    console.log(`populateRecipes error: state does not have recipes: ${recipes}`)
     return
   }
 
-  recipesContainer.classList.remove('hidden')
   recipesList.innerHTML = ''
   for (const recipe of recipes) {
     const li = document.createElement('li')
@@ -355,7 +332,7 @@ function populateRecipes() {
     li.dataset.id = recipe.id
     recipesList.appendChild(li)
   }
-  recipesContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
+  recipeContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
 }
 
 /**
@@ -367,30 +344,6 @@ function loadRecipe(recipe) {
   }
 
   switchEl.classList.remove('on')
-  const activeTab = document.querySelector('.tab.active')
-  if (activeTab) {
-    activeTab.classList.remove('active')
-  }
-  const tabId = `tab-${recipe.id}`
-  let tab = document.querySelector(`#${tabId}`)
-  if (!tab) {
-    tab = document.createElement('div')
-    tab.id = tabId
-    tab.classList.add('tab')
-    tab.classList.add('active')
-    tab.innerHTML = `<span class="text-tab">${recipe.title}</span> <i class="close-tab fa-regular fa-circle-xmark"></i>`
-    document
-      .querySelector('#tabs')
-      .insertBefore(tab, document.querySelector('#tabs').lastElementChild)
-    tab.querySelector('.text-tab').addEventListener('click', (e) => {
-      handleTabClick(tab)
-    })
-    tab.querySelector('.close-tab').addEventListener('click', (e) => {
-      e.stopPropagation()
-      handleTabCloseClick(tab)
-    })
-  }
-  tab.classList.add('active')
   recipeEl.classList.remove('hidden')
   recipeTitleEl.value = recipe.title
   recipeRelated.value = recipe.related
@@ -462,16 +415,4 @@ function makeRecipeLinkEl(id, title) {
     handleRecipeLinkClick(li)
   })
   return li
-}
-
-/**
- * Get an array of recipes that are currently showing in the tabs
- */
-function getOpenRecipes() {
-  const tabs = [...document.querySelectorAll('.tab')]
-  const openRecipes = tabs.map((tab) => {
-    const id = tab.id.replace('tab-', '')
-    return state.getRecipeById(id)
-  })
-  return openRecipes
 }

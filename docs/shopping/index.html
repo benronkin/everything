@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Shopping list | Ben Ronkin</title>
+  </head>
+  <body class="dark-mode">
+    <div class="wrapper">
+      <nav></nav>
+      <main>
+        <div class="container">
+          <span id="message"></span>
+          <div id="shopping-container">
+            <form id="shopping-form">
+              <input type="text" id="shopping-input" placeholder="Add item" autocomplete="off" />
+              <div id="suggest-auto-complete"></div>
+            </form>
+
+            <div class="flex" style="justify-content: space-between">
+              <div class="flex">
+                <div class="switch" id="sort-switch">
+                  <div class="thumb"></div>
+                </div>
+                <span>Sort</span>
+              </div>
+
+              <div class="flex">
+                <div class="switch" id="suggest-switch">
+                  <div class="thumb"></div>
+                </div>
+                <span>Suggest</span>
+              </div>
+            </div>
+            <div id="shopping-suggestions" class="hidden"></div>
+
+            <div id="shopping-div" class="drag-container"></div>
+            <span id="empty-state">Nothing to buy, chef 👨‍🍳</span>
+          </div>
+        </div>
+      </main>
+      <footer></footer>
+    </div>
+    <script src="./shopping.js" type="module"></script>
+  </body>
+</html>

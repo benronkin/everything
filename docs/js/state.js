@@ -4,7 +4,7 @@ const prodUrl = 'https://recipes-cloudflare.ba201220a.workers.dev'
 const stateObj = {
   data: {
     recipes: [],
-    WEB_APP_URL: prodUrl
+    WEB_APP_URL: prodUrl,
   },
 
   add(key, values) {
@@ -25,9 +25,6 @@ const stateObj = {
   },
 
   delete(key, value) {
-    if (!value) {
-      return
-    }
     let arr = this.get(key)
     if (key !== 'recipes') {
       value = value.trim()
@@ -41,6 +38,10 @@ const stateObj = {
 
   get: function (key) {
     return this.data[key]
+  },
+
+  getAll: function () {
+    return this.data
   },
 
   set: function (key, value) {
@@ -79,7 +80,7 @@ const stateObj = {
   setRecipeSection: function (id, section, value) {
     const recipe = this.getRecipeById(id)
     recipe[section] = value
-  }
+  },
 }
 
 // Make `state` globally accessible via `window` for debugging
