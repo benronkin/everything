@@ -272,6 +272,10 @@ function handleSuggestionPlusClick(e) {
   const div = e.target.closest('.shopping-suggestion')
   addShoppingItemToList(div.innerText, 'prepend')
   div.remove()
+  // on mobile, the next fa-plus "inherits" a hover state
+  // so remove it
+  const els = document.querySelectorAll('.shopping-suggestion .fa-plus')
+  els.forEach((el) => el.blur())
   clearSelection()
   document.dispatchEvent(new CustomEvent('list-changed'))
 }

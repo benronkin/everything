@@ -1,7 +1,7 @@
 const footerString = `
 <div class="container">
     <div id="version-container">
-      Version: <span id="version-number">1.2.2</span>
+      Version: <span id="version-number">1.2.3</span>
     </div>
 </div>
 `
