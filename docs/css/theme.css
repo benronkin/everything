@@ -55,6 +55,7 @@
   --card-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   --secondary-bg-1: var(--teal1);
   --secondary-bg-2: var(--teal2);
+  --nav-gradient: linear-gradient(90deg, var(--gray3), var(--gray2), var(--gray1));
 }
 .minor-bg {
   background-color: var(--minor-bg);

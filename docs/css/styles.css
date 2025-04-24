@@ -133,7 +133,7 @@ nav {
   height: var(--nav-height);
 }
 nav {
-  background: linear-gradient(90deg, var(--gray1), var(--gray2), var(--gray1));
+  background: var(--nav-gradient);
   color: var(--major-color);
 }
 nav li {
