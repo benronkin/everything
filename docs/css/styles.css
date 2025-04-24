@@ -277,7 +277,8 @@ ul {
   border-bottom: 1px solid var(--gbody-bg);
 }
 #recipe-action-buttons-group {
-  width: 100%;
+  margin: 30px 0 20px;
+  width: 150px;
 }
 #recipe-action-buttons-group.collapsed {
   width: 40px;
@@ -285,7 +286,6 @@ ul {
 }
 #recipe-container {
   display: flex;
-  margin-top: 30px;
 }
 #recipe-left-sidebar {
   transition: width 300ms ease;
@@ -293,8 +293,8 @@ ul {
   width: 220px;
 }
 #recipe-left-sidebar.collapsed {
-  margin-right: 20px;
-  width: 40px;
+  margin-right: 0;
+  width: 0;
 }
 #recipe-left-sidebar.collapsed + #recipe {
   border-left: none;
