@@ -28,7 +28,6 @@
   </head>
   <body class="dark-mode">
     <div class="wrapper">
-      <nav></nav>
       <main>
         <div class="container">
           <div id="message">Fetching data from server...</div>
@@ -45,11 +44,10 @@
           </div>
         </div>
       </main>
-      <footer></footer>
     </div>
     <script type="module">
-      import { populateNav } from './partials/nav.js'
-      import { populateFooter } from './partials/footer.js'
+      import { createNav } from './partials/nav.js'
+      import { createFooter } from './partials/footer.js'
       import { handleTokenQueryParam, getWebApp, postWebApp } from './js/io.js'
       import { setMessage } from './js/ui.js'
       import { state } from './js/state.js'
@@ -90,8 +88,11 @@
           setMessage('<i class="fa-solid fa-circle-exclamation"></i> Authentication failed')
           console.log('handleDOMContentLoaded: no token')
           loginContainer.classList.remove('hidden')
-          populateNav({ title: 'Recipes', disableRightDrawer: true })
-          populateFooter()
+          const wrapperEl = document.querySelector('.wrapper')
+          const navEl = createNav({ title: 'Recipes', disableRightDrawer: true })
+          wrapperEl.prepend(navEl)
+          const footerEl = createFooter()
+          wrapperEl.appendChild(footerEl)
           return
         }
 
