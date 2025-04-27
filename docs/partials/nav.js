@@ -1,3 +1,7 @@
+// -------------------------------
+// Globals
+// -------------------------------
+
 const navString = `
 <div class="container">
     <div class="brand">
@@ -13,21 +17,43 @@ const navString = `
         </svg>
         <h3></h3>
     </div>
-    <ul>
-        <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
-        <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
-    </ul>
+    <i id="toggle-right-drawer" class="fa-solid fa-bars"></i>
 </div>
 `
 
-export function populateNav({ title, active, removeLinks = false } = {}) {
-  const navEl = document.querySelector('nav')
+// -------------------------------
+// Exported functions
+// -------------------------------
+
+export function createNav({ title, disableRightDrawer = false, wideNav = false } = {}) {
+  const navEl = document.createElement('nav')
   navEl.innerHTML = navString
   navEl.querySelector('h3').innerHTML = title
-  if (active) {
-    navEl.querySelector(`[data-value="${active}"`).classList.add('active')
+
+  if (wideNav) {
+    const div = navEl.querySelector('.container')
+    div.classList.remove('container')
+    div.classList.add('container-wide')
+    div.classList.add('ml-20')
   }
-  if (removeLinks) {
-    navEl.querySelector('ul').remove()
+
+  const rightDrawerToggleEl = navEl.querySelector('#toggle-right-drawer')
+  if (disableRightDrawer) {
+    rightDrawerToggleEl.remove()
+  } else {
+    rightDrawerToggleEl.addEventListener('click', handleToggleRightDrawer)
   }
+
+  return navEl
+}
+
+// -------------------------------
+// Event handler functions
+// -------------------------------
+
+/**
+ * Toggle the right drawer
+ */
+function handleToggleRightDrawer() {
+  document.querySelector('#right-drawer').classList.toggle('open')
 }

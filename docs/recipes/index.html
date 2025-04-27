@@ -28,17 +28,19 @@
   </head>
   <body class="dark-mode">
     <div class="wrapper">
-      <nav></nav>
       <main>
         <div class="container">
           <span id="message"></span>
-          <div id="recipe-action-buttons-group" class="button-group">
-            <i id="left-panel-toggle" class="fa-solid fa-bars"></i>
-            <i id="add-recipe" class="fa-solid fa-plus"></i>
-            <i id="shop-ingredients" class="fa-solid fa-cart-plus"></i>
+
+          <div class="action-button-group-wrapper">
+            <div id="recipe-action-buttons-group" class="button-group">
+              <i id="left-panel-toggle" class="fa-solid fa-chevron-left"></i>
+              <i id="add-recipe" class="fa-solid fa-plus"></i>
+              <i id="shop-ingredients" class="fa-solid fa-cart-plus"></i>
+            </div>
           </div>
-          <div id="recipe-container">
-            <div id="recipe-left-sidebar">
+          <div id="columns-container">
+            <div id="recipes-sidebar" class="left-sidebar">
               <input type="search" id="search-recipes" placeholder="Search recipes" />
               <span id="search-recipes-message"></span>
               <ul id="recipes-list"></ul>
@@ -50,12 +52,12 @@
               <textarea name="notes" id="recipe-notes" class="field"></textarea>
               <div id="related-recipes-header">
                 <h5 style="margin: 0">related recipes</h5>
-                <div id="related-recipes-switch" class="switch ml20">
+                <div id="related-recipes-switch" class="switch ml-20">
                   <div class="thumb"></div>
                 </div>
               </div>
               <div id="related-recipes-body">
-                <div id="related-recipe-links"></div>
+                <div id="related-sidebar-links"></div>
                 <textarea name="related" id="recipe-related" class="field hidden"></textarea>
               </div>
               <h5>Ingredients</h5>
@@ -75,7 +77,6 @@
           </div>
         </div>
       </main>
-      <footer></footer>
     </div>
     <script src="./recipes.js" type="module"></script>
   </body>

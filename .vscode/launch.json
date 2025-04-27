@@ -5,13 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug client with localhost",
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome with localhost",
       "url": "http://localhost:5500/docs/index.html",
       "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
       "trace": true
+    },
+    {
+      "name": "Debug Cloudflare worker",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "cwd": "/",
+      "resolveSourceMapLocations": null,
+      "attachExistingChildren": false,
+      "autoAttachChildProcesses": false
     }
   ]
 }

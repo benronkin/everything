@@ -15,6 +15,7 @@ import { execSync } from 'child_process'
 function build() {
   console.clear()
   setProdUrl()
+  updateAdminPage()
   updateIndexPage()
   execSync('npx live-server --host=localhost --port=5500 --open=docs/index.html', { stdio: 'inherit', shell: true })
   console.log('Make sure to start recipes-cloudflare')
@@ -40,14 +41,25 @@ function setProdUrl() {
 /**
  *
  */
+function updateAdminPage() {
+  const indexPath = './docs/admin/index.html'
+  let content = fs.readFileSync(indexPath, 'utf8')
+
+  content = content.replace('placeholder="key" value=""', 'placeholder="key" value="45VGrWWp983321pplRbmferrtE3450922DpqWemmv"')
+  console.log('🔥 Updated admin key placeholder in admin.html')
+
+  fs.writeFileSync(indexPath, content, 'utf8')
+}
+
+/**
+ *
+ */
 function updateIndexPage() {
   const indexPath = './docs/index.html'
   let content = fs.readFileSync(indexPath, 'utf8')
 
-  // Add the ronkinben@gmail.com placeholder
   content = content.replace('value=""', 'value="ronkinben@gmail.com"')
   console.log('🔥 Updated email placeholder in index')
 
-  // Write the file
   fs.writeFileSync(indexPath, content, 'utf8')
 }

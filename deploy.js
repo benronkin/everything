@@ -17,6 +17,7 @@ import { execSync } from 'child_process'
 function build() {
   console.clear()
   setProdUrl()
+  updateAdminPage()
   updateIndexPage()
   updateFooterPartial()
   commitChanges()
@@ -37,6 +38,19 @@ function setProdUrl() {
   content = content.replace(/WEB_APP_URL:\s*devUrl/, 'WEB_APP_URL: prodUrl')
   fs.writeFileSync(filePath, content, 'utf8')
   console.log('🔥 Updated WEB_APP_URL to prodUrl in js/state.js')
+}
+
+/**
+ *
+ */
+function updateAdminPage() {
+  const indexPath = './docs/admin/index.html'
+  let content = fs.readFileSync(indexPath, 'utf8')
+
+  content = content.replace(/(placeholder="key" value=")[^"]*(")/, '$1$2')
+  console.log('🔥 Updated admin key placeholder in admin.html')
+
+  fs.writeFileSync(indexPath, content, 'utf8')
 }
 
 /**

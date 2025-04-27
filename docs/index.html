@@ -90,7 +90,7 @@
           setMessage('<i class="fa-solid fa-circle-exclamation"></i> Authentication failed')
           console.log('handleDOMContentLoaded: no token')
           loginContainer.classList.remove('hidden')
-          populateNav({ title: 'Recipes', removeLinks: true })
+          populateNav({ title: 'Recipes', disableRightDrawer: true })
           populateFooter()
           return
         }

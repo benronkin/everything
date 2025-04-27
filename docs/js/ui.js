@@ -11,15 +11,6 @@ const messageEl = document.querySelector('#message')
 // ------------------------
 
 /**
- * Set event listeners for top-level UI
- */
-export function initUi() {
-  initDialog()
-
-  setMessage('Loading...')
-}
-
-/**
  * Set message at top of page
  */
 export function setMessage(value) {
@@ -49,4 +40,18 @@ export function resizeTextarea(textarea) {
   if (minHeight > textarea.clientHeight) {
     textarea.style.height = minHeight + 'px'
   }
+}
+
+/**
+ * Make a sidebar link element
+ */
+export function makeSidebarLinkEl(id, title, cb) {
+  const li = document.createElement('li')
+  li.textContent = title
+  li.classList.add('sidebar-link')
+  li.dataset.id = id
+  li.addEventListener('click', () => {
+    cb(li)
+  })
+  return li
 }

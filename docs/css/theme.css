@@ -29,6 +29,8 @@
   --teal4: #7be3e5;
   --teal5: #b8f5f6;
   --teal6: #e6ffff;
+  --border-image-horizontal: linear-gradient(to right, var(--purple1), var(--purple3), var(--purple1));
+  --border-image-vertical: linear-gradient(to bottom, var(--purple1), var(--purple3), var(--purple1));
 }
 .light-mode {
   --body-bg: var(--gray6);
@@ -53,8 +55,10 @@
   --text-default: var(--gray6);
   --card-bg-translucent: rgba(42, 46, 53, 0.7);
   --card-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  --primary-accent: var(--purple2);
   --secondary-bg-1: var(--teal1);
-  --secondary-bg-2: var(--teal2);
+  --secondary-accent: var(--teal2);
+  --gray-accent: var(--gray2);
   --nav-gradient: linear-gradient(90deg, var(--gray2), var(--gray1));
 }
 .minor-bg {

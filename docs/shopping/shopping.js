@@ -1,21 +1,27 @@
 import { state } from '../js/state.js'
-import { makeDragStyles, enableDragging, disableDragging } from '../js/drag.js'
-import { populateNav } from '../partials/nav.js'
-import { populateFooter } from '../partials/footer.js'
-import { setMessage, initUi } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebApp } from '../js/io.js'
+import { makeDragStyles, enableDragging, disableDragging } from '../js/drag.js'
+import { createNav } from '../partials/nav.js'
+import { createFooter } from '../partials/footer.js'
+import { createRightDrawer } from '../partials/right-drawer.js'
+import { createFormHorizontal } from '../partials/form-horizontal.js'
+import { setMessage } from '../js/ui.js'
 
 // ----------------------
 // Globals
 // ----------------------
 
+const shoppingContainer = document.querySelector('#shopping-container')
 const shoppingForm = document.querySelector('#shopping-form')
-const shoppingInput = document.querySelector('#shopping-input')
 const shoppingDiv = document.querySelector('#shopping-div')
 const suggestionsContainer = document.querySelector('#shopping-suggestions')
 const suggestSwitch = document.querySelector('#suggest-switch')
-const suggestAutoComplete = document.querySelector('#suggest-auto-complete')
 const sortSwitch = document.querySelector('#sort-switch')
+
+// set in handleDOMContentLoaded
+let shoppingInput
+let suggestAutoComplete
+
 let retryTimeout = 10
 
 // ----------------------
@@ -43,9 +49,9 @@ export async function addItemsToShoppingList(newItems, suppressListChanged = fal
   }
 }
 
-// ------------------------
-// Event handlers
-// ------------------------
+// ---------------------------------------
+// Event handlers for hard-coded elements
+// ---------------------------------------
 
 // since shopping is a module imported by recipes,
 // set event handlers only when on shopping page
@@ -64,12 +70,6 @@ if (window.location.pathname.includes('/shopping/')) {
 
   /* when clearSelection is dispatched */
   document.addEventListener('clear-selection', clearSelection)
-
-  /* when shopping input key is pressed */
-  shoppingInput.addEventListener('keyup', handleShopInputKeyUp)
-
-  /* when shopping form is submitted */
-  shoppingForm.addEventListener('submit', (e) => handleShoppingFormSubmit(e, 'prepend'))
 }
 
 // ------------------------
@@ -88,9 +88,9 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  initUi()
+  setMessage('Loading...')
 
-  const { shoppingList, shoppingSuggestions } = await getWebApp(`${state.getWebAppUrl()}/shopping`)
+  const { shoppingList, shoppingSuggestions } = await getWebApp(`${state.getWebAppUrl()}/shopping/read`)
 
   setMessage('')
 
@@ -98,12 +98,7 @@ async function handleDOMContentLoaded() {
 
   document.querySelector('#empty-state').classList.toggle('hidden', shoppingList.length > 0)
 
-  populateNav({
-    nav: document.querySelector('nav'),
-    title: 'Shopping',
-    active: 'shopping',
-  })
-  populateFooter()
+  addPageElements()
 }
 
 /**
@@ -189,7 +184,7 @@ async function handleShoppingListChange(e) {
   document.querySelector('#empty-state').classList.toggle('hidden', values.length > 0)
 
   try {
-    const { status, message } = await postWebApp(`${state.getWebAppUrl()}/shopping-list-update`, {
+    const { status, message } = await postWebApp(`${state.getWebAppUrl()}/shopping/update`, {
       value: values.join(','),
     })
     if (status !== 200) {
@@ -289,7 +284,7 @@ function handleSuggestionTrashClick(e) {
   div.remove()
   const suggestions = state.delete('shopping-suggestions', value)
   // clearSelection()
-  postWebApp(`${state.getWebAppUrl()}/shopping-suggestions-update`, {
+  postWebApp(`${state.getWebAppUrl()}/shopping/suggestions/update`, {
     value: suggestions.join(','),
   })
 }
@@ -306,7 +301,44 @@ async function initShopping(shoppingList, shoppingSuggestions) {
   displayShoppingList(shoppingList)
   state.set('shopping-items', shoppingList.split(','))
   state.set('shopping-suggestions', shoppingSuggestions.split(','))
+}
+
+/**
+ * Set nav, footer and other page elements
+ */
+function addPageElements() {
+  // create nav and footer
+  const wrapperEl = document.querySelector('.wrapper')
+  const navEl = createNav({ title: 'Shopping', active: 'shopping' })
+  wrapperEl.prepend(navEl)
+  const footerEl = createFooter()
+  wrapperEl.appendChild(footerEl)
+
+  const rightDrawerEl = createRightDrawer({ active: 'shopping' })
+  document.querySelector('main').prepend(rightDrawerEl)
+
+  // create shopping form
+  const shoppingFormEl = createFormHorizontal({
+    formId: 'shopping-form',
+    inputType: 'text',
+    inputName: 'add-item-input',
+    inputPlaceholder: 'Add item',
+    inputAutoComplete: 'off',
+    iClass: 'bread-slice',
+    submitText: 'Add',
+  })
+  shoppingContainer.prepend(shoppingFormEl)
+  shoppingFormEl.innerHTML += '<div id="suggest-auto-complete"></div>'
+  shoppingInput = shoppingFormEl.querySelector('input')
   shoppingInput.focus()
+
+  suggestAutoComplete = document.querySelector('#suggest-auto-complete')
+
+  /* when shopping input key is pressed */
+  shoppingInput.addEventListener('keyup', handleShopInputKeyUp)
+
+  /* when shopping form is submitted */
+  shoppingFormEl.addEventListener('submit', (e) => handleShoppingFormSubmit(e, 'prepend'))
 }
 
 /**

@@ -24,42 +24,39 @@
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Shopping list | Ben Ronkin</title>
+    <title>Admin | Ben Ronkin</title>
   </head>
   <body class="dark-mode">
     <div class="wrapper">
       <main>
         <div class="container">
-          <span id="message"></span>
-          <div id="shopping-container">
-            <!-- <form id="shopping-form">
-              <input type="text" id="shopping-input" placeholder="Add item" autocomplete="off" />
-              <div id="suggest-auto-complete"></div>
-            </form> -->
+          <div id="message" class="hidden"></div>
 
-            <div class="flex" style="justify-content: space-between">
-              <div class="flex">
-                <div class="switch" id="sort-switch">
-                  <div class="thumb"></div>
-                </div>
-                <span>Sort</span>
+          <!-- login form -->
+          <div id="login-container" class="card translucent" style="margin-top: 30px; align-items: flex-start">
+            <h4>Enter admin key to gain access</h4>
+            <form id="login-form" class="form-horizontal">
+              <div class="input-icon-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" name="key" placeholder="key" value="" />
               </div>
-
-              <div class="flex">
-                <div class="switch" id="suggest-switch">
-                  <div class="thumb"></div>
-                </div>
-                <span>Suggest</span>
-              </div>
-            </div>
-            <div id="shopping-suggestions" class="hidden"></div>
-
-            <div id="shopping-div" class="drag-container"></div>
-            <span id="empty-state">Nothing to buy, chef 👨‍🍳</span>
+              <button id="login-btn" class="primary" type="submit">Submit</button>
+            </form>
           </div>
+        </div>
+
+        <!-- columns container-->
+        <div class="action-button-group-wrapper">
+          <div id="admin-action-buttons-group" class="button-group hidden">
+            <i id="left-panel-toggle" class="fa-solid fa-bars"></i>
+          </div>
+        </div>
+        <div id="columns-container" class="container-wide hidden">
+          <div id="admin-sidebar" class="left-sidebar"><ul></ul></div>
+          <div id="main-panel"></div>
         </div>
       </main>
     </div>
-    <script src="./shopping.js" type="module"></script>
+    <script src="./admin.js" type="module"></script>
   </body>
 </html>

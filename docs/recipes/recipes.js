@@ -1,10 +1,9 @@
 import { state } from '../js/state.js'
-import { populateNav } from '../partials/nav.js'
-import { populateFooter } from '../partials/footer.js'
-import { setMessage, initUi, resizeTextarea, isMobile } from '../js/ui.js'
+import { createNav } from '../partials/nav.js'
+import { createFooter } from '../partials/footer.js'
+import { createRightDrawer } from '../partials/right-drawer.js'
+import { setMessage, resizeTextarea, isMobile, makeSidebarLinkEl } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebApp } from '../js/io.js'
-import { filterIngredient, transformIngredient } from '../js/ingredients.js'
-import { addItemsToShoppingList } from '../shopping/shopping.js'
 import { MODAL, setDialog } from '../js/modal.js'
 
 // ----------------------
@@ -17,12 +16,12 @@ const addRecipeBtn = document.querySelector('#add-recipe')
 const shopIngredientsBtn = document.querySelector('#shop-ingredients')
 const searchRecipesEl = document.querySelector('#search-recipes')
 const searchRecipesMessageEl = document.querySelector('#search-recipes-message')
-const recipeContainer = document.querySelector('#recipe-container')
+const columnsContainer = document.querySelector('#columns-container')
 const recipesList = document.querySelector('#recipes-list')
 const recipeEl = document.querySelector('#recipe')
 const recipeTitleEl = document.querySelector('#recipe-title')
 const recipeRelated = document.querySelector('#recipe-related')
-const relatedRecipesEl = document.querySelector('#related-recipe-links')
+const relatedRecipesEl = document.querySelector('#related-sidebar-links')
 const recipeIngredients = document.querySelector('#recipe-ingredients')
 const recipeMethod = document.querySelector('#recipe-method')
 const recipeNotes = document.querySelector('#recipe-notes')
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 switchEl.addEventListener('click', handleRelatedSwitchClick)
 
 /* When recipes container is populated */
-recipeContainer.addEventListener('recipes-loaded', handleRecipeContainerPopulated)
+columnsContainer.addEventListener('recipes-loaded', handlecolumnsContainerPopulated)
 
 /* When the left panel toggle is clicked */
 leftPanelToggle.addEventListener('click', () => {
@@ -100,21 +99,26 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  initUi()
+  setMessage('Loading...')
 
-  const { recipes } = await getWebApp(`${state.getWebAppUrl()}/recipes-latest`)
+  const { recipes } = await getWebApp(`${state.getWebAppUrl()}/recipes/latest`)
 
   setMessage('')
 
   state.setRecipes(recipes)
   populateRecipes()
 
-  populateNav({
-    nav: document.querySelector('nav'),
-    title: 'Recipes',
-    active: 'recipes',
-  })
-  populateFooter()
+  // create and add page elements
+  const wrapperEl = document.querySelector('.wrapper')
+
+  const navEl = createNav({ title: 'Recipes' })
+  wrapperEl.prepend(navEl)
+
+  const rightDrawerEl = createRightDrawer({ active: 'recipes' })
+  document.querySelector('main').prepend(rightDrawerEl)
+
+  const footerEl = createFooter()
+  wrapperEl.appendChild(footerEl)
 }
 
 /**
@@ -129,11 +133,11 @@ function handleRelatedSwitchClick() {
 /**
  * Handle recipe container populated
  */
-function handleRecipeContainerPopulated() {
-  const recipeLinks = document.querySelectorAll('.recipe-link')
-  for (const recipeLink of recipeLinks) {
-    recipeLink.addEventListener('click', async (e) => {
-      handleRecipeLinkClick(e.target)
+function handlecolumnsContainerPopulated() {
+  const sidebarLinks = document.querySelectorAll('.sidebar-link')
+  for (const sidebarLink of sidebarLinks) {
+    sidebarLink.addEventListener('click', async (e) => {
+      handleSidebarLinkClick(e.target)
     })
   }
 }
@@ -142,12 +146,14 @@ function handleRecipeContainerPopulated() {
  * Handle left panel toggle
  */
 function handleLeftPanelToggle() {
+  leftPanelToggle.classList.toggle('fa-chevron-left')
+  leftPanelToggle.classList.toggle('fa-chevron-right')
   addRecipeBtn.classList.toggle('hidden')
   shopIngredientsBtn.classList.toggle('hidden')
   document.querySelector('#recipe-action-buttons-group').classList.toggle('collapsed')
   searchRecipesEl.classList.toggle('hidden')
   recipesList.classList.toggle('hidden')
-  document.querySelector('#recipe-left-sidebar').classList.toggle('collapsed')
+  document.querySelector('.left-sidebar').classList.toggle('collapsed')
 }
 
 /**
@@ -155,7 +161,7 @@ function handleLeftPanelToggle() {
  */
 async function handleRecipeCreate() {
   addRecipeBtn.disabled = true
-  const { id } = await getWebApp(`${state.getWebAppUrl()}/recipe-create`)
+  const { id } = await getWebApp(`${state.getWebAppUrl()}/recipes/create`)
 
   const newRecipe = {
     id,
@@ -169,7 +175,7 @@ async function handleRecipeCreate() {
   }
   state.push('recipes', newRecipe)
 
-  const li = makeRecipeLinkEl(id, newRecipe.title)
+  const li = makeSidebarLinkEl(id, newRecipe.title, handleSidebarLinkClick)
   recipesList.appendChild(li)
   li.click()
   addRecipeBtn.disabled = false
@@ -205,13 +211,13 @@ async function handleFieldChange(elem) {
   // const recipeSection = elem.id.replace('recipe-', '')
   const recipeSection = elem.name
   if (recipeSection === 'title') {
-    document.querySelector('.recipe-link.active').textContent = elem.value
+    document.querySelector('.sidebar-link.active').textContent = elem.value
   }
   const id = recipeIdEl.textContent
   state.setRecipeSection(id, recipeSection, elem.value)
 
   try {
-    const { message, error } = await postWebApp(`${state.getWebAppUrl()}/recipe-update`, {
+    const { message, error } = await postWebApp(`${state.getWebAppUrl()}/recipes/update`, {
       id,
       value: elem.value,
       section: recipeSection,
@@ -228,10 +234,10 @@ async function handleFieldChange(elem) {
 /**
  * Handle recipe link click
  */
-async function handleRecipeLinkClick(elem) {
+async function handleSidebarLinkClick(elem) {
   shopIngredientsBtn.classList.remove('hidden')
   shopIngredientsBtn.disabled = false
-  document.querySelector('.recipe-link.active')?.classList.remove('active')
+  document.querySelector('.sidebar-link.active')?.classList.remove('active')
 
   // hide the left panel if mobile
   if (isMobile()) {
@@ -241,17 +247,17 @@ async function handleRecipeLinkClick(elem) {
   // if this li is a related link then clicking it
   // needs to activate its li in the sidebar
   // so don't use: elem.classList.add('active')
-  document.querySelector(`.recipe-link[data-id="${elem.dataset.id}"]`).classList.add('active')
+  document.querySelector(`.sidebar-link[data-id="${elem.dataset.id}"]`).classList.add('active')
   const recipeId = elem.dataset.id
   const recipe = state.getRecipeById(recipeId)
   if (!recipe) {
-    console.log(`handleRecipeLinkClick error: Recipe not found for id: ${recipeId}`)
+    console.log(`handleSidebarLinkClick error: Recipe not found for id: ${recipeId}`)
     console.log('recipes:', state.getRecipes())
     return
   }
 
   loadRecipe(recipe)
-  const resp = await postWebApp(`${state.getWebAppUrl()}/recipe-access`, {
+  const resp = await postWebApp(`${state.getWebAppUrl()}/recipes/update-access`, {
     id: recipeId,
   })
   const { message } = resp
@@ -280,14 +286,14 @@ async function handleDeleteRecipe(e) {
   modalMessageEl.innerText = ''
   const id = e.detail.id
   const password = document.querySelector('#modal-delete-input').value
-  const { error } = await getWebApp(`${state.getWebAppUrl()}/recipe-delete?id=${id}&password=${password}`)
+  const { error } = await getWebApp(`${state.getWebAppUrl()}/recipes/delete?id=${id}&password=${password}`)
 
   if (error) {
     modalMessageEl.innerText = error
     return
   }
   state.delete('recipes', id)
-  document.querySelector(`.recipe-link[data-id="${id}"`).remove()
+  document.querySelector(`.sidebar-link[data-id="${id}"`).remove()
   console.log(`handleDeleteRecipe message: ${message}`)
   document.querySelector('dialog').close()
 }
@@ -305,7 +311,7 @@ async function handleShopIngredientsClick() {
   shoppingList = shoppingList.split(',').map((i) => i.trim().toLowerCase())
   const allItems = [...new Set([...newItems, ...shoppingList])].filter(Boolean)
   // updat the server's shopping list
-  await postWebApp(`${state.getWebAppUrl()}/shopping-list-update`, {
+  await postWebApp(`${state.getWebAppUrl()}/shopping/update`, {
     value: allItems.join(','),
   })
 }
@@ -328,11 +334,11 @@ function populateRecipes() {
   for (const recipe of recipes) {
     const li = document.createElement('li')
     li.textContent = recipe.title
-    li.classList.add('recipe-link')
+    li.classList.add('sidebar-link')
     li.dataset.id = recipe.id
     recipesList.appendChild(li)
   }
-  recipeContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
+  columnsContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
 }
 
 /**
@@ -365,7 +371,7 @@ function loadRecipe(recipe) {
  * Get the searched recipes
  */
 async function getSearchedRecipes(q) {
-  const data = await getWebApp(`${state.getWebAppUrl()}/recipes-search?q=${q}`)
+  const data = await getWebApp(`${state.getWebAppUrl()}/recipes/search?q=${q}`)
 
   const { recipes, message } = data
   if (message) {
@@ -397,22 +403,8 @@ function populateRelatedRecipes(ids) {
       continue
     }
     const title = recipe.title
-    const li = makeRecipeLinkEl(id, title)
+    const li = makeSidebarLinkEl(id, title, handleSidebarLinkClick)
     ulEl.appendChild(li)
   }
   relatedRecipesEl.appendChild(ulEl)
-}
-
-/**
- * Make a recipe link element
- */
-function makeRecipeLinkEl(id, title) {
-  const li = document.createElement('li')
-  li.textContent = title
-  li.classList.add('recipe-link')
-  li.dataset.id = id
-  li.addEventListener('click', () => {
-    handleRecipeLinkClick(li)
-  })
-  return li
 }
