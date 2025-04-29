@@ -1,5 +1,4 @@
-const devUrl = 'http://localhost:8787'
-// const devUrl = 'http://192.168.1.193:5500'
+const devUrl = 'http://192.168.1.193:8787'
 const prodUrl = 'https://recipes-cloudflare.ba201220a.workers.dev'
 
 const stateObj = {
@@ -45,8 +44,21 @@ const stateObj = {
     return this.data
   },
 
+  getById: function (collection, id) {
+    return this.data[collection].find((doc) => doc.id === id)
+  },
+
+  getCollection: function (collection) {
+    return this.data[collection]
+  },
+
   set: function (key, value) {
     this.data[key] = value
+  },
+
+  setById: function ({ collection, id, key, value }) {
+    const doc = this.getById(collection, id)
+    doc[key] = value
   },
 
   push: function (key, value) {

@@ -1,5 +1,3 @@
-// js/modal.js
-
 // -------------------------------
 // Globals
 // -------------------------------
@@ -7,33 +5,63 @@
 let modal
 
 const MODAL_STYLE = `
-    dialog {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      margin: auto;
-    }
-    dialog::backdrop {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    #modal-btn-group {
-      margin: 20px 0;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    #modal-conform-delete-btn {
-    	background-color: red;
-    	color: white;
-    }
-    #modal-cancel-btn {
-      background: transparent;
-      border: 1px solid #555555;
-      color: #555555;
-    }
-  `
+  dialog {
+    padding: 20px 30px;
+    border: none;
+    border-radius: 8px;
+    margin: auto;
+    max-width: 400px;
+    background: var(--gray-accent);
+    color: var(--text-default);
+    box-shadow: var(--card-shadow);
+  }
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  #modal-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  #modal-body {
+    margin-bottom: 20px;
+  }
+  #modal-btn-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin: 40px 0 20px;
+  }
+  #modal-delete-input {
+    width: 100%;
+    padding: 8px 10px;
+    margin: 0;
+    border: 1px solid var(--border-gray);
+    background: var(--input-bg, var(--gray1));
+    color: var(--text-default);
+    border-radius: 4px;
+  }
+  #modal-delete-btn {
+    background-color: var(--danger-bg);
+    color: var(--danger-text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #modal-cancel-btn {
+    background: transparent;
+    border: 1px solid var(--border-gray);
+    color: var(--text-default);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+`
 export const MODAL = {
-  DELETE_RECIPE: {
+  DELETE: {
     html: `
   	<h3 id="modal-header"></h3>
   	<p id="modal-body"></p>
@@ -46,14 +74,10 @@ export const MODAL = {
     init: function () {
       const modal = document.querySelector('dialog')
       modal.addEventListener('click', handleModalClick)
-      document
-        .querySelector('#modal-delete-btn')
-        .addEventListener('click', handleModalConfirmDeleteClick)
-      document
-        .querySelector('#modal-cancel-btn')
-        .addEventListener('click', handleModalCancelClick)
-    }
-  }
+      document.querySelector('#modal-delete-btn').addEventListener('click', handleModalConfirmDeleteClick)
+      document.querySelector('#modal-cancel-btn').addEventListener('click', handleModalCancelClick)
+    },
+  },
 }
 
 // -------------------------------
@@ -107,9 +131,7 @@ function handleModalClick(e) {
  * Handle modal confirm delete click
  */
 function handleModalConfirmDeleteClick(e) {
-  document.dispatchEvent(
-    new CustomEvent('delete-recipe', { detail: { id: modal.dataset.target } })
-  )
+  document.dispatchEvent(new CustomEvent('delete-confirmed', { detail: { id: modal.dataset.target } }))
 }
 
 /**

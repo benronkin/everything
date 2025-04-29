@@ -47,6 +47,7 @@
   --body-bg: linear-gradient(180deg, var(--gray1), var(--gray0));
   --body-color: var(--gray6);
   --border-gray: var(--gray3);
+  --danger-bg: var(--red3);
   --major-bg: var(--gray1);
   --major-color: var(--gray5);
   --minor-bg: var(--color-gray6);

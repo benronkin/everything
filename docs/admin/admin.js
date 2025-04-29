@@ -4,7 +4,7 @@ import { createRightDrawer } from '../partials/right-drawer.js'
 
 import { state } from '../js/state.js'
 import { makeSidebarLinkEl, setMessage } from '../js/ui.js'
-import { postWebApp } from '../js/io.js'
+import { postWebAppJson } from '../js/io.js'
 import { listRecipeCategories } from './categories.js'
 
 // ----------------------
@@ -69,7 +69,7 @@ async function handleLoginFormSubmit(e) {
   const formData = new FormData(loginForm)
   const key = formData.get('key')
   try {
-    const { error, message, data } = await postWebApp(`${state.getWebAppUrl()}/admin/key-submit`, {
+    const { error, message, data } = await postWebAppJson(`${state.getWebAppUrl()}/admin/key-submit`, {
       key,
     })
     if (error) {

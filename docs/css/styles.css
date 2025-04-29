@@ -55,7 +55,6 @@ button {
   cursor: pointer;
   padding: 10px;
   border: none;
-  background-color: #007bff;
   color: white;
   height: 40px;
 }
@@ -96,9 +95,6 @@ i {
   border-radius: 6px;
   cursor: pointer;
 }
-i:hover {
-  color: var(--purple3);
-}
 i.primary {
   background-color: var(--purple2);
 }
@@ -120,12 +116,15 @@ textarea {
 }
 input:focus,
 textarea:focus,
-#recipe input:focus,
-#recipe textarea:focus {
+#main-panel input:focus,
+#main-panel textarea:focus {
   outline: none;
   border-bottom: 2px solid transparent;
   border-image: var(--border-image-horizontal);
   border-image-slice: 1;
+}
+input[type='date'] {
+  filter: brightness(0) saturate(100%) invert(90%);
 }
 main {
   background: var(--body-bg);
@@ -181,6 +180,7 @@ ul {
 #bottom-btn-group {
   display: flex;
   margin-left: auto;
+  margin-top: 20px;
 }
 #columns-container {
   display: flex;
@@ -206,13 +206,6 @@ ul {
   flex-direction: column;
   justify-content: center;
 }
-#main-panel {
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: calc(100% - var(--sidebar-width));
-}
 #message {
   padding: 8px 16px;
   display: block;
@@ -235,7 +228,6 @@ ul {
     transform: translateY(0);
   }
 }
-
 #mode-select {
   margin-top: 3px;
   width: 150px;
@@ -245,8 +237,10 @@ ul {
 #mode-select:focus {
   outline: none;
 }
-#recipe {
-  width: 100%;
+#main-panel {
+  padding: 0 20px;
+  align-items: center;
+  width: calc(100% - var(--sidebar-width));
   padding-left: 20px;
   border-left: 1px solid var(--purple2);
   flex-grow: 1;
@@ -255,8 +249,8 @@ ul {
   align-items: stretch;
   justify-content: flex-start;
 }
-#recipe input,
-#recipe textarea {
+#main-panel input,
+#main-panel textarea {
   width: 100%;
   margin: 10px 0;
   border-bottom: 1px solid var(--gbody-bg);
@@ -281,12 +275,7 @@ ul {
   margin-right: 20px;
   width: 220px;
 }
-#recipes-panel {
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-}
+
 #related-recipes-header {
   margin-top: 20px;
   display: flex;
@@ -390,6 +379,14 @@ ul {
 .container-wide {
   width: 100%;
 }
+.danger-box {
+  color: var(--danger-bg);
+  border: 1px solid var(--danger-bg);
+  padding: 5px;
+}
+.danger-box i {
+  color: var(--danger-bg);
+}
 .fa-trash {
   color: var(--red6);
   font-size: 1.5rem;
@@ -404,6 +401,7 @@ ul {
 .flex {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
 }
 .form-horizontal {
@@ -450,12 +448,21 @@ ul {
 .left-sidebar.collapsed {
   display: none;
 }
-.left-sidebar.collapsed + #recipe {
+.left-sidebar.collapsed + #main-panel {
   border-left: none;
   padding-left: 5px;
 }
+.mb-20 {
+  margin-bottom: 20px;
+}
 .ml-20 {
   margin-left: 20px;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.mt-40 {
+  margin-top: 40px;
 }
 .nav li {
   font-size: 1.1rem;
@@ -484,11 +491,13 @@ ul {
 }
 .sidebar-link {
   cursor: pointer;
-  padding: 10px 0;
+  padding: 10px 0 10px 10px;
   margin-bottom: 10px;
 }
 .sidebar-link.active {
-  font-weight: bold;
+  background: var(--primary-accent);
+  color: var(--body-color);
+  border-radius: 12px;
 }
 .shopping-item {
   cursor: pointer;

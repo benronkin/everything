@@ -48,7 +48,7 @@
     <script type="module">
       import { createNav } from './partials/nav.js'
       import { createFooter } from './partials/footer.js'
-      import { handleTokenQueryParam, getWebApp, postWebApp } from './js/io.js'
+      import { handleTokenQueryParam, getWebApp, postWebAppJson } from './js/io.js'
       import { setMessage } from './js/ui.js'
       import { state } from './js/state.js'
 
@@ -115,7 +115,7 @@
         const formData = new FormData(loginForm)
         const email = formData.get('email')
         try {
-          const { error, message } = await postWebApp(`${state.getWebAppUrl()}/email-submit`, {
+          const { error, message } = await postWebAppJson(`${state.getWebAppUrl()}/email-submit`, {
             email,
           })
           if (error) {

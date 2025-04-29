@@ -61,15 +61,45 @@ export async function getWebApp(path) {
 }
 
 /**
- * Post data to Web app
+ * Post form data to Web app
  */
-export async function postWebApp(path, clientData) {
+export async function postWebAppForm(path, formData) {
+  const headers = new Headers()
+
+  const token = localStorage.getItem('authToken')
+  if (!token) {
+    console.log('postWebAppForm no token. aborting')
+    return
+  }
+  headers.append('Auth-Token', token)
+
+  const req = new Request(path, {
+    method: 'POST',
+    headers,
+    body: formData, // 🚀 native FormData, NOT JSON.stringify
+  })
+
+  let res
+  try {
+    res = await fetch(req)
+    const resp = await res.json()
+    return resp
+  } catch (err) {
+    console.warn('postWebAppForm error:', err)
+    return { error: `postWebAppForm error: ${err}` }
+  }
+}
+
+/**
+ * Post JSON data to Web app
+ */
+export async function postWebAppJson(path, clientData) {
   const headers = new Headers()
   headers.append('Content-Type', 'application/json')
 
   const token = localStorage.getItem('authToken')
   if (!token && !path.includes('/email-submit')) {
-    console.log('postWebApp no token. aborting')
+    console.log('postWebAppJson no token. aborting')
     return
   }
   headers.append('Auth-Token', token)
@@ -88,7 +118,7 @@ export async function postWebApp(path, clientData) {
     if (path.includes('http://') || path.includes('')) {
       console.warn('Is cloudflare running?')
     }
-    const errorMessage = `postWebApp error: ${err}\nFetch payload: ${JSON.stringify(clientData)}`
+    const errorMessage = `postWebAppJson error: ${err}\nFetch payload: ${JSON.stringify(clientData)}`
     return { error: errorMessage }
   }
 }

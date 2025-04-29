@@ -1,5 +1,3 @@
-import { initDialog } from './modal.js'
-
 // ----------------------
 // Globals
 // ----------------------
@@ -40,18 +38,4 @@ export function resizeTextarea(textarea) {
   if (minHeight > textarea.clientHeight) {
     textarea.style.height = minHeight + 'px'
   }
-}
-
-/**
- * Make a sidebar link element
- */
-export function makeSidebarLinkEl(id, title, cb) {
-  const li = document.createElement('li')
-  li.textContent = title
-  li.classList.add('sidebar-link')
-  li.dataset.id = id
-  li.addEventListener('click', () => {
-    cb(li)
-  })
-  return li
 }

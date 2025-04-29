@@ -1,5 +1,5 @@
 import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp, postWebApp } from '../js/io.js'
+import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 import { makeDragStyles, enableDragging, disableDragging } from '../js/drag.js'
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
@@ -184,7 +184,7 @@ async function handleShoppingListChange(e) {
   document.querySelector('#empty-state').classList.toggle('hidden', values.length > 0)
 
   try {
-    const { status, message } = await postWebApp(`${state.getWebAppUrl()}/shopping/update`, {
+    const { status, message } = await postWebAppJson(`${state.getWebAppUrl()}/shopping/update`, {
       value: values.join(','),
     })
     if (status !== 200) {
@@ -284,7 +284,7 @@ function handleSuggestionTrashClick(e) {
   div.remove()
   const suggestions = state.delete('shopping-suggestions', value)
   // clearSelection()
-  postWebApp(`${state.getWebAppUrl()}/shopping/suggestions/update`, {
+  postWebAppJson(`${state.getWebAppUrl()}/shopping/suggestions/update`, {
     value: suggestions.join(','),
   })
 }
