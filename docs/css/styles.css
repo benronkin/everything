@@ -172,7 +172,12 @@ select {
 }
 ul {
   list-style-type: none;
-  padding: 0;
+  padding: 20px;
+}
+#add-photo-form {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: var(--gray-accent);
 }
 #add-recipe {
   cursor: pointer;
