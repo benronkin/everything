@@ -305,6 +305,8 @@ async function handleAddPhotoSubmit(e) {
       console.log(message)
       addPhotoMessage.textContent = message
     }
+    addPhotoForm.reset()
+    await populateJournalImages(formData.get('entry'))
   } catch (err) {
     console.log(err)
     addPhotoMessage.textContent = err.message
@@ -351,6 +353,7 @@ function populateJournalEntries() {
  */
 async function populateJournalImages(id) {
   const { photos } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/read?entry=${id}`)
+  console.log('photos', photos)
   if (!photos.length) {
     return
   }

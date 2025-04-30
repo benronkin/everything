@@ -1,5 +1,5 @@
 const devUrl = 'http://192.168.1.193:8787'
-const prodUrl = 'https://recipes-cloudflare.ba201220a.workers.dev'
+const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
 
 const stateObj = {
   data: {
