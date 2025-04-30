@@ -104,6 +104,8 @@ async function handleDOMContentLoaded() {
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
   initDialog()
+
+  state.setDefaultPage('recipes')
 }
 
 /**
@@ -123,7 +125,7 @@ function handleLeftPanelToggle(e) {
   leftPanelToggle.classList.toggle('fa-chevron-right')
   addRecipeBtn.classList.toggle('hidden')
   shopIngredientsBtn.classList.toggle('hidden')
-  e.target.closest('.button-group').classList.toggle('collapsed')
+  e.target.closest('.i-group').classList.toggle('collapsed')
   searchRecipesEl.classList.toggle('hidden')
   leftSidebarList.classList.toggle('hidden')
   document.querySelector('.left-sidebar').classList.toggle('collapsed')

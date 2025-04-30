@@ -4,7 +4,7 @@
 
 const navString = `
 <div class="container">
-    <div class="brand ml-20">
+    <div class="brand">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
         <rect x="10" y="10" width="80" height="80" rx="8" fill="#fdf6e3" stroke="#333" stroke-width="2"/>
         <path d="M20 20h60v15H20z" fill="#fdd835"/>
@@ -34,7 +34,6 @@ export function createNav({ title, disableRightDrawer = false, wideNav = false }
     const div = navEl.querySelector('.container')
     div.classList.remove('container')
     div.classList.add('container-wide')
-    div.classList.add('ml-20')
   }
 
   const rightDrawerToggleEl = navEl.querySelector('#toggle-right-drawer')

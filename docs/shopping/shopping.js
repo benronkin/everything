@@ -12,7 +12,6 @@ import { setMessage } from '../js/ui.js'
 // ----------------------
 
 const shoppingContainer = document.querySelector('#shopping-container')
-const shoppingForm = document.querySelector('#shopping-form')
 const shoppingDiv = document.querySelector('#shopping-div')
 const suggestionsContainer = document.querySelector('#shopping-suggestions')
 const suggestSwitch = document.querySelector('#suggest-switch')
@@ -99,6 +98,8 @@ async function handleDOMContentLoaded() {
   document.querySelector('#empty-state').classList.toggle('hidden', shoppingList.length > 0)
 
   addPageElements()
+
+  state.setDefaultPage('shopping')
 }
 
 /**

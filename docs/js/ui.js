@@ -39,3 +39,21 @@ export function resizeTextarea(textarea) {
     textarea.style.height = minHeight + 'px'
   }
 }
+
+/**
+ * Toggle the expander's button group
+ */
+export function toggleExpander(e) {
+  // arrives from eventhandler or from a link click
+  const el = e.target || e
+  el.classList.toggle('fa-chevron-left')
+  el.classList.toggle('fa-chevron-right')
+  const group = el.closest('.i-group')
+  group.classList.toggle('collapsed')
+
+  group.querySelectorAll('i').forEach((i) => {
+    if (i !== el) {
+      i.classList.toggle('hidden')
+    }
+  })
+}

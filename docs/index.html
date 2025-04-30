@@ -96,11 +96,17 @@
           return
         }
 
-        const mode = localStorage.getItem('mode')
-        if (mode === 'shopping') {
-          window.location.href = './shopping/index.html'
-        } else {
-          window.location.href = './recipes/index.html'
+        const mode = state.getDefaultPage()
+        switch (mode) {
+          case 'journal':
+            window.location.href = './journal/index.html'
+            break
+          case 'shopping':
+            window.location.href = './shopping/index.html'
+            break
+          default:
+            window.location.href = './recipes/index.html'
+            break
         }
       }
 

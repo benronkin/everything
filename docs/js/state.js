@@ -75,6 +75,18 @@ const stateObj = {
   },
 
   // -----------------------
+  // default page
+  // -----------------------
+
+  getDefaultPage: function () {
+    return localStorage.getItem('mode') || 'recipes'
+  },
+
+  setDefaultPage: function (mode) {
+    localStorage.setItem('mode', mode)
+  },
+
+  // -----------------------
   // recipes
   // -----------------------
 

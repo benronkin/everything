@@ -32,9 +32,9 @@
         <div class="container">
           <span id="message"></span>
 
-          <div class="action-button-group-wrapper">
-            <div class="button-group">
-              <i id="left-panel-toggle" class="fa-solid fa-chevron-left"></i>
+          <div class="action-i-group-wrapper">
+            <div class="i-group">
+              <i id="left-panel-toggle" class="i-group-expander fa-solid fa-chevron-left"></i>
               <i id="add-journal" class="fa-solid fa-plus"></i>
             </div>
           </div>
@@ -57,8 +57,6 @@
               <input name="state" id="journal-state" class="field" />
               <h5>Country</h5>
               <input name="country" id="journal-country" class="field" />
-              <h5>Id</h5>
-              <p id="journal-id"></p>
               <div class="flex mt-20">
                 <h4>Photos</h4>
                 <i id="add-photo-toggle" class="fa-solid fa-camera primary"></i>
@@ -72,6 +70,9 @@
                   <span id="add-photo-message"></span>
                 </div>
               </form>
+              <div id="image-gallery"></div>
+              <h5>Id</h5>
+              <p id="journal-id" class="smaller"></p>
               <div class="flex danger-box mt-40 mb-20">
                 <span>Delete entry</span>
                 <i id="delete-entry-btn" class="fa fa-trash"></i>

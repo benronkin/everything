@@ -4,7 +4,8 @@ import { createFooter } from '../partials/footer.js'
 import { createSidebarLink } from '../partials/left-sidebar-link.js'
 import { createRightDrawer } from '../partials/right-drawer.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
-import { setMessage, resizeTextarea, isMobile } from '../js/ui.js'
+import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
+import { setMessage, resizeTextarea, isMobile, toggleExpander } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
 
 // ----------------------
@@ -32,6 +33,7 @@ const photoFileEl = document.querySelector('#photo-file-input')
 const photoEntryIdEl = document.querySelector('#photo-entry-id')
 const addPhotoSubmit = document.querySelector('#add-photo-submit')
 const addPhotoMessage = document.querySelector('#add-photo-message')
+const imageGallery = document.querySelector('#image-gallery')
 
 let journalDefaults
 
@@ -94,7 +96,7 @@ async function handleDOMContentLoaded() {
   if (journal.length === 0) {
     searchJournalsMessageEl.textContent = 'No journal entries found'
   } else {
-    populateJournal()
+    populateJournalEntries()
   }
 
   // create and add page elements
@@ -110,16 +112,15 @@ async function handleDOMContentLoaded() {
   wrapperEl.appendChild(footerEl)
 
   initDialog()
+
+  state.setDefaultPage('journal')
 }
 
 /**
  * Handle left panel toggle
  */
 function handleLeftPanelToggle() {
-  leftPanelToggle.classList.toggle('fa-chevron-left')
-  leftPanelToggle.classList.toggle('fa-chevron-right')
-  addJournalBtn.classList.toggle('hidden')
-  document.querySelector('.button-group').classList.toggle('collapsed')
+  toggleExpander(leftPanelToggle)
   searchJournalsEl.classList.toggle('hidden')
   leftSidebarList.classList.toggle('hidden')
   document.querySelector('.left-sidebar').classList.toggle('collapsed')
@@ -190,7 +191,6 @@ async function handleJournalSearch(e) {
   }
 
   state.set(journal, journal)
-  populateJournal()
 }
 
 /**
@@ -311,6 +311,20 @@ async function handleAddPhotoSubmit(e) {
   }
 }
 
+/**
+ * Handle caption edit of a photo
+ */
+async function handleCaptionChange(e) {
+  console.log('you edited a caption')
+}
+
+/**
+ * Handle photo deletion
+ */
+async function handlePhotoTrash(e) {
+  console.log('you deleted a photo')
+}
+
 // ------------------------
 // Helper functions
 // ------------------------
@@ -318,10 +332,10 @@ async function handleAddPhotoSubmit(e) {
 /**
  * Populate the journal elements
  */
-function populateJournal() {
+function populateJournalEntries() {
   const journal = state.get('journal')
   if (!journal) {
-    console.log(`populateJournal error: state does not have journal: ${journal}`)
+    console.log(`populateJournalEntries error: state does not have journal: ${journal}`)
     return
   }
 
@@ -329,6 +343,27 @@ function populateJournal() {
   for (const { id, location, visit_date } of journal) {
     const li = createSidebarLink({ id, title: createEntryTitle(location, visit_date), cb: handleSidebarLinkClick })
     leftSidebarList.appendChild(li)
+  }
+}
+
+/**
+ * Populate the journal photos
+ */
+async function populateJournalImages(id) {
+  const { photos } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/read?entry=${id}`)
+  if (!photos.length) {
+    return
+  }
+  imageGallery.innerHTML = ''
+  for (const photo of photos) {
+    const el = createImageGalleryItem({
+      imgSrc: photo.url,
+      caption: photo.caption,
+      expanderCb: toggleExpander,
+      inputCb: handleCaptionChange,
+      trashCb: handlePhotoTrash,
+    })
+    imageGallery.appendChild(el)
   }
 }
 
@@ -346,6 +381,7 @@ function loadJournal(journal) {
   countryEl.value = journal.country
   idEl.textContent = journal.id
   photoEntryIdEl.value = journal.id
+  populateJournalImages(journal.id)
 }
 
 /**
