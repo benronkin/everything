@@ -42,7 +42,7 @@ export async function getWebApp(path) {
     const { status, message, data } = await res.json()
 
     if (status !== 200) {
-      console.log(`getWebApp ${status} error:`, message)
+      console.log(`getWebApp ${status} error for path: "${path}":`, message)
       return { error: message }
     }
     return { ...data, message }
