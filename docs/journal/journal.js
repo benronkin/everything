@@ -416,6 +416,7 @@ function loadJournal(journal) {
   idEl.textContent = journal.id
   photoEntryIdEl.value = journal.id
   imageGallery.innerHTML = ''
+  console.log('emptied imageGallery', imageGallery)
   populateJournalImages(journal.id)
 }
 
