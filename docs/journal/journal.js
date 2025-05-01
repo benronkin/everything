@@ -137,6 +137,7 @@ function handleAddPhotoToggle() {
   addPhotoToggle.classList.toggle('fa-camera')
   addPhotoForm.classList.toggle('hidden')
   addPhotoForm.reset()
+  addPhotoSubmit.removeAttribute('disabled')
   photoFileEl.value = ''
 }
 
@@ -299,7 +300,23 @@ async function handleAddPhotoSubmit(e) {
     return
   }
 
+  addPhotoSubmit.setAttribute('disabled', true)
+  addPhotoMessage.textContent = 'Loading...'
+
+  const compressionOptions = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 600,
+    useWebWorker: true,
+    fileType: 'image/jpeg',
+    initialQuality: 0.8,
+    exifOrientation: null,
+  }
+
   try {
+    const file = formData.get('file')
+    const compressed = await imageCompression(file, compressionOptions)
+    formData.set('file', compressed)
+
     const { message } = await postWebAppForm(`${state.getWebAppUrl()}/journal/photos/create`, formData)
     if (message) {
       console.log(message)
@@ -323,8 +340,23 @@ async function handleCaptionChange(e) {
 /**
  * Handle photo deletion
  */
-async function handlePhotoTrash(e) {
-  console.log('you deleted a photo')
+async function handlePhotoDelete(e) {
+  const deleteEl = e.target
+  const parent = e.target.closest('.image-gallery-item')
+  const photoMessageEl = parent.querySelector('.photo-message')
+
+  deleteEl.setAttribute('disabled', true)
+  photoMessageEl.textContent = 'Deleting image...'
+  const id = parent.dataset.id
+
+  const { error } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/delete?id=${id}`)
+
+  if (error) {
+    deleteEl.removeAttribute('disabled')
+    photoMessageEl.textContent = error.message
+    return
+  }
+  parent.remove()
 }
 
 // ------------------------
@@ -353,18 +385,18 @@ function populateJournalEntries() {
  */
 async function populateJournalImages(id) {
   const { photos } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/read?entry=${id}`)
-  console.log('photos', photos)
   if (!photos.length) {
     return
   }
   imageGallery.innerHTML = ''
   for (const photo of photos) {
     const el = createImageGalleryItem({
+      id: photo.id,
       imgSrc: photo.url,
       caption: photo.caption,
       expanderCb: toggleExpander,
       inputCb: handleCaptionChange,
-      trashCb: handlePhotoTrash,
+      trashCb: handlePhotoDelete,
     })
     imageGallery.appendChild(el)
   }
