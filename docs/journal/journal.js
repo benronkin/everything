@@ -388,7 +388,6 @@ async function populateJournalImages(id) {
   if (!photos.length) {
     return
   }
-  imageGallery.innerHTML = ''
   for (const photo of photos) {
     const el = createImageGalleryItem({
       id: photo.id,
@@ -416,6 +415,7 @@ function loadJournal(journal) {
   countryEl.value = journal.country
   idEl.textContent = journal.id
   photoEntryIdEl.value = journal.id
+  imageGallery.innerHTML = ''
   populateJournalImages(journal.id)
 }
 
