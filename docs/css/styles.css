@@ -62,11 +62,13 @@ button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
-button.primary {
+button.primary,
+label.primary {
   background-color: var(--purple2);
   transition: background-color 200ms ease;
 }
-button.primary:hover {
+button.primary:hover,
+label.primary:hover {
   background: var(--purple3);
   box-shadow: 0 0 10px var(--purple3);
 }
@@ -123,9 +125,7 @@ textarea:focus,
   border-image: var(--border-image-horizontal);
   border-image-slice: 1;
 }
-input[type='date'] {
-  filter: brightness(0) saturate(100%) invert(90%);
-}
+
 main {
   background: var(--body-bg);
 }
@@ -172,12 +172,11 @@ select {
 }
 ul {
   list-style-type: none;
-  padding: 20px;
 }
 #add-photo-form {
   padding: 20px;
   margin-bottom: 20px;
-  background-color: var(--gray-accent);
+  background-color: var(--strongest);
 }
 #add-recipe {
   cursor: pointer;
@@ -258,7 +257,7 @@ ul {
 #main-panel textarea {
   width: 100%;
   margin: 10px 0;
-  border-bottom: 1px solid var(--gbody-bg);
+  border-bottom: 1px solid var(--gray3);
 }
 #right-drawer {
   position: fixed;
@@ -274,11 +273,6 @@ ul {
 }
 #right-drawer.open {
   transform: translateX(0);
-}
-#left-sidebar {
-  transition: width 300ms ease;
-  margin-right: 20px;
-  width: 220px;
 }
 
 #related-recipes-header {
@@ -334,6 +328,9 @@ ul {
 .action-i-group-wrapper {
   padding: 30px 0;
   width: var(--sidebar-width);
+}
+.bb-white {
+  border-bottom: white;
 }
 .journal-photo {
   max-width: 100%;
@@ -446,11 +443,13 @@ ul {
   padding-left: 32px;
 }
 .left-sidebar {
+  transition: width 300ms ease;
+  margin-right: 0;
   color: var(--text-default);
   border-right: 2px solid transparent;
   border-image: var(--border-image-vertical);
   border-image-slice: 1;
-  padding: 0 20px 20px 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -468,6 +467,9 @@ ul {
 }
 .ml-20 {
   margin-left: 20px;
+}
+.mr-20 {
+  margin-right: 20px;
 }
 .mt-20 {
   margin-top: 20px;
@@ -502,13 +504,12 @@ ul {
 }
 .sidebar-link {
   cursor: pointer;
-  padding: 10px 0 10px 0;
+  padding: 10px;
   margin-bottom: 10px;
 }
 .sidebar-link.active {
   background: var(--primary-accent);
   color: var(--body-color);
-  border-radius: 12px;
 }
 .shopping-item {
   cursor: pointer;

@@ -40,7 +40,7 @@
           </div>
           <div id="columns-container">
             <div class="left-sidebar">
-              <input type="search" id="search-journals" placeholder="Search journal" />
+              <input type="search" id="search-journals" placeholder="Search journal" style="width: calc(var(--sidebar-width) - 20px)" />
               <span id="search-journals-message"></span>
               <ul id="left-sidebar-list"></ul>
             </div>
@@ -62,8 +62,14 @@
                 <i id="add-photo-toggle" class="fa-solid fa-camera primary"></i>
               </div>
               <form id="add-photo-form" class="hidden">
-                <input id="photo-file-input" name="file" class="primary" type="file" accept="image/*" />
-                <input id="photo-caption-input" name="caption" type="text" placeholder="Describe this photo..." maxlength="200" />
+                <input
+                  id="photo-caption-input"
+                  class="bb-white"
+                  name="caption"
+                  type="text"
+                  placeholder="Describe this photo..."
+                  maxlength="200"
+                />
                 <input id="photo-entry-id" type="hidden" name="entry" />
                 <div class="flex">
                   <button id="add-photo-submit" class="primary" type="submit">Upload</button>

@@ -5,6 +5,7 @@ import { createSidebarLink } from '../partials/left-sidebar-link.js'
 import { createRightDrawer } from '../partials/right-drawer.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
 import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
+import { createFileInput } from '../partials/fileInput.js'
 import { setMessage, resizeTextarea, isMobile, toggleExpander } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
 
@@ -29,11 +30,11 @@ const stateEl = document.querySelector('#journal-state')
 const countryEl = document.querySelector('#journal-country')
 const notesEl = document.querySelector('#journal-notes')
 const idEl = document.querySelector('#journal-id')
-const photoFileEl = document.querySelector('#photo-file-input')
 const photoEntryIdEl = document.querySelector('#photo-entry-id')
 const addPhotoSubmit = document.querySelector('#add-photo-submit')
 const addPhotoMessage = document.querySelector('#add-photo-message')
 const imageGallery = document.querySelector('#image-gallery')
+let photoFileEl
 
 let journalDefaults
 
@@ -107,6 +108,10 @@ async function handleDOMContentLoaded() {
 
   const rightDrawerEl = createRightDrawer({ active: 'journal' })
   document.querySelector('main').prepend(rightDrawerEl)
+
+  const fileInput = createFileInput({ id: 'photo-file-input', label: 'Select image', accept: 'image/*', icon: 'fa-camera' })
+  addPhotoForm.prepend(fileInput)
+  photoFileEl = fileInput
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
