@@ -106,15 +106,16 @@ function commitChanges() {
     console.log('❌ Could not retrieve last commit message.')
   }
 
-  const commitMessage = readlineSync
+  let commitMessage = readlineSync
     .question(`Commit message (${lastCommitMessage}): `, {
       defaultInput: lastCommitMessage,
     })
     .trim()
 
   if (!commitMessage) {
-    console.log('❌ No commit message entered. Skipping commit.')
-    return
+    commitMessage = lastCommitMessage
+    // console.log('❌ No commit message entered. Skipping commit.')
+    // return
   }
 
   try {

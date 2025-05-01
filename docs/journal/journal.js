@@ -334,7 +334,21 @@ async function handleAddPhotoSubmit(e) {
  * Handle caption edit of a photo
  */
 async function handleCaptionChange(e) {
-  console.log('you edited a caption')
+  const parent = e.target.closest('.image-gallery-item')
+  const photoMessageEl = parent.querySelector('.photo-message')
+
+  const id = parent.dataset.id
+
+  const { message, error } = await postWebAppJson(`${state.getWebAppUrl()}/journal/photos/update`, {
+    id,
+    value: e.target.value,
+    section: 'caption',
+  })
+  if (error) {
+    photoMessageEl.textContent = error.message
+    return
+  }
+  photoMessageEl.textContent = message
 }
 
 /**
@@ -416,7 +430,6 @@ function loadJournal(journal) {
   idEl.textContent = journal.id
   photoEntryIdEl.value = journal.id
   imageGallery.innerHTML = ''
-  console.log('emptied imageGallery', imageGallery)
   populateJournalImages(journal.id)
 }
 
