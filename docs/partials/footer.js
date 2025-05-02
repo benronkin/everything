@@ -2,7 +2,7 @@
 // Globals
 // -------------------------------
 
-const footerString = `
+const html = `
 <div class="container">
     <div id="version-container">
       Version: <span id="version-number">2.1.1</span>
@@ -15,7 +15,7 @@ const footerString = `
 // -------------------------------
 
 export function createFooter() {
-  const footerEl = document.createElement('footer')
-  footerEl.innerHTML = footerString
-  return footerEl
+  const el = document.createElement('footer')
+  el.innerHTML = html
+  return el
 }

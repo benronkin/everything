@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------------------------
 
 import fs from 'fs'
-import { execSync } from 'child_process'
+import { spawn, exec } from 'child_process'
 
 // -------------------------------
 // Init
@@ -17,8 +17,22 @@ function build() {
   setProdUrl()
   updateAdminPage()
   updateIndexPage()
-  execSync('npx live-server --host=localhost --port=5500 --open=docs/index.html', { stdio: 'inherit', shell: true })
-  console.log('Make sure to start recipes-cloudflare')
+
+  // This opens in the default browser:
+  // execSync('npx live-server --host=localhost --port=5500 --open=docs/index.html', { stdio: 'inherit', shell: true })
+
+  // Start the server (non-blocking)
+  spawn('npx', ['live-server', '--host=localhost', '--port=5500', '--no-browser'], {
+    stdio: 'inherit',
+    shell: true,
+  })
+
+  // Open Chrome after a short delay
+  setTimeout(() => {
+    exec('open -a "Google Chrome" http://localhost:5500/docs/recipes/index.html')
+  }, 1000)
+
+  console.log('Make sure to start the recipes server')
 }
 
 build()

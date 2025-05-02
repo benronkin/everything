@@ -95,7 +95,7 @@ function createElement({ id, html, label, accept, icon }) {
   const labelEl = el.querySelector('label')
   inputEl.setAttribute('id', id)
   inputEl.setAttribute('accept', accept)
-  labelEl.innerHTML += label
+  labelEl.appendChild(document.createTextNode(label))
   labelEl.setAttribute('for', id)
   el.querySelector('i').classList.add(icon)
   return el

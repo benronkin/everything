@@ -1,9 +1,11 @@
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
 import { createRightDrawer } from '../partials/right-drawer.js'
+import { createSelect } from '../partials/select.js'
+import { createSwitch } from '../partials/switch.js'
 
+import { setMessage } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { makeSidebarLinkEl, setMessage } from '../js/ui.js'
 import { postWebAppJson } from '../js/io.js'
 import { listRecipeCategories } from './categories.js'
 
@@ -53,6 +55,31 @@ async function handleDOMContentLoaded() {
 
   const rightDrawerEl = createRightDrawer({ active: 'recipes' })
   document.querySelector('main').prepend(rightDrawerEl)
+
+  const selectEl = createSelect({
+    id: 'journal-category',
+    label: 'Category',
+    icon: 'fa-tags',
+    orientation: 'column',
+    options: [
+      { value: 'food', label: 'Food' },
+      { value: 'travel', label: 'Travel and more', selected: true },
+      { value: 'fun', label: 'Fun' },
+    ],
+  })
+  document.querySelector('#select-target').appendChild(selectEl)
+  selectEl.querySelector('select').addEventListener('change', (e) => console.log('changed to', e.target.value))
+
+  const switchEl = createSwitch({
+    id: 'test-switch',
+    iconOff: 'fa-sun',
+    iconOn: 'fa-moon',
+    isOn: true,
+  })
+  document.querySelector('#select-target').appendChild(switchEl)
+  switchEl.addEventListener('click', (e) => {
+    console.log(switchEl.classList.contains('on'))
+  })
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
