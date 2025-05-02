@@ -3,7 +3,6 @@
 // -------------------------------
 
 let cssInjected = false
-let switchEl
 
 const css = `
 .switch {
@@ -17,12 +16,18 @@ const css = `
   align-items: center;
   transition: background 300ms ease;
 }
+.switch.on {
+  background-color: var(--primary-accent)
+}
+.switch.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .thumb {
-  color: var(----gray3);
   width: 1.5rem;
   height: 1.5rem;
   border: none;
-  background-color: var(--purple2);
+  background-color: var(--gray4);
   border-radius: 50%;
   position: absolute;
   left: -1px;
@@ -31,8 +36,11 @@ const css = `
   align-items: center;
   justify-content: center;
 }
-.thumb.iconed {
+.switch.iconed .thumb {
   background: transparent;
+}
+.switch.disabled .thumb {
+  background-color: var(--gray3);
 }
 .switch.on .thumb {
   left: 40%;
@@ -52,9 +60,9 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createSwitch({ id, iconOff = false, iconOn, isOn } = {}) {
+export function createSwitch({ id, iconOff = false, iconOn } = {}) {
   injectStyle(css)
-  const el = createElement({ id, html, iconOff, iconOn, isOn })
+  const el = createElement({ id, html, iconOff, iconOn })
   return el
 }
 
@@ -78,25 +86,85 @@ function injectStyle(css) {
 /**
  * Create the HTML element
  */
-function createElement({ id, html, iconOff, iconOn, isOn }) {
-  switchEl = document.createElement('div')
+function createElement({ id, html, iconOff, iconOn }) {
+  const switchEl = document.createElement('div')
   switchEl.innerHTML = html
   switchEl.className = 'switch'
-  switchEl.addEventListener('click', () => handleSwitchElClick(iconOff, iconOn))
+  switchEl.setAttribute('id', id)
+  switchEl.addEventListener('click', handleSwitchElClick)
   if (iconOff && iconOn) {
-    switchEl.querySelector('i').className = `iconed fa-solid ${iconOff}`
+    switchEl.className = `switch iconed`
+    switchEl.querySelector('i').className = `fa-solid ${iconOff}`
+    switchEl._iconOff = iconOff
+    switchEl._iconOn = iconOn
   }
-  if (isOn) {
-    handleSwitchElClick(iconOn, iconOff)
-  }
+  // using bind to eliminate global switchEl,
+  // to support multiple switches on page
+  switchEl.isOn = isOn.bind(switchEl)
+  switchEl.setOn = setOn.bind(switchEl)
+  switchEl.setOff = setOff.bind(switchEl)
+  switchEl.toggle = handleSwitchElClick.bind(switchEl)
+  switchEl.disable = disable.bind(switchEl)
+  switchEl.enable = enable.bind(switchEl)
+  switchEl.isDisabled = isDisabled.bind(switchEl)
+
   return switchEl
 }
 
 /**
  *
  */
-function handleSwitchElClick(iconOn, iconOff) {
-  switchEl.classList.toggle('on')
-  switchEl.querySelector('i').classList.toggle(iconOn)
-  switchEl.querySelector('i').classList.toggle(iconOff)
+function handleSwitchElClick() {
+  this.classList.toggle('on')
+  this.querySelector('i').classList.toggle(this._iconOff)
+  this.querySelector('i').classList.toggle(this._iconOn)
+}
+
+/**
+ *
+ */
+function isOn() {
+  return this.classList.contains('on')
+}
+
+/**
+ *
+ */
+function setOn() {
+  if (this.isOn()) {
+    return
+  }
+  this.dispatchEvent(new Event('click'))
+}
+
+/**
+ *
+ */
+function setOff() {
+  if (!this.isOn()) {
+    return
+  }
+  this.dispatchEvent(new Event('click'))
+}
+
+/**
+ *
+ */
+function disable() {
+  this.classList.add('disabled')
+}
+
+/**
+ *
+ */
+function enable() {
+  this.classList.remove('disabled')
+}
+
+/**
+ *
+ * @returns
+ */
+function isDisabled() {
+  return this.classList.contains('disabled')
 }

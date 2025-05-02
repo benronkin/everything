@@ -5,6 +5,8 @@ import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
 import { createRightDrawer } from '../partials/right-drawer.js'
 import { createFormHorizontal } from '../partials/form-horizontal.js'
+import { createField } from '../partials/formField.js'
+import { createSwitch } from '../partials/switch.js'
 import { setMessage } from '../js/ui.js'
 
 // ----------------------
@@ -14,8 +16,8 @@ import { setMessage } from '../js/ui.js'
 const shoppingContainer = document.querySelector('#shopping-container')
 const shoppingDiv = document.querySelector('#shopping-div')
 const suggestionsContainer = document.querySelector('#shopping-suggestions')
-const suggestSwitch = document.querySelector('#suggest-switch')
-const sortSwitch = document.querySelector('#sort-switch')
+let suggestSwitch
+let sortSwitch
 
 // set in handleDOMContentLoaded
 let shoppingInput
@@ -57,12 +59,6 @@ export async function addItemsToShoppingList(newItems, suppressListChanged = fal
 if (window.location.pathname.includes('/shopping/')) {
   /* When page is loaded */
   document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
-
-  /* when sort switch is clicked */
-  sortSwitch.addEventListener('click', handleSortSwitchClick)
-
-  /* when suggest switch is clicked */
-  suggestSwitch.addEventListener('click', handleSuggestSwitchClick)
 
   /* when shopping list changes */
   document.addEventListener('list-changed', handleShoppingListChange)
@@ -106,10 +102,9 @@ async function handleDOMContentLoaded() {
  * Handle sort switch click
  */
 function handleSortSwitchClick() {
-  sortSwitch.classList.toggle('on')
   const shoppingItems = document.querySelectorAll('.shopping-item')
 
-  if (sortSwitch.classList.contains('on')) {
+  if (sortSwitch.isOn()) {
     enableDragging()
     clearSelection()
     shoppingItems.forEach((el) => makeElementDraggable(el))
@@ -124,7 +119,6 @@ function handleSortSwitchClick() {
  */
 function handleSuggestSwitchClick() {
   clearSelection()
-  suggestSwitch.classList.toggle('on')
   suggestionsContainer.classList.toggle('hidden')
   displaySuggestions()
 }
@@ -317,6 +311,18 @@ function addPageElements() {
 
   const rightDrawerEl = createRightDrawer({ active: 'shopping' })
   document.querySelector('main').prepend(rightDrawerEl)
+
+  // switches
+  const switchWrapper = document.querySelector('#top-switches-wrapper')
+  sortSwitch = createSwitch({ id: 'sort-switch' })
+  sortSwitch.addEventListener('click', handleSortSwitchClick)
+  let field = createField({ element: sortSwitch, label: 'Sort', labelPosition: 'left' })
+  switchWrapper.appendChild(field)
+
+  suggestSwitch = createSwitch({ id: 'suggest-switch' })
+  suggestSwitch.addEventListener('click', handleSuggestSwitchClick)
+  field = createField({ element: suggestSwitch, label: 'Suggest', labelPosition: 'bottom' })
+  switchWrapper.appendChild(field)
 
   // create shopping form
   const shoppingFormEl = createFormHorizontal({

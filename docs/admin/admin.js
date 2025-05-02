@@ -72,14 +72,15 @@ async function handleDOMContentLoaded() {
 
   const switchEl = createSwitch({
     id: 'test-switch',
-    iconOff: 'fa-sun',
-    iconOn: 'fa-moon',
-    isOn: true,
+    // iconOff: 'fa-sun',
+    // iconOn: 'fa-moon',
   })
   document.querySelector('#select-target').appendChild(switchEl)
   switchEl.addEventListener('click', (e) => {
     console.log(switchEl.classList.contains('on'))
   })
+  switchEl.setOn()
+  // switchEl.disable()
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)

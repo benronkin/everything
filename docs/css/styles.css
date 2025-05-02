@@ -574,50 +574,6 @@ ul {
 .smaller {
   font-size: 0.85rem;
 }
-.switch {
-  background-color: var(--gray3);
-  position: relative;
-  width: 2rem;
-  height: 1rem;
-  border: 1px solid var(gray1);
-  border-radius: 30px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background 300ms ease;
-}
-.switch.on {
-  background-color: var(--purple3);
-  box-shadow: 0 0 8px var(--purple3);
-}
-.switch.disabled {
-  border: none;
-  background-color: #eeeeee !important;
-  cursor: not-allowed;
-}
-.thumb {
-  width: 1.25rem;
-  height: 1.25rem;
-  background: white;
-  border: 1px solid white;
-  border-radius: 50%;
-  position: absolute;
-  left: -5%;
-  transition: left 300ms ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.switch.on .thumb {
-  left: 50%;
-}
-.switch.disabled .thumb {
-  border: 1px solid #dddddd;
-  background-color: #eeeeee !important;
-}
-.thumb i {
-  font-size: 0.75rem;
-}
 .tab {
   padding: 10px;
   cursor: pointer;
