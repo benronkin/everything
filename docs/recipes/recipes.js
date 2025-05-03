@@ -271,6 +271,7 @@ async function handleDeleteRecipe(e) {
   state.delete('recipes', id)
   document.querySelector(`.sidebar-link[data-id="${id}"`).remove()
   document.querySelector('dialog').close()
+  mainPanelEl.classList.add('hidden')
 }
 
 /**
