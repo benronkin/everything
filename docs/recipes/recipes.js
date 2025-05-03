@@ -65,7 +65,7 @@ recipeRelated.addEventListener('change', populateRelatedRecipes)
 recipeDeleteBtn.addEventListener('click', handleRecipeDeleteBtnClick)
 
 /* When a recipe is confirmed delete */
-document.addEventListener('delete-recipe', handleDeleteRecipe)
+document.addEventListener('delete-confirmed', handleDeleteRecipe)
 
 // ------------------------
 // Event handler functions
@@ -257,6 +257,7 @@ function handleRecipeDeleteBtnClick() {
  * Handle delete recipe confirmation
  */
 async function handleDeleteRecipe(e) {
+  console.log('here')
   const modalMessageEl = document.querySelector('#modal-message')
   modalMessageEl.innerText = ''
   const id = e.detail.id
