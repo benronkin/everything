@@ -253,6 +253,9 @@ ul {
   align-items: stretch;
   justify-content: flex-start;
 }
+#main-panel.hidden {
+  display: none;
+}
 #main-panel input,
 #main-panel textarea {
   width: 100%;
@@ -286,10 +289,10 @@ ul {
   justify-content: center;
   margin-bottom: 40px;
 }
-#related-sidebar-links {
+#related-left-panel-links {
   width: 50%;
 }
-#related-sidebar-links .sidebar-link {
+#related-left-panel-links .left-panel-link {
   padding: 5px 5px 5px 0;
   margin-bottom: 3px !important;
 }
@@ -325,10 +328,7 @@ ul {
   margin-left: 20px;
   font-size: 0.9rem;
 }
-.action-i-group-wrapper {
-  padding: 30px 0;
-  width: var(--sidebar-width);
-}
+
 .bb-white {
   border-bottom: white;
 }
@@ -337,21 +337,6 @@ ul {
   height: auto;
   display: block;
   margin-top: 10px;
-}
-.i-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  background-color: var(--gray1);
-  border: 1px solid var(--gray3);
-  border-radius: 10px;
-  padding: 6px 10px;
-  width: max-content;
-}
-.i-group.collapsed {
-  width: 40px;
-  padding: 6px 4px;
 }
 .i-group i {
   padding: 10px;
@@ -385,7 +370,8 @@ ul {
   margin: auto;
 }
 .container-wide {
-  width: 100%;
+  width: 95%;
+  margin: 0 auto;
 }
 .date-input-wrapper {
   position: relative;
@@ -460,23 +446,20 @@ ul {
 .input-icon-group input {
   padding-left: 32px;
 }
-.left-sidebar {
+#left-panel {
   transition: width 300ms ease;
   margin-right: 0;
   color: var(--text-default);
-  border-right: 2px solid transparent;
-  border-image: var(--border-image-vertical);
-  border-image-slice: 1;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: var(--sidebar-width);
 }
-.left-sidebar.collapsed {
+#left-panel.collapsed {
   display: none;
 }
-.left-sidebar.collapsed + #main-panel {
+#left-panel.collapsed + #main-panel {
   border-left: none;
   padding-left: 5px;
 }
@@ -520,12 +503,12 @@ ul {
 .nav li.active a {
   color: var(--body-color);
 }
-.sidebar-link {
+.left-panel-link {
   cursor: pointer;
   padding: 10px;
   margin-bottom: 10px;
 }
-.sidebar-link.active {
+.left-panel-link.active {
   background: var(--primary-accent);
   color: var(--body-color);
 }
@@ -590,8 +573,10 @@ ul {
 
 /* mobile */
 
-@media (max-width: 768px) {
-  /* #shopping-container {
-    margin-top: 90px;
-  } */
+@media (min-width: 768px) {
+  #left-panel {
+    border-image-slice: 1;
+    border-right: 2px solid transparent;
+    border-image: var(--border-image-vertical);
+  }
 }

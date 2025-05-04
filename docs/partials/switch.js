@@ -60,9 +60,9 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createSwitch({ id, iconOff = false, iconOn } = {}) {
+export function createSwitch({ id, iconOff = false, iconOn, classList = [] } = {}) {
   injectStyle(css)
-  const el = createElement({ id, html, iconOff, iconOn })
+  const el = createElement({ id, html, iconOff, iconOn, classList })
   return el
 }
 
@@ -86,12 +86,16 @@ function injectStyle(css) {
 /**
  * Create the HTML element
  */
-function createElement({ id, html, iconOff, iconOn }) {
+function createElement({ id, html, iconOff, iconOn, classList }) {
   const switchEl = document.createElement('div')
   switchEl.innerHTML = html
-  switchEl.className = 'switch'
   switchEl.setAttribute('id', id)
   switchEl.addEventListener('click', handleSwitchElClick)
+
+  switchEl.className = 'switch'
+  if (classList.length) {
+    switchEl.classList.add(...classList)
+  }
   if (iconOff && iconOn) {
     switchEl.className = `switch iconed`
     switchEl.querySelector('i').className = `fa-solid ${iconOff}`

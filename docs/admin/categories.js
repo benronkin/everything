@@ -1,4 +1,4 @@
-import { createFormHorizontal } from '../partials/form-horizontal.js'
+import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { state } from '../js/state.js'
 

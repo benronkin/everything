@@ -1,9 +1,8 @@
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
-import { createRightDrawer } from '../partials/right-drawer.js'
-import { createSelect } from '../partials/select.js'
-import { createSwitch } from '../partials/switch.js'
-
+import { createLeftPanelLink } from '../partials/leftPanelLink.js'
+import { createMainIconGroup } from '../partials/mainIconGroup.js'
+import { createRightDrawer } from '../partials/rightDrawer.js'
 import { setMessage } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { postWebAppJson } from '../js/io.js'
@@ -13,14 +12,12 @@ import { listRecipeCategories } from './categories.js'
 // Globals
 // ----------------------
 
-const leftSidebar = document.querySelector('.left-sidebar')
-const leftPanelToggle = document.querySelector('#left-panel-toggle')
-const adminActionButtonGroup = document.querySelector('#admin-action-buttons-group')
 const columnsContainer = document.querySelector('#columns-container')
 const loginContainer = document.querySelector('#login-container')
 const loginForm = document.querySelector('#login-form')
 const loginBtn = document.querySelector('#login-btn')
-const sidebarLinkList = document.querySelector('#admin-sidebar ul')
+const leftPanelList = document.querySelector('#left-panel-list')
+let mainIconGroup
 
 // ----------------------
 // Event listeners
@@ -33,11 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /* When login form is submitted */
 loginForm.addEventListener('submit', handleLoginFormSubmit)
-
-/* When the left panel toggle is clicked */
-leftPanelToggle.addEventListener('click', () => {
-  handleLeftPanelToggle()
-})
 
 // ------------------------
 // Event handler functions
@@ -56,31 +48,8 @@ async function handleDOMContentLoaded() {
   const rightDrawerEl = createRightDrawer({ active: 'recipes' })
   document.querySelector('main').prepend(rightDrawerEl)
 
-  const selectEl = createSelect({
-    id: 'journal-category',
-    label: 'Category',
-    icon: 'fa-tags',
-    orientation: 'column',
-    options: [
-      { value: 'food', label: 'Food' },
-      { value: 'travel', label: 'Travel and more', selected: true },
-      { value: 'fun', label: 'Fun' },
-    ],
-  })
-  document.querySelector('#select-target').appendChild(selectEl)
-  selectEl.querySelector('select').addEventListener('change', (e) => console.log('changed to', e.target.value))
-
-  const switchEl = createSwitch({
-    id: 'test-switch',
-    // iconOff: 'fa-sun',
-    // iconOn: 'fa-moon',
-  })
-  document.querySelector('#select-target').appendChild(switchEl)
-  switchEl.addEventListener('click', (e) => {
-    console.log(switchEl.classList.contains('on'))
-  })
-  switchEl.setOn()
-  // switchEl.disable()
+  mainIconGroup = createMainIconGroup()
+  document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
@@ -122,14 +91,6 @@ async function handleLoginFormSubmit(e) {
   loginBtn.disabled = false
 }
 
-/**
- * Handle left panel toggle
- */
-function handleLeftPanelToggle() {
-  // adminActionButtonGroup.classList.toggle('collapsed')
-  leftSidebar.classList.toggle('collapsed')
-}
-
 // ------------------------
 // Helpers
 // ------------------------
@@ -138,19 +99,19 @@ function handleLeftPanelToggle() {
  * Populate the admin sidebar's link list
  */
 function showAdminRoutes(data) {
-  adminActionButtonGroup.classList.remove('hidden')
+  const c = document.querySelector('#columns-container').closest('.container-wide')
+  c.classList.remove('hidden')
   loginContainer.classList.add('hidden')
-  columnsContainer.classList.remove('hidden')
   for (const { label, endpoint } of data) {
-    const li = makeSidebarLinkEl(endpoint, label, handleSidebarLinkClick)
-    sidebarLinkList.appendChild(li)
+    const li = createLeftPanelLink({ id: endpoint, title: label, cb: handleLeftPanelLinkClick })
+    leftPanelList.appendChild(li)
   }
 }
 
 /**
  * Hanlde an admin sidebar's link click
  */
-function handleSidebarLinkClick(el) {
+function handleLeftPanelLinkClick(el) {
   switch (el.dataset.id) {
     case 'admin-recipe-cateogires':
       listRecipeCategories()

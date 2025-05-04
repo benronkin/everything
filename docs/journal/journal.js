@@ -1,8 +1,10 @@
 import { state } from '../js/state.js'
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
-import { createSidebarLink } from '../partials/left-sidebar-link.js'
-import { createRightDrawer } from '../partials/right-drawer.js'
+import { createLeftPanelLink } from '../partials/leftPanelLink.js'
+import { createIcon } from '../partials/icon.js'
+import { createMainIconGroup } from '../partials/mainIconGroup.js'
+import { createRightDrawer } from '../partials/rightDrawer.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
 import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
 import { createFileInput } from '../partials/fileInput.js'
@@ -13,11 +15,9 @@ import { handleTokenQueryParam, getWebApp, postWebAppForm, postWebAppJson } from
 // Globals
 // ----------------------
 
-const leftPanelToggle = document.querySelector('#left-panel-toggle')
-const addJournalBtn = document.querySelector('#add-journal')
 const searchJournalsEl = document.querySelector('#search-journals')
 const searchJournalsMessageEl = document.querySelector('#search-journals-message')
-const leftSidebarList = document.querySelector('#left-sidebar-list')
+const leftPanelList = document.querySelector('#left-panel-list')
 const mainPanelEl = document.querySelector('#main-panel')
 const journalDeleteBtn = document.querySelector('#delete-entry-btn')
 const addPhotoToggle = document.querySelector('#add-photo-toggle')
@@ -35,8 +35,9 @@ const addPhotoSubmit = document.querySelector('#add-photo-submit')
 const addPhotoMessage = document.querySelector('#add-photo-message')
 const imageGallery = document.querySelector('#image-gallery')
 let photoFileEl
-
+let mainIconGroup
 let journalDefaults
+let addJournalBtn
 
 // ----------------------
 // Event handlers
@@ -45,14 +46,8 @@ let journalDefaults
 /* When page is loaded */
 document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
 
-/* When the left panel toggle is clicked */
-leftPanelToggle.addEventListener('click', handleLeftPanelToggle)
-
 /* When the add photo toggle is clicked */
 addPhotoToggle.addEventListener('click', handleAddPhotoToggle)
-
-/* When add journal entry button is clicked */
-addJournalBtn.addEventListener('click', handleJournalCreate)
 
 /* When search journals input key down */
 searchJournalsEl.addEventListener('keydown', handleJournalSearch)
@@ -109,6 +104,13 @@ async function handleDOMContentLoaded() {
   const rightDrawerEl = createRightDrawer({ active: 'journal' })
   document.querySelector('main').prepend(rightDrawerEl)
 
+  mainIconGroup = createMainIconGroup({
+    elements: [createIcon({ id: 'add-journal', className: 'fa-plus' }), createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' })],
+  })
+  document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
+  addJournalBtn = document.querySelector('#add-journal')
+  addJournalBtn.addEventListener('click', handleJournalCreate)
+
   const fileInput = createFileInput({ id: 'photo-file-input', label: 'Select image', accept: 'image/*', icon: 'fa-camera' })
   addPhotoForm.prepend(fileInput)
   photoFileEl = fileInput
@@ -119,19 +121,6 @@ async function handleDOMContentLoaded() {
   initDialog()
 
   state.setDefaultPage('journal')
-}
-
-/**
- * Handle left panel toggle
- */
-function handleLeftPanelToggle() {
-  toggleExpander(leftPanelToggle)
-  searchJournalsEl.classList.toggle('hidden')
-  leftSidebarList.classList.toggle('hidden')
-  document.querySelector('.left-sidebar').classList.toggle('collapsed')
-  if (isMobile()) {
-    mainPanelEl.classList.toggle('hidden')
-  }
 }
 
 /**
@@ -168,9 +157,9 @@ async function handleJournalCreate() {
   }
   state.push('journal', newEntry)
 
-  const li = createSidebarLink({ id, title: createEntryTitle(newEntry.location, dateString), cb: handleSidebarLinkClick })
+  const li = createLeftPanelLink({ id, title: createEntryTitle(newEntry.location, dateString), cb: handleLeftPanelLinkClick })
 
-  leftSidebarList.appendChild(li)
+  leftPanelList.appendChild(li)
   li.click()
   addJournalBtn.disabled = false
 }
@@ -203,7 +192,7 @@ async function handleJournalSearch(e) {
  * Handle journal entry field change
  */
 async function handleFieldChange(e) {
-  document.querySelector('.sidebar-link.active').textContent = createEntryTitle(locationEl.value, visitDateEl.value)
+  document.querySelector('.left-panel-link.active').textContent = createEntryTitle(locationEl.value, visitDateEl.value)
 
   const elem = e.target
   const id = idEl.textContent
@@ -235,19 +224,11 @@ async function handleFieldChange(e) {
 /**
  * Handle sidebar link click
  */
-async function handleSidebarLinkClick(elem) {
-  document.querySelector('.sidebar-link.active')?.classList.remove('active')
-
-  // hide the left panel if mobile
-  if (isMobile()) {
-    handleLeftPanelToggle(elem)
-  }
-
-  document.querySelector(`.sidebar-link[data-id="${elem.dataset.id}"]`).classList.add('active')
+async function handleLeftPanelLinkClick(elem) {
   const id = elem.dataset.id
   const journal = state.getById('journal', id)
   if (!journal) {
-    console.log(`handleSidebarLinkClick error: Journal not found for id: ${id}`)
+    console.log(`handleLeftPanelLinkClick error: Journal not found for id: ${id}`)
     console.log('Journal:', state.getCollection('journal'))
     return
   }
@@ -284,7 +265,7 @@ async function handleDeleteConfirmed(e) {
     return
   }
   state.delete('recipes', id)
-  document.querySelector(`.sidebar-link[data-id="${id}"`).remove()
+  document.querySelector(`.left-panel-link[data-id="${id}"`).remove()
   console.log(`handleDeleteRecipe message: ${message}`)
   document.querySelector('dialog').close()
   mainPanelEl.classList.add('hidden')
@@ -392,10 +373,10 @@ function populateJournalEntries() {
     return
   }
 
-  leftSidebarList.innerHTML = ''
+  leftPanelList.innerHTML = ''
   for (const { id, location, visit_date } of journal) {
-    const li = createSidebarLink({ id, title: createEntryTitle(location, visit_date), cb: handleSidebarLinkClick })
-    leftSidebarList.appendChild(li)
+    const li = createLeftPanelLink({ id, title: createEntryTitle(location, visit_date), cb: handleLeftPanelLinkClick })
+    leftPanelList.appendChild(li)
   }
 }
 

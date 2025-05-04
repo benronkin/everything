@@ -1,8 +1,11 @@
 import { state } from '../js/state.js'
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
-import { createSidebarLink } from '../partials/left-sidebar-link.js'
-import { createRightDrawer } from '../partials/right-drawer.js'
+import { createLeftPanelLink } from '../partials/leftPanelLink.js'
+import { createIcon } from '../partials/icon.js'
+import { createMainIconGroup } from '../partials/mainIconGroup.js'
+import { createRightDrawer } from '../partials/rightDrawer.js'
+import { createSwitch } from '../partials/switch.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
 import { setMessage, resizeTextarea, isMobile } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
@@ -11,14 +14,10 @@ import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 // Globals
 // ----------------------
 
-const switchEl = document.querySelector('#related-recipes-switch')
-const leftPanelToggle = document.querySelector('#left-panel-toggle')
-const addRecipeBtn = document.querySelector('#add-recipe')
-const shopIngredientsBtn = document.querySelector('#shop-ingredients')
 const searchRecipesEl = document.querySelector('#search-recipes')
 const searchRecipesMessageEl = document.querySelector('#search-recipes-message')
 const columnsContainer = document.querySelector('#columns-container')
-const leftSidebarList = document.querySelector('#left-sidebar-list')
+const leftPanelList = document.querySelector('#left-panel-list')
 const mainPanelEl = document.querySelector('#main-panel')
 const recipeTitleEl = document.querySelector('#recipe-title')
 const recipeRelated = document.querySelector('#recipe-related')
@@ -30,6 +29,9 @@ const recipeCategory = document.querySelector('#recipe-category')
 const recipeTags = document.querySelector('#recipe-tags')
 const recipeIdEl = document.querySelector('#recipe-id')
 const recipeDeleteBtn = document.querySelector('#bottom-btn-group .fa-trash')
+let mainIconGroup
+let addRecipeBtn
+let shopIngredientsBtn
 
 // ----------------------
 // Event handlers
@@ -37,18 +39,6 @@ const recipeDeleteBtn = document.querySelector('#bottom-btn-group .fa-trash')
 
 /* When page is loaded */
 document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
-
-/* When related recipes switch is toggled */
-switchEl.addEventListener('click', handleRelatedSwitchClick)
-
-/* When the left panel toggle is clicked */
-leftPanelToggle.addEventListener('click', handleLeftPanelToggle)
-
-/* When add recipe button is clicked */
-addRecipeBtn.addEventListener('click', handleRecipeCreate)
-
-/* When shop ingredients button is clicked */
-shopIngredientsBtn.addEventListener('click', handleShopIngredientsClick)
 
 /* When search recipes input key down */
 searchRecipesEl.addEventListener('keydown', handleRecipeSearch)
@@ -101,34 +91,37 @@ async function handleDOMContentLoaded() {
   const rightDrawerEl = createRightDrawer({ active: 'recipes' })
   document.querySelector('main').prepend(rightDrawerEl)
 
+  mainIconGroup = createMainIconGroup({
+    elements: [createIcon({ id: 'add-recipe', className: 'fa-plus' }), createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' })],
+  })
+  document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
+  addRecipeBtn = document.querySelector('#add-recipe')
+  addRecipeBtn.addEventListener('click', handleRecipeCreate)
+
+  shopIngredientsBtn = document.querySelector('#shop-ingredients')
+  shopIngredientsBtn.addEventListener('click', handleShopIngredientsClick)
+
+  const switchEl = createSwitch({ id: 'related-recipes-switch', classList: ['ml-20'] })
+  switchEl.addEventListener('click', handleRelatedSwitchClick)
+  document.querySelector('#related-recipes-header').appendChild(switchEl)
+
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
   initDialog()
 
   state.setDefaultPage('recipes')
+
+  if (isMobile()) {
+    mainPanelEl.classList.add('hidden')
+  }
 }
 
 /**
  * Handle related switch click
  */
 function handleRelatedSwitchClick() {
-  switchEl.classList.toggle('on')
   recipeRelated.classList.toggle('hidden')
   resizeTextarea(recipeRelated)
-}
-
-/**
- * Handle left panel toggle
- */
-function handleLeftPanelToggle(e) {
-  leftPanelToggle.classList.toggle('fa-chevron-left')
-  leftPanelToggle.classList.toggle('fa-chevron-right')
-  addRecipeBtn.classList.toggle('hidden')
-  shopIngredientsBtn.classList.toggle('hidden')
-  leftPanelToggle.closest('.i-group').classList.toggle('collapsed')
-  searchRecipesEl.classList.toggle('hidden')
-  leftSidebarList.classList.toggle('hidden')
-  document.querySelector('.left-sidebar').classList.toggle('collapsed')
 }
 
 /**
@@ -150,8 +143,8 @@ async function handleRecipeCreate() {
   }
   state.push('recipes', newRecipe)
 
-  const li = createSidebarLink({ id, title: newRecipe.title, cb: handleSidebarLinkClick })
-  leftSidebarList.appendChild(li)
+  const li = createLeftPanelLink({ id, title: newRecipe.title, cb: handleLeftPanelLinkClick })
+  leftPanelList.appendChild(li)
   li.click()
   addRecipeBtn.disabled = false
 }
@@ -167,6 +160,11 @@ async function handleRecipeSearch(e) {
   if (value.length === 0) {
     return
   }
+  // hide the left panel if mobile
+  if (isMobile()) {
+    mainIconGroup.expand()
+  }
+
   searchRecipesMessageEl.textContent = 'Searching...'
   const { recipes } = await getSearchedRecipes(value)
   if (recipes.length === 0) {
@@ -186,7 +184,7 @@ async function handleFieldChange(e) {
   const elem = e.target
   const recipeSection = elem.name
   if (recipeSection === 'title') {
-    document.querySelector('.sidebar-link.active').textContent = elem.value
+    document.querySelector('.left-panel-link.active').textContent = elem.value
   }
   const id = recipeIdEl.textContent
   state.setRecipeSection(id, recipeSection, elem.value)
@@ -209,24 +207,14 @@ async function handleFieldChange(e) {
 /**
  * Handle recipe link click
  */
-async function handleSidebarLinkClick(elem) {
+async function handleLeftPanelLinkClick(elem) {
   shopIngredientsBtn.classList.remove('hidden')
   shopIngredientsBtn.disabled = false
-  document.querySelector('.sidebar-link.active')?.classList.remove('active')
 
-  // hide the left panel if mobile
-  if (isMobile()) {
-    handleLeftPanelToggle()
-  }
-
-  // if this li is a related link then clicking it
-  // needs to activate its li in the sidebar
-  // so don't use: elem.classList.add('active')
-  document.querySelector(`.sidebar-link[data-id="${elem.dataset.id}"]`).classList.add('active')
   const recipeId = elem.dataset.id
   const recipe = state.getRecipeById(recipeId)
   if (!recipe) {
-    console.log(`handleSidebarLinkClick error: Recipe not found for id: ${recipeId}`)
+    console.log(`handleLeftPanelLinkClick error: Recipe not found for id: ${recipeId}`)
     console.log('recipes:', state.getRecipes())
     return
   }
@@ -269,7 +257,7 @@ async function handleDeleteRecipe(e) {
     return
   }
   state.delete('recipes', id)
-  document.querySelector(`.sidebar-link[data-id="${id}"`).remove()
+  document.querySelector(`.left-panel-link[data-id="${id}"`).remove()
   document.querySelector('dialog').close()
   mainPanelEl.classList.add('hidden')
 }
@@ -306,10 +294,10 @@ function populateRecipes() {
     return
   }
 
-  leftSidebarList.innerHTML = ''
+  leftPanelList.innerHTML = ''
   for (const { id, title } of recipes) {
-    const li = createSidebarLink({ id, title, cb: handleSidebarLinkClick })
-    leftSidebarList.appendChild(li)
+    const li = createLeftPanelLink({ id, title, cb: handleLeftPanelLinkClick })
+    leftPanelList.appendChild(li)
   }
   columnsContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
 }
@@ -318,11 +306,8 @@ function populateRecipes() {
  * Load the recipe object to the page
  */
 function loadRecipe(recipe) {
-  if (switchEl.classList.contains('on')) {
-    switchEl.dispatchEvent(new Event('click'))
-  }
+  document.querySelector('#related-recipes-switch').setOff()
 
-  switchEl.classList.remove('on')
   mainPanelEl.classList.remove('hidden')
   recipeTitleEl.value = recipe.title
   recipeRelated.value = recipe.related
@@ -378,7 +363,7 @@ function populateRelatedRecipes() {
       continue
     }
     const title = recipe.title
-    const li = makeSidebarLinkEl({ id, title, cb: handleSidebarLinkClick })
+    const li = createLeftPanelLink({ id, title, cb: handleLeftPanelLinkClick })
     ulEl.appendChild(li)
   }
   relatedRecipesEl.appendChild(ulEl)
