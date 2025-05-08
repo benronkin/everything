@@ -1,3 +1,5 @@
+import { createIcon } from './icon.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
@@ -16,24 +18,39 @@ const css = `
   border-radius: 10px;
   padding: 6px 10px;
   width: max-content;
+  font-size: 1.1rem;
+  transition: all 200ms ease;
 }
 #main-icon-group.collapsed {
   width: 40px;
   padding: 6px 4px;
 }
-`
-
-const html = `
- <i id="left-panel-toggle" class="fa-solid fa-chevron-left"></i>
+#left-panel {
+  transition: width 300ms ease;
+  margin-right: 0;
+  color: var(--gray6);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: var(--sidebar-width);
+}
+#left-panel.collapsed {
+  display: none;
+}
+#left-panel.collapsed + #main-panel {
+  border-left: none;
+  padding-left: 5px;
+}
 `
 
 // -------------------------------
 // Exported functions
 // -------------------------------
 
-export function createMainIconGroup({ elements = [] } = {}) {
+export function createMainIconGroup(config) {
   injectStyle(css)
-  const el = createElement({ elements })
+  const el = createElement(config)
   return el
 }
 
@@ -57,17 +74,24 @@ function injectStyle(css) {
 /**
  * Create the HTML element.
  */
-function createElement({ elements }) {
+function createElement({ children } = {}) {
   const el = document.createElement('div')
   el.setAttribute('id', 'main-icon-group')
-  el.className = 'i-group'
-  el.innerHTML = html
+  el.appendChild(
+    createIcon({
+      id: 'left-panel-toggle',
+      className: 'fa-chevron-left',
+      onClick: handleLeftPanelToggle,
+    })
+  )
 
-  for (const element of elements) {
-    el.appendChild(element)
+  // undefined is not iterable
+  // hence the check
+  if (children) {
+    for (const child of children) {
+      el.appendChild(child)
+    }
   }
-
-  el.querySelector('#left-panel-toggle').addEventListener('click', handleLeftPanelToggle)
 
   el.expand = expand.bind(el)
   el.collapse = collapse.bind(el)
@@ -93,7 +117,7 @@ function handleLeftPanelToggle() {
 function collapse() {
   document.querySelector('#left-panel').classList.add('collapsed')
   document.querySelector('#main-panel').classList.remove('hidden')
-  const toggle = document.querySelector('#left-panel-toggle')
+  const toggle = document.querySelector('[data-id="left-panel-toggle"]')
   toggle.classList.add('fa-chevron-right')
   toggle.classList.remove('fa-chevron-left')
   const group = document.querySelector('#main-icon-group')
@@ -113,7 +137,7 @@ function expand() {
   if (isMobile()) {
     document.querySelector('#main-panel').classList.add('hidden')
   }
-  const toggle = document.querySelector('#left-panel-toggle')
+  const toggle = document.querySelector('[data-id="left-panel-toggle"]')
   toggle.classList.remove('fa-chevron-right')
   toggle.classList.add('fa-chevron-left')
   const group = document.querySelector('#main-icon-group')
@@ -127,5 +151,7 @@ function expand() {
  * Check if the client is mobile
  */
 function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
 }

@@ -2,7 +2,50 @@
 // Globals
 // -------------------------------
 
-const navString = `
+let cssInjected = false
+
+const css = `
+nav {
+  color: var(--gray5);
+  background: var(--nav-gradient);
+  display: flex;
+  height: var(--nav-height);
+}
+nav ul,
+nav .container,
+nav .container-wide,
+nav .brand {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+nav ul,
+nav .container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+nav .brand {
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+}
+nav .brand h3 {
+  margin: 0;
+  padding-left: 5px;
+  white-space: nowrap;
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+nav svg {
+  width: 35px;
+}
+`
+
+const html = `
 <div class="container">
     <div class="brand">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -25,9 +68,52 @@ const navString = `
 // Exported functions
 // -------------------------------
 
-export function createNav({ title, disableRightDrawer = false, wideNav = false } = {}) {
+export function createNav({
+  title,
+  disableRightDrawer = false,
+  wideNav = false,
+} = {}) {
+  injectStyle(css)
+  return createElement({
+    title,
+    disableRightDrawer,
+    wideNav,
+  })
+}
+
+// -------------------------------
+// Event handler functions
+// -------------------------------
+
+/**
+ * Toggle the right drawer
+ */
+function handleToggleRightDrawer() {
+  const drawer = document.querySelector('[data-id="right-drawer"]')
+  drawer.classList.toggle('open')
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function injectStyle(css) {
+  if (cssInjected || !css) return
+  const style = document.createElement('style')
+  style.textContent = css
+  document.head.appendChild(style)
+  cssInjected = true
+}
+
+/**
+ *
+ */
+function createElement({ title, disableRightDrawer, wideNav }) {
   const navEl = document.createElement('nav')
-  navEl.innerHTML = navString
+  navEl.innerHTML = html
   navEl.querySelector('h3').innerHTML = title
 
   if (wideNav) {
@@ -44,15 +130,4 @@ export function createNav({ title, disableRightDrawer = false, wideNav = false }
   }
 
   return navEl
-}
-
-// -------------------------------
-// Event handler functions
-// -------------------------------
-
-/**
- * Toggle the right drawer
- */
-function handleToggleRightDrawer() {
-  document.querySelector('#right-drawer').classList.toggle('open')
 }

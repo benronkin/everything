@@ -3,48 +3,30 @@
 // -------------------------------
 
 /**
- * Create a drag stylesheet once when initShopping fires
- */
-export function makeDragStyles() {
-  const styles = `
-    .drag-container {
-      margin-top: 1rem;
-    }
-    .draggable {
-      cursor: move;
-    }
-    .draggable.dragging {
-      opacity: 0.5;
-    } 
-  `
-
-  const styleSheet = document.createElement('style')
-  styleSheet.textContent = styles
-  document.head.appendChild(styleSheet)
-}
-
-/**
  *
  */
-export function enableDragging() {
+export function enableDragging(containerEl) {
   // clear prior event handlers
-  disableDragging()
-  document.querySelectorAll('.shopping-item').forEach((elem) => makeElementDraggable(elem))
-  document.querySelectorAll('.drag-container').forEach((container) => {
-    container.addEventListener('dragover', enableDragContainer)
-    container.addEventListener('touchmove', enableDragContainer)
-  })
+  enableClicking(containerEl)
+  containerEl.classList.add('dragging-container')
+  containerEl
+    .querySelectorAll('.draggable-target')
+    .forEach((elem) => makeElementDraggable(elem))
+
+  containerEl.addEventListener('dragover', enableDragContainer)
+  containerEl.addEventListener('touchmove', enableDragContainer)
 }
 
 /**
  *
  */
-export function disableDragging() {
-  document.querySelectorAll('.draggable').forEach((elem) => breakElementDraggable(elem))
-  document.querySelectorAll('.drag-container').forEach((container) => {
-    container.removeEventListener('dragover', enableDragContainer)
-    container.removeEventListener('touchmove', enableDragContainer)
-  })
+export function enableClicking(containerEl) {
+  containerEl.classList.remove('dragging-container')
+  containerEl
+    .querySelectorAll('.draggable-target')
+    .forEach((elem) => breakElementDraggable(elem))
+  containerEl.removeEventListener('dragover', enableDragContainer)
+  containerEl.removeEventListener('touchmove', enableDragContainer)
 }
 
 // -------------------------------
@@ -55,14 +37,14 @@ export function disableDragging() {
  *
  */
 function handleDragStart(e) {
-  e.target.closest('.shopping-item').classList.add('dragging')
+  e.target.closest('.draggable-target').classList.add('dragging')
 }
 
 /**
  *
  */
 function handleDragEnd(e) {
-  e.target.closest('.shopping-item').classList.remove('dragging')
+  e.target.closest('.draggable-target').classList.remove('dragging')
   document.dispatchEvent(new CustomEvent('list-changed'))
 }
 
@@ -76,8 +58,11 @@ function handleDragEnd(e) {
 function enableDragContainer(e) {
   e.preventDefault()
   const draggedElem = document.querySelector('.dragging')
-  const dragContainer = draggedElem.closest('.drag-container')
-  const afterElement = getAfterElement(dragContainer, e.clientY || e.touches[0].clientY)
+  const dragContainer = draggedElem.closest('.dragging-container')
+  const afterElement = getAfterElement(
+    dragContainer,
+    e.clientY || e.touches[0].clientY
+  )
   if (afterElement === null) {
     dragContainer.appendChild(draggedElem)
   } else {
@@ -89,8 +74,7 @@ function enableDragContainer(e) {
  * Make an existing DOM element draggable
  */
 function makeElementDraggable(elem) {
-  elem.classList.add('draggable')
-  elem.setAttribute('draggable', 'true')
+  elem.enableDrag()
 
   elem.addEventListener('dragstart', handleDragStart)
   elem.addEventListener('touchstart', handleDragStart)
@@ -102,8 +86,7 @@ function makeElementDraggable(elem) {
  * Break an existing DOM element draggable
  */
 function breakElementDraggable(elem) {
-  elem.classList.remove('draggable')
-  elem.setAttribute('draggable', 'false')
+  elem.enableClick()
 
   elem.removeEventListener('dragstart', handleDragStart)
   elem.removeEventListener('touchstart', handleDragStart)
@@ -115,7 +98,9 @@ function breakElementDraggable(elem) {
  *
  */
 function getAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+  const draggableElements = [
+    ...container.querySelectorAll('.draggable-target:not(.dragging)'),
+  ]
   return draggableElements.reduce(
     (closest, child) => {
       const box = child.getBoundingClientRect()

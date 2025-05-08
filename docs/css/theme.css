@@ -1,4 +1,50 @@
-:root {
+.u-light-mode {
+  --gray0: #f8f8f8;
+  --gray1: #dbe1e8;
+  --gray2: #b2becd;
+  --gray3: #6c7983;
+  --gray4: #454e56;
+  --gray5: #2a2e35;
+  --gray6: #12181b;
+  --blue0: #9898d1;
+  --blue6: #2e3077;
+  --purple0: #ebdcfe;
+  --purple1: #c9a7fc;
+  --purple2: #a374f9;
+  --purple3: #7e3ff2;
+  --purple4: #5b2bbf;
+  --purple5: #3a1a6e;
+  --purple6: #1f0f3e;
+  --red0: #ffe5e5;
+  --red1: #f8b4b4;
+  --red2: #ff6b6b;
+  --red3: #e63946;
+  --red4: #a31919;
+  --red5: #601212;
+  --red6: #2b0404;
+  --teal0: #e6ffff;
+  --teal1: #b8f5f6;
+  --teal2: #7be3e5;
+  --teal3: #1cc5c8;
+  --teal4: #0b939b;
+  --teal5: #065a60;
+  --teal6: #042b2d;
+  --body-bg: linear-gradient(180deg, var(--gray5), var(--gray6));
+  --card-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  --border-image-horizontal: linear-gradient(
+    to right,
+    var(--purple1),
+    var(--purple3),
+    var(--purple1)
+  );
+  --border-image-vertical: linear-gradient(
+    to bottom,
+    var(--purple1),
+    var(--purple3),
+    var(--purple1)
+  );
+}
+.u-dark-mode {
   --gray0: #12181b;
   --gray1: #2a2e35;
   --gray2: #454e56;
@@ -29,43 +75,23 @@
   --teal4: #7be3e5;
   --teal5: #b8f5f6;
   --teal6: #e6ffff;
-  --border-image-horizontal: linear-gradient(to right, var(--purple1), var(--purple3), var(--purple1));
-  --border-image-vertical: linear-gradient(to bottom, var(--purple1), var(--purple3), var(--purple1));
+  --body-bg: linear-gradient(180deg, var(--gray1), var(--gray0));
+  --nav-gradient: linear-gradient(90deg, var(--gray2), var(--gray1));
+  --card-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  --card-bg-translucent: rgba(42, 46, 53, 0.7);
   --shadow-small: 0 1px 2px rgba(0, 0, 0, 0.15);
   --shadow-focus: 0 0 0 2px rgba(128, 90, 213, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.6); /* for dark mode */
-}
-.light-mode {
-  --body-bg: var(--gray6);
-  --body-color: var(--gray1);
-  --major-color: var(--gray5);
-  --major-bg: var(--gray5);
-  --major-color: var(--gray1);
-  --minor-bg: var(--color-gray3);
-  --minor-color: var(--gray1);
-  --link-color: var(--purple4);
-  --card-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
-.dark-mode {
-  --body-bg: linear-gradient(180deg, var(--gray1), var(--gray0));
-  --body-color: var(--gray6);
-  --border-gray: var(--gray3);
-  --danger-bg: var(--red3);
-  --major-bg: var(--gray1);
-  --major-color: var(--gray5);
-  --minor-bg: var(--color-gray6);
-  --minor-color: var(--gray6);
-  --link-color: var(--purple4);
-  --text-default: var(--gray6);
-  --card-bg-translucent: rgba(42, 46, 53, 0.7);
-  --card-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  --primary-accent: var(--purple2);
-  --secondary-bg-1: var(--teal1);
-  --secondary-accent: var(--teal2);
-  --gray-accent: var(--gray2);
-  --nav-gradient: linear-gradient(90deg, var(--gray2), var(--gray1));
-  --strongest: black;
-}
-.minor-bg {
-  background-color: var(--minor-bg);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-image-horizontal: linear-gradient(
+    to right,
+    var(--purple1),
+    var(--purple3),
+    var(--purple1)
+  );
+  --border-image-vertical: linear-gradient(
+    to bottom,
+    var(--purple1),
+    var(--purple3),
+    var(--purple1)
+  );
 }

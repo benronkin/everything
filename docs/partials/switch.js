@@ -17,7 +17,7 @@ const css = `
   transition: background 300ms ease;
 }
 .switch.on {
-  background-color: var(--primary-accent)
+  background-color: var(--purple2)
 }
 .switch.disabled {
   opacity: 0.5;
@@ -60,7 +60,12 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createSwitch({ id, iconOff = false, iconOn, classList = [] } = {}) {
+export function createSwitch({
+  id,
+  iconOff = false,
+  iconOn,
+  classList = [],
+} = {}) {
   injectStyle(css)
   const el = createElement({ id, html, iconOff, iconOn, classList })
   return el

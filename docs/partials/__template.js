@@ -5,26 +5,20 @@
 let cssInjected = false
 
 const css = `
-i {
-  padding: 7px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-i.primary {
-  background-color: var(--purple2);
-}
-i.secondary {
-  background-color: var(--teal1);
-}
+
+`
+
+const formString = `
+ 
 `
 
 // -------------------------------
 // Exported functions
 // -------------------------------
 
-export function createIcon({ id, className, onClick } = {}) {
+export function create___({} = {}) {
   injectStyle(css)
-  return createElement({ id, className, onClick })
+  return createElement({})
 }
 
 // -------------------------------
@@ -45,13 +39,9 @@ function injectStyle(css) {
 /**
  *
  */
-function createElement({ id, className, onClick } = {}) {
-  const el = document.createElement('i')
-  el.dataset.id = id
-  el.className = `fa-solid ${className}`
-  if (onClick) {
-    el.addEventListener('click', onClick)
-  }
+function createElement({}) {
+  const el = document.createElement('div')
+  el.innerHTML = html
 
   return el
 }

@@ -8,15 +8,27 @@ import { createRightDrawer } from '../partials/rightDrawer.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
 import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
 import { createFileInput } from '../partials/fileInput.js'
-import { setMessage, resizeTextarea, isMobile, toggleExpander } from '../js/ui.js'
-import { handleTokenQueryParam, getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
+import {
+  setMessage,
+  resizeTextarea,
+  isMobile,
+  toggleExpander,
+} from '../js/ui.js'
+import {
+  handleTokenQueryParam,
+  getWebApp,
+  postWebAppForm,
+  postWebAppJson,
+} from '../js/io.js'
 
 // ----------------------
 // Globals
 // ----------------------
 
 const searchJournalsEl = document.querySelector('#search-journals')
-const searchJournalsMessageEl = document.querySelector('#search-journals-message')
+const searchJournalsMessageEl = document.querySelector(
+  '#search-journals-message'
+)
 const leftPanelList = document.querySelector('#left-panel-list')
 const mainPanelEl = document.querySelector('#main-panel')
 const journalDeleteBtn = document.querySelector('#delete-entry-btn')
@@ -105,13 +117,18 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup({
-    elements: [createIcon({ id: 'add-journal', className: 'fa-plus' }), createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' })],
+    children: [createIcon({ id: 'add-journal', className: 'fa-plus' })],
   })
   document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
-  addJournalBtn = document.querySelector('#add-journal')
+  addJournalBtn = document.querySelector('[data-id="add-journal"]')
   addJournalBtn.addEventListener('click', handleJournalCreate)
 
-  const fileInput = createFileInput({ id: 'photo-file-input', label: 'Select image', accept: 'image/*', icon: 'fa-camera' })
+  const fileInput = createFileInput({
+    id: 'photo-file-input',
+    label: 'Select image',
+    accept: 'image/*',
+    icon: 'fa-camera',
+  })
   addPhotoForm.prepend(fileInput)
   photoFileEl = fileInput
 
@@ -141,7 +158,9 @@ function handleAddPhotoToggle() {
 async function handleJournalCreate() {
   addJournalBtn.disabled = true
   const { id } = await getWebApp(`${state.getWebAppUrl()}/journal/create`)
-  const { defaults } = await getWebApp(`${state.getWebAppUrl()}/journal/defaults/read`)
+  const { defaults } = await getWebApp(
+    `${state.getWebAppUrl()}/journal/defaults/read`
+  )
 
   const dateString = new Date().toISOString()
 
@@ -157,7 +176,11 @@ async function handleJournalCreate() {
   }
   state.push('journal', newEntry)
 
-  const li = createLeftPanelLink({ id, title: createEntryTitle(newEntry.location, dateString), cb: handleLeftPanelLinkClick })
+  const li = createLeftPanelLink({
+    id,
+    title: createEntryTitle(newEntry.location, dateString),
+    cb: handleLeftPanelLinkClick,
+  })
 
   leftPanelList.appendChild(li)
   li.click()
@@ -177,7 +200,9 @@ async function handleJournalSearch(e) {
   }
   searchJournalsMessageEl.textContent = 'Searching...'
 
-  const { journal } = await getWebApp(`${state.getWebAppUrl()}/journal/search?q=${value}`)
+  const { journal } = await getWebApp(
+    `${state.getWebAppUrl()}/journal/search?q=${value}`
+  )
 
   if (journal.length === 0) {
     searchJournalsMessageEl.textContent = 'No journal entries found'
@@ -192,7 +217,8 @@ async function handleJournalSearch(e) {
  * Handle journal entry field change
  */
 async function handleFieldChange(e) {
-  document.querySelector('.left-panel-link.active').textContent = createEntryTitle(locationEl.value, visitDateEl.value)
+  document.querySelector('.left-panel-link.active').textContent =
+    createEntryTitle(locationEl.value, visitDateEl.value)
 
   const elem = e.target
   const id = idEl.textContent
@@ -200,11 +226,14 @@ async function handleFieldChange(e) {
   state.setById(doc)
 
   try {
-    const { message, error } = await postWebAppJson(`${state.getWebAppUrl()}/journal/update`, {
-      id,
-      value: elem.value,
-      section: elem.name,
-    })
+    const { message, error } = await postWebAppJson(
+      `${state.getWebAppUrl()}/journal/update`,
+      {
+        id,
+        value: elem.value,
+        section: elem.name,
+      }
+    )
     if (error) {
       throw new Error(error)
     }
@@ -228,7 +257,9 @@ async function handleLeftPanelLinkClick(elem) {
   const id = elem.dataset.id
   const journal = state.getById('journal', id)
   if (!journal) {
-    console.log(`handleLeftPanelLinkClick error: Journal not found for id: ${id}`)
+    console.log(
+      `handleLeftPanelLinkClick error: Journal not found for id: ${id}`
+    )
     console.log('Journal:', state.getCollection('journal'))
     return
   }
@@ -258,7 +289,9 @@ async function handleDeleteConfirmed(e) {
   modalMessageEl.innerText = ''
   const id = e.detail.id
   const password = document.querySelector('#modal-delete-input').value
-  const { error } = await getWebApp(`${state.getWebAppUrl()}/journal/delete?id=${id}&password=${password}`)
+  const { error } = await getWebApp(
+    `${state.getWebAppUrl()}/journal/delete?id=${id}&password=${password}`
+  )
 
   if (error) {
     modalMessageEl.innerText = error
@@ -303,7 +336,10 @@ async function handleAddPhotoSubmit(e) {
     const compressed = await imageCompression(file, compressionOptions)
     formData.set('file', compressed)
 
-    const { message } = await postWebAppForm(`${state.getWebAppUrl()}/journal/photos/create`, formData)
+    const { message } = await postWebAppForm(
+      `${state.getWebAppUrl()}/journal/photos/create`,
+      formData
+    )
     if (message) {
       console.log(message)
       addPhotoMessage.textContent = message
@@ -325,11 +361,14 @@ async function handleCaptionChange(e) {
 
   const id = parent.dataset.id
 
-  const { message, error } = await postWebAppJson(`${state.getWebAppUrl()}/journal/photos/update`, {
-    id,
-    value: e.target.value,
-    section: 'caption',
-  })
+  const { message, error } = await postWebAppJson(
+    `${state.getWebAppUrl()}/journal/photos/update`,
+    {
+      id,
+      value: e.target.value,
+      section: 'caption',
+    }
+  )
   if (error) {
     photoMessageEl.textContent = error.message
     return
@@ -349,7 +388,9 @@ async function handlePhotoDelete(e) {
   photoMessageEl.textContent = 'Deleting image...'
   const id = parent.dataset.id
 
-  const { error } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/delete?id=${id}`)
+  const { error } = await getWebApp(
+    `${state.getWebAppUrl()}/journal/photos/delete?id=${id}`
+  )
 
   if (error) {
     deleteEl.removeAttribute('disabled')
@@ -369,13 +410,19 @@ async function handlePhotoDelete(e) {
 function populateJournalEntries() {
   const journal = state.get('journal')
   if (!journal) {
-    console.log(`populateJournalEntries error: state does not have journal: ${journal}`)
+    console.log(
+      `populateJournalEntries error: state does not have journal: ${journal}`
+    )
     return
   }
 
   leftPanelList.innerHTML = ''
   for (const { id, location, visit_date } of journal) {
-    const li = createLeftPanelLink({ id, title: createEntryTitle(location, visit_date), cb: handleLeftPanelLinkClick })
+    const li = createLeftPanelLink({
+      id,
+      title: createEntryTitle(location, visit_date),
+      cb: handleLeftPanelLinkClick,
+    })
     leftPanelList.appendChild(li)
   }
 }
@@ -384,7 +431,9 @@ function populateJournalEntries() {
  * Populate the journal photos
  */
 async function populateJournalImages(id) {
-  const { photos } = await getWebApp(`${state.getWebAppUrl()}/journal/photos/read?entry=${id}`)
+  const { photos } = await getWebApp(
+    `${state.getWebAppUrl()}/journal/photos/read?entry=${id}`
+  )
   if (!photos.length) {
     return
   }

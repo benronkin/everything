@@ -6,6 +6,7 @@
 import fs from 'fs'
 import readlineSync from 'readline-sync'
 import { execSync } from 'child_process'
+import { checkStyles } from './checkStyles.js'
 
 // -------------------------------
 // Init
@@ -14,8 +15,13 @@ import { execSync } from 'child_process'
 /**
  *
  */
-function build() {
+async function build() {
   console.clear()
+  const resp = await checkStyles()
+  if (resp) {
+    console.log(resp)
+    process.exit(1)
+  }
   setProdUrl()
   updateAdminPage()
   updateIndexPage()
@@ -83,7 +89,10 @@ function updateFooterPartial() {
     })
     .trim()
   // Update the version in index.html
-  content = content.replace(/<span id="version-number">(.*?)<\/span>/, `<span id="version-number">${newVersion}</span>`)
+  content = content.replace(
+    /<span id="version-number">(.*?)<\/span>/,
+    `<span id="version-number">${newVersion}</span>`
+  )
 
   // Write the file
   fs.writeFileSync(filePath, content, 'utf8')

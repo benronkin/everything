@@ -11,8 +11,8 @@ const MODAL_STYLE = `
     border-radius: 8px;
     margin: auto;
     max-width: 400px;
-    background: var(--gray-accent);
-    color: var(--text-default);
+    background: var(--gray2);
+    color: var(--gray6);
     box-shadow: var(--card-shadow);
   }
   dialog::backdrop {
@@ -38,13 +38,13 @@ const MODAL_STYLE = `
     width: 100%;
     padding: 8px 10px;
     margin: 0;
-    border: 1px solid var(--border-gray);
+    border: 1px solid var(--gray3);
     background: var(--input-bg, var(--gray1));
-    color: var(--text-default);
+    color: var(--gray6);
     border-radius: 4px;
   }
   #modal-delete-btn {
-    background-color: var(--danger-bg);
+    background-color: var(--red3);
     color: var(--danger-text);
     border: none;
     padding: 8px 16px;
@@ -53,8 +53,8 @@ const MODAL_STYLE = `
   }
   #modal-cancel-btn {
     background: transparent;
-    border: 1px solid var(--border-gray);
-    color: var(--text-default);
+    border: 1px solid var(--gray3);
+    color: var(--gray6);
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
@@ -74,8 +74,12 @@ export const MODAL = {
     init: function () {
       const modal = document.querySelector('dialog')
       modal.addEventListener('click', handleModalClick)
-      document.querySelector('#modal-delete-btn').addEventListener('click', handleModalConfirmDeleteClick)
-      document.querySelector('#modal-cancel-btn').addEventListener('click', handleModalCancelClick)
+      document
+        .querySelector('#modal-delete-btn')
+        .addEventListener('click', handleModalConfirmDeleteClick)
+      document
+        .querySelector('#modal-cancel-btn')
+        .addEventListener('click', handleModalCancelClick)
     },
   },
 }
@@ -131,7 +135,11 @@ function handleModalClick(e) {
  * Handle modal confirm delete click
  */
 function handleModalConfirmDeleteClick(e) {
-  document.dispatchEvent(new CustomEvent('delete-confirmed', { detail: { id: modal.dataset.target } }))
+  document.dispatchEvent(
+    new CustomEvent('delete-confirmed', {
+      detail: { id: modal.dataset.target },
+    })
+  )
 }
 
 /**

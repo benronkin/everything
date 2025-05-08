@@ -13,7 +13,7 @@ const css = `
 .select-container {
   display: flex;
   align-items: center;
-  background-color: var(--primary-accent); 
+  background-color: var(--purple2); 
   box-shadow: var(--shadow-small);
   border-radius: 12px;
   padding: 5px 10px;
@@ -22,7 +22,7 @@ const css = `
 .custom-select {
   appearance: none;
   background-color: transparent;
-  color: var(--body-color);
+  color: var(--gray1);
   border: none;
   font-size: 0.9rem; 
   padding: 0 1.5rem 0 0.8rem;
@@ -43,7 +43,7 @@ const css = `
 }
 
 .caret-wrapper i {
-  color: var(--body-color);
+  color: var(--gray1);
   font-size: 0.8rem;
 }
 `

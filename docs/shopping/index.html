@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate"
+    />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
@@ -26,19 +29,22 @@
     <link rel="shortcut icon" href="../img/favicon.ico" />
     <title>Shopping list | Ben Ronkin</title>
   </head>
-  <body class="dark-mode">
+  <body class="u-dark-mode">
     <div class="wrapper">
       <main>
         <div class="container">
           <span id="message"></span>
-          <div id="shopping-container">
-            <div id="top-switches-wrapper" class="flex" style="justify-content: space-between"></div>
-
-            <div id="shopping-suggestions" class="hidden"></div>
-
-            <div id="shopping-div" class="drag-container"></div>
-            <span id="empty-state">Nothing to buy, chef 👨‍🍳</span>
+          <div id="form-wrapper">
+            <div id="suggest-auto-complete"></div>
           </div>
+          <div
+            id="top-switches-wrapper"
+            class="flex"
+            style="justify-content: space-between"
+          ></div>
+
+          <div id="shopping-wrapper"></div>
+          <div id="suggestions-wrapper" class="hidden"></div>
         </div>
       </main>
     </div>

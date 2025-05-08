@@ -6,6 +6,7 @@ import { createIcon } from '../partials/icon.js'
 import { createMainIconGroup } from '../partials/mainIconGroup.js'
 import { createRightDrawer } from '../partials/rightDrawer.js'
 import { createSwitch } from '../partials/switch.js'
+import { createSearch } from '../partials/search.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
 import { setMessage, resizeTextarea, isMobile } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
@@ -14,10 +15,8 @@ import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 // Globals
 // ----------------------
 
-const searchRecipesEl = document.querySelector('#search-recipes')
-const searchRecipesMessageEl = document.querySelector('#search-recipes-message')
-const columnsContainer = document.querySelector('#columns-container')
 const leftPanelList = document.querySelector('#left-panel-list')
+const columnsContainer = document.querySelector('#columns-container')
 const mainPanelEl = document.querySelector('#main-panel')
 const recipeTitleEl = document.querySelector('#recipe-title')
 const recipeRelated = document.querySelector('#recipe-related')
@@ -39,9 +38,6 @@ let shopIngredientsBtn
 
 /* When page is loaded */
 document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
-
-/* When search recipes input key down */
-searchRecipesEl.addEventListener('keydown', handleRecipeSearch)
 
 /* When recipe field loses focus */
 document.querySelectorAll('.field').forEach((field) => {
@@ -76,11 +72,10 @@ async function handleDOMContentLoaded() {
   setMessage('Loading...')
 
   const { recipes } = await getWebApp(`${state.getWebAppUrl()}/recipes/latest`)
+  state.setRecipes(recipes)
+  state.setDefaultPage('recipes')
 
   setMessage('')
-
-  state.setRecipes(recipes)
-  populateRecipes()
 
   // create and add page elements
   const wrapperEl = document.querySelector('.wrapper')
@@ -92,16 +87,29 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup({
-    elements: [createIcon({ id: 'add-recipe', className: 'fa-plus' }), createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' })],
+    children: [
+      createIcon({ id: 'add-recipe', className: 'fa-plus' }),
+      createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' }),
+    ],
   })
   document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
-  addRecipeBtn = document.querySelector('#add-recipe')
+  addRecipeBtn = document.querySelector('[data-id="add-recipe"]')
   addRecipeBtn.addEventListener('click', handleRecipeCreate)
 
-  shopIngredientsBtn = document.querySelector('#shop-ingredients')
+  shopIngredientsBtn = document.querySelector('[data-id="shop-ingredients"]')
   shopIngredientsBtn.addEventListener('click', handleShopIngredientsClick)
 
-  const switchEl = createSwitch({ id: 'related-recipes-switch', classList: ['ml-20'] })
+  const searchRecipesEl = createSearch({
+    searchResultsTarget: document.querySelector('#left-panel'),
+    searchCb: searchRecipes,
+    searchResultsCb: handleSearchResult,
+  })
+  document.querySelector('#left-panel').prepend(searchRecipesEl)
+
+  const switchEl = createSwitch({
+    id: 'related-recipes-switch',
+    classList: ['u-ml-20'],
+  })
   switchEl.addEventListener('click', handleRelatedSwitchClick)
   document.querySelector('#related-recipes-header').appendChild(switchEl)
 
@@ -109,7 +117,7 @@ async function handleDOMContentLoaded() {
   wrapperEl.appendChild(footerEl)
   initDialog()
 
-  state.setDefaultPage('recipes')
+  populateRecipes()
 
   if (isMobile()) {
     mainPanelEl.classList.add('hidden')
@@ -143,38 +151,14 @@ async function handleRecipeCreate() {
   }
   state.push('recipes', newRecipe)
 
-  const li = createLeftPanelLink({ id, title: newRecipe.title, cb: handleLeftPanelLinkClick })
+  const li = createLeftPanelLink({
+    id,
+    title: newRecipe.title,
+    cb: handleLeftPanelLinkClick,
+  })
   leftPanelList.appendChild(li)
   li.click()
   addRecipeBtn.disabled = false
-}
-
-/**
- * Handle recipe search
- */
-async function handleRecipeSearch(e) {
-  if (e.key !== 'Enter') {
-    return
-  }
-  const value = e.target.value.toLowerCase().trim()
-  if (value.length === 0) {
-    return
-  }
-  // hide the left panel if mobile
-  if (isMobile()) {
-    mainIconGroup.expand()
-  }
-
-  searchRecipesMessageEl.textContent = 'Searching...'
-  const { recipes } = await getSearchedRecipes(value)
-  if (recipes.length === 0) {
-    searchRecipesMessageEl.textContent = 'No recipes found'
-  } else {
-    searchRecipesMessageEl.textContent = ''
-  }
-
-  state.setRecipes(recipes)
-  populateRecipes()
 }
 
 /**
@@ -190,11 +174,14 @@ async function handleFieldChange(e) {
   state.setRecipeSection(id, recipeSection, elem.value)
 
   try {
-    const { message, error } = await postWebAppJson(`${state.getWebAppUrl()}/recipes/update`, {
-      id,
-      value: elem.value,
-      section: recipeSection,
-    })
+    const { message, error } = await postWebAppJson(
+      `${state.getWebAppUrl()}/recipes/update`,
+      {
+        id,
+        value: elem.value,
+        section: recipeSection,
+      }
+    )
     if (error) {
       throw new Error(error)
     }
@@ -214,15 +201,20 @@ async function handleLeftPanelLinkClick(elem) {
   const recipeId = elem.dataset.id
   const recipe = state.getRecipeById(recipeId)
   if (!recipe) {
-    console.log(`handleLeftPanelLinkClick error: Recipe not found for id: ${recipeId}`)
+    console.log(
+      `handleLeftPanelLinkClick error: Recipe not found for id: ${recipeId}`
+    )
     console.log('recipes:', state.getRecipes())
     return
   }
 
   loadRecipe(recipe)
-  const resp = await postWebAppJson(`${state.getWebAppUrl()}/recipes/update-access`, {
-    id: recipeId,
-  })
+  const resp = await postWebAppJson(
+    `${state.getWebAppUrl()}/recipes/update-access`,
+    {
+      id: recipeId,
+    }
+  )
   const { message } = resp
   console.log(message)
 }
@@ -245,12 +237,13 @@ function handleRecipeDeleteBtnClick() {
  * Handle delete recipe confirmation
  */
 async function handleDeleteRecipe(e) {
-  console.log('here')
   const modalMessageEl = document.querySelector('#modal-message')
   modalMessageEl.innerText = ''
   const id = e.detail.id
   const password = document.querySelector('#modal-delete-input').value
-  const { error } = await getWebApp(`${state.getWebAppUrl()}/recipes/delete?id=${id}&password=${password}`)
+  const { error } = await getWebApp(
+    `${state.getWebAppUrl()}/recipes/delete?id=${id}&password=${password}`
+  )
 
   if (error) {
     modalMessageEl.innerText = error
@@ -268,9 +261,16 @@ async function handleDeleteRecipe(e) {
 async function handleShopIngredientsClick() {
   shopIngredientsBtn.disabled = true
   // get the recipe's ingredients
-  const newItems = recipeIngredients.value.split('\n').map((i) => i.trim().toLowerCase())
+  const newItems = recipeIngredients.value
+    .split('\n')
+    .map((i) => i.trim().toLowerCase())
+  if (!newItems.length || newItems[0] === '') {
+    return
+  }
   // get the server's shopping list
-  let { shoppingList } = await getWebApp(`${state.getWebAppUrl()}/shopping`)
+  let { shoppingList } = await getWebApp(
+    `${state.getWebAppUrl()}/shopping/read`
+  )
   // combine recipe ingredients with shopping list and dedup ingredients
   shoppingList = shoppingList.split(',').map((i) => i.trim().toLowerCase())
   const allItems = [...new Set([...newItems, ...shoppingList])].filter(Boolean)
@@ -290,7 +290,9 @@ async function handleShopIngredientsClick() {
 function populateRecipes() {
   const recipes = state.getRecipes()
   if (!recipes) {
-    console.log(`populateRecipes error: state does not have recipes: ${recipes}`)
+    console.log(
+      `populateRecipes error: state does not have recipes: ${recipes}`
+    )
     return
   }
 
@@ -328,15 +330,28 @@ function loadRecipe(recipe) {
 /**
  * Get the searched recipes
  */
-async function getSearchedRecipes(q) {
-  const data = await getWebApp(`${state.getWebAppUrl()}/recipes/search?q=${q}`)
+async function searchRecipes(q) {
+  const data = await getWebApp(
+    `${state.getWebAppUrl()}/recipes/search?q=${q.trim().toLowerCase()}`
+  )
 
   const { recipes, message } = data
   if (message) {
-    console.log(`getSearchedRecipes error: ${message}`)
-    return { error: message }
+    console.log(`searchRecipes error: ${message}`)
+    return message
   }
-  return { recipes }
+  return recipes
+}
+
+/**
+ * Handle results coming from the search partial
+ */
+async function handleSearchResult(results) {
+  if (isMobile()) {
+    mainIconGroup.expand()
+  }
+  state.setRecipes(results)
+  populateRecipes()
 }
 
 /**
