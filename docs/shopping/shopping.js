@@ -301,7 +301,7 @@ function addPageElements() {
   field = createField({
     element: suggestSwitch,
     label: 'Suggest',
-    labelPosition: 'bottom',
+    labelPosition: 'left',
   })
   switchWrapper.appendChild(field)
 
@@ -348,9 +348,10 @@ function addPageElements() {
 /**
  * Create a shopping suggestion element
  */
-function createShoppingSuggestion(text) {
+function createShoppingSuggestion({ text, selected = false }) {
   const suggestion = createSuperListItem({
     text,
+    selected,
     textColor: 'var(--gray6)',
     bgColor: 'var(--teal2)',
     children: [
@@ -420,8 +421,8 @@ function populateShopAutoComplete() {
   if (suggests.length === 0) {
     return
   }
-  for (const s of suggests) {
-    const div = createShoppingSuggestion(s)
+  for (const text of suggests) {
+    const div = createShoppingSuggestion({ text, selected: true })
     suggestAutoComplete.appendChild(div)
   }
 }

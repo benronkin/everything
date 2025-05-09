@@ -22,8 +22,8 @@ const css = `
 .drag-container {
   margin-top: 1rem;
 }
-.draggable-target, 
-.draggable-target .fa-bars {
+.draggable-target[data-state="drag"], 
+.draggable-target[data-state="drag"] .fa-bars {
   cursor: move;
 }
 `
@@ -112,6 +112,7 @@ function injectStyle(css) {
 function createElement({
   draggable: canDrag = true,
   text,
+  selected,
   bgColor,
   textColor,
   onClick,
@@ -154,6 +155,9 @@ function createElement({
   div.select = select.bind(div)
   div.unselect = unselect.bind(div)
 
+  if (selected) {
+    div.select()
+  }
   return div
 }
 
