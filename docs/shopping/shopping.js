@@ -259,16 +259,16 @@ function handleSuggestionTrashClick(e) {
 /**
  * Set recipe event listeners
  */
-async function initShopping(shoppingList, shoppingSuggestions) {
-  state.set('shopping-list', shoppingList.split(','))
-  state.set('suggestions', shoppingSuggestions.split(','))
-  if (shoppingList.length) {
-    shoppingListEl.setSilent(true)
-    for (const item of shoppingList.split(',')) {
-      addShoppingItemToList(item)
-    }
-    shoppingListEl.setSilent(false)
+async function initShopping(shoppingStr, suggestionsStr) {
+  const shoppingArr = shoppingStr.split(',').filter((el) => el.length)
+  const suggestionsArr = suggestionsStr.split(',').filter((el) => el.length)
+  state.set('shopping-list', shoppingArr)
+  state.set('suggestions', suggestionsArr)
+  shoppingListEl.setSilent(true)
+  for (const item of shoppingArr) {
+    addShoppingItemToList(item)
   }
+  shoppingListEl.setSilent(false)
 }
 
 /**
@@ -399,8 +399,8 @@ function displaySuggestions() {
 
   suggestions = suggestions.filter((s) => !shoppingItems.includes(s))
   suggestions.sort()
-  for (const s of suggestions) {
-    const child = createShoppingSuggestion(s)
+  for (const text of suggestions) {
+    const child = createShoppingSuggestion({ text, selected: false })
     suggestionsEl.appendChild(child)
   }
 }

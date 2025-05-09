@@ -127,7 +127,10 @@ function createElement({
   div.innerHTML = html
   div._onClick = onClick
 
-  div.querySelector('span').textContent = text.toString().trim().toLowerCase()
+  div.querySelector('span').textContent = (text || '')
+    .toString()
+    .trim()
+    .toLowerCase()
 
   for (const child of children) {
     div.querySelector('.i-box').appendChild(child)
