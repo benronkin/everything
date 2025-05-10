@@ -20,7 +20,9 @@ export function setMessage(value) {
  * Detect if mobile device
  */
 export function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
 }
 
 /**
@@ -36,7 +38,12 @@ export function resizeTextarea(textarea) {
 
   // If the scroll height is more than the default height, expand the textarea
   if (minHeight > textarea.clientHeight) {
-    textarea.style.height = minHeight + 'px'
+    textarea.style.height = minHeight + 5 + 'px'
+  }
+
+  if (isMobile()) {
+    const height = parseFloat(textarea.style.height) || 0
+    textarea.style.height = height / 2.4 + 'px'
   }
 }
 
