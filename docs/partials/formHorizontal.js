@@ -45,7 +45,7 @@ const html = `
         <i class="fa-solid"></i>
         <input  />
       </div>
-      <button class="primary" type="submit" class="hidden"></button>
+      <button class="primary hidden" type="submit"></button>
   </form>
   <span class="message"></span>
 `

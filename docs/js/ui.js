@@ -3,6 +3,7 @@
 // ----------------------
 
 const messageEl = document.querySelector('#message')
+let sharedStyleEl = null
 
 // ------------------------
 // Exported functions
@@ -23,6 +24,18 @@ export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   )
+}
+
+/**
+ * Inject partials' css to the dom
+ */
+export function injectStyle(css) {
+  if (!sharedStyleEl) {
+    sharedStyleEl = document.createElement('style')
+    sharedStyleEl.setAttribute('data-ui-style', 'true')
+    document.head.appendChild(sharedStyleEl)
+  }
+  sharedStyleEl.textContent += '\n' + css
 }
 
 /**

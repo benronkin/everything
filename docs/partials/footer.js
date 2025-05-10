@@ -1,3 +1,5 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
@@ -38,17 +40,6 @@ export function createFooter() {
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- *
- */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  *
