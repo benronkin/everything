@@ -7,6 +7,12 @@ import { enableDragging, enableClicking } from '../js/drag.js'
 let cssInjected = false
 
 const css = `
+.main-super-list-wrapper {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  padding: 10px 0;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
+}
 `
 
 // -------------------------------
@@ -36,6 +42,15 @@ function handleItemClick(e, superListEl) {
       item.unselect()
     }
   })
+
+  superListEl.dispatchEvent(
+    new CustomEvent('selection-changed', {
+      detail: {
+        selected: !!superListEl.getSelected(),
+        value: superListEl.getSelected()?.querySelector('span').textContent,
+      },
+    })
+  )
 }
 
 /**
@@ -78,6 +93,8 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
   div.addChildren(children)
   div.enableDragging = () => enableDragging(div)
   div.enableClicking = () => enableClicking(div)
+  div.getData = getData.bind(div)
+  div.getSelected = getSelected.bind(div)
   div.has = has.bind(div)
   div.listItems = listItems.bind(div)
   if (onChange) {
@@ -85,6 +102,7 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
   }
   div.reset = reset.bind(div)
   div.setSilent = setSilent.bind(div)
+  div.updateItem = updateItem.bind(div)
 
   /* when super-list-item invokes a custom click event */
   div.addEventListener('super-list-item-clicked', (e) =>
@@ -111,12 +129,15 @@ function addChild(child, pos = 'top') {
   } else {
     this.appendChild(child)
   }
-  // if (sortSwitch.classList.contains('on')) {
-  //   makeElementDraggable(shoppingItem)
-  //   enableDragging()
-  // } else {
-  //   makeElementClickable(shoppingItem)
-  // }
+
+  this.dispatchEvent(
+    new CustomEvent('selection-changed', {
+      detail: {
+        selected: !!this.getSelected(),
+        value: this.getSelected()?.querySelector('span').textContent,
+      },
+    })
+  )
   this.dispatchEvent(new CustomEvent('list-changed'))
 }
 
@@ -138,7 +159,34 @@ function addChildren(children) {
   for (const child of children) {
     this.appendChild(child)
   }
+
+  this.dispatchEvent(
+    new CustomEvent('selection-changed', {
+      detail: {
+        selected: !!this.getSelected(),
+        value: this.getSelected()?.querySelector('span').textContent,
+      },
+    })
+  )
   this.dispatchEvent(new CustomEvent('list-changed'))
+}
+
+/**
+ * Get ids, texts, and selected status of all items
+ */
+function getData() {
+  return [...this.querySelectorAll('.super-list-item')].map((el) => ({
+    id: el.id,
+    text: el.querySelector('span')?.textContent.trim(),
+    selected: el.dataset.selected === 'true',
+  }))
+}
+
+/**
+ * Get the selected superListItem
+ */
+function getSelected() {
+  return this.querySelector('.super-list-item[data-selected="true"]')
 }
 
 /**
@@ -167,6 +215,15 @@ function listItems() {
  */
 function reset() {
   this.querySelectorAll('.super-list-item').forEach((child) => child.unselect())
+
+  this.dispatchEvent(
+    new CustomEvent('selection-changed', {
+      detail: {
+        selected: !!this.getSelected(),
+        value: this.getSelected()?.querySelector('span').textContent,
+      },
+    })
+  )
 }
 
 /**
@@ -174,4 +231,18 @@ function reset() {
  */
 function setSilent(silent) {
   this._silent = silent
+}
+
+/**
+ * update the sueprListItem by its id
+ */
+function updateItem(id, text) {
+  const item = this.querySelector(`#${id}`)
+  if (item) {
+    item.querySelector('span').textContent = text
+  }
+
+  this.dispatchEvent(new CustomEvent('list-changed'))
+
+  return item
 }

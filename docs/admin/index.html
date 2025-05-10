@@ -39,23 +39,9 @@
           <div
             id="login-container"
             class="card translucent"
-            style="margin-top: 30px; align-items: flex-start"
+            style="margin-top: 30px"
           >
             <h4>Enter admin key to gain access</h4>
-            <form id="login-form" class="form-horizontal">
-              <div class="input-icon-group">
-                <i class="fa-solid fa-key"></i>
-                <input
-                  type="password"
-                  name="key"
-                  placeholder="key"
-                  value="45VGrWWp983321pplRbmferrtE3450922DpqWemmv"
-                />
-              </div>
-              <button id="login-btn" class="primary" type="submit">
-                Submit
-              </button>
-            </form>
           </div>
         </div>
 
@@ -69,6 +55,15 @@
             <div id="main-panel"></div>
           </div>
         </div>
+
+        <!-- admin templates-->
+        <template id="top-switches-template">
+          <div
+            data-role="top-switches"
+            class="flex u-mb-20"
+            style="justify-content: space-between"
+          ></div>
+        </template>
       </main>
     </div>
     <script src="./admin.js" type="module"></script>

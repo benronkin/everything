@@ -4,15 +4,29 @@
 
 let cssInjected = false
 
-const drawerString = `
-<ul class="nav">
-  <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
-  <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
-  <li data-value="journal"><a href="../journal/index.html">Journal</a></li>
-</ul>
+const html = `
+<div class="nav-wrapper">
+  <ul class="nav">
+    <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
+    <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
+    <li data-value="journal"><a href="../journal/index.html">Journal</a></li>
+  </ul>
+  <ul class="nav nav-admin">
+    <li data-value="admin"><a href="../admin/index.html">Admin</a></li>
+  </ul>
+</div>
 `
 
 const css = `
+.nav-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.nav-admin {
+  margin-bottom: 20px;
+}
 .nav li {
   font-size: 1.1rem;
   text-align: left;
@@ -83,7 +97,7 @@ function injectStyle(css) {
 function createElement({ active }) {
   const drawerEl = document.createElement('div')
   drawerEl.dataset.id = 'right-drawer'
-  drawerEl.innerHTML = drawerString
+  drawerEl.innerHTML = html
 
   if (active) {
     drawerEl.querySelector(`[data-value="${active}"`).classList.add('active')

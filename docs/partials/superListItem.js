@@ -116,14 +116,15 @@ function createElement({
   bgColor,
   textColor,
   onClick,
-  children,
+  children = [],
+  id,
 }) {
   const div = document.createElement('div')
   div.classList.add('super-list-item')
   if (canDrag) {
     div.classList.add('draggable-target')
   }
-  div.setAttribute('id', generateUUID())
+  div.setAttribute('id', id || generateUUID())
   div.innerHTML = html
   div._onClick = onClick
 

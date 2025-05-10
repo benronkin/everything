@@ -142,12 +142,6 @@ ul {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   animation: fadeInSlideDown 300ms ease-out;
 }
-#shopping-wrapper {
-  background-color: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
-  padding: 10px 0;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
-}
 #suggestions-wrapper {
   background-color: rgba(255, 255, 255, 0.015);
   border-left: 3px solid var(--teal3);
@@ -185,7 +179,7 @@ ul {
 #main-panel textarea {
   width: 100%;
   margin: 10px 0;
-  border-bottom: 1px solid var(--gray1);
+  border-bottom: 1px solid var(--gray3);
 }
 #related-recipes-header {
   margin-top: 20px;
@@ -291,7 +285,6 @@ ul {
 .input-icon-group input {
   padding-left: 32px;
 }
-
 .u-mb-20 {
   margin-bottom: 20px;
 }

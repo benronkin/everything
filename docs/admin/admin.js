@@ -1,5 +1,6 @@
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
+import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createLeftPanelLink } from '../partials/leftPanelLink.js'
 import { createMainIconGroup } from '../partials/mainIconGroup.js'
 import { createRightDrawer } from '../partials/rightDrawer.js'
@@ -12,10 +13,7 @@ import { listRecipeCategories } from './categories.js'
 // Globals
 // ----------------------
 
-const columnsContainer = document.querySelector('#columns-container')
 const loginContainer = document.querySelector('#login-container')
-const loginForm = document.querySelector('#login-form')
-const loginBtn = document.querySelector('#login-btn')
 const leftPanelList = document.querySelector('#left-panel-list')
 let mainIconGroup
 
@@ -27,9 +25,6 @@ let mainIconGroup
 document.addEventListener('DOMContentLoaded', async () => {
   handleDOMContentLoaded()
 })
-
-/* When login form is submitted */
-loginForm.addEventListener('submit', handleLoginFormSubmit)
 
 // ------------------------
 // Event handler functions
@@ -45,11 +40,26 @@ async function handleDOMContentLoaded() {
   const navEl = createNav({ title: 'Recipes: Admin', wideNav: true })
   wrapperEl.prepend(navEl)
 
-  const rightDrawerEl = createRightDrawer({ active: 'recipes' })
+  const rightDrawerEl = createRightDrawer({ active: 'admin' })
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup()
   document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
+
+  // set the login form
+  const loginFormEl = createFormHorizontal({
+    formId: 'login-form',
+    inputType: 'password',
+    inputName: 'key',
+    inputPlaceholder: 'Enter admin key',
+    iClass: 'fa-key',
+    submitText: 'Submit',
+    value: '45VGrWWp983321pplRbmferrtE3450922DpqWemmv',
+    events: {
+      submit: handleLoginFormSubmit,
+    },
+  })
+  document.querySelector('#login-container').appendChild(loginFormEl)
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
@@ -60,15 +70,21 @@ async function handleDOMContentLoaded() {
  */
 async function handleLoginFormSubmit(e) {
   e.preventDefault()
-  loginBtn.disabled = true
+  const form = e.target.closest('.form-horizontal')
+  const btn = form.querySelector('button')
+
+  btn.disabled = true
   setMessage('Validating key. Please wait...')
 
-  const formData = new FormData(loginForm)
+  const formData = new FormData(form)
   const key = formData.get('key')
   try {
-    const { error, message, data } = await postWebAppJson(`${state.getWebAppUrl()}/admin/key-submit`, {
-      key,
-    })
+    const { error, message, data } = await postWebAppJson(
+      `${state.getWebAppUrl()}/admin/key-submit`,
+      {
+        key,
+      }
+    )
     if (error) {
       console.error(error)
       setMessage(error.message)
@@ -88,7 +104,7 @@ async function handleLoginFormSubmit(e) {
     console.error(error)
     setMessage(error.message)
   }
-  loginBtn.disabled = false
+  btn.disabled = false
 }
 
 // ------------------------
@@ -99,11 +115,17 @@ async function handleLoginFormSubmit(e) {
  * Populate the admin sidebar's link list
  */
 function showAdminRoutes(data) {
-  const c = document.querySelector('#columns-container').closest('.container-wide')
+  const c = document
+    .querySelector('#columns-container')
+    .closest('.container-wide')
   c.classList.remove('hidden')
   loginContainer.classList.add('hidden')
   for (const { label, endpoint } of data) {
-    const li = createLeftPanelLink({ id: endpoint, title: label, cb: handleLeftPanelLinkClick })
+    const li = createLeftPanelLink({
+      id: endpoint,
+      title: label,
+      cb: handleLeftPanelLinkClick,
+    })
     leftPanelList.appendChild(li)
   }
 }

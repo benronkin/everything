@@ -60,7 +60,7 @@ export async function addItemsToShoppingList(
 }
 
 // ---------------------------------------
-// Event handlers for hard-coded elements
+// Event listeners
 // ---------------------------------------
 
 // since shopping is a module imported by recipes,
@@ -77,7 +77,7 @@ if (window.location.pathname.includes('/shopping/')) {
 }
 
 // ------------------------
-// Event handler functions
+// Event handlers
 // ------------------------
 
 /**
@@ -313,6 +313,7 @@ function addPageElements() {
     inputPlaceholder: 'Add item',
     inputAutoComplete: 'off',
     iClass: 'fa-carrot',
+    submitText: 'ADD',
   })
   formWrapper.prepend(shoppingFormEl)
   shoppingInput = shoppingFormEl.querySelector('input')
@@ -331,6 +332,7 @@ function addPageElements() {
   // shopping-list
   shoppingListEl = createSuperList({
     id: 'shopping-list',
+    className: 'main-super-list-wrapper',
     draggable: true,
     emptyState: 'Nothing to buy, chef 👨‍🍳',
     onChange: handleShoppingListChange,
