@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const html = `
 <div class="nav-wrapper">
@@ -68,28 +68,15 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createRightDrawer({ active } = {}) {
+export function createRightDrawer(config) {
   injectStyle(css)
-  const el = createElement({ active })
+  const el = createElement(config)
   return el
 }
 
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  cssInjected = true
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-}
 
 /**
  *

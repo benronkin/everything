@@ -1,10 +1,9 @@
 import { createFormHorizontal } from './formHorizontal.js'
+import { injectStyle } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 `
@@ -16,45 +15,14 @@ const css = `
 /**
  *
  */
-export function createSearch({ searchCb, searchResultsCb }) {
+export function createSearch(config) {
   injectStyle(css)
-  return createElement({ searchCb, searchResultsCb })
+  return createElement(config)
 }
 
 // -------------------------------
-// Helpers
+// Event handlers
 // -------------------------------
-
-/**
- *
- */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  cssInjected = true
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-}
-
-/**
- *
- */
-function createElement({ searchCb, searchResultsCb }) {
-  const wrapper = document.createElement('div')
-  wrapper.className = 'search-wrapper'
-
-  const searchForm = createFormHorizontal({
-    inputType: 'search',
-    inputName: 'search',
-    inputPlaceholder: 'Search recipes',
-    iClass: 'fa-magnifying-glass',
-  })
-
-  wrapper.appendChild(searchForm)
-  wrapper.querySelector('form').addEventListener('submit', (e) => handleFormSubmit({ e, wrapper, searchCb, searchResultsCb }))
-
-  return wrapper
-}
 
 /**
  *
@@ -78,4 +46,32 @@ async function handleFormSubmit({ e, wrapper, searchCb, searchResultsCb }) {
     message.textContent = `${results.length} results found`
   }
   searchResultsCb(results)
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function createElement({ searchCb, searchResultsCb }) {
+  const wrapper = document.createElement('div')
+  wrapper.className = 'search-wrapper'
+
+  const searchForm = createFormHorizontal({
+    inputType: 'search',
+    inputName: 'search',
+    inputPlaceholder: 'Search recipes',
+    iClass: 'fa-magnifying-glass',
+  })
+
+  wrapper.appendChild(searchForm)
+  wrapper
+    .querySelector('form')
+    .addEventListener('submit', (e) =>
+      handleFormSubmit({ e, wrapper, searchCb, searchResultsCb })
+    )
+
+  return wrapper
 }

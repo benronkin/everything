@@ -1,7 +1,9 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-let cssInjected = false
+
 let listenersBound = false
 
 const css = `
@@ -43,29 +45,16 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createFileInput({ id, label = 'Select file', accept, icon } = {}) {
+export function createFileInput(config) {
   injectStyle(css)
   bindEventHandlers()
-  const el = createElement({ id, html, label, accept, icon })
+  const el = createElement(config)
   return el
 }
 
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  cssInjected = true
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-}
 
 /**
  * Bind event handlers once

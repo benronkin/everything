@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 .select-wrapper {
@@ -63,24 +63,16 @@ const html = `
 // Exported
 // -------------------------------
 
-export function createSelect({ id, options = [] }) {
+export function createSelect(config) {
   injectStyle(css)
-  return createElement({ id, options })
+  return createElement(config)
 }
 
 // -------------------------------
 // Helpers
 // -------------------------------
 
-function injectStyle(css) {
-  if (cssInjected) return
-  cssInjected = true
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-}
-
-function createElement({ id, options }) {
+function createElement({ id, options = [] }) {
   const el = document.createElement('div')
   el.innerHTML = html
   const wrapper = el.firstElementChild

@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 .journal-photo {
@@ -43,32 +43,14 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createImageGalleryItem({
-  id,
-  imgSrc,
-  caption,
-  expanderCb,
-  inputCb,
-  trashCb,
-} = {}) {
+export function createImageGalleryItem(config) {
   injectStyle(css)
-  return createElement({ id, imgSrc, caption, expanderCb, inputCb, trashCb })
+  return createElement(config)
 }
 
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- *
- */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  *

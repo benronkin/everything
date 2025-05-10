@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 .switch {
@@ -60,14 +60,9 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createSwitch({
-  id,
-  iconOff = false,
-  iconOn,
-  classList = [],
-} = {}) {
+export function createSwitch(config) {
   injectStyle(css)
-  const el = createElement({ id, html, iconOff, iconOn, classList })
+  const el = createElement(config)
   return el
 }
 
@@ -76,22 +71,9 @@ export function createSwitch({
 // -------------------------------
 
 /**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
-
-/**
  * Create the HTML element
  */
-function createElement({ id, html, iconOff, iconOn, classList }) {
+function createElement({ id, html, iconOff, iconOn, classList = [] }) {
   const switchEl = document.createElement('div')
   switchEl.innerHTML = html
   switchEl.setAttribute('id', id)

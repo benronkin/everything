@@ -4,8 +4,6 @@ import { injectStyle } from '../js/ui.js'
 // Globals
 // -------------------------------
 
-let cssInjected = false
-
 const css = `
 footer {
   padding: 20px;

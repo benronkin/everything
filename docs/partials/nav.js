@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 nav {
@@ -68,17 +68,9 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createNav({
-  title,
-  disableRightDrawer = false,
-  wideNav = false,
-} = {}) {
+export function createNav(config) {
   injectStyle(css)
-  return createElement({
-    title,
-    disableRightDrawer,
-    wideNav,
-  })
+  return createElement(config)
 }
 
 // -------------------------------
@@ -100,18 +92,7 @@ function handleToggleRightDrawer() {
 /**
  *
  */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
-
-/**
- *
- */
-function createElement({ title, disableRightDrawer, wideNav }) {
+function createElement({ title, disableRightDrawer = false, wideNav = false }) {
   const navEl = document.createElement('nav')
   navEl.innerHTML = html
   navEl.querySelector('h3').innerHTML = title

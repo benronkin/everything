@@ -1,10 +1,9 @@
 import { createIcon } from './icon.js'
+import { injectStyle } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 #main-icon-group {
@@ -57,19 +56,6 @@ export function createMainIconGroup(config) {
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  * Create the HTML element.

@@ -1,10 +1,9 @@
 import { enableDragging, enableClicking } from '../js/drag.js'
+import { injectStyle } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 .main-super-list-wrapper {
@@ -65,17 +64,6 @@ function handleListChanged() {
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- *
- */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  *

@@ -1,25 +1,27 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
 
-let cssInjected = false
-
 const css = `
-
 `
 
-const formString = `
- 
+const html = `
 `
 
 // -------------------------------
 // Exported functions
 // -------------------------------
 
-export function create___({} = {}) {
+export function create(config) {
   injectStyle(css)
-  return createElement({})
+  return createElement(config)
 }
+
+// -------------------------------
+// Event handlers
+// -------------------------------
 
 // -------------------------------
 // Helpers
@@ -28,18 +30,7 @@ export function create___({} = {}) {
 /**
  *
  */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
-
-/**
- *
- */
-function createElement({}) {
+function createElement({} = {}) {
   const el = document.createElement('div')
   el.innerHTML = html
 

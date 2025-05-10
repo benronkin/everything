@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 .form-field {
@@ -24,9 +24,9 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createField({ element, label, labelPosition = 'left', classList = [], labelFor } = {}) {
+export function createField(config) {
   injectStyle(css)
-  const el = createElement({ element, label, labelPosition, classList, labelFor })
+  const el = createElement(config)
   return el
 }
 
@@ -35,23 +35,17 @@ export function createField({ element, label, labelPosition = 'left', classList 
 // -------------------------------
 
 /**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
-
-/**
  * Create the HTML element.
- * labelFor allows you to target elements nested in wrappers, dynamic elements, etc
+ * labelFor allows you to target elements
+ * nested in wrappers, dynamic elements, etc
  */
-function createElement({ element, label, labelPosition, classList, labelFor }) {
+function createElement({
+  element,
+  label,
+  labelPosition = 'left',
+  classList = [],
+  labelFor,
+}) {
   const fieldEl = document.createElement('div')
   fieldEl.className = 'form-field'
   if (classList.length) {

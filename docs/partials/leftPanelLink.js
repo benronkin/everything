@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // ------------------------
 // Globals
 // ------------------------
-
-let cssInjected = false
 
 const css = `
 .left-panel-link {
@@ -24,28 +24,15 @@ const css = `
 /**
  * Create a sidebar link element
  */
-export function createLeftPanelLink({ id, title, icon, cb }) {
+export function createLeftPanelLink(config) {
   injectStyle(css)
-  const el = createElement({ id, title, icon, cb })
+  const el = createElement(config)
   return el
 }
 
 // ------------------------
 // Helpers
 // ------------------------
-
-/**
- * Inject style sheet once
- */
-function injectStyle(css) {
-  if (cssInjected) {
-    return
-  }
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  * Create the HTML element.

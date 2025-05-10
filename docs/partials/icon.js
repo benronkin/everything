@@ -1,8 +1,8 @@
+import { injectStyle } from '../js/ui.js'
+
 // -------------------------------
 // Globals
 // -------------------------------
-
-let cssInjected = false
 
 const css = `
 i {
@@ -22,25 +22,14 @@ i.secondary {
 // Exported functions
 // -------------------------------
 
-export function createIcon({ id, className, onClick } = {}) {
+export function createIcon(config) {
   injectStyle(css)
-  return createElement({ id, className, onClick })
+  return createElement(config)
 }
 
 // -------------------------------
 // Helpers
 // -------------------------------
-
-/**
- *
- */
-function injectStyle(css) {
-  if (cssInjected || !css) return
-  const style = document.createElement('style')
-  style.textContent = css
-  document.head.appendChild(style)
-  cssInjected = true
-}
 
 /**
  *
