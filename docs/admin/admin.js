@@ -7,7 +7,8 @@ import { createRightDrawer } from '../partials/rightDrawer.js'
 import { setMessage } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { postWebAppJson } from '../js/io.js'
-import { listRecipeCategories } from './categories.js'
+import { listRecipeCategories } from './recipeCategories.js'
+import { listRecipes } from './recipes.js'
 
 // ----------------------
 // Globals
@@ -135,8 +136,11 @@ function showAdminRoutes(data) {
  */
 function handleLeftPanelLinkClick(el) {
   switch (el.dataset.id) {
-    case 'admin-recipe-cateogires':
+    case 'admin-recipe-cateogries':
       listRecipeCategories()
+      break
+    case 'admin-recipes':
+      listRecipes()
       break
   }
 }

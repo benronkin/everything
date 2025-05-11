@@ -17,7 +17,7 @@ const html = `
 /**
  *
  */
-export function create(config) {
+export function createSpan(config) {
   injectStyle(css)
   return createElement(config)
 }
@@ -33,9 +33,10 @@ export function create(config) {
 /**
  *
  */
-function createElement({} = {}) {
-  const el = document.createElement('div')
+function createElement({ text } = {}) {
+  const el = document.createElement('span')
   el.innerHTML = html
+  el.textContent = text
 
   return el
 }

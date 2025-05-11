@@ -2,6 +2,7 @@ import { getWebApp, postWebAppJson } from '../js/io.js'
 import { state } from '../js/state.js'
 import { createField } from '../partials/formField.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
+import { createIcon } from '../partials/icon.js'
 import { createSuperList } from '../partials/superList.js'
 import { createSuperListItem } from '../partials/superListItem.js'
 import { createSwitch } from '../partials/switch.js'
@@ -81,6 +82,12 @@ export async function listRecipeCategories() {
       id,
       textColor: 'var(--gray6)',
       bgColor: 'var(--purple2)',
+      children: [
+        createIcon({
+          className: 'fa-trash hidden',
+          onClick: handleCategoryTrashClick,
+        }),
+      ],
     })
     categoriesEl.appendChild(cat)
   }
@@ -128,7 +135,7 @@ function handleCategoryFormSubmit(e) {
 
   const selectedItem = categoriesEl.getSelected()
   if (selectedItem) {
-    categoriesEl.updateItem(selectedItem.getAttribute('id'), category)
+    categoriesEl.updateChild(selectedItem.getAttribute('id'), category)
   } else {
     const cat = createSuperListItem({
       text: category,
@@ -159,7 +166,22 @@ function handleCategorySelectionChange(e) {
 /**
  *
  */
-function handleCategoriesListChange() {
-  const items = categoriesEl.getData()
-  console.log('items', items)
+async function handleCategoriesListChange() {
+  const categories = categoriesEl.getData()
+  const { status, message } = await postWebAppJson(
+    `${state.getWebAppUrl()}/recipes/categories/update`,
+    { categories }
+  )
+
+  console.log('status', status)
+  console.log('message', message)
+}
+
+/**
+ * Handle the category trash click
+ */
+function handleCategoryTrashClick(e) {
+  const el = e.target.closest('.super-list-item')
+  const id = el.getAttribute('id')
+  categoriesEl.removeChild(id)
 }

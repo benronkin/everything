@@ -43,18 +43,18 @@ function createElement({
   element,
   label,
   labelPosition = 'left',
-  classList = [],
+  fieldClasses,
+  labelClasses,
   labelFor,
 }) {
   const fieldEl = document.createElement('div')
   fieldEl.className = 'form-field'
-  if (classList.length) {
-    fieldEl.classList.add(...classList)
-  }
-
   fieldEl.appendChild(element)
   if (!label) {
     return fieldEl
+  }
+  if (fieldClasses) {
+    fieldEl.className += ` ${fieldClasses.join(', ')}`
   }
 
   const labelEl = document.createElement('label')
@@ -63,6 +63,10 @@ function createElement({
     labelEl.setAttribute('for', forId)
   }
   labelEl.className = labelPosition
+  if (labelClasses) {
+    labelEl.className += ` ${labelClasses.join(', ')}`
+  }
+
   labelEl.appendChild(document.createTextNode(label))
 
   switch (labelPosition) {

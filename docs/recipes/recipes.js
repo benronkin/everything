@@ -1,14 +1,21 @@
 import { state } from '../js/state.js'
 import { createNav } from '../partials/nav.js'
 import { createFooter } from '../partials/footer.js'
+import { createField } from '../partials/formField.js'
 import { createLeftPanelLink } from '../partials/leftPanelLink.js'
 import { createIcon } from '../partials/icon.js'
 import { createMainIconGroup } from '../partials/mainIconGroup.js'
 import { createRightDrawer } from '../partials/rightDrawer.js'
+import { createSelect } from '../partials/select.js'
 import { createSwitch } from '../partials/switch.js'
 import { createSearch } from '../partials/search.js'
 import { MODAL, initDialog, setDialog } from '../partials/modal.js'
-import { setMessage, resizeTextarea, isMobile } from '../js/ui.js'
+import {
+  // getElementValue,
+  setMessage,
+  resizeTextarea,
+  isMobile,
+} from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 
 // ----------------------
@@ -24,13 +31,13 @@ const relatedRecipesEl = document.querySelector('#related-recipes-links')
 const recipeIngredients = document.querySelector('#recipe-ingredients')
 const recipeMethod = document.querySelector('#recipe-method')
 const recipeNotes = document.querySelector('#recipe-notes')
-const recipeCategory = document.querySelector('#recipe-category')
 const recipeTags = document.querySelector('#recipe-tags')
 const recipeIdEl = document.querySelector('#recipe-id')
 const recipeDeleteBtn = document.querySelector('#bottom-btn-group .fa-trash')
 let mainIconGroup
 let addRecipeBtn
 let shopIngredientsBtn
+let categorySelect
 
 // ----------------------
 // Event handlers
@@ -71,7 +78,19 @@ async function handleDOMContentLoaded() {
 
   setMessage('Loading...')
 
-  const { recipes } = await getWebApp(`${state.getWebAppUrl()}/recipes/latest`)
+  const [recipesResp, categoriesResp] = await Promise.all([
+    getWebApp(`${state.getWebAppUrl()}/recipes/latest`),
+    getWebApp(`${state.getWebAppUrl()}/recipes/categories/read`),
+  ])
+
+  const { recipes } = recipesResp
+  let { categories } = categoriesResp
+  categories = categories.map((c) => ({
+    value: c.id,
+    label: c.label,
+  }))
+  categories.unshift({ value: '', label: '' })
+
   state.setRecipes(recipes)
   state.setDefaultPage('recipes')
 
@@ -113,6 +132,24 @@ async function handleDOMContentLoaded() {
   switchEl.addEventListener('click', handleRelatedSwitchClick)
   document.querySelector('#related-recipes-header').appendChild(switchEl)
 
+  // category select formField
+  const categorySelectName = 'category'
+  categorySelect = createSelect({
+    id: 'recipe-category',
+    name: categorySelectName,
+    options: categories,
+  })
+  categorySelect.addEventListener('change', handleFieldChange)
+  const categoryFormField = createField({
+    element: categorySelect,
+    label: 'category',
+    labelPosition: 'top',
+    fieldClasses: ['u-column-start'],
+    labelClasses: ['u-h5'],
+    labelFor: 'recipe-category',
+  })
+  document.querySelector('#category-target').appendChild(categoryFormField)
+
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
   initDialog()
@@ -145,10 +182,10 @@ async function handleRecipeCreate() {
     ingredients: '',
     method: '',
     notes: '',
-    category: '',
     tags: '',
     related: '',
   }
+  categorySelect.unselect()
   state.push('recipes', newRecipe)
 
   const li = createLeftPanelLink({
@@ -166,21 +203,20 @@ async function handleRecipeCreate() {
  */
 async function handleFieldChange(e) {
   const elem = e.target
-  const recipeSection = elem.name
-  if (recipeSection === 'title') {
+
+  const section = elem.name
+  if (section === 'title') {
     document.querySelector('.left-panel-link.active').textContent = elem.value
   }
+
   const id = recipeIdEl.textContent
-  state.setRecipeSection(id, recipeSection, elem.value)
+  const value = elem.value
+  state.setRecipeSection(id, section, value)
 
   try {
     const { message, error } = await postWebAppJson(
       `${state.getWebAppUrl()}/recipes/update`,
-      {
-        id,
-        value: elem.value,
-        section: recipeSection,
-      }
+      { id, section, value }
     )
     if (error) {
       throw new Error(error)
@@ -309,7 +345,6 @@ function populateRecipes() {
  */
 function loadRecipe(recipe) {
   document.querySelector('#related-recipes-switch').setOff()
-
   mainPanelEl.classList.remove('hidden')
   recipeTitleEl.value = recipe.title
   recipeRelated.value = recipe.related
@@ -320,8 +355,12 @@ function loadRecipe(recipe) {
   resizeTextarea(recipeMethod)
   recipeNotes.value = recipe.notes
   resizeTextarea(recipeNotes)
-  recipeCategory.value = recipe.category || ''
-  resizeTextarea(recipeCategory)
+  if (categorySelect.hasOptionValue(recipe.category)) {
+    categorySelect.selectByValue(recipe.category)
+  } else {
+    categorySelect.unselect()
+  }
+
   recipeTags.value = recipe.tags
   resizeTextarea(recipeTags)
   recipeIdEl.textContent = recipe.id

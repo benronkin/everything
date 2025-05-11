@@ -10,6 +10,17 @@ let sharedStyleEl = null
 // ------------------------
 
 /**
+ * Get value from custom select or input
+ */
+// export function getElementValue(elem) {
+//   console.log('elem', elem, elem.getValue)
+//   if (elem.getValue) {
+//     return elem.getValue()
+//   }
+//   return elem.value
+// }
+
+/**
  * Set message at top of page
  */
 export function setMessage(value) {

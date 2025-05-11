@@ -6,11 +6,7 @@ import { injectStyle } from '../js/ui.js'
 
 const css = `
 .select-wrapper {
-  display: inline-block;
   position: relative;
-}
-
-.select-container {
   display: flex;
   align-items: center;
   background-color: var(--purple2); 
@@ -22,7 +18,7 @@ const css = `
 .custom-select {
   appearance: none;
   background-color: transparent;
-  color: var(--gray1);
+  color: var(--gray5);
   border: none;
   font-size: 0.9rem; 
   padding: 0 1.5rem 0 0.8rem;
@@ -43,19 +39,15 @@ const css = `
 }
 
 .caret-wrapper i {
-  color: var(--gray1);
+  color: var(--gray5);
   font-size: 0.8rem;
 }
 `
 
 const html = `
-<div class="select-wrapper">
-  <div class="select-container">
-    <select class="custom-select"></select>
-    <div class="caret-wrapper">
-      <i class="fa-solid fa-caret-down"></i>
-    </div>
-  </div>
+<select class="custom-select"></select>
+<div class="caret-wrapper">
+  <i class="fa-solid fa-caret-down"></i>
 </div>
 `
 
@@ -63,6 +55,9 @@ const html = `
 // Exported
 // -------------------------------
 
+/**
+ *
+ */
 export function createSelect(config) {
   injectStyle(css)
   return createElement(config)
@@ -72,20 +67,148 @@ export function createSelect(config) {
 // Helpers
 // -------------------------------
 
-function createElement({ id, options = [] }) {
+/**
+ *
+ */
+function createElement({ id, className, name, options = [] }) {
   const el = document.createElement('div')
+  el.className = 'select-wrapper'
   el.innerHTML = html
-  const wrapper = el.firstElementChild
-  const selectEl = wrapper.querySelector('select')
-  selectEl.setAttribute('id', id)
+  const selectEl = el.querySelector('select')
+  if (id) {
+    selectEl.setAttribute('id', id)
+  }
 
+  if (name) {
+    selectEl.setAttribute('name', name)
+  }
+
+  if (className) {
+    selectEl.className = className
+  }
+
+  el.getName = getName.bind(el)
+  el.getOptionByLabel = getOptionByLabel.bind(el)
+  el.getOptionByValue = getOptionByValue.bind(el)
+  el.getSelected = getSelected.bind(el)
+  el.getValue = getValue.bind(el)
+  el.hasOptionLabel = hasOptionLabel.bind(el)
+  el.hasOptionValue = hasOptionValue.bind(el)
+  el.selectByLabel = selectByLabel.bind(el)
+  el.selectByValue = selectByValue.bind(el)
+  el.setOptions = setOptions.bind(el)
+  el.unselect = unselect.bind(el)
+
+  el.setOptions(options)
+
+  return el
+}
+
+/**
+ *
+ */
+function getName() {
+  return this.querySelector('select').getAttribute('name')
+}
+
+/**
+ *
+ */
+function getOptionByLabel(label) {
+  return [...this.querySelectorAll('option')].find((opt) => opt.label === label)
+}
+
+/**
+ *
+ */
+function getOptionByValue(value) {
+  value = value?.trim()
+  if (!value) {
+    return null
+  }
+  return [...this.querySelectorAll('option')].find((opt) => opt.value === value)
+}
+
+/**
+ *
+ */
+function getSelected() {
+  return this.querySelector('option[selected="true"]')
+}
+
+/**
+ *
+ */
+function getValue() {
+  return this.querySelector('select').value
+}
+
+/**
+ *
+ */
+function hasOptionLabel(label) {
+  return !!this.getOptionByLabel(label)
+}
+
+/**
+ *
+ */
+function hasOptionValue(value) {
+  if (!value?.trim()) {
+    return false
+  }
+  return !!this.getOptionByValue(value)
+}
+
+/**
+ *
+ */
+function selectByLabel(label) {
+  // remove prior select
+  this.unselect()
+  const option = this.getOptionByLabel(label)
+  if (option) {
+    option.setAttribute('selected', true)
+    this.querySelector('select').value = option.value
+  }
+}
+
+/**
+ *
+ */
+function selectByValue(value) {
+  // remove prior select
+  this.unselect()
+  const option = this.getOptionByValue(value)
+  if (option) {
+    option.setAttribute('selected', true)
+    this.querySelector('select').value = value
+  }
+}
+
+/**
+ *
+ */
+function setOptions(options) {
+  const selectEl = this.querySelector('select')
   options.forEach((opt) => {
     const optEl = document.createElement('option')
     optEl.value = opt.value
     optEl.textContent = opt.label
-    if (opt.selected) optEl.selected = true
+    if (opt.selected) {
+      optEl.setAttribute('selected', true)
+    }
+
     selectEl.appendChild(optEl)
   })
+}
 
-  return wrapper
+/**
+ *
+ */
+function unselect() {
+  const oldSelected = this.getSelected()
+  if (oldSelected) {
+    oldSelected.setAttribute('selected', null)
+  }
 }

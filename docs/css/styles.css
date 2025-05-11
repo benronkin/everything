@@ -77,7 +77,9 @@ h4 {
   text-transform: uppercase;
   color: var(--gray5);
 }
-h5 {
+h5,
+.u-h5 {
+  font-size: 0.9rem;
   font-weight: 400;
   margin-top: 20px;
   text-transform: uppercase;
@@ -284,6 +286,9 @@ ul {
 }
 .input-icon-group input {
   padding-left: 32px;
+}
+.u-column-start {
+  align-items: flex-start !important;
 }
 .u-mb-20 {
   margin-bottom: 20px;

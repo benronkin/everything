@@ -73,7 +73,7 @@ export function createSwitch(config) {
 /**
  * Create the HTML element
  */
-function createElement({ id, html, iconOff, iconOn, classList = [] }) {
+function createElement({ id, iconOff, iconOn, classList = [] }) {
   const switchEl = document.createElement('div')
   switchEl.innerHTML = html
   switchEl.setAttribute('id', id)

@@ -82,15 +82,17 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
   div.enableDragging = () => enableDragging(div)
   div.enableClicking = () => enableClicking(div)
   div.getData = getData.bind(div)
+  div.getItem = getItem.bind(div)
   div.getSelected = getSelected.bind(div)
   div.has = has.bind(div)
   div.listItems = listItems.bind(div)
+  div.removeChild = removeChild.bind(div)
+  div.reset = reset.bind(div)
+  div.setSilent = setSilent.bind(div)
+  div.updateChild = updateChild.bind(div)
   if (onChange) {
     div.onChange = onChange.bind(div)
   }
-  div.reset = reset.bind(div)
-  div.setSilent = setSilent.bind(div)
-  div.updateItem = updateItem.bind(div)
 
   /* when super-list-item invokes a custom click event */
   div.addEventListener('super-list-item-clicked', (e) =>
@@ -171,6 +173,13 @@ function getData() {
 }
 
 /**
+ * Get item by id
+ */
+function getItem(id) {
+  return this.querySelector(`#${id}`)
+}
+
+/**
  * Get the selected superListItem
  */
 function getSelected() {
@@ -199,6 +208,20 @@ function listItems() {
 }
 
 /**
+ * remove the sueprListItem by its id
+ */
+function removeChild(id) {
+  const item = this.getItem(id)
+  if (item) {
+    item.remove()
+  }
+
+  this.dispatchEvent(new CustomEvent('list-changed'))
+
+  return item
+}
+
+/**
  *
  */
 function reset() {
@@ -224,8 +247,8 @@ function setSilent(silent) {
 /**
  * update the sueprListItem by its id
  */
-function updateItem(id, text) {
-  const item = this.querySelector(`#${id}`)
+function updateChild(id, text) {
+  const item = this.getItem(id)
   if (item) {
     item.querySelector('span').textContent = text
   }
