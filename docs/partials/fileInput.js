@@ -37,7 +37,7 @@ label.custom-file {
 `
 
 const html = `
-<input type="file" class="hidden-file-input" />
+<input type="file" name="file" class="hidden-file-input" />
 <label class="custom-file primary">
   <i class="fa-solid"></i>
 </label>
@@ -68,7 +68,7 @@ function bindEventHandlers() {
   }
   listenersBound = true
   document.addEventListener('change', (e) => {
-    if (e.target.matches('.custom-file')) {
+    if (!e.target.matches('#photo-file-input')) {
       return
     }
     const span = e.target.closest('.file-upload').querySelector('.file-name')
