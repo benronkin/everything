@@ -345,6 +345,7 @@ async function handleAddPhotoSubmit(e) {
       addPhotoMessage.textContent = message
     }
     addPhotoForm.reset()
+    document.querySelector('#add-photo-submit').setAttribute('disabled', false)
     photoFileEl.clear()
     await populateJournalImages(formData.get('entry'))
   } catch (err) {
