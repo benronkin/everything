@@ -21,7 +21,7 @@ footer {
 const html = `
 <div class="container">
     <div id="version-container">
-      Version: <span id="version-number">2.2.0</span>
+      Version: <span id="version-number">2.2.1</span>
     </div>
 </div>
 `

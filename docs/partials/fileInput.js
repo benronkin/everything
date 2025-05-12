@@ -11,6 +11,9 @@ const css = `
   position: relative;
   display: inline-block;
 }
+.image-gallery-item img {
+  width: inherit;
+}
 input.hidden-file-input {
   display: none;
 }
@@ -76,7 +79,7 @@ function bindEventHandlers() {
 /**
  * Create the HTML element
  */
-function createElement({ id, html, label, accept, icon }) {
+function createElement({ id, label, accept, icon }) {
   const el = document.createElement('div')
   el.innerHTML = html
   el.className = 'file-upload'
