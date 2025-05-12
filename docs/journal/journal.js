@@ -149,7 +149,7 @@ function handleAddPhotoToggle() {
   addPhotoForm.classList.toggle('hidden')
   addPhotoForm.reset()
   addPhotoSubmit.removeAttribute('disabled')
-  photoFileEl.value = ''
+  photoFileEl.clear()
 }
 
 /**
@@ -345,6 +345,7 @@ async function handleAddPhotoSubmit(e) {
       addPhotoMessage.textContent = message
     }
     addPhotoForm.reset()
+    photoFileEl.clear()
     await populateJournalImages(formData.get('entry'))
   } catch (err) {
     console.log(err)

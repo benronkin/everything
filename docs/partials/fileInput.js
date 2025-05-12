@@ -90,5 +90,15 @@ function createElement({ id, label, accept, icon }) {
   labelEl.appendChild(document.createTextNode(label))
   labelEl.setAttribute('for', id)
   el.querySelector('i').classList.add(icon)
+
+  el.clear = clear.bind(el)
   return el
+}
+
+/**
+ *
+ */
+function clear() {
+  this.querySelector('input').value = ''
+  this.querySelector('.file-name').textContent = ''
 }
