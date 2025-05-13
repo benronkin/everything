@@ -46,7 +46,11 @@ export function injectStyle(css) {
     sharedStyleEl.setAttribute('data-ui-style', 'true')
     document.head.appendChild(sharedStyleEl)
   }
-  sharedStyleEl.textContent += '\n' + css
+
+  // Only append if it’s not already in the sheet
+  if (!sharedStyleEl.textContent.includes(css.trim())) {
+    sharedStyleEl.textContent += '\n' + css.trim()
+  }
 }
 
 /**

@@ -16,20 +16,17 @@ const css = `
   margin-left: 20px;
 }
 .form-horizontal-wrapper button:disabled {
-  background-color: var(--gray2);
-  color: var(--gray4);
   cursor: not-allowed;
   pointer-events: none;
-  opacity: 0.6;
 }
-.form-horizontal {
+.form-horizontal-wrapper .form-horizontal {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
   width: 100%;
 }
-.form-horizontal input {
+.form-horizontal-wrapper .form-horizontal input {
   margin: 0;
   width: 100%;
 }

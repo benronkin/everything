@@ -132,6 +132,9 @@ ul {
   flex-grow: 1;
   min-height: calc(100vh - var(--nav-height) - 60px);
 }
+#image-gallery img {
+  width: inherit;
+}
 #message {
   padding: 8px 16px;
   display: block;

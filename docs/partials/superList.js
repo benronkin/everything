@@ -6,12 +6,6 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
-.main-super-list-wrapper {
-  background-color: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
-  padding: 10px 0;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
-}
 `
 
 // -------------------------------

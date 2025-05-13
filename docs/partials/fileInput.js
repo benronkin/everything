@@ -11,28 +11,23 @@ const css = `
   position: relative;
   display: inline-block;
 }
-.image-gallery-item img {
+.file-upload .image-gallery-item img {
   width: inherit;
 }
-input.hidden-file-input {
+.file-upload input.hidden-file-input {
   display: none;
 }
-label.custom-file {
-  background: var(--purple2);
-  color: var(--text-color);
+.file-upload label.custom-file {
   padding: 0.4rem 1rem;
-  border-radius: 12px;
   cursor: pointer;
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: var(--shadow-small);
 }
-.file-name {
+.file-upload .file-name {
   margin-left: 1rem;
   font-size: 0.85rem;
-  color: var(--text-muted);
 }
 `
 

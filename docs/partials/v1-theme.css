@@ -1,0 +1,18 @@
+.super-list-item {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.drag-container {
+  margin-top: 1rem;
+}
+.draggable-target[data-state='drag'],
+.draggable-target[data-state='drag'] .fa-bars {
+  cursor: move;
+}

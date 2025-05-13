@@ -7,14 +7,8 @@ import { injectStyle } from '../js/ui.js'
 const css = `
 i {
   padding: 7px;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-}
-i.primary {
-  background-color: var(--purple2);
-}
-i.secondary {
-  background-color: var(--teal1);
 }
 `
 

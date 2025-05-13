@@ -5,24 +5,11 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
-.super-list-item {
-  cursor: pointer;
+.super-list-item .icons {
   display: flex;
-  justify-content: space-between;
+  gap: 12px;
   align-items: center;
-  height: 40px;
-  padding: 10px 14px;
-  margin-bottom: 8px;
-  font-weight: 500;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-.drag-container {
-  margin-top: 1rem;
-}
-.draggable-target[data-state="drag"], 
-.draggable-target[data-state="drag"] .fa-bars {
-  cursor: move;
+  justify-content: flex-end;
 }
 `
 
@@ -128,12 +115,14 @@ function createElement({
     div.dataset.textColor = textColor
     div.addEventListener('mouseenter', () => {
       if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
-        div.style.backgroundColor = bgColor
+        div.style.borderColor = bgColor
+        div.style.color = bgColor
       }
     })
     div.addEventListener('mouseleave', () => {
       if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
-        div.style.backgroundColor = ''
+        div.style.borderColor = ''
+        div.style.color = ''
       }
     })
   }
@@ -174,8 +163,8 @@ function enableDrag() {
  */
 function select() {
   this.dataset.selected = 'true'
-  this.style.color = this.dataset.textColor
-  this.style.backgroundColor = this.dataset.bgColor
+  this.style.color = this.dataset.bgColor
+  this.style.borderColor = this.dataset.bgColor
 
   // don't show icons in drag mode
   if (this.dataset.mode === 'drag') {
@@ -194,6 +183,7 @@ function unselect() {
   this.dataset.selected = 'false'
   this.style.color = ''
   this.style.backgroundColor = ''
+  this.style.borderColor = ''
 
   this.querySelectorAll('i:not(.fa-bars)').forEach((i) =>
     i.classList.add('hidden')

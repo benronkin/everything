@@ -67,12 +67,15 @@ export async function checkStyles() {
 // ----------------------
 
 /**
- *
+ *`
  */
 async function extractStyles(def) {
   const filePaths = await getFilePathsByType(def.folder, def.ext)
   const fileAsyncArr = []
   for (const filePath of filePaths) {
+    if (filePath.includes('theme')) {
+      continue
+    }
     fileAsyncArr.push(await readFile(filePath))
   }
   const texts = await Promise.all(fileAsyncArr)

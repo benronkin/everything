@@ -376,8 +376,8 @@ function createShoppingSuggestion({ text, selected = false }) {
 function addShoppingItemToList(text, pos) {
   const shoppingItem = createSuperListItem({
     text,
-    textColor: 'var(--gray6)',
-    bgColor: 'var(--purple2)',
+    textColor: 'var(--purple3)',
+    bgColor: 'var(--purple3)',
     children: [
       createIcon({
         className: 'fa-trash hidden',
