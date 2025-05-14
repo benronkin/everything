@@ -28,7 +28,8 @@ const css = `
   align-items: center;
   justify-content: flex-end;
 }
-.super-list-item[data-state="drag"] input[name="title"] {
+.super-list-item[data-state="drag"] input[name="title"],
+.super-list-item.not-editable input[name="title"] {
   pointer-events: none;
   border: none;
   background: transparent;
@@ -42,7 +43,7 @@ const html = `
   <div class="header">
     <input type="text" name="title" />
     <input type="text" class="hidden" />
-    <div class="i-box">
+    <div class="icons">
       <i class="fa-solid fa-bars hidden"></i>
     </div>
   </div>
@@ -125,7 +126,7 @@ function handleTitleInputChange(e) {
 /**
  * Dispatch a custom event
  */
-function dispatch(eventName, detail) {
+function dispatch(eventName, detail = {}) {
   detail.target = this
   detail.id = this.getAttribute('id')
   const event = new CustomEvent(eventName, {
@@ -154,6 +155,34 @@ function enableDrag() {
   this.setAttribute('draggable', 'true')
   this.querySelectorAll('i').forEach((i) => i.classList.add('hidden'))
   this.querySelector('i.fa-bars').classList.remove('hidden')
+}
+
+/**
+ *
+ */
+function getData() {
+  const obj = {
+    id: this.getAttribute('id'),
+    title: this.querySelector('[name="title"]').value.trim(),
+    details: this.querySelector('[name="details"]').value.trim(),
+  }
+  return obj
+}
+
+/**
+ *
+ */
+function getDetails() {
+  const obj = this.getData()
+  return obj.details
+}
+
+/**
+ *
+ */
+function getTitle() {
+  const obj = this.getData()
+  return obj.title
 }
 
 /**
@@ -227,6 +256,7 @@ function createElement({
   draggable: canDrag = true,
   title,
   details,
+  editable = true,
   selected,
   bgColor,
   textColor,
@@ -240,6 +270,9 @@ function createElement({
   if (canDrag) {
     div.classList.add('draggable-target')
   }
+  if (!editable) {
+    div.classList.add('not-editable')
+  }
   div.setAttribute('id', id || generateUUID())
   div.innerHTML = html
   div._onClick = onClick
@@ -249,7 +282,7 @@ function createElement({
   titleInput.addEventListener('change', handleTitleInputChange)
 
   for (const child of children) {
-    div.querySelector('.i-box').appendChild(child)
+    div.querySelector('.icons').appendChild(child)
   }
 
   if (bgColor) {
@@ -299,6 +332,9 @@ function createElement({
   div.dispatch = dispatch.bind(div)
   div.enableClick = enableClick.bind(div)
   div.enableDrag = enableDrag.bind(div)
+  div.getData = getData.bind(div)
+  div.getDetails = getDetails.bind(div)
+  div.getTitle = getTitle.bind(div)
   div.isSelected = isSelected.bind(div)
   div.select = select.bind(div)
   div.unselect = unselect.bind(div)

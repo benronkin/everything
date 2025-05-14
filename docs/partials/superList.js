@@ -37,11 +37,15 @@ function handleItemClick(e, superListEl) {
     }
   })
 
-  superListEl.dispatchEvent(
-    new CustomEvent('selection-changed', {
-      detail: { selected },
-    })
-  )
+  superListEl.dispatch('selection-changed', {
+    detail: { selected },
+  })
+
+  // superListEl.dispatchEvent(
+  //   new CustomEvent('selection-changed', {
+  //     detail: { selected },
+  //   })
+  // )
 }
 
 /**
@@ -54,48 +58,8 @@ function handleListChanged(e) {
 }
 
 // -------------------------------
-// Helpers
+// Object methods
 // -------------------------------
-
-/**
- *
- */
-function createElement({ id, className, children, emptyState, onChange } = {}) {
-  const div = document.createElement('div')
-  // div.className = `super-list`
-  div.className = `super-list${className ? ' ' + className : ''}`
-  div.id = id
-  div._emptyState = emptyState
-  div._onChange = onChange
-
-  div.addChild = addChild.bind(div)
-  div.addChildren = addChildren.bind(div)
-  div.addChildren(children)
-  div.enableDragging = () => enableDragging(div)
-  div.enableClicking = () => enableClicking(div)
-  div.getData = getData.bind(div)
-  div.getItem = getItem.bind(div)
-  div.getSelected = getSelected.bind(div)
-  div.has = has.bind(div)
-  div.listItems = listItems.bind(div)
-  div.removeChild = removeChild.bind(div)
-  div.reset = reset.bind(div)
-  div.setSilent = setSilent.bind(div)
-  div.updateChild = updateChild.bind(div)
-  if (onChange) {
-    div.onChange = onChange.bind(div)
-  }
-
-  /* when super-list-item invokes a custom click event */
-  div.addEventListener('super-list-item-clicked', (e) =>
-    handleItemClick(e, div)
-  )
-
-  /* when super-list-item or super-list itself invokes list-changed event */
-  div.addEventListener('list-changed', handleListChanged)
-
-  return div
-}
 
 /**
  * Add item to list
@@ -112,15 +76,23 @@ function addChild(child, pos = 'top') {
     this.appendChild(child)
   }
 
-  this.dispatchEvent(
-    new CustomEvent('selection-changed', {
-      detail: {
-        selected: !!this.getSelected(),
-        value: this.getSelected()?.querySelector('span').textContent,
-      },
-    })
-  )
-  this.dispatchEvent(new CustomEvent('list-changed'))
+  this.dispatch('selection-changed', {
+    detail: {
+      selected: !!this.getSelected(),
+      value: this.getSelected()?.querySelector('span').textContent,
+    },
+  })
+  this.dispatch('list-changed')
+
+  // this.dispatchEvent(
+  //   new CustomEvent('selection-changed', {
+  //     detail: {
+  //       selected: !!this.getSelected(),
+  //       value: this.getSelected()?.querySelector('span').textContent,
+  //     },
+  //   })
+  // )
+  // this.dispatchEvent(new CustomEvent('list-changed'))
 }
 
 /**
@@ -142,15 +114,35 @@ function addChildren(children) {
     this.appendChild(child)
   }
 
-  this.dispatchEvent(
-    new CustomEvent('selection-changed', {
-      detail: {
-        selected: !!this.getSelected(),
-        value: this.getSelected()?.querySelector('span').textContent,
-      },
-    })
-  )
-  this.dispatchEvent(new CustomEvent('list-changed'))
+  this.dispatch('selection-changed', {
+    selected: !!this.getSelected(),
+    value: this.getSelected()?.querySelector('span').textContent,
+  })
+  this.dispatch('list-changed')
+
+  // this.dispatchEvent(
+  //   new CustomEvent('selection-changed', {
+  //     detail: {
+  //       selected: !!this.getSelected(),
+  //       value: this.getSelected()?.querySelector('span').textContent,
+  //     },
+  //   })
+  // )
+  // this.dispatchEvent(new CustomEvent('list-changed'))
+}
+
+/**
+ * Dispatch a custom event
+ */
+function dispatch(eventName, detail = {}) {
+  detail.target = this
+  detail.id = this.getAttribute('id')
+  const event = new CustomEvent(eventName, {
+    bubbles: true,
+    detail,
+  })
+
+  this.dispatchEvent(event)
 }
 
 /**
@@ -159,7 +151,8 @@ function addChildren(children) {
 function getData() {
   return [...this.querySelectorAll('.super-list-item')].map((el) => ({
     id: el.id,
-    text: el.querySelector('span')?.textContent.trim(),
+    title: el.querySelector('[name="title"]').value.trim(),
+    details: el.querySelector('[name="details"]').value.trim(),
     selected: el.dataset.selected === 'true',
   }))
 }
@@ -182,19 +175,18 @@ function getSelected() {
  * Check if item is in list
  */
 function has(item) {
-  const items = this.listItems()
-  return items.includes(item.toString().trim().toLowerCase())
+  const items = this.getTitles().map((item) =>
+    item.querySelector('[name="title"]').toString().trim().toLowerCase()
+  )
+  return items.includes(item)
 }
 
 /**
- * Get shopping list items
+ * Get list items
  */
-function listItems() {
-  if (!window.location.pathname.includes('/shopping/')) {
-    return []
-  }
-  const items = [...this.querySelectorAll('.super-list-item')].map((el) =>
-    el.textContent.trim().toLowerCase()
+function getTitles() {
+  const items = [...this.querySelectorAll('.super-list-item')].map((item) =>
+    item.getTitle()
   )
   return items
 }
@@ -208,8 +200,7 @@ function removeChild(id) {
     item.remove()
   }
 
-  this.dispatchEvent(new CustomEvent('list-changed'))
-
+  this.dispatch('list-changed')
   return item
 }
 
@@ -219,14 +210,19 @@ function removeChild(id) {
 function reset() {
   this.querySelectorAll('.super-list-item').forEach((child) => child.unselect())
 
-  this.dispatchEvent(
-    new CustomEvent('selection-changed', {
-      detail: {
-        selected: !!this.getSelected(),
-        value: this.getSelected()?.querySelector('span').textContent,
-      },
-    })
-  )
+  this.dispatch('selection-changed', {
+    selected: !!this.getSelected(),
+    title: this.getSelected()?.querySelector('[name="title"]').value,
+    details: this.getSelected()?.querySelector('[name="details"]').value,
+  })
+  // this.dispatchEvent(
+  //   new CustomEvent('selection-changed', {
+  //     detail: {
+  //       selected: !!this.getSelected(),
+  //       value: this.getSelected()?.querySelector('span').textContent,
+  //     },
+  //   })
+  // )
 }
 
 /**
@@ -239,13 +235,59 @@ function setSilent(silent) {
 /**
  * update the sueprListItem by its id
  */
-function updateChild(id, text) {
+function updateChild({ id, title, details }) {
   const item = this.getItem(id)
   if (item) {
-    item.querySelector('span').textContent = text
+    item.querySelector('[name="title"]').value = title
+    item.querySelector('[name="details"]').value = details
   }
 
-  this.dispatchEvent(new CustomEvent('list-changed'))
+  this.dispatch('list-changed')
 
   return item
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function createElement({ id, className, children, emptyState, onChange } = {}) {
+  const div = document.createElement('div')
+  // div.className = `super-list`
+  div.className = `super-list${className ? ' ' + className : ''}`
+
+  div._emptyState = emptyState
+  div._onChange = onChange
+  div.id = id
+  div.addChild = addChild.bind(div)
+  div.addChildren = addChildren.bind(div)
+  div.addChildren(children)
+  div.dispatch = dispatch.bind(div)
+  div.enableDragging = () => enableDragging(div)
+  div.enableClicking = () => enableClicking(div)
+  div.getData = getData.bind(div)
+  div.getItem = getItem.bind(div)
+  div.getSelected = getSelected.bind(div)
+  div.has = has.bind(div)
+  div.getTitles = getTitles.bind(div)
+  div.removeChild = removeChild.bind(div)
+  div.reset = reset.bind(div)
+  div.setSilent = setSilent.bind(div)
+  div.updateChild = updateChild.bind(div)
+  if (onChange) {
+    div.onChange = onChange.bind(div)
+  }
+
+  /* when super-list-item invokes a custom click event */
+  div.addEventListener('super-list-item-clicked', (e) =>
+    handleItemClick(e, div)
+  )
+
+  /* when super-list-item or super-list itself invokes list-changed event */
+  div.addEventListener('list-changed', handleListChanged)
+
+  return div
 }

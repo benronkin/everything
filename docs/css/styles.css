@@ -147,12 +147,13 @@ ul {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   animation: fadeInSlideDown 300ms ease-out;
 }
-#suggestions-wrapper {
-  background-color: rgba(255, 255, 255, 0.015);
+#suggestions-wrapper,
+#suggest-auto-complete {
+  background-color: var(--gray1);
   border-left: 3px solid var(--teal3);
-  padding: 10px 0 10px 10px;
+  padding: 20px;
   margin-top: 20px;
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   box-shadow: 0 0 6px rgba(0, 255, 255, 0.08);
 }
 @keyframes fadeInSlideDown {

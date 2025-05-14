@@ -22,8 +22,6 @@ let shoppingListEl
 let suggestionsEl
 let suggestSwitch
 let sortSwitch
-
-// set in handleDOMContentLoaded
 let shoppingInput
 let suggestAutoComplete
 
@@ -46,12 +44,12 @@ export async function addItemsToShoppingList(
 
   if (window.location.pathname.includes('/shopping/')) {
     // avoid duplicating existing items in shopping list
-    const items = shoppingListEl.listItems()
-    newItems = newItems.filter((item) => !items.includes(item))
+    const titles = shoppingListEl.getTitles()
+    newItems = newItems.filter((item) => !titles.includes(item))
   }
   // append to list
-  for (const item of newItems) {
-    addShoppingItemToList(item, 'bottom')
+  for (const text of newItems) {
+    addShoppingItemToList(text, 'bottom')
   }
   if (!suppressListChanged) {
     // when init loads the list, it must not invoke list-changed
@@ -178,7 +176,7 @@ function handleShopInputKeyUp() {
  * server update is successful
  */
 async function handleShoppingListChange(e) {
-  let values = shoppingListEl.listItems()
+  let values = shoppingListEl.getTitles()
   state.add('shopping-list', values)
 
   try {
@@ -225,9 +223,10 @@ function handleShoppingTrashClick(e) {
  * Handle suggestion plus click
  */
 function handleSuggestionPlusClick(e) {
-  const div = e.target.closest('.super-list-item')
-  addShoppingItemToList(div.innerText, 'top')
-  div.remove()
+  const el = e.target.closest('.super-list-item')
+  addShoppingItemToList(el.getTitle(), 'top')
+  el.remove()
+  document.querySelector('#suggest-auto-complete').classList.add('hidden')
   // on mobile, the next fa-plus "inherits" a hover state
   // so remove it
   const els = document.querySelectorAll('.super-list-item .fa-plus')
@@ -350,9 +349,14 @@ function addPageElements() {
 /**
  * Create a shopping suggestion element
  */
-function createShoppingSuggestion({ text, selected = false }) {
+function createShoppingSuggestion({
+  title,
+  selected = false,
+  editable = true,
+}) {
   const suggestion = createSuperListItem({
-    text,
+    title,
+    editable,
     selected,
     textColor: 'var(--gray6)',
     bgColor: 'var(--teal2)',
@@ -397,12 +401,12 @@ function displaySuggestions() {
     suggestions = ['apples', 'carrots', 'berries']
   }
   suggestionsEl.innerHTML = ''
-  const shoppingItems = shoppingListEl.listItems()
+  const shoppingItems = shoppingListEl.getTitles()
 
   suggestions = suggestions.filter((s) => !shoppingItems.includes(s))
   suggestions.sort()
-  for (const text of suggestions) {
-    const child = createShoppingSuggestion({ text, selected: false })
+  for (const title of suggestions) {
+    const child = createShoppingSuggestion({ title, selected: false })
     suggestionsEl.appendChild(child)
   }
 }
@@ -420,11 +424,19 @@ function populateShopAutoComplete() {
   suggests = suggests.filter((s) => !items.includes(s))
   suggests = suggests.filter((s) => s.includes(q))
 
+  const autoCompleteEl = document.querySelector('#suggest-auto-complete')
+
   if (suggests.length === 0) {
+    autoCompleteEl.classList.add('hidden')
     return
   }
-  for (const text of suggests) {
-    const div = createShoppingSuggestion({ text, selected: true })
+  autoCompleteEl.classList.remove('hidden')
+  for (const title of suggests) {
+    const div = createShoppingSuggestion({
+      title,
+      editable: false,
+      selected: true,
+    })
     suggestAutoComplete.appendChild(div)
   }
 }
