@@ -84,13 +84,11 @@
   --text-muted: rgba(255, 255, 255, 0.6);
   --border-image-horizontal: linear-gradient(
     to right,
-    var(--purple1),
     var(--purple3),
     var(--purple1)
   );
   --border-image-vertical: linear-gradient(
     to bottom,
-    var(--purple1),
     var(--purple3),
     var(--purple1)
   );
@@ -138,8 +136,8 @@ i.secondary {
 
 .super-list-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   background-color: #1e1e1e;
   border-radius: var(--border-radius);
   border: 1px solid var(--gray2);
@@ -150,7 +148,16 @@ i.secondary {
   font-weight: 600;
   cursor: pointer;
 }
-
+.super-list-item .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.super-list-item .header input {
+  margin: 0 20px 0 0;
+  max-width: 400px;
+  border-color: var(--gray0);
+}
 .super-list-item .details {
   margin-top: 10px;
   font-weight: 400;
@@ -160,18 +167,14 @@ i.secondary {
   border-radius: var(--border-radius);
   background-color: #2a2a2a;
 }
-
 .super-list-item i {
-  margin: -10px;
-  color: var(--purple3);
+  /* margin: -10px; */
   cursor: pointer;
   transition: color 0.2s;
 }
-
 .super-list-item.selected .icons i {
   color: var(--gray6);
 }
-
 .super-list-item:hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }

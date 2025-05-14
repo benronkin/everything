@@ -78,7 +78,7 @@ export async function listRecipeCategories() {
   // popualte the categories super list
   for (const { id, label: text } of categories) {
     const cat = createSuperListItem({
-      text,
+      title: text,
       id,
       textColor: 'var(--gray6)',
       bgColor: 'var(--purple2)',
@@ -138,7 +138,7 @@ function handleCategoryFormSubmit(e) {
     categoriesEl.updateChild(selectedItem.getAttribute('id'), category)
   } else {
     const cat = createSuperListItem({
-      text: category,
+      title: category,
       id: crypto.randomUUID(),
       textColor: 'var(--gray6)',
       bgColor: 'var(--purple2)',
@@ -151,14 +151,9 @@ function handleCategoryFormSubmit(e) {
  * Handle click/unclick of category item
  */
 function handleCategorySelectionChange(e) {
-  const { selected, value } = e.detail
+  const { selected } = e.detail
   if (selected) {
-    categoryFormEl.setValue(value)
-    categoryFormEl.setSubmit({ text: 'UPDATE' })
-    categoryFormEl.enable()
-  } else {
     categoryFormEl.setValue('')
-    categoryFormEl.setSubmit({ text: 'ADD' })
     categoryFormEl.disable()
   }
 }

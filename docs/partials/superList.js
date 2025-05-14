@@ -21,27 +21,25 @@ export function createSuperList(config) {
 }
 
 // -------------------------------
-// Event handler functions
+// Event handlers
 // -------------------------------
 
 /**
- *
+ * We preface selection-changed with standard work to
+ * unselect all other items
  */
 function handleItemClick(e, superListEl) {
-  const { id, el } = e.detail
+  const { target, selected } = e.detail
 
   superListEl.querySelectorAll('.super-list-item').forEach((item) => {
-    if (item !== el) {
+    if (item !== target) {
       item.unselect()
     }
   })
 
   superListEl.dispatchEvent(
     new CustomEvent('selection-changed', {
-      detail: {
-        selected: !!superListEl.getSelected(),
-        value: superListEl.getSelected()?.querySelector('span').textContent,
-      },
+      detail: { selected },
     })
   )
 }
@@ -49,9 +47,9 @@ function handleItemClick(e, superListEl) {
 /**
  *
  */
-function handleListChanged() {
+function handleListChanged(e) {
   if (!this._silent && this._onChange) {
-    this._onChange()
+    this._onChange(e)
   }
 }
 
@@ -100,7 +98,7 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
 }
 
 /**
- * Add shopping item to list
+ * Add item to list
  */
 function addChild(child, pos = 'top') {
   if (!this.querySelectorAll('.super-list-item').length) {

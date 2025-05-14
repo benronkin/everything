@@ -44,8 +44,14 @@ function handleDragStart(e) {
  *
  */
 function handleDragEnd(e) {
-  e.target.closest('.draggable-target').classList.remove('dragging')
-  document.dispatchEvent(new CustomEvent('list-changed'))
+  const el = e.target.closest('.draggable-target')
+  el.classList.remove('dragging')
+  el.dispatchEvent(
+    new CustomEvent('list-changed', {
+      bubbles: true,
+      detail: { reason: 'drag' },
+    })
+  )
 }
 
 // -------------------------------

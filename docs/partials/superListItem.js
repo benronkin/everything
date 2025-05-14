@@ -1,23 +1,53 @@
-import { injectStyle } from '../js/ui.js'
+import { injectStyle, resizeTextarea } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
+.super-list-item[data-state="drag"] {
+  cursor: move;
+}
+.super-list-item input,
+.super-list-item textarea {
+  cursor: pointer;
+  color: inherit;
+}
+.super-list-item textarea {
+  min-height: 25px;
+  padding: 4px;
+  margin: 0;
+}
+.super-list-item .details {
+  height: fit-content;
+  margin-top: 15px;
+}
 .super-list-item .icons {
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: flex-end;
 }
+.super-list-item[data-state="drag"] input[name="title"] {
+  pointer-events: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}
 `
 
 const html = `
-  <span></span>
-  <input type="text" class="hidden" />
-  <div class="i-box">
-    <i class="fa-solid fa-bars hidden"></i>
+  <div class="header">
+    <input type="text" name="title" />
+    <input type="text" class="hidden" />
+    <div class="i-box">
+      <i class="fa-solid fa-bars hidden"></i>
+    </div>
+  </div>
+  <div class="details hidden">
+    <textarea name="details"></textarea>
   </div>
 `
 
@@ -38,7 +68,7 @@ export function createSuperListItem(config) {
 // -------------------------------
 
 /**
- *
+ * Handle click on the item
  */
 function handleClick(e) {
   const div = e.target.closest('.super-list-item')
@@ -58,86 +88,52 @@ function handleClick(e) {
   }
 
   // notify superList of the click
-  const event = new CustomEvent('super-list-item-clicked', {
-    bubbles: true,
-    detail: {
-      id: div.id,
-      checked: div.dataset.checked,
-      el: div,
-      value: div.innerText.trim(),
-    },
+  this.dispatch('super-list-item-clicked', {
+    selected: div.dataset.selected,
+    title: div.querySelector('[name="title"]').value.trim(),
+    details: div.querySelector('[name="details"]').value.trim(),
   })
 
-  div.dispatchEvent(event)
+  // div.dispatchEvent(event)
 
   if (div._onClick) {
     div._onClick()
   }
 }
 
+/**
+ * When user edits the title
+ */
+function handleTitleInputChange(e) {
+  const div = e.target
+  div.dispatchEvent(
+    new CustomEvent('list-changed', {
+      bubbles: true,
+      detail: {
+        id: e.target.closest('.super-list-item').getAttribute('id'),
+        section: 'title',
+        value: e.target.value,
+      },
+    })
+  )
+}
+
 // -------------------------------
-// Helpers
+// Object methods
 // -------------------------------
 
 /**
- *
+ * Dispatch a custom event
  */
-function createElement({
-  draggable: canDrag = true,
-  text,
-  selected,
-  bgColor,
-  textColor,
-  onClick,
-  children = [],
-  id,
-}) {
-  const div = document.createElement('div')
-  div.classList.add('super-list-item')
-  if (canDrag) {
-    div.classList.add('draggable-target')
-  }
-  div.setAttribute('id', id || generateUUID())
-  div.innerHTML = html
-  div._onClick = onClick
+function dispatch(eventName, detail) {
+  detail.target = this
+  detail.id = this.getAttribute('id')
+  const event = new CustomEvent(eventName, {
+    bubbles: true,
+    detail,
+  })
 
-  div.querySelector('span').textContent = (text || '')
-    .toString()
-    .trim()
-    .toLowerCase()
-
-  for (const child of children) {
-    div.querySelector('.i-box').appendChild(child)
-  }
-
-  if (bgColor) {
-    div.dataset.bgColor = bgColor
-    div.dataset.textColor = textColor
-    div.addEventListener('mouseenter', () => {
-      if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
-        div.style.borderColor = bgColor
-        div.style.color = bgColor
-      }
-    })
-    div.addEventListener('mouseleave', () => {
-      if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
-        div.style.borderColor = ''
-        div.style.color = ''
-      }
-    })
-  }
-
-  div.addEventListener('click', handleClick)
-
-  div.enableClick = enableClick.bind(div)
-  div.enableDrag = enableDrag.bind(div)
-  div.select = select.bind(div)
-  div.unselect = unselect.bind(div)
-
-  if (selected) {
-    div.select()
-  }
-  return div
+  this.dispatchEvent(event)
 }
 
 /**
@@ -153,9 +149,18 @@ function enableClick() {
  *
  */
 function enableDrag() {
+  this.unselect()
   this.dataset.state = 'drag'
   this.setAttribute('draggable', 'true')
+  this.querySelectorAll('i').forEach((i) => i.classList.add('hidden'))
   this.querySelector('i.fa-bars').classList.remove('hidden')
+}
+
+/**
+ *
+ */
+function isSelected() {
+  return this.dataset.selected === 'true'
 }
 
 /**
@@ -165,6 +170,9 @@ function select() {
   this.dataset.selected = 'true'
   this.style.color = this.dataset.bgColor
   this.style.borderColor = this.dataset.bgColor
+  this.querySelectorAll('i').forEach(
+    (i) => (i.style.color = this.dataset.bgColor)
+  )
 
   // don't show icons in drag mode
   if (this.dataset.mode === 'drag') {
@@ -174,6 +182,15 @@ function select() {
   this.querySelectorAll('i:not(.fa-bars)').forEach((i) =>
     i.classList.remove('hidden')
   )
+
+  if (this._showDetails) {
+    this.querySelector('.details').classList.remove('hidden')
+
+    const detailsTA = this.querySelector('[name="details"]')
+    detailsTA.classList.remove('hidden')
+    resizeTextarea(detailsTA)
+  }
+  this.querySelector('[name="title"]').focus()
 }
 
 /**
@@ -185,9 +202,111 @@ function unselect() {
   this.style.backgroundColor = ''
   this.style.borderColor = ''
 
-  this.querySelectorAll('i:not(.fa-bars)').forEach((i) =>
+  this.querySelectorAll('i').forEach((i) => {
+    i.style.color = ''
+  })
+
+  this.querySelectorAll('i:not(.fa-bars)').forEach((i) => {
     i.classList.add('hidden')
-  )
+  })
+
+  if (this._showDetails) {
+    this.querySelector('.details').classList.add('hidden')
+    this.querySelector('[name="details"]').classList.add('hidden')
+  }
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function createElement({
+  draggable: canDrag = true,
+  title,
+  details,
+  selected,
+  bgColor,
+  textColor,
+  onClick,
+  children = [],
+  showDetails = false,
+  id,
+}) {
+  const div = document.createElement('div')
+  div.classList.add('super-list-item')
+  if (canDrag) {
+    div.classList.add('draggable-target')
+  }
+  div.setAttribute('id', id || generateUUID())
+  div.innerHTML = html
+  div._onClick = onClick
+
+  let titleInput = div.querySelector('[name="title"]')
+  titleInput.value = (title || '').toString().trim()
+  titleInput.addEventListener('change', handleTitleInputChange)
+
+  for (const child of children) {
+    div.querySelector('.i-box').appendChild(child)
+  }
+
+  if (bgColor) {
+    div.dataset.bgColor = bgColor
+    div.dataset.textColor = textColor
+    div.addEventListener('mouseenter', () => {
+      if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
+        div.style.borderColor = bgColor
+        div.style.color = bgColor
+        div.querySelectorAll('i').forEach((i) => (i.style.color = bgColor))
+      }
+    })
+    div.addEventListener('mouseleave', () => {
+      if (div.dataset.selected !== 'true' && div.dataset.state !== 'drag') {
+        div.style.borderColor = ''
+        div.style.color = ''
+        div.querySelectorAll('i').forEach((i) => (i.style.color = ''))
+      }
+    })
+  }
+
+  div.addEventListener('click', handleClick)
+
+  if (showDetails) {
+    const detailsTA = div.querySelector('[name="details"]')
+    detailsTA.value = (details || '').toString().trim()
+
+    detailsTA.addEventListener('change', () => {
+      div.dispatchEvent(
+        new CustomEvent('list-changed', {
+          bubbles: true,
+          detail: {
+            id,
+            section: 'details',
+            value: detailsTA.value,
+          },
+        })
+      )
+    })
+
+    div._showDetails = showDetails
+    div
+      .querySelector('.details')
+      .addEventListener('click', (e) => e.stopPropagation())
+  }
+
+  div.dispatch = dispatch.bind(div)
+  div.enableClick = enableClick.bind(div)
+  div.enableDrag = enableDrag.bind(div)
+  div.isSelected = isSelected.bind(div)
+  div.select = select.bind(div)
+  div.unselect = unselect.bind(div)
+
+  if (selected) {
+    div.select()
+  }
+  return div
 }
 
 /**

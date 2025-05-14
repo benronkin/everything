@@ -147,7 +147,7 @@ function handleShoppingFormSubmit(e) {
     itemEl.querySelector('.fa-bars').classList.remove('hidden')
   } else {
     // new item is added
-    if (inShoppingList(value)) {
+    if (shoppingListEl.has(value)) {
       setMessage('Already in list')
       return
     }
@@ -375,7 +375,7 @@ function createShoppingSuggestion({ text, selected = false }) {
  */
 function addShoppingItemToList(text, pos) {
   const shoppingItem = createSuperListItem({
-    text,
+    title: (text || '').trim().toLowerCase(),
     textColor: 'var(--purple3)',
     bgColor: 'var(--purple3)',
     children: [

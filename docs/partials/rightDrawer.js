@@ -7,6 +7,7 @@ import { injectStyle } from '../js/ui.js'
 const html = `
 <div class="nav-wrapper">
   <ul class="nav">
+    <li data-value="tasks"><a href="../tasks/index.html">Tasks</a></li>
     <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
     <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
     <li data-value="journal"><a href="../journal/index.html">Journal</a></li>

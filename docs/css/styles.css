@@ -180,8 +180,8 @@ ul {
 #main-panel.hidden {
   display: none;
 }
-#main-panel input,
-#main-panel textarea {
+#main-panel input.field,
+#main-panel textarea.field {
   width: 100%;
   margin: 10px 0;
   border-bottom: 1px solid var(--gray3);
