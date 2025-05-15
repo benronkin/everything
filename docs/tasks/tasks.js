@@ -273,7 +273,8 @@ function addPageElements() {
   tasksListEl = createSuperList({
     id: 'tasks-list',
     className: 'main-super-list-wrapper',
-    emptyState: 'Nothing to do',
+    emptyState:
+      '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
     onChange: handleTasksListChange,
   })
   tasksWrapper.appendChild(tasksListEl)

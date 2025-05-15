@@ -29,11 +29,13 @@ const css = `
   justify-content: flex-end;
 }
 .super-list-item[data-state="drag"] input[name="title"],
-.super-list-item.not-editable input[name="title"] {
+.super-list-item.not-editable input[name="title"],
+.super-list-item input:disabled
+{
   pointer-events: none;
   border: none;
   background: transparent;
-  color: inherit;
+  color: var(--gray5);
   cursor: default;
   text-decoration: none;
 }

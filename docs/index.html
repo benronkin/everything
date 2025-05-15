@@ -40,30 +40,13 @@
             style="margin-top: 30px; align-items: flex-start"
           >
             <h4>Enter your email address to gain access</h4>
-            <form id="login-form" class="form-horizontal">
-              <div class="input-icon-group">
-                <i class="fa-solid fa-envelope"></i>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value=""
-                />
-              </div>
-              <button id="login-btn" class="primary" type="submit">
-                Submit
-              </button>
-            </form>
-            <span
-              id="login-message"
-              style="margin-top: 10px; font-size: 90%"
-            ></span>
           </div>
         </div>
       </main>
     </div>
     <script type="module">
       import { createNav } from './partials/nav.js'
+      import { createFormHorizontal } from './partials/formHorizontal.js'
       import { createFooter } from './partials/footer.js'
       import {
         handleTokenQueryParam,
@@ -78,9 +61,8 @@
       // ----------------------
 
       const loginContainer = document.querySelector('#login-container')
-      const loginForm = document.querySelector('#login-form')
-      const loginBtn = document.querySelector('#login-btn')
-      const loginMessageEl = document.querySelector('#login-message')
+      let loginForm
+      let loginButton
 
       // ----------------------
       // Event listeners
@@ -91,9 +73,6 @@
         handleDOMContentLoaded()
       })
 
-      /* When login form is submitted */
-      loginForm.addEventListener('submit', handleLoginFormSubmit)
-
       // ------------------------
       // Event handler functions
       // ------------------------
@@ -102,33 +81,41 @@
        * Handle DOMContentLoaded
        */
       async function handleDOMContentLoaded() {
+        // force login (temporary for setting token in db)
+        const urlParams = new URLSearchParams(window.location.search)
+        const setupParam = urlParams.get('setup')
+        if (setupParam) {
+          showLoginForm('Upgrading the app. We need your email again')
+          return
+        }
+
         handleTokenQueryParam()
 
         const token = localStorage.getItem('authToken')
         if (!token) {
-          setMessage(
+          console.log('handleDOMContentLoaded: no token')
+          showLoginForm(
             '<i class="fa-solid fa-circle-exclamation"></i> Authentication failed'
           )
-          console.log('handleDOMContentLoaded: no token')
-          loginContainer.classList.remove('hidden')
-          const wrapperEl = document.querySelector('.wrapper')
-          const navEl = createNav({
-            title: 'Recipes',
-            disableRightDrawer: true,
-          })
-          wrapperEl.prepend(navEl)
-          const footerEl = createFooter()
-          wrapperEl.appendChild(footerEl)
           return
         }
 
         const mode = state.getDefaultPage()
         switch (mode) {
+          case 'admin':
+            window.location.href = './admin/index.html'
+            break
           case 'journal':
             window.location.href = './journal/index.html'
             break
+          case 'recipes':
+            window.location.href = './recipes/index.html'
+            break
           case 'shopping':
             window.location.href = './shopping/index.html'
+            break
+          case 'tasks':
+            window.location.href = './tasks/index.html'
             break
           default:
             window.location.href = './recipes/index.html'
@@ -137,15 +124,47 @@
       }
 
       /**
+       *
+       */
+      function showLoginForm(message) {
+        if (message) {
+          setMessage(message)
+        }
+
+        loginForm = createFormHorizontal({
+          formId: 'login-form',
+          inputType: 'email',
+          inputName: 'email',
+          inputPlaceholder: 'Email',
+          iClass: 'fa-envelope',
+          inputAutoComplete: false,
+          submitText: 'Submit',
+          events: { submit: handleLoginFormSubmit },
+        })
+        loginContainer.appendChild(loginForm)
+        loginButton = loginForm.querySelector('button')
+
+        loginContainer.classList.remove('hidden')
+        const wrapperEl = document.querySelector('.wrapper')
+        const navEl = createNav({
+          title: 'The Everything App',
+          disableRightDrawer: true,
+        })
+        wrapperEl.prepend(navEl)
+        const footerEl = createFooter()
+        wrapperEl.appendChild(footerEl)
+      }
+
+      /**
        * Handle login form submit
        */
       async function handleLoginFormSubmit(e) {
         e.preventDefault()
-        loginBtn.disabled = true
-        loginMessageEl.textContent = 'Checking. Please wait...'
+        loginForm.disable()
+        loginForm.message = 'Checking. Please wait...'
+        setMessage('')
 
-        const formData = new FormData(loginForm)
-        const email = formData.get('email')
+        const email = loginForm.value
         try {
           const { error, message } = await postWebAppJson(
             `${state.getWebAppUrl()}/email-submit`,
@@ -156,12 +175,13 @@
           if (error) {
             throw new Error(error)
           }
-          loginMessageEl.textContent = message
+          loginForm.message = ''
+          setMessage(message)
         } catch (err) {
-          loginMessageEl.textContent = err.message
-          loginBtn.disabled = false
+          loginForm.message = err.message
           console.log(err)
         }
+        loginForm.enable()
       }
     </script>
   </body>

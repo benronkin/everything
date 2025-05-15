@@ -55,7 +55,9 @@ export async function getWebApp(path) {
     console.log('getWebapp error:', error)
 
     return {
-      error: `getWebApp error: ${error}\nRes: ${res ? await res.text() : 'res is empty'}`,
+      error: `getWebApp error: ${error}\nRes: ${
+        res ? await res.text() : 'res is empty'
+      }`,
     }
   }
 }
@@ -118,7 +120,9 @@ export async function postWebAppJson(path, clientData) {
     if (path.includes('http://') || path.includes('')) {
       console.warn('Is cloudflare running?')
     }
-    const errorMessage = `postWebAppJson error: ${err}\nFetch payload: ${JSON.stringify(clientData)}`
+    const errorMessage = `postWebAppJson error: ${err}\nFetch payload: ${JSON.stringify(
+      clientData
+    )}`
     return { error: errorMessage }
   }
 }

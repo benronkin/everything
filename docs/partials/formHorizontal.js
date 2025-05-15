@@ -9,7 +9,7 @@ const css = `
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 }
 .form-horizontal-wrapper button {
@@ -129,6 +129,24 @@ function createElement({
   wrapperEl.message = message.bind(wrapperEl)
   wrapperEl.setSubmit = setSubmit.bind(wrapperEl)
   wrapperEl.setValue = setValue.bind(wrapperEl)
+
+  Object.defineProperty(wrapperEl, 'message', {
+    get() {
+      return wrapperEl.querySelector('.message').textContent
+    },
+    set(message) {
+      wrapperEl.querySelector('.message').textContent = message
+    },
+  })
+
+  Object.defineProperty(wrapperEl, 'value', {
+    get() {
+      return wrapperEl.querySelector('input').value
+    },
+    set(value) {
+      wrapperEl.querySelector('input').value = value
+    },
+  })
 
   return wrapperEl
 }

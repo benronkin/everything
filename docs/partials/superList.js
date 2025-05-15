@@ -240,7 +240,7 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
   div.enableClicking = () => enableClicking(div)
 
   if (emptyState) {
-    div.querySelector('.empty-state').textContent = emptyState
+    div.querySelector('.empty-state').innerHTML = emptyState
   }
 
   div.setAttribute('id', id)
@@ -292,6 +292,8 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
     div.silent = true
     div.addChildren(children)
     div.silent = false
+  } else {
+    div.querySelector('.empty-state').classList.remove('hidden')
   }
 
   return div
