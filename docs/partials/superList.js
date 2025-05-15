@@ -88,11 +88,12 @@ function addChild(child, pos = 'top') {
  * Children can be added post creation of superList
  */
 function addChildren(children = []) {
-  if (this.length) {
-    // remove empty state
-    this.innerHTML = ''
-  }
+  this.querySelector('.empty-state').classList.toggle(
+    'hidden',
+    !!children.length
+  )
 
+  console.log('children.length', children.length)
   if (children.length) {
     for (const child of children) {
       this.appendChild(child)
@@ -240,6 +241,7 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
   div.enableClicking = () => enableClicking(div)
 
   if (emptyState) {
+    div._emptyState = emptyState
     div.querySelector('.empty-state').innerHTML = emptyState
   }
 

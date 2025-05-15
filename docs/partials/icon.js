@@ -6,7 +6,6 @@ import { injectStyle } from '../js/ui.js'
 
 const css = `
 i {
-  padding: 7px;
   border-radius: var(--border-radius);
   cursor: pointer;
 }

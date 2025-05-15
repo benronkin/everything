@@ -26,6 +26,14 @@ const css = `
   margin-top: 20px;
   width: 100%;
 }
+.form-horizontal-wrapper .input-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}  
+.form-horizontal-wrapper .input-group i {
+  padding-left: 0;  
+}
 .form-horizontal-wrapper .form-horizontal input {
   margin: 0;
   width: 100%;
@@ -38,7 +46,7 @@ const css = `
 
 const html = `
   <form class="form-horizontal">
-      <div class="input-icon-group">
+      <div class="input-group">
         <i class="fa-solid"></i>
         <input  />
       </div>

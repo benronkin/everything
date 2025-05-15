@@ -173,11 +173,11 @@ async function handleTasksListChange(e) {
 /**
  *
  */
-function handleTaskFormSubmit(e) {
+function handleTaskFormSubmit(e, pos) {
   e.preventDefault()
 
-  const formData = new FormData(tasksFormEl.querySelector('form'))
-  const title = formData.get('task').trim()
+  const title = tasksFormEl.value.trim()
+
   if (!title.length) {
     return
   }
@@ -186,9 +186,10 @@ function handleTaskFormSubmit(e) {
     title,
   }
 
-  const taskEl = addTaskToList(payload, 'top')
+  const superListItem = createTaskItem(payload, pos)
+  tasksListEl.addChild(superListItem)
   tasksFormEl.querySelector('form').reset()
-  taskEl.select()
+  superListItem.select()
 }
 
 /**
@@ -209,10 +210,10 @@ function handleTaskTrashClick(e) {
  */
 async function initTasks(tasks) {
   state.set('tasks', tasks)
+
+  const children = tasks.map((task) => createTaskItem(task))
   tasksListEl.silent = true
-  for (const task of tasks) {
-    addTaskToList(task, 'bottom')
-  }
+  tasksListEl.addChildren(children)
   tasksListEl.silent = false
 }
 
@@ -283,7 +284,7 @@ function addPageElements() {
 /**
  * Add tasks item to list
  */
-function addTaskToList({ id, title, details }, pos) {
+function createTaskItem({ id, title, details }) {
   const taskEl = createSuperListItem({
     id,
     title,
@@ -300,7 +301,6 @@ function addTaskToList({ id, title, details }, pos) {
       }),
     ],
   })
-  tasksListEl.addChild(taskEl, pos)
   return taskEl
 }
 

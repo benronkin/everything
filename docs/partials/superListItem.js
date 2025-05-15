@@ -28,22 +28,23 @@ const css = `
   align-items: center;
   justify-content: flex-end;
 }
-.super-list-item[data-state="drag"] input[name="title"],
-.super-list-item.not-editable input[name="title"],
-.super-list-item input:disabled
-{
+.super-list-item[data-state="drag"] input[name="title"] {
   pointer-events: none;
   border: none;
   background: transparent;
-  color: var(--gray5);
+  color: inherit;
   cursor: default;
   text-decoration: none;
+}
+.super-list-item .disabled-item-span {
+  padding: 7px 0;
 }
 `
 
 const html = `
   <div class="header">
     <input type="text" name="title" />
+    <span class="disabled-item-span hidden"></span>
     <input type="text" class="hidden" />
     <div class="icons">
       <i class="fa-solid fa-bars hidden"></i>
@@ -273,7 +274,7 @@ function createElement({
   draggable: canDrag = true,
   title,
   details,
-  editable = true,
+  disabled = false,
   selected,
   bgColor,
   textColor,
@@ -290,7 +291,6 @@ function createElement({
 
   div.dataset.id = id || crypto.randomUUID()
   div.innerHTML = html
-  div._onClick = onClick
 
   let titleInput = div.querySelector('[name="title"]')
   titleInput.value = (title || '').toString().trim()
@@ -319,11 +319,6 @@ function createElement({
     })
   }
 
-  if (!editable) {
-    div.classList.add('not-editable')
-    titleInput.setAttribute('disabled', 'disabled')
-  }
-
   div.addEventListener('click', handleClick)
 
   if (showDetails) {
@@ -338,6 +333,23 @@ function createElement({
       .addEventListener('click', (e) => e.stopPropagation())
   }
 
+  Object.defineProperty(div, 'disabled', {
+    get() {
+      return div._disabled
+    },
+    set(newValue) {
+      div._disabled = newValue
+      if (newValue) {
+        const span = div.querySelector('.disabled-item-span')
+        span.classList.remove('hidden')
+        titleInput.classList.add('hidden')
+        span.textContent = div.getTitle()
+      }
+    },
+  })
+
+  div._onClick = onClick
+  div._disabled = disabled
   div.dispatch = dispatch.bind(div)
   div.enableClick = enableClick.bind(div)
   div.enableDrag = enableDrag.bind(div)
@@ -349,8 +361,11 @@ function createElement({
   div.select = select.bind(div)
   div.unselect = unselect.bind(div)
 
+  div.disabled = disabled
+
   if (selected) {
     div.select()
   }
+
   return div
 }
