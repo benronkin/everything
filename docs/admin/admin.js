@@ -55,7 +55,6 @@ async function handleDOMContentLoaded() {
     inputPlaceholder: 'Enter admin key',
     iClass: 'fa-key',
     submitText: 'Submit',
-    value: '45VGrWWp983321pplRbmferrtE3450922DpqWemmv',
     events: {
       submit: handleLoginFormSubmit,
     },
