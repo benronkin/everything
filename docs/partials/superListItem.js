@@ -285,10 +285,8 @@ function createElement({
   if (canDrag) {
     div.classList.add('draggable-target')
   }
-  if (!editable) {
-    div.classList.add('not-editable')
-  }
-  div.dataset.id = id || generateUUID()
+
+  div.dataset.id = id || crypto.randomUUID()
   div.innerHTML = html
   div._onClick = onClick
 
@@ -317,6 +315,11 @@ function createElement({
         div.querySelectorAll('i').forEach((i) => (i.style.color = ''))
       }
     })
+  }
+
+  if (!editable) {
+    div.classList.add('not-editable')
+    titleInput.setAttribute('disabled', 'disabled')
   }
 
   div.addEventListener('click', handleClick)
@@ -348,15 +351,4 @@ function createElement({
     div.select()
   }
   return div
-}
-
-/**
- * Create a uuid
- */
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
 }

@@ -382,6 +382,7 @@ function createShoppingSuggestion({
 function createShoppingItem(text) {
   const shoppingItem = createSuperListItem({
     title: (text || '').trim().toLowerCase(),
+    editable: false,
     textColor: 'var(--purple3)',
     bgColor: 'var(--purple3)',
     children: [
