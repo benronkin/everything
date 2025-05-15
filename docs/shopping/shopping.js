@@ -49,7 +49,8 @@ export async function addItemsToShoppingList(
   }
   // append to list
   for (const text of newItems) {
-    addShoppingItemToList(text, 'bottom')
+    const superListItem = createShoppingItem(text)
+    shoppingListEl.addChild(superListItem)
   }
   if (!suppressListChanged) {
     // when init loads the list, it must not invoke list-changed
@@ -150,7 +151,8 @@ function handleShoppingFormSubmit(e) {
       return
     }
 
-    addShoppingItemToList(value, 'top')
+    const superListItem = createShoppingItem(value)
+    shoppingListEl.addChild(superListItem)
   }
   shoppingListEl.dispatchEvent(new CustomEvent('list-changed'))
 }
@@ -216,7 +218,7 @@ function handleShoppingTrashClick(e) {
   clearSelection()
   displaySuggestions()
   e.target.closest('.super-list-item').remove()
-  shoppingListEl.dispatchEvent(new CustomEvent('list-changed'))
+  shoppingListEl.dispatch('list-changed')
 }
 
 /**
@@ -224,17 +226,18 @@ function handleShoppingTrashClick(e) {
  */
 function handleSuggestionPlusClick(e) {
   const el = e.target.closest('.super-list-item')
-  addShoppingItemToList(el.getTitle(), 'top')
+  const superListItem = createShoppingItem(el.getTitle(), 'top')
+  shoppingListEl.addChild(superListItem)
   el.remove()
   document.querySelector('#suggest-auto-complete').classList.add('hidden')
   // on mobile, the next fa-plus "inherits" a hover state
   // so remove it
-  const els = document.querySelectorAll('.super-list-item .fa-plus')
-  els.forEach((el) => el.blur())
+  shoppingListEl.reset()
+  suggestionsEl.reset()
+  // const els = document.querySelectorAll('.super-list-item .fa-plus')
+  // els.forEach((el) => el.blur())
   clearSelection()
-  document
-    .querySelector('#shopping-list')
-    .dispatchEvent(new CustomEvent('list-changed'))
+  shoppingListEl.dispatch('list-changed')
 }
 
 /**
@@ -242,7 +245,7 @@ function handleSuggestionPlusClick(e) {
  */
 function handleSuggestionTrashClick(e) {
   const div = e.target.closest('.super-list-item')
-  const value = div.textContent.trim()
+  const value = div.querySelector('[name="title"]').value.trim()
   div.remove()
   const suggestions = state.delete('suggestions', value)
   // clearSelection()
@@ -263,11 +266,10 @@ async function initShopping(shoppingStr, suggestionsStr) {
   const suggestionsArr = suggestionsStr.split(',').filter((el) => el.length)
   state.set('shopping-list', shoppingArr)
   state.set('suggestions', suggestionsArr)
-  shoppingListEl.setSilent(true)
-  for (const item of shoppingArr) {
-    addShoppingItemToList(item)
-  }
-  shoppingListEl.setSilent(false)
+  const children = shoppingArr.map((text) => createShoppingItem(text))
+  shoppingListEl.silent = true
+  shoppingListEl.addChildren(children)
+  shoppingListEl.silent = false
 }
 
 /**
@@ -375,9 +377,9 @@ function createShoppingSuggestion({
 }
 
 /**
- * Add shopping item to list
+ * Create a shopping list item
  */
-function addShoppingItemToList(text, pos) {
+function createShoppingItem(text) {
   const shoppingItem = createSuperListItem({
     title: (text || '').trim().toLowerCase(),
     textColor: 'var(--purple3)',
@@ -389,7 +391,7 @@ function addShoppingItemToList(text, pos) {
       }),
     ],
   })
-  shoppingListEl.addChild(shoppingItem, pos)
+  return shoppingItem
 }
 
 /**

@@ -1,4 +1,5 @@
 import { getWebApp, postWebAppJson } from '../js/io.js'
+import { log } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { createField } from '../partials/formField.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
@@ -29,7 +30,6 @@ export async function listRecipeCategories() {
   const { categories } = await getWebApp(
     `${state.getWebAppUrl()}/recipes/categories/read`
   )
-
   mainPanelEl.innerHTML = ''
 
   // set the add category form
@@ -178,5 +178,5 @@ async function handleCategoriesListChange() {
 function handleCategoryTrashClick(e) {
   const el = e.target.closest('.super-list-item')
   const id = el.getAttribute('id')
-  categoriesEl.removeChild(id)
+  categoriesEl.deleteChild(id)
 }

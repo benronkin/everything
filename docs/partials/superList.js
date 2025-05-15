@@ -1,11 +1,15 @@
 import { enableDragging, enableClicking } from '../js/drag.js'
-import { injectStyle } from '../js/ui.js'
+import { injectStyle, log } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
+`
+
+const html = `
+  <span class="empty-state hidden"></span>
 `
 
 // -------------------------------
@@ -40,19 +44,15 @@ function handleItemClick(e, superListEl) {
   superListEl.dispatch('selection-changed', {
     detail: { selected },
   })
-
-  // superListEl.dispatchEvent(
-  //   new CustomEvent('selection-changed', {
-  //     detail: { selected },
-  //   })
-  // )
 }
 
 /**
  *
  */
 function handleListChanged(e) {
-  if (!this._silent && this._onChange) {
+  this.querySelector('.empty-state').classList.toggle('hidden', !!this.length)
+
+  if (!this.silent && this._onChange) {
     this._onChange(e)
   }
 }
@@ -65,11 +65,6 @@ function handleListChanged(e) {
  * Add item to list
  */
 function addChild(child, pos = 'top') {
-  if (!this.querySelectorAll('.super-list-item').length) {
-    // remove empty state
-    this.innerHTML = ''
-  }
-
   if (pos === 'top') {
     this.insertBefore(child, this.firstChild)
   } else {
@@ -77,66 +72,78 @@ function addChild(child, pos = 'top') {
   }
 
   this.dispatch('selection-changed', {
-    detail: {
-      selected: !!this.getSelected(),
-      value: this.getSelected()?.querySelector('span').textContent,
-    },
+    selected: !!this.getSelected(),
+    value: this.getSelected()?.querySelector('span').textContent,
   })
-  this.dispatch('list-changed')
 
-  // this.dispatchEvent(
-  //   new CustomEvent('selection-changed', {
-  //     detail: {
-  //       selected: !!this.getSelected(),
-  //       value: this.getSelected()?.querySelector('span').textContent,
-  //     },
-  //   })
-  // )
-  // this.dispatchEvent(new CustomEvent('list-changed'))
+  this.dispatch('list-changed', {
+    action: 'create',
+    targetId: child.getId(),
+    title: child.querySelector('[name=title]').value,
+    details: child.querySelector('[name=details]').value,
+  })
 }
 
 /**
  * Children can be added post creation of superList
  */
-function addChildren(children) {
-  // children may be undefined and not iterable
-  // hence the check
-  if (!children) {
-    return
-  }
-
-  if (!this.querySelectorAll('.super-list-item').length) {
+function addChildren(children = []) {
+  if (this.length) {
     // remove empty state
     this.innerHTML = ''
   }
 
-  for (const child of children) {
-    this.appendChild(child)
+  if (children.length) {
+    for (const child of children) {
+      this.appendChild(child)
+    }
+
+    this.dispatch('selection-changed', {
+      selected: !!this.getSelected(),
+      value: this.getSelected()?.querySelector('span').textContent,
+    })
   }
 
-  this.dispatch('selection-changed', {
-    selected: !!this.getSelected(),
-    value: this.getSelected()?.querySelector('span').textContent,
-  })
   this.dispatch('list-changed')
+}
 
-  // this.dispatchEvent(
-  //   new CustomEvent('selection-changed', {
-  //     detail: {
-  //       selected: !!this.getSelected(),
-  //       value: this.getSelected()?.querySelector('span').textContent,
-  //     },
-  //   })
-  // )
-  // this.dispatchEvent(new CustomEvent('list-changed'))
+/**
+ * remove the sueprListItem by its id
+ */
+function deleteChild(id) {
+  const item = this.getItem(id)
+  if (item) {
+    item.remove()
+  }
+
+  this.dispatch('list-changed', {
+    action: 'delete',
+    targetId: id,
+  })
+  return item
+}
+
+/**
+ * remove all sueprListItems
+ */
+function deleteChildren() {
+  this.querySelectorAll('.super-list-item').forEach((i) => i.remove())
+
+  this.dispatch('list-changed', {
+    action: 'delete',
+  })
 }
 
 /**
  * Dispatch a custom event
  */
 function dispatch(eventName, detail = {}) {
+  if (this.silent) {
+    log(`${this.id} is silent, canceling dispatch`)
+    return
+  }
   detail.target = this
-  detail.id = this.getAttribute('id')
+  detail.dispatcherId = this.getAttribute('id')
   const event = new CustomEvent(eventName, {
     bubbles: true,
     detail,
@@ -149,11 +156,12 @@ function dispatch(eventName, detail = {}) {
  * Get ids, texts, and selected status of all items
  */
 function getData() {
-  return [...this.querySelectorAll('.super-list-item')].map((el) => ({
-    id: el.id,
+  return [...this.querySelectorAll('.super-list-item')].map((el, i) => ({
+    id: el.dataset.id,
     title: el.querySelector('[name="title"]').value.trim(),
     details: el.querySelector('[name="details"]').value.trim(),
     selected: el.dataset.selected === 'true',
+    sortOrder: i,
   }))
 }
 
@@ -161,7 +169,7 @@ function getData() {
  * Get item by id
  */
 function getItem(id) {
-  return this.querySelector(`#${id}`)
+  return this.querySelector(`[data-id="${id}"]`)
 }
 
 /**
@@ -175,10 +183,8 @@ function getSelected() {
  * Check if item is in list
  */
 function has(item) {
-  const items = this.getTitles().map((item) =>
-    item.querySelector('[name="title"]').toString().trim().toLowerCase()
-  )
-  return items.includes(item)
+  const titles = this.getTitles()
+  return titles.includes(item)
 }
 
 /**
@@ -192,19 +198,6 @@ function getTitles() {
 }
 
 /**
- * remove the sueprListItem by its id
- */
-function removeChild(id) {
-  const item = this.getItem(id)
-  if (item) {
-    item.remove()
-  }
-
-  this.dispatch('list-changed')
-  return item
-}
-
-/**
  *
  */
 function reset() {
@@ -215,21 +208,6 @@ function reset() {
     title: this.getSelected()?.querySelector('[name="title"]').value,
     details: this.getSelected()?.querySelector('[name="details"]').value,
   })
-  // this.dispatchEvent(
-  //   new CustomEvent('selection-changed', {
-  //     detail: {
-  //       selected: !!this.getSelected(),
-  //       value: this.getSelected()?.querySelector('span').textContent,
-  //     },
-  //   })
-  // )
-}
-
-/**
- *
- */
-function setSilent(silent) {
-  this._silent = silent
 }
 
 /**
@@ -256,27 +234,32 @@ function updateChild({ id, title, details }) {
  */
 function createElement({ id, className, children, emptyState, onChange } = {}) {
   const div = document.createElement('div')
-  // div.className = `super-list`
-  div.className = `super-list${className ? ' ' + className : ''}`
+  div.innerHTML = html
 
-  div._emptyState = emptyState
-  div._onChange = onChange
-  div.id = id
-  div.addChild = addChild.bind(div)
-  div.addChildren = addChildren.bind(div)
-  div.addChildren(children)
-  div.dispatch = dispatch.bind(div)
   div.enableDragging = () => enableDragging(div)
   div.enableClicking = () => enableClicking(div)
+
+  if (emptyState) {
+    div.querySelector('.empty-state').textContent = emptyState
+  }
+
+  div.setAttribute('id', id)
+  div.className = `super-list${className ? ' ' + className : ''}`
+
+  div._onChange = onChange
+  div.addChild = addChild.bind(div)
+  div.addChildren = addChildren.bind(div)
+  div.dispatch = dispatch.bind(div)
   div.getData = getData.bind(div)
   div.getItem = getItem.bind(div)
   div.getSelected = getSelected.bind(div)
   div.has = has.bind(div)
   div.getTitles = getTitles.bind(div)
-  div.removeChild = removeChild.bind(div)
+  div.deleteChild = deleteChild.bind(div)
+  div.deleteChildren = deleteChildren.bind(div)
   div.reset = reset.bind(div)
-  div.setSilent = setSilent.bind(div)
   div.updateChild = updateChild.bind(div)
+
   if (onChange) {
     div.onChange = onChange.bind(div)
   }
@@ -288,6 +271,28 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
 
   /* when super-list-item or super-list itself invokes list-changed event */
   div.addEventListener('list-changed', handleListChanged)
+
+  // sets custom props
+  Object.defineProperty(div, 'length', {
+    get() {
+      return this.getData().length
+    },
+  })
+  Object.defineProperty(div, 'silent', {
+    get() {
+      return this._silent
+    },
+    set(isSilent) {
+      log(`${this.id} is ${isSilent ? 'silent' : 'unsilent'}`)
+      this._silent = isSilent
+    },
+  })
+
+  if (children) {
+    div.silent = true
+    div.addChildren(children)
+    div.silent = false
+  }
 
   return div
 }

@@ -10,25 +10,6 @@ let sharedStyleEl = null
 // ------------------------
 
 /**
- * Get value from custom select or input
- */
-// export function getElementValue(elem) {
-//   console.log('elem', elem, elem.getValue)
-//   if (elem.getValue) {
-//     return elem.getValue()
-//   }
-//   return elem.value
-// }
-
-/**
- * Set message at top of page
- */
-export function setMessage(value) {
-  messageEl.innerHTML = value
-  messageEl.classList.toggle('hidden', !value)
-}
-
-/**
  * Detect if mobile device
  */
 export function isMobile() {
@@ -54,6 +35,15 @@ export function injectStyle(css) {
 }
 
 /**
+ * Log in debug
+ */
+export function log(...args) {
+  if (localStorage.getItem('debugMode') === 'true') {
+    console.log(...args)
+  }
+}
+
+/**
  * Resize the textarea
  */
 export function resizeTextarea(textarea) {
@@ -73,6 +63,14 @@ export function resizeTextarea(textarea) {
     const height = parseFloat(textarea.style.height) || 0
     textarea.style.height = height / 2.4 + 'px'
   }
+}
+
+/**
+ * Set message at top of page
+ */
+export function setMessage(value) {
+  messageEl.innerHTML = value
+  messageEl.classList.toggle('hidden', !value)
 }
 
 /**

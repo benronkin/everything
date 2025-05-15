@@ -106,17 +106,24 @@ function handleClick(e) {
  * When user edits the title
  */
 function handleTitleInputChange(e) {
-  const div = e.target
-  div.dispatchEvent(
-    new CustomEvent('list-changed', {
-      bubbles: true,
-      detail: {
-        id: e.target.closest('.super-list-item').getAttribute('id'),
-        section: 'title',
-        value: e.target.value,
-      },
-    })
-  )
+  const div = e.target.closest('.super-list-item')
+  div.dispatch('list-changed', {
+    action: 'update-task',
+    targetId: div.dataset.id,
+    title: e.target.value,
+  })
+}
+
+/**
+ *
+ */
+function handleDetailsInputChange(e) {
+  const div = e.target.closest('.super-list-item')
+  div.dispatch('list-changed', {
+    action: 'update-task',
+    targetId: div.dataset.id,
+    details: e.target.value,
+  })
 }
 
 // -------------------------------
@@ -128,7 +135,7 @@ function handleTitleInputChange(e) {
  */
 function dispatch(eventName, detail = {}) {
   detail.target = this
-  detail.id = this.getAttribute('id')
+  detail.dispatcherId = this.dataset.id
   const event = new CustomEvent(eventName, {
     bubbles: true,
     detail,
@@ -162,7 +169,7 @@ function enableDrag() {
  */
 function getData() {
   const obj = {
-    id: this.getAttribute('id'),
+    id: this.dataset.id,
     title: this.querySelector('[name="title"]').value.trim(),
     details: this.querySelector('[name="details"]').value.trim(),
   }
@@ -175,6 +182,14 @@ function getData() {
 function getDetails() {
   const obj = this.getData()
   return obj.details
+}
+
+/**
+ *
+ */
+function getId() {
+  const obj = this.getData()
+  return obj.id
 }
 
 /**
@@ -273,7 +288,7 @@ function createElement({
   if (!editable) {
     div.classList.add('not-editable')
   }
-  div.setAttribute('id', id || generateUUID())
+  div.dataset.id = id || generateUUID()
   div.innerHTML = html
   div._onClick = onClick
 
@@ -310,18 +325,7 @@ function createElement({
     const detailsTA = div.querySelector('[name="details"]')
     detailsTA.value = (details || '').toString().trim()
 
-    detailsTA.addEventListener('change', () => {
-      div.dispatchEvent(
-        new CustomEvent('list-changed', {
-          bubbles: true,
-          detail: {
-            id,
-            section: 'details',
-            value: detailsTA.value,
-          },
-        })
-      )
-    })
+    detailsTA.addEventListener('change', handleDetailsInputChange)
 
     div._showDetails = showDetails
     div
@@ -333,6 +337,7 @@ function createElement({
   div.enableClick = enableClick.bind(div)
   div.enableDrag = enableDrag.bind(div)
   div.getData = getData.bind(div)
+  div.getId = getId.bind(div)
   div.getDetails = getDetails.bind(div)
   div.getTitle = getTitle.bind(div)
   div.isSelected = isSelected.bind(div)

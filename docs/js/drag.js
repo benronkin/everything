@@ -49,7 +49,7 @@ function handleDragEnd(e) {
   el.dispatchEvent(
     new CustomEvent('list-changed', {
       bubbles: true,
-      detail: { reason: 'drag' },
+      detail: { action: 'drag' },
     })
   )
 }

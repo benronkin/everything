@@ -19,7 +19,7 @@ footer {
 const html = `
 <div class="container">
     <div id="version-container">
-      Version: <span id="version-number">2.2.3</span>
+      Version: <span id="version-number">2.2.4</span>
     </div>
 </div>
 `

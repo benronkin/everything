@@ -94,29 +94,6 @@ function handleTaskInputKeyUp(e) {
 }
 
 /**
- *
- */
-function handleTaskFormSubmit(e) {
-  e.preventDefault()
-
-  const formData = new FormData(tasksFormEl.querySelector('form'))
-  const title = formData.get('task').trim()
-  if (!title.length) {
-    return
-  }
-
-  const taskEl = addTaskToList(
-    {
-      id: crypto.randomUUID(),
-      title,
-    },
-    'top'
-  )
-  tasksFormEl.clear()
-  taskEl.select()
-}
-
-/**
  * When the user focuses on the task form
  */
 function handleTaskFormFocus() {
@@ -133,17 +110,60 @@ function handleTasksSelectionChange(el) {
 }
 
 /**
- * Only handles drag. All other events handled specifically
+ * handles drag and CRUD
  */
 async function handleTasksListChange(e) {
-  if (e.detail?.reason !== 'drag') {
-    return
+  const payload = {}
+  let endpoint
+
+  if (!e.detail?.action) {
+    console.warn('No task action specified')
+    return { status: 401, message: `No task action specified"` }
   }
 
-  const tasks = tasksListEl.getData()
+  // create, delete, and drag require
+  // resorting on the server
+  const _setTasks = () => {
+    const tasks = tasksListEl.getData()
+    payload.tasks = tasks.map((t) => t.id)
+  }
+
+  switch (e.detail.action) {
+    case 'create':
+      endpoint = 'create'
+      payload.id = e.detail.targetId
+      payload.title = e.detail.title
+      _setTasks()
+      break
+    case 'delete':
+      endpoint = 'delete'
+      payload.id = e.detail.targetId
+      _setTasks()
+      break
+    case 'drag':
+      endpoint = 'update'
+      _setTasks()
+      break
+    case 'update-task':
+      endpoint = 'update-task'
+      payload.id = e.detail.targetId
+      if (e.detail.title) {
+        payload.title = e.detail.title
+      }
+      if (e.detail.details) {
+        payload.details = e.detail.details
+      }
+      break
+    default:
+      return {
+        status: 401,
+        message: `Unknown task action: "${e.detail.action}"`,
+      }
+  }
+
   const { status, message } = await postWebAppJson(
-    `${state.getWebAppUrl()}/recipes/tasks/update`,
-    { tasks }
+    `${state.getWebAppUrl()}/tasks/${endpoint}`,
+    payload
   )
 
   console.log('status', status)
@@ -151,12 +171,33 @@ async function handleTasksListChange(e) {
 }
 
 /**
+ *
+ */
+function handleTaskFormSubmit(e) {
+  e.preventDefault()
+
+  const formData = new FormData(tasksFormEl.querySelector('form'))
+  const title = formData.get('task').trim()
+  if (!title.length) {
+    return
+  }
+
+  const payload = {
+    title,
+  }
+
+  const taskEl = addTaskToList(payload, 'top')
+  tasksFormEl.querySelector('form').reset()
+  taskEl.select()
+}
+
+/**
  * Handle the tasks trash click
  */
 function handleTaskTrashClick(e) {
   const el = e.target.closest('.super-list-item')
-  const id = el.getAttribute('id')
-  tasksListEl.removeChild(id)
+  const id = el.dataset.id
+  tasksListEl.deleteChild(id)
 }
 
 // ------------------------
@@ -168,11 +209,11 @@ function handleTaskTrashClick(e) {
  */
 async function initTasks(tasks) {
   state.set('tasks', tasks)
-  tasksListEl.setSilent(true)
+  tasksListEl.silent = true
   for (const task of tasks) {
     addTaskToList(task, 'bottom')
   }
-  tasksListEl.setSilent(false)
+  tasksListEl.silent = false
 }
 
 /**
