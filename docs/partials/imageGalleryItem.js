@@ -60,7 +60,7 @@ function createElement({ id, imgSrc, caption, expanderCb, inputCb, trashCb }) {
   el.dataset.id = id
   el.innerHTML = html
   el.classList.add('image-gallery-item')
-  el.classList.add('container-wide')
+  el.classList.add('container')
   el.querySelector('img').src = imgSrc
   el.querySelector('input').value = caption
 

@@ -93,7 +93,6 @@ function addChildren(children = []) {
     !!children.length
   )
 
-  console.log('children.length', children.length)
   if (children.length) {
     for (const child of children) {
       this.appendChild(child)

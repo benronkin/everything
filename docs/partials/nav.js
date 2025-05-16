@@ -13,7 +13,6 @@ nav {
 }
 nav ul,
 nav .container,
-nav .container-wide,
 nav .brand {
   align-items: center;
   display: flex;
@@ -96,12 +95,6 @@ function createElement({ title, disableRightDrawer = false, wideNav = false }) {
   const navEl = document.createElement('nav')
   navEl.innerHTML = html
   navEl.querySelector('h3').innerHTML = title
-
-  if (wideNav) {
-    const div = navEl.querySelector('.container')
-    div.classList.remove('container')
-    div.classList.add('container-wide')
-  }
 
   const rightDrawerToggleEl = navEl.querySelector('#toggle-right-drawer')
   if (disableRightDrawer) {

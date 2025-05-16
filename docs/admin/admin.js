@@ -115,9 +115,7 @@ async function handleLoginFormSubmit(e) {
  * Populate the admin sidebar's link list
  */
 function showAdminRoutes(data) {
-  const c = document
-    .querySelector('#columns-container')
-    .closest('.container-wide')
+  const c = document.querySelector('#columns-container').closest('.container')
   c.classList.remove('hidden')
   loginContainer.classList.add('hidden')
   for (const { label, endpoint } of data) {

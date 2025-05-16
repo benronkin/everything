@@ -233,10 +233,6 @@ ul {
   max-width: var(--maxWidth);
   margin: auto;
 }
-.container-wide {
-  width: 95%;
-  margin: 0 auto;
-}
 .date-input-wrapper {
   position: relative;
 }
@@ -317,5 +313,8 @@ ul {
     border-image-slice: 1;
     border-right: 2px solid transparent;
     border-image: var(--border-image-vertical);
+  }
+  .container {
+    max-width: 1028px;
   }
 }
