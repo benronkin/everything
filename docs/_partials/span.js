@@ -5,10 +5,14 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
+span {
+  padding: 7px 0;
+  border-radius: var(--border-radius);
+}
 `
 
-const html = `
-`
+// const html = `
+// `
 
 // -------------------------------
 // Exported functions
@@ -27,16 +31,25 @@ export function createSpan(config) {
 // -------------------------------
 
 // -------------------------------
-// Helpers
+// Constructor
 // -------------------------------
 
 /**
  *
  */
-function createElement({ text } = {}) {
+function createElement({ html } = {}) {
   const el = document.createElement('span')
-  el.innerHTML = html
-  el.textContent = text
+
+  Object.defineProperty(el, 'value', {
+    get() {
+      return el.innerHTML
+    },
+    set(newValue) {
+      el.innerHTML = newValue
+    },
+  })
+
+  el.value = html
 
   return el
 }

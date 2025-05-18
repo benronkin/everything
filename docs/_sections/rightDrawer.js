@@ -1,51 +1,72 @@
 import { injectStyle } from '../js/ui.js'
+import { createList } from '../_partials/list.js'
+import { createListItem } from '../_partials/listItem.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
-const html = `
-<div class="nav-wrapper">
-  <ul class="nav">
-    <li data-value="tasks"><a href="../tasks/index.html">Tasks</a></li>
-    <li data-value="recipes"><a href="../recipes/index.html">Recipes</a></li>
-    <li data-value="shopping"><a href="../shopping/index.html">Shopping</a></li>
-    <li data-value="journal"><a href="../journal/index.html">Journal</a></li>
-  </ul>
-  <ul class="nav nav-admin">
-    <li data-value="admin"><a href="../admin/index.html">Admin</a></li>
-  </ul>
-</div>
-`
+const items = [
+  {
+    html: 'Tasks',
+    url: '../tasks/index.html',
+    id: 'rd-item-tasks',
+  },
+  {
+    html: 'Recipes',
+    url: '../recipes/index.html',
+    id: 'rd-item-recipes',
+  },
+  {
+    html: 'Shopping',
+    url: '../shopping/index.html',
+    id: 'rd-item-shopping',
+  },
+  {
+    html: 'Journal',
+    url: '../journal/index.html',
+    id: 'rd-item-journal',
+  },
+  {
+    html: 'Admin',
+    url: '../admin/index.html',
+    id: 'rd-item-admin',
+  },
+]
 
 const css = `
-.nav-wrapper {
+.nav {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.nav-admin {
-  margin-bottom: 20px;
-}
-.nav li {
+.nav .list-item {
+  padding: 0;
+  margin-bottom: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
   font-size: 1.1rem;
   text-align: left;
   width: 100%;
   transition: background 200ms ease;
 }
-.nav li a,
-.nav li a:visited {
+.nav .list-item:last-child {
+  margin-top: auto;
+}
+.nav .list-item a,
+.nav .list-item a:visited {
   padding: 12px 20px;
   display: block;
   width: 100%;
   color: var(--gray5);
   text-shadow: none;
 }
-.nav li:hover {
+.nav .list-item:hover {
   background: var(--gray2);
+  transform: none;
 }
-.nav li.active {
+.nav .list-item[data-selected="true"] {
   background: var(--purple2);
 }
 [data-id="right-drawer"] {
@@ -83,12 +104,17 @@ export function createRightDrawer(config) {
  *
  */
 function createElement({ active }) {
-  const drawerEl = document.createElement('div')
-  drawerEl.dataset.id = 'right-drawer'
-  drawerEl.innerHTML = html
+  const listEl = createList({ id: 'right-drawer', className: 'nav' })
 
+  const listItems = items.map(({ html, url, id }) =>
+    createListItem({ value: html, url, id, type: 'anchor' })
+  )
+  listEl.addChildren(listItems)
   if (active) {
-    drawerEl.querySelector(`[data-value="${active}"`).classList.add('active')
+    const id = `rd-item-${active}`
+    const child = listEl.getChildById(id)
+    child.selected = true
   }
-  return drawerEl
+
+  return listEl
 }

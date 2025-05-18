@@ -1,5 +1,5 @@
 import { createIcon } from './icon.js'
-import { injectStyle } from '../js/ui.js'
+import { injectStyle, setMessage } from '../js/ui.js'
 
 // -------------------------------
 // Globals
@@ -54,48 +54,30 @@ export function createMainIconGroup(config) {
 }
 
 // -------------------------------
-// Helpers
+// Event handlers
 // -------------------------------
-
-/**
- * Create the HTML element.
- */
-function createElement({ children } = {}) {
-  const el = document.createElement('div')
-  el.setAttribute('id', 'main-icon-group')
-  el.appendChild(
-    createIcon({
-      id: 'left-panel-toggle',
-      className: 'fa-chevron-left',
-      onClick: handleLeftPanelToggle,
-    })
-  )
-
-  // undefined is not iterable
-  // hence the check
-  if (children) {
-    for (const child of children) {
-      el.appendChild(child)
-    }
-  }
-
-  el.expand = expand.bind(el)
-  el.collapse = collapse.bind(el)
-  el.toggle = handleLeftPanelToggle.bind(el)
-  return el
-}
 
 /**
  * Handle left panel toggle
  */
 function handleLeftPanelToggle() {
   const group = document.querySelector('#main-icon-group')
+  if (!group.shouldAllowCollapse()) {
+    setMessage('Select a recipe first', 2000)
+    document.querySelector('[data-id="left-panel-toggle"]').shake()
+    return
+  }
+
   if (group.classList.contains('collapsed')) {
     group.expand()
   } else {
     group.collapse()
   }
 }
+
+// -------------------------------
+// Object methods
+// -------------------------------
 
 /**
  *
@@ -132,6 +114,45 @@ function expand() {
     el.classList.remove('hidden')
   }
 }
+
+// -------------------------------
+// Constructor
+// -------------------------------
+
+/**
+ * Create the HTML element.
+ */
+function createElement({ children, shouldAllowCollapse } = {}) {
+  const el = document.createElement('div')
+  el.setAttribute('id', 'main-icon-group')
+  el.appendChild(
+    createIcon({
+      id: 'left-panel-toggle',
+      className: 'fa-chevron-left',
+      events: { click: handleLeftPanelToggle },
+    })
+  )
+
+  // undefined is not iterable
+  // hence the check
+  if (children) {
+    for (const child of children) {
+      el.appendChild(child)
+    }
+  }
+
+  // if and when to block the collapse
+  el.shouldAllowCollapse = shouldAllowCollapse || (() => true)
+
+  el.expand = expand.bind(el)
+  el.collapse = collapse.bind(el)
+  el.toggle = handleLeftPanelToggle.bind(el)
+  return el
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
 
 /**
  * Check if the client is mobile

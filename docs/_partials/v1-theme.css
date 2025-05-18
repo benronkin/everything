@@ -1,4 +1,4 @@
-.super-list-item {
+.list-item {
   cursor: pointer;
   display: flex;
   justify-content: space-between;

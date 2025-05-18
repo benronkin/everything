@@ -1,14 +1,14 @@
 import { state } from '../js/state.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
-import { createNav } from '../partials/nav.js'
-import { createFooter } from '../partials/footer.js'
-import { createRightDrawer } from '../partials/rightDrawer.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createSuperList } from '../partials/superList.js'
-import { createSuperListItem } from '../partials/superListItem.js'
-import { createIcon } from '../partials/icon.js'
-import { createField } from '../partials/formField.js'
-import { createSwitch } from '../partials/switch.js'
+import { createNav } from '../_sections/nav.js'
+import { createFooter } from '../_sections/footer.js'
+import { createRightDrawer } from '../_sections/rightDrawer.js'
+import { createFormHorizontal } from '../_partials/formHorizontal.js'
+import { createList } from '../_partials/list.js'
+import { createTitleDetailsItem } from '../_partials/titleDetailsItem.js'
+import { createIcon } from '../_partials/icon.js'
+import { createField } from '../_partials/formField.js'
+import { createSwitch } from '../_partials/switch.js'
 import { setMessage } from '../js/ui.js'
 
 // -------------------------------
@@ -27,6 +27,16 @@ let retryTimeout = 10
 // -------------------------------
 // Exported functions
 // -------------------------------
+
+/**
+ *
+ */
+export async function getUserTasks(token) {
+  const resp = await getWebApp(
+    `${state.getWebAppUrl()}/tasks/read?token=${token}`
+  )
+  return resp
+}
 
 // ---------------------------------------
 // Event listeners
@@ -48,17 +58,15 @@ document.addEventListener('clear-selection', clearSelection)
 async function handleDOMContentLoaded() {
   handleTokenQueryParam()
 
+  setMessage('Loading...')
+
   token = localStorage.getItem('authToken')
   if (!token) {
     window.location.href = '../index.html'
     return
   }
 
-  setMessage('Loading...')
-
-  const { tasks } = await getWebApp(
-    `${state.getWebAppUrl()}/tasks/read?token=${token}`
-  )
+  const { tasks } = await getUserTasks(token)
 
   setMessage('')
 
@@ -104,7 +112,7 @@ function handleTaskFormFocus() {
  * Handle click/unclick of tasks item
  */
 function handleTasksSelectionChange(el) {
-  if (el.isSelected()) {
+  if (el.selected) {
     tasksFormEl.setValue('')
   }
 }
@@ -186,17 +194,17 @@ function handleTaskFormSubmit(e, pos) {
     title,
   }
 
-  const superListItem = createTaskItem(payload, pos)
-  tasksListEl.addChild(superListItem)
+  const listItem = createTaskItem(payload, pos)
+  tasksListEl.addChild(listItem)
   tasksFormEl.querySelector('form').reset()
-  superListItem.select()
+  listItem.selected = true
 }
 
 /**
  * Handle the tasks trash click
  */
 function handleTaskTrashClick(e) {
-  const el = e.target.closest('.super-list-item')
+  const el = e.target.closest('.list-item')
   const id = el.dataset.id
   tasksListEl.deleteChild(id)
 }
@@ -271,9 +279,9 @@ function addPageElements() {
     .addEventListener('focus', handleTaskFormFocus)
 
   // tasks-list
-  tasksListEl = createSuperList({
+  tasksListEl = createList({
     id: 'tasks-list',
-    className: 'main-super-list-wrapper',
+    className: 'main-list-wrapper',
     emptyState:
       '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
     onChange: handleTasksListChange,
@@ -285,19 +293,18 @@ function addPageElements() {
  * Add tasks item to list
  */
 function createTaskItem({ id, title, details }) {
-  const taskEl = createSuperListItem({
+  const taskEl = createTitleDetailsItem({
     id,
     title,
     details,
-    showDetails: true,
-    textColor: 'var(--purple3)',
-    bgColor: 'var(--purple3)',
-    onClick: () => handleTasksSelectionChange(taskEl),
-    children: [
+    draggable: false,
+    selected: false,
+    events: { click: () => handleTasksSelectionChange(taskEl) },
+    icons: [
       createIcon({
         className: 'fa-trash hidden',
         id,
-        onClick: handleTaskTrashClick,
+        events: { click: handleTaskTrashClick },
       }),
     ],
   })

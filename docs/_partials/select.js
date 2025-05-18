@@ -64,45 +64,8 @@ export function createSelect(config) {
 }
 
 // -------------------------------
-// Helpers
+// Object methods
 // -------------------------------
-
-/**
- *
- */
-function createElement({ id, className, name, options = [] }) {
-  const el = document.createElement('div')
-  el.className = 'select-wrapper'
-  el.innerHTML = html
-  const selectEl = el.querySelector('select')
-  if (id) {
-    selectEl.setAttribute('id', id)
-  }
-
-  if (name) {
-    selectEl.setAttribute('name', name)
-  }
-
-  if (className) {
-    selectEl.className = className
-  }
-
-  el.getName = getName.bind(el)
-  el.getOptionByLabel = getOptionByLabel.bind(el)
-  el.getOptionByValue = getOptionByValue.bind(el)
-  el.getSelected = getSelected.bind(el)
-  el.getValue = getValue.bind(el)
-  el.hasOptionLabel = hasOptionLabel.bind(el)
-  el.hasOptionValue = hasOptionValue.bind(el)
-  el.selectByLabel = selectByLabel.bind(el)
-  el.selectByValue = selectByValue.bind(el)
-  el.setOptions = setOptions.bind(el)
-  el.unselect = unselect.bind(el)
-
-  el.setOptions(options)
-
-  return el
-}
 
 /**
  *
@@ -211,4 +174,46 @@ function unselect() {
   if (oldSelected) {
     oldSelected.setAttribute('selected', null)
   }
+  this.querySelector('select').value = ''
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function createElement({ id, className, name, options = [] }) {
+  const el = document.createElement('div')
+  el.className = 'select-wrapper'
+  el.innerHTML = html
+  const selectEl = el.querySelector('select')
+  if (id) {
+    selectEl.setAttribute('id', id)
+  }
+
+  if (name) {
+    selectEl.setAttribute('name', name)
+  }
+
+  if (className) {
+    selectEl.className = className
+  }
+
+  el.getName = getName.bind(el)
+  el.getOptionByLabel = getOptionByLabel.bind(el)
+  el.getOptionByValue = getOptionByValue.bind(el)
+  el.getSelected = getSelected.bind(el)
+  el.getValue = getValue.bind(el)
+  el.hasOptionLabel = hasOptionLabel.bind(el)
+  el.hasOptionValue = hasOptionValue.bind(el)
+  el.selectByLabel = selectByLabel.bind(el)
+  el.selectByValue = selectByValue.bind(el)
+  el.setOptions = setOptions.bind(el)
+  el.unselect = unselect.bind(el)
+
+  el.setOptions(options)
+
+  return el
 }

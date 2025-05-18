@@ -19,7 +19,7 @@ const html = `
 /**
  *
  */
-export function createSuperList(config) {
+export function createList(config) {
   injectStyle(css)
   return createElement(config)
 }
@@ -32,16 +32,16 @@ export function createSuperList(config) {
  * We preface selection-changed with standard work to
  * unselect all other items
  */
-function handleItemClick(e, superListEl) {
+function handleItemClick(e, listEl) {
   const { target, selected } = e.detail
 
-  superListEl.querySelectorAll('.super-list-item').forEach((item) => {
+  listEl.querySelectorAll(`.${listEl.itemClass}`).forEach((item) => {
     if (item !== target) {
-      item.unselect()
+      item.selected = false
     }
   })
 
-  superListEl.dispatch('selection-changed', {
+  listEl.dispatch('selection-changed', {
     detail: { selected },
   })
 }
@@ -65,6 +65,13 @@ function handleListChanged(e) {
  * Add item to list
  */
 function addChild(child, pos = 'top') {
+  if (!child.className.includes(this.itemClass)) {
+    throw new Error(
+      `Oops, list "#${this.getAttribute('id')}" is set with itemClass "${
+        this.itemClass
+      }" but you loaded it with a "${child.className}" item`
+    )
+  }
   if (pos === 'top') {
     this.insertBefore(child, this.firstChild)
   } else {
@@ -78,14 +85,12 @@ function addChild(child, pos = 'top') {
 
   this.dispatch('list-changed', {
     action: 'create',
-    targetId: child.getId(),
-    title: child.querySelector('[name=title]').value,
-    details: child.querySelector('[name=details]').value,
+    ...child.data,
   })
 }
 
 /**
- * Children can be added post creation of superList
+ * Children can be added post creation of list
  */
 function addChildren(children = []) {
   this.querySelector('.empty-state').classList.toggle(
@@ -100,7 +105,7 @@ function addChildren(children = []) {
 
     this.dispatch('selection-changed', {
       selected: !!this.getSelected(),
-      value: this.getSelected()?.querySelector('span').textContent,
+      value: this.getSelected()?.value,
     })
   }
 
@@ -111,7 +116,7 @@ function addChildren(children = []) {
  * remove the sueprListItem by its id
  */
 function deleteChild(id) {
-  const item = this.getItem(id)
+  const item = this.getChildById(id)
   if (item) {
     item.remove()
   }
@@ -127,7 +132,7 @@ function deleteChild(id) {
  * remove all sueprListItems
  */
 function deleteChildren() {
-  this.querySelectorAll('.super-list-item').forEach((i) => i.remove())
+  this.getChildren().forEach((i) => i.remove())
 
   this.dispatch('list-changed', {
     action: 'delete',
@@ -153,68 +158,67 @@ function dispatch(eventName, detail = {}) {
 }
 
 /**
- * Get ids, texts, and selected status of all items
+ * get all iistItems
  */
-function getData() {
-  return [...this.querySelectorAll('.super-list-item')].map((el, i) => ({
-    id: el.dataset.id,
-    title: el.querySelector('[name="title"]').value.trim(),
-    details: el.querySelector('[name="details"]').value.trim(),
-    selected: el.dataset.selected === 'true',
-    sortOrder: i,
-  }))
+function getChildren() {
+  return [...this.querySelectorAll(`.${this.itemClass}`)]
 }
 
 /**
  * Get item by id
  */
-function getItem(id) {
+function getChildById(id) {
   return this.querySelector(`[data-id="${id}"]`)
 }
 
 /**
- * Get the selected superListItem
+ * Get ids, texts, and selected status of all items
+ */
+function getData() {
+  return [...this.querySelectorAll(`.${this.itemClass}`)].map((el, i) => ({
+    ...el.data,
+    sortOrder: i,
+  }))
+}
+
+/**
+ * Get item by position
+ */
+function getNthChild(n) {
+  return this.getChildren()[n]
+}
+
+/**
+ * Get the selected listItem
  */
 function getSelected() {
-  return this.querySelector('.super-list-item[data-selected="true"]')
+  return this.querySelector('.list-item[data-selected="true"]')
 }
 
 /**
  * Check if item is in list
  */
-function has(item) {
-  const titles = this.getTitles()
-  return titles.includes(item)
-}
-
-/**
- * Get list items
- */
-function getTitles() {
-  const items = [...this.querySelectorAll('.super-list-item')].map((item) =>
-    item.getTitle()
-  )
-  return items
+function has(text) {
+  const texts = this.data.map((obj) => obj.text)
+  return texts.includes(text)
 }
 
 /**
  *
  */
 function reset() {
-  this.querySelectorAll('.super-list-item').forEach((child) => child.unselect())
+  this.querySelectorAll(`.${this.itemClass}`).forEach(
+    (child) => (child.selected = false)
+  )
 
-  this.dispatch('selection-changed', {
-    selected: !!this.getSelected(),
-    title: this.getSelected()?.querySelector('[name="title"]').value,
-    details: this.getSelected()?.querySelector('[name="details"]').value,
-  })
+  this.dispatch('selection-changed')
 }
 
 /**
  * update the sueprListItem by its id
  */
 function updateChild({ id, title, details }) {
-  const item = this.getItem(id)
+  const item = this.getChildById(id)
   if (item) {
     item.querySelector('[name="title"]').value = title
     item.querySelector('[name="details"]').value = details
@@ -232,7 +236,14 @@ function updateChild({ id, title, details }) {
 /**
  *
  */
-function createElement({ id, className, children, emptyState, onChange } = {}) {
+function createElement({
+  id,
+  itemClass = 'list-item',
+  className,
+  children,
+  emptyState,
+  onChange,
+} = {}) {
   const div = document.createElement('div')
   div.innerHTML = html
 
@@ -244,18 +255,22 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
     div.querySelector('.empty-state').innerHTML = emptyState
   }
 
-  div.setAttribute('id', id)
-  div.className = `super-list${className ? ' ' + className : ''}`
+  if (id) {
+    // div.setAttribute('id', id) canceling that. Change code that uses it
+    div.dataset.id = id
+  }
+  div.className = `list${className ? ' ' + className : ''}`
 
   div._onChange = onChange
   div.addChild = addChild.bind(div)
   div.addChildren = addChildren.bind(div)
   div.dispatch = dispatch.bind(div)
+  div.getChildren = getChildren.bind(div)
   div.getData = getData.bind(div)
-  div.getItem = getItem.bind(div)
+  div.getChildById = getChildById.bind(div)
+  div.getNthChild = getNthChild.bind(div)
   div.getSelected = getSelected.bind(div)
   div.has = has.bind(div)
-  div.getTitles = getTitles.bind(div)
   div.deleteChild = deleteChild.bind(div)
   div.deleteChildren = deleteChildren.bind(div)
   div.reset = reset.bind(div)
@@ -265,29 +280,43 @@ function createElement({ id, className, children, emptyState, onChange } = {}) {
     div.onChange = onChange.bind(div)
   }
 
-  /* when super-list-item invokes a custom click event */
-  div.addEventListener('super-list-item-clicked', (e) =>
-    handleItemClick(e, div)
-  )
+  /* when list-item invokes a custom click event */
+  div.addEventListener('list-item-clicked', (e) => handleItemClick(e, div))
 
-  /* when super-list-item or super-list itself invokes list-changed event */
+  /* when list-item or list itself invokes list-changed event */
   div.addEventListener('list-changed', handleListChanged)
 
   // sets custom props
-  Object.defineProperty(div, 'length', {
-    get() {
-      return this.getData().length
+  Object.defineProperties(div, {
+    data: {
+      get() {
+        return this.getChildren().map((child) => child.data)
+      },
+    },
+    length: {
+      get() {
+        return this.getData().length
+      },
+    },
+    itemClass: {
+      get() {
+        return this._itemClass
+      },
+      set(itemClass) {
+        this._itemClass = itemClass
+      },
+    },
+    silent: {
+      get() {
+        return this._silent
+      },
+      set(isSilent) {
+        log(`${this.id} is ${isSilent ? 'silent' : 'unsilent'}`)
+        this._silent = isSilent
+      },
     },
   })
-  Object.defineProperty(div, 'silent', {
-    get() {
-      return this._silent
-    },
-    set(isSilent) {
-      log(`${this.id} is ${isSilent ? 'silent' : 'unsilent'}`)
-      this._silent = isSilent
-    },
-  })
+  div.itemClass = itemClass
 
   if (children) {
     div.silent = true

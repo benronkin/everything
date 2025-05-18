@@ -1,12 +1,12 @@
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { log } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { createField } from '../partials/formField.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createIcon } from '../partials/icon.js'
-import { createSuperList } from '../partials/superList.js'
-import { createSuperListItem } from '../partials/superListItem.js'
-import { createSwitch } from '../partials/switch.js'
+import { createField } from '../_partials/formField.js'
+import { createFormHorizontal } from '../_partials/formHorizontal.js'
+import { createIcon } from '../_partials/icon.js'
+import { createList } from '../_partials/list.js'
+import { createListItem } from '../_partials/listItem.js'
+import { createSwitch } from '../_partials/switch.js'
 
 // -------------------------------
 // Globals
@@ -63,9 +63,9 @@ export async function listRecipeCategories() {
   switchWrapper.appendChild(field)
 
   // create the categories super list
-  categoriesEl = createSuperList({
+  categoriesEl = createList({
     id: 'categories-list',
-    className: 'main-super-list-wrapper u-mb-20',
+    className: 'main-list-wrapper u-mb-20',
     draggable: true,
   })
   categoriesEl.addEventListener(
@@ -77,7 +77,7 @@ export async function listRecipeCategories() {
 
   // popualte the categories super list
   for (const { id, label: text } of categories) {
-    const cat = createSuperListItem({
+    const cat = createListItem({
       title: text,
       id,
       textColor: 'var(--gray6)',
@@ -85,7 +85,7 @@ export async function listRecipeCategories() {
       children: [
         createIcon({
           className: 'fa-trash hidden',
-          onClick: handleCategoryTrashClick,
+          events: { click: handleCategoryTrashClick },
         }),
       ],
     })
@@ -137,7 +137,7 @@ function handleCategoryFormSubmit(e) {
   if (selectedItem) {
     categoriesEl.updateChild(selectedItem.getAttribute('id'), category)
   } else {
-    const cat = createSuperListItem({
+    const cat = createListItem({
       title: category,
       id: crypto.randomUUID(),
       textColor: 'var(--gray6)',
@@ -176,7 +176,7 @@ async function handleCategoriesListChange() {
  * Handle the category trash click
  */
 function handleCategoryTrashClick(e) {
-  const el = e.target.closest('.super-list-item')
+  const el = e.target.closest('.list-item')
   const id = el.getAttribute('id')
   categoriesEl.deleteChild(id)
 }

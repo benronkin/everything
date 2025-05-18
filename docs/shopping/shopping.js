@@ -1,14 +1,13 @@
 import { state } from '../js/state.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
-import { createNav } from '../partials/nav.js'
-import { createFooter } from '../partials/footer.js'
-import { createRightDrawer } from '../partials/rightDrawer.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createSuperList } from '../partials/superList.js'
-import { createSuperListItem } from '../partials/superListItem.js'
-import { createIcon } from '../partials/icon.js'
-import { createField } from '../partials/formField.js'
-import { createSwitch } from '../partials/switch.js'
+import { createNav } from '../_sections/nav.js'
+import { createFooter } from '../_sections/footer.js'
+import { createRightDrawer } from '../_sections/rightDrawer.js'
+import { createFormHorizontal } from '../_partials/formHorizontal.js'
+import { createList } from '../_partials/list.js'
+import { createListItem } from '../_partials/listItem.js'
+import { createField } from '../_partials/formField.js'
+import { createSwitch } from '../_partials/switch.js'
 import { setMessage } from '../js/ui.js'
 
 // ----------------------
@@ -49,8 +48,8 @@ export async function addItemsToShoppingList(
   }
   // append to list
   for (const text of newItems) {
-    const superListItem = createShoppingItem(text)
-    shoppingListEl.addChild(superListItem)
+    const listItem = createShoppingItem(text)
+    shoppingListEl.addChild(listItem)
   }
   if (!suppressListChanged) {
     // when init loads the list, it must not invoke list-changed
@@ -151,8 +150,8 @@ function handleShoppingFormSubmit(e) {
       return
     }
 
-    const superListItem = createShoppingItem(value)
-    shoppingListEl.addChild(superListItem)
+    const listItem = createShoppingItem(value)
+    shoppingListEl.addChild(listItem)
   }
   shoppingListEl.dispatchEvent(new CustomEvent('list-changed'))
 }
@@ -178,7 +177,7 @@ function handleShopInputKeyUp() {
  * server update is successful
  */
 async function handleShoppingListChange(e) {
-  let values = shoppingListEl.getTitles()
+  let values = shoppingListEl.data.map((obj) => obj.text)
   state.add('shopping-list', values)
 
   try {
@@ -217,7 +216,7 @@ function handleShoppingTrashClick(e) {
   e.stopPropagation()
   clearSelection()
   displaySuggestions()
-  e.target.closest('.super-list-item').remove()
+  e.target.closest('.list-item').remove()
   shoppingListEl.dispatch('list-changed')
 }
 
@@ -225,16 +224,16 @@ function handleShoppingTrashClick(e) {
  * Handle suggestion plus click
  */
 function handleSuggestionPlusClick(e) {
-  const el = e.target.closest('.super-list-item')
-  const superListItem = createShoppingItem(el.getTitle(), 'top')
-  shoppingListEl.addChild(superListItem)
+  const el = e.target.closest('.list-item')
+  const listItem = createShoppingItem(el.data.text, 'top')
+  shoppingListEl.addChild(listItem)
   el.remove()
   document.querySelector('#suggest-auto-complete').classList.add('hidden')
   // on mobile, the next fa-plus "inherits" a hover state
   // so remove it
   shoppingListEl.reset()
   suggestionsEl.reset()
-  // const els = document.querySelectorAll('.super-list-item .fa-plus')
+  // const els = document.querySelectorAll('.list-item .fa-plus')
   // els.forEach((el) => el.blur())
   clearSelection()
   shoppingListEl.dispatch('list-changed')
@@ -244,8 +243,8 @@ function handleSuggestionPlusClick(e) {
  * Handle suggestion trash click
  */
 function handleSuggestionTrashClick(e) {
-  const div = e.target.closest('.super-list-item')
-  const value = div.querySelector('[name="title"]').value.trim()
+  const div = e.target.closest('.list-item')
+  const value = div.data.text.trim()
   div.remove()
   const suggestions = state.delete('suggestions', value)
   // clearSelection()
@@ -331,9 +330,9 @@ function addPageElements() {
   )
 
   // shopping-list
-  shoppingListEl = createSuperList({
+  shoppingListEl = createList({
     id: 'shopping-list',
-    className: 'main-super-list-wrapper',
+    className: 'main-list-wrapper',
     draggable: true,
     emptyState: 'Nothing to buy, chef 👨‍🍳',
     onChange: handleShoppingListChange,
@@ -341,7 +340,7 @@ function addPageElements() {
   shoppingWrapper.appendChild(shoppingListEl)
 
   // suggestions
-  suggestionsEl = createSuperList({
+  suggestionsEl = createList({
     id: 'suggestions-list',
     draggable: false,
   })
@@ -351,26 +350,20 @@ function addPageElements() {
 /**
  * Create a shopping suggestion element
  */
-function createShoppingSuggestion({
-  title,
-  selected = false,
-  editable = true,
-}) {
-  const suggestion = createSuperListItem({
-    title,
-    editable,
+function createShoppingSuggestion({ text, selected = false }) {
+  const suggestion = createListItem({
+    value: text,
     selected,
-    textColor: 'var(--gray6)',
-    bgColor: 'var(--teal2)',
-    children: [
-      createIcon({
+    classes: { selected: 'u-selected-secondary', hover: 'u-hover-secondary' },
+    icons: [
+      {
         className: 'fa-plus hidden',
-        onClick: handleSuggestionPlusClick,
-      }),
-      createIcon({
+        events: { click: handleSuggestionPlusClick },
+      },
+      {
         className: 'fa-trash hidden',
-        onClick: handleSuggestionTrashClick,
-      }),
+        events: { click: handleSuggestionTrashClick },
+      },
     ],
   })
   return suggestion
@@ -380,16 +373,13 @@ function createShoppingSuggestion({
  * Create a shopping list item
  */
 function createShoppingItem(text) {
-  const shoppingItem = createSuperListItem({
-    title: (text || '').trim().toLowerCase(),
-    disabled: true,
-    textColor: 'var(--purple3)',
-    bgColor: 'var(--purple3)',
-    children: [
-      createIcon({
+  const shoppingItem = createListItem({
+    value: (text || '').trim().toLowerCase(),
+    icons: [
+      {
         className: 'fa-trash hidden',
-        onClick: handleShoppingTrashClick,
-      }),
+        events: { click: handleShoppingTrashClick },
+      },
     ],
   })
   return shoppingItem
@@ -404,12 +394,16 @@ function displaySuggestions() {
     suggestions = ['apples', 'carrots', 'berries']
   }
   suggestionsEl.innerHTML = ''
-  const shoppingItems = shoppingListEl.getTitles()
+  const shoppingItems = shoppingListEl.data.map((obj) => obj.text)
 
   suggestions = suggestions.filter((s) => !shoppingItems.includes(s))
   suggestions.sort()
-  for (const title of suggestions) {
-    const child = createShoppingSuggestion({ title, selected: false })
+
+  // console.log('shoppingItems', shoppingItems)
+  // console.log('suggestions', suggestions)
+
+  for (const text of suggestions) {
+    const child = createShoppingSuggestion({ text, selected: false })
     suggestionsEl.appendChild(child)
   }
 }
@@ -419,6 +413,7 @@ function displaySuggestions() {
  */
 function populateShopAutoComplete() {
   if (!shoppingInput.value) {
+    autoCompleteEl.classList.add('hidden')
     return
   }
   const q = shoppingInput.value.toLowerCase().trim()
@@ -434,9 +429,9 @@ function populateShopAutoComplete() {
     return
   }
   autoCompleteEl.classList.remove('hidden')
-  for (const title of suggests) {
+  for (const text of suggests) {
     const div = createShoppingSuggestion({
-      title,
+      text,
       editable: false,
       selected: true,
     })

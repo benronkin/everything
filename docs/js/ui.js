@@ -68,9 +68,20 @@ export function resizeTextarea(textarea) {
 /**
  * Set message at top of page
  */
-export function setMessage(value) {
+export function setMessage(value, timeout) {
   messageEl.innerHTML = value
   messageEl.classList.toggle('hidden', !value)
+
+  if (timeout) {
+    setTimeout(() => {
+      messageEl.style.animation = 'fadeOutSlideUp 300ms ease-out'
+      setTimeout(() => {
+        messageEl.innerHTML = ''
+        messageEl.classList.add('hidden')
+        messageEl.style.animation = '' // reset so future fadeInSlideDown can fire again
+      }, 300)
+    }, timeout)
+  }
 }
 
 /**

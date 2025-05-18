@@ -1,15 +1,15 @@
 import { state } from '../js/state.js'
-import { createNav } from '../partials/nav.js'
-import { createFooter } from '../partials/footer.js'
-import { createField } from '../partials/formField.js'
-import { createLeftPanelLink } from '../partials/leftPanelLink.js'
-import { createIcon } from '../partials/icon.js'
-import { createMainIconGroup } from '../partials/mainIconGroup.js'
-import { createRightDrawer } from '../partials/rightDrawer.js'
-import { createSelect } from '../partials/select.js'
-import { createSwitch } from '../partials/switch.js'
-import { createSearch } from '../partials/search.js'
-import { MODAL, initDialog, setDialog } from '../partials/modal.js'
+import { createNav } from '../_sections/nav.js'
+import { createFooter } from '../_sections/footer.js'
+import { createField } from '../_partials/formField.js'
+import { createLeftPanelLink } from '../_partials/leftPanelLink.js'
+import { createIcon } from '../_partials/icon.js'
+import { createMainIconGroup } from '../_partials/mainIconGroup.js'
+import { createRightDrawer } from '../_sections/rightDrawer.js'
+import { createSelect } from '../_partials/select.js'
+import { createSwitch } from '../_partials/switch.js'
+import { createSearch } from '../_partials/search.js'
+import { MODAL, initDialog, setDialog } from '../_sections/modal.js'
 import {
   // getElementValue,
   setMessage,
@@ -106,6 +106,7 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup({
+    shouldAllowCollapse: () => !!recipeIdEl.textContent,
     children: [
       createIcon({ id: 'add-recipe', className: 'fa-plus' }),
       createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' }),
@@ -206,7 +207,7 @@ async function handleFieldChange(e) {
 
   const section = elem.name
   if (section === 'title') {
-    document.querySelector('.left-panel-link.active').textContent = elem.value
+    getActiveRecipeLink().textContent = elem.value
   }
 
   const id = recipeIdEl.textContent
@@ -289,6 +290,7 @@ async function handleDeleteRecipe(e) {
   document.querySelector(`.left-panel-link[data-id="${id}"`).remove()
   document.querySelector('dialog').close()
   mainPanelEl.classList.add('hidden')
+  resetMainPanel()
 }
 
 /**
@@ -317,7 +319,7 @@ async function handleShopIngredientsClick() {
 }
 
 // ------------------------
-// Helper functions
+// Helpers
 // ------------------------
 
 /**
@@ -421,4 +423,22 @@ function populateRelatedRecipes() {
     ulEl.appendChild(li)
   }
   relatedRecipesEl.appendChild(ulEl)
+}
+
+/**
+ * Erase all inputs and textareas of recipe
+ */
+function resetMainPanel() {
+  const mainPanel = document.querySelector('#main-panel')
+  mainPanel.querySelectorAll('input').forEach((el) => (el.value = ''))
+  mainPanel.querySelectorAll('textarea').forEach((el) => (el.value = ''))
+  mainPanel.querySelector('#recipe-id').textContent = ''
+  categorySelect.unselect()
+}
+
+/**
+ *
+ */
+function getActiveRecipeLink() {
+  return document.querySelector('.left-panel-link.active')
 }

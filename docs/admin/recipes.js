@@ -1,8 +1,8 @@
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { state } from '../js/state.js'
-import { createTable } from '../partials/table.js'
-import { createSelect } from '../partials/select.js'
-import { createSpan } from '../partials/span.js'
+import { createTable } from '../_partials/table.js'
+import { createSelect } from '../_partials/select.js'
+import { createSpan } from '../_partials/span.js'
 
 // -------------------------------
 // Globals
@@ -56,9 +56,9 @@ export async function listRecipes() {
     table.addRow({
       id: r.id,
       fields: [
-        createSpan({ text: r.title }),
+        createSpan({ html: r.title }),
         selectEl,
-        createSpan({ text: note }),
+        createSpan({ html: note }),
       ],
     })
   }

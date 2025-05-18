@@ -80,8 +80,8 @@ function enableDragContainer(e) {
  * Make an existing DOM element draggable
  */
 function makeElementDraggable(elem) {
-  elem.enableDrag()
-
+  elem.selected = false
+  elem.draggable = true
   elem.addEventListener('dragstart', handleDragStart)
   elem.addEventListener('touchstart', handleDragStart)
   elem.addEventListener('dragend', handleDragEnd)
@@ -92,7 +92,7 @@ function makeElementDraggable(elem) {
  * Break an existing DOM element draggable
  */
 function breakElementDraggable(elem) {
-  elem.enableClick()
+  elem.draggable = false
 
   elem.removeEventListener('dragstart', handleDragStart)
   elem.removeEventListener('touchstart', handleDragStart)
