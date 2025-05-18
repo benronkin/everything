@@ -1,10 +1,9 @@
 import { createNav } from './sections/nav.js'
 import { createFormHorizontal } from './partials/formHorizontal.js'
 import { createFooter } from './sections/footer.js'
-import { handleTokenQueryParam, postWebAppJson } from './js/io.js'
+import { handleTokenQueryParam, getWebApp, postWebAppJson } from './js/io.js'
 import { setMessage } from './js/ui.js'
 import { state } from './js/state.js'
-import { getUserTasks } from './tasks/tasks.js'
 
 // ----------------------
 // Globals
@@ -90,7 +89,9 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  const { tasks } = await getUserTasks()
+  const { tasks } = await getWebApp(
+    `${state.getWebAppUrl()}/tasks/read?token=${token}`
+  )
   const defaultPage = state.getDefaultPage()
   const nextPage = await getNextPage(tasks, defaultPage)
   window.location.href = nextPage

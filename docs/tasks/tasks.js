@@ -24,20 +24,6 @@ let tasksInput
 let token
 let retryTimeout = 10
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- *
- */
-export async function getUserTasks(token) {
-  const resp = await getWebApp(
-    `${state.getWebAppUrl()}/tasks/read?token=${token}`
-  )
-  return resp
-}
-
 // ---------------------------------------
 // Event listeners
 // ---------------------------------------
@@ -66,7 +52,9 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  const { tasks } = await getUserTasks(token)
+  const { tasks } = await getWebApp(
+    `${state.getWebAppUrl()}/tasks/read?token=${token}`
+  )
 
   setMessage('')
 
