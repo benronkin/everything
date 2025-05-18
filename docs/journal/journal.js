@@ -1,13 +1,13 @@
 import { state } from '../js/state.js'
-import { createNav } from '../_sections/nav.js'
-import { createFooter } from '../_sections/footer.js'
-import { createLeftPanelLink } from '../_partials/leftPanelLink.js'
-import { createIcon } from '../_partials/icon.js'
-import { createMainIconGroup } from '../_partials/mainIconGroup.js'
-import { createRightDrawer } from '../_sections/rightDrawer.js'
-import { MODAL, initDialog, setDialog } from '../_sections/modal.js'
-import { createImageGalleryItem } from '../_partials/imageGalleryItem.js'
-import { createFileInput } from '../_partials/fileInput.js'
+import { createNav } from '../sections/nav.js'
+import { createFooter } from '../sections/footer.js'
+import { createLeftPanelLink } from '../partials/leftPanelLink.js'
+import { createIcon } from '../partials/icon.js'
+import { createMainIconGroup } from '../partials/mainIconGroup.js'
+import { createRightDrawer } from '../sections/rightDrawer.js'
+import { MODAL, initDialog, setDialog } from '../sections/modal.js'
+import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
+import { createFileInput } from '../partials/fileInput.js'
 import {
   setMessage,
   resizeTextarea,

@@ -1,6 +1,6 @@
 import { injectStyle } from '../js/ui.js'
-import { createList } from '../_partials/list.js'
-import { createListItem } from '../_partials/listItem.js'
+import { createList } from '../partials/list.js'
+import { createListItem } from '../partials/listItem.js'
 
 // -------------------------------
 // Globals

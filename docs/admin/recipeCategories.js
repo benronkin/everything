@@ -1,12 +1,12 @@
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { log } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { createField } from '../_partials/formField.js'
-import { createFormHorizontal } from '../_partials/formHorizontal.js'
-import { createIcon } from '../_partials/icon.js'
-import { createList } from '../_partials/list.js'
-import { createListItem } from '../_partials/listItem.js'
-import { createSwitch } from '../_partials/switch.js'
+import { createField } from '../partials/formField.js'
+import { createFormHorizontal } from '../partials/formHorizontal.js'
+import { createIcon } from '../partials/icon.js'
+import { createList } from '../partials/list.js'
+import { createListItem } from '../partials/listItem.js'
+import { createSwitch } from '../partials/switch.js'
 
 // -------------------------------
 // Globals

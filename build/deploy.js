@@ -77,7 +77,7 @@ function updateIndexPage() {
  *
  */
 function updateFooterPartial() {
-  const filePath = './docs/_sections/footer.js'
+  const filePath = './docs/sections/footer.js'
   let content = fs.readFileSync(filePath, 'utf8')
   const match = content.match(/<span id="version-number">(.*?)<\/span>/)
   const currentVersion = match ? match[1] : null
