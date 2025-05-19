@@ -90,15 +90,16 @@ function createElement({
   const formEl = wrapperEl.querySelector('form')
   formEl.classList.add('form-horizontal')
   if (formId) {
-    formEl.setAttribute('id', formId)
+    formEl.dataset.id = formId
   }
 
   const inputEl = formEl.querySelector('input')
-  inputEl.setAttribute('type', inputType)
-  inputEl.setAttribute('name', inputName)
-  inputEl.setAttribute('placeholder', inputPlaceholder)
+  inputEl.type = inputType
+  inputEl.name = inputName
+  inputEl.placeholder = inputPlaceholder
+  inputEl.dataset.testId = `${formId}-input` // cypress
   if (inputAutoComplete) {
-    inputEl.setAttribute('autocomplete', inputAutoComplete)
+    inputEl.autocomplete = inputAutoComplete
   }
   if (value) {
     inputEl.value = value
@@ -111,6 +112,7 @@ function createElement({
   if (submitText) {
     submitEl.classList.remove('hidden')
     submitEl.textContent = submitText
+    submitEl.dataset.testId = `${formId}-submit` //cypress
   }
 
   if (disabled) {

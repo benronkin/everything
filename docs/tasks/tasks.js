@@ -192,7 +192,7 @@ function handleTaskFormSubmit(e, pos) {
  * Handle the tasks trash click
  */
 function handleTaskTrashClick(e) {
-  const el = e.target.closest('.list-item')
+  const el = e.target.closest('.td-item')
   const id = el.dataset.id
   tasksListEl.deleteChild(id)
 }
@@ -269,6 +269,7 @@ function addPageElements() {
   // tasks-list
   tasksListEl = createList({
     id: 'tasks-list',
+    itemClass: 'td-item',
     className: 'main-list-wrapper',
     emptyState:
       '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
@@ -287,13 +288,13 @@ function createTaskItem({ id, title, details }) {
     details,
     draggable: false,
     selected: false,
-    events: { click: () => handleTasksSelectionChange(taskEl) },
+    events: { click: handleTasksSelectionChange },
     icons: [
-      createIcon({
+      {
         className: 'fa-trash hidden',
         id,
         events: { click: handleTaskTrashClick },
-      }),
+      },
     ],
   })
   return taskEl

@@ -67,9 +67,7 @@ function handleListChanged(e) {
 function addChild(child, pos = 'top') {
   if (!child.className.includes(this.itemClass)) {
     throw new Error(
-      `Oops, list "#${this.getAttribute('id')}" is set with itemClass "${
-        this.itemClass
-      }" but you loaded it with a "${child.className}" item`
+      `Oops, list "#${this.dataset.id}" is set with itemClass "${this.itemClass}" but you loaded it with a "${child.className}" item`
     )
   }
   if (pos === 'top') {
@@ -259,6 +257,7 @@ function createElement({
     // div.setAttribute('id', id) canceling that. Change code that uses it
     div.dataset.id = id
   }
+  div.dataset.testId = id || 'list'
   div.className = `list${className ? ' ' + className : ''}`
 
   div._onChange = onChange

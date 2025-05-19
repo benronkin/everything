@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { createList } from './list.js'
 import { createListItem } from './listItem.js'
 import { createTitleDetailsItem } from './titleDetailsItem.js'
-import { createRightDrawer } from './rightDrawer.js'
+import { createRightDrawer } from '../sections/rightDrawer.js'
 
 describe('create a list for listItem', () => {
   let listEl

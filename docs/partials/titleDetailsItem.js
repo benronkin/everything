@@ -27,6 +27,7 @@ const css = `
   cursor: move;
 }
 .td-item input {
+  color: inherit;
   cursor: pointer;
   margin: 0;
   width: 90%;
@@ -96,9 +97,7 @@ export function createTitleDetailsItem(config) {
 /**
  * Handle click on the item
  */
-function handleClick(e) {
-  const div = e.target.closest('.td-item')
-
+function handleClick(div, cb) {
   if (div.draggable) {
     return
   }
@@ -108,7 +107,9 @@ function handleClick(e) {
   div.querySelector('.details').classList.toggle('hidden', !div.selected)
 
   // notify list of the click
-  this.dispatch('list-item-clicked', this.data)
+  div.dispatch('list-item-clicked', div.data)
+
+  cb(div)
 }
 
 /**
@@ -213,17 +214,15 @@ function createElement({
   div.innerHTML = html
   div._classes = classes
 
-  let titleInput = div.querySelector('[name="title"]')
-  titleInput.value = (title || '').toString().trim()
-  titleInput.addEventListener('change', handleTitleInputChange)
-
   for (const iconConfig of icons) {
     const child = createIcon(iconConfig)
+
     div.querySelector('.icons').appendChild(child)
   }
 
   div.dispatch = dispatch.bind(div)
   div.getClass = getClass.bind(div)
+  div.isSelected = isSelected.bind(div)
 
   const detailsTA = div.querySelector('[name="details"]')
   detailsTA.value = (details || '').toString().trim()
@@ -272,16 +271,30 @@ function createElement({
         }
       },
     },
+    title: {
+      get() {
+        return div.querySelector('[name="title"]').value
+      },
+      set(v) {
+        div.querySelector('[name="title"]').value = v
+      },
+    },
   })
   div.selected = selected
   div.draggable = draggable
+  div.title = (title || '').toString().trim()
 
-  div.addEventListener('click', handleClick)
   div.addEventListener('mouseenter', handleMouseEnter)
   div.addEventListener('mouseleave', handleMouseLeave)
   for (const [eventName, cb] of Object.entries(events)) {
-    div.addEventListener(eventName, cb)
+    if (eventName === 'click') {
+      div.addEventListener('click', () => handleClick(div, cb))
+    } else {
+      div.addEventListener(eventName, cb)
+    }
   }
+  const titleInput = div.querySelector('[name="title"]')
+  titleInput.addEventListener('change', handleTitleInputChange)
 
   return div
 }

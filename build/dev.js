@@ -24,7 +24,7 @@ async function build() {
   updateAdminPage()
   updateIndexPage()
   execSync(
-    'npx live-server --host=127.0.0.1 --port=5500 --open=docs/index.html',
+    'npx live-server --host=127.0.0.1 --port=5500 --no-browser --open=docs/index.html',
     { stdio: 'inherit', shell: true }
   )
 }
