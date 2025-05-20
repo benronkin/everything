@@ -8,17 +8,20 @@ import { createIcon } from './icon.js'
 const css = `
 .td-item {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: flex-start;
-  background-color: #1e1e1e;
+  background-color: var(--card-bg-translucent);
   border-radius: var(--border-radius);
   border: 1px solid var(--gray2);
+  border-top-width: 25px;
   margin-bottom: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-  padding: 14px 18px;
+  padding: 5px 18px;
   color: var(--gray6);
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 .td-item:hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
@@ -26,10 +29,16 @@ const css = `
 .td-item[data-draggable="true"] {
   cursor: move;
 }
+.td-item [data-target="expander"] {
+  position: absolute;
+  top: -27px;
+  right: 0;
+}
 .td-item input {
   color: inherit;
   cursor: pointer;
   margin: 0;
+  padding: 5px;
   width: 90%;
 }
 .td-item textarea {
@@ -40,6 +49,7 @@ const css = `
   margin: 0;
 }
 .td-item .header {
+color: inherit;
   display: flex;
 }
 .td-item .details {
@@ -55,18 +65,23 @@ const css = `
 .td-item i {
   color: inherit;
 }
+.td-item i[data-target] {
+  color: var(--purple0)
+}
 .td-item[data-draggable="true"] i.fa-bars {
   display: inline-block !important;
 }
 .td-item[data-draggable="true"] i:not(.fa-bars) {
   display: none;
 }
-.td-item[data-selected="true"] i:not(.fa-bars) {
-  display: inline-block !important;
+.td-item.u-selected-primary {
+  color: var(--purple3);
+  border-color: var(--purple3);
 }
 `
 
 const html = `
+  <i class="fa-solid fa-chevron-left" data-target="expander"></i>
   <div class="header">
     <input type="text" name="title" />
     <div class="icons">
@@ -97,17 +112,20 @@ export function createTitleDetailsItem(config) {
 /**
  * Handle click on the item
  */
-function handleClick(div, cb) {
+function handleClick(e, div, cb) {
   if (div.draggable) {
     return
   }
 
-  div.selected = !div.selected
+  if (e.target.closest('input') || e.target.closest('textarea')) {
+    return
+  }
 
-  div.querySelector('.details').classList.toggle('hidden', !div.selected)
+  div.selected = !div.selected
+  div.expanded = !div.expanded
 
   // notify list of the click
-  div.dispatch('list-item-clicked', div.data)
+  div.dispatch('list-item-clicked', { selectedItem: div.closest('.td-item') })
 
   cb(div)
 }
@@ -183,13 +201,6 @@ function getClass(className) {
   return this._classes[className]
 }
 
-/**
- *
- */
-function isSelected() {
-  return this.dataset.selected === 'true'
-}
-
 // -------------------------------
 // Constructor
 // -------------------------------
@@ -200,6 +211,7 @@ function isSelected() {
 function createElement({
   draggable = false,
   selected = false,
+  expanded = false,
   title,
   details,
   icons = [],
@@ -222,13 +234,11 @@ function createElement({
 
   div.dispatch = dispatch.bind(div)
   div.getClass = getClass.bind(div)
-  div.isSelected = isSelected.bind(div)
 
   const detailsTA = div.querySelector('[name="details"]')
   detailsTA.value = (details || '').toString().trim()
   resizeTextarea(detailsTA)
   detailsTA.addEventListener('change', handleDetailsInputChange)
-  detailsTA.addEventListener('click', (e) => e.stopPropagation())
 
   Object.defineProperties(div, {
     data: {
@@ -253,6 +263,26 @@ function createElement({
         } else {
           div.setAttribute('draggable', 'false')
         }
+      },
+    },
+    expanded: {
+      get() {
+        return div.dataset.expanded === 'true'
+      },
+      set(v) {
+        if (div.draggable) {
+          return
+        }
+        div.dataset.expanded = v
+        // no DOM in vitest hence ?.
+        div.querySelector('.details')?.classList.toggle('hidden', !v)
+        div.querySelector('.fa-trash')?.classList.toggle('hidden', !v)
+        div
+          .querySelector('[data-target="expander"]')
+          .classList.toggle('fa-chevron-down', v)
+        div
+          .querySelector('[data-target="expander"]')
+          .classList.toggle('fa-chevron-left', !v)
       },
     },
     selected: {
@@ -280,6 +310,7 @@ function createElement({
       },
     },
   })
+  div.expanded = expanded
   div.selected = selected
   div.draggable = draggable
   div.title = (title || '').toString().trim()
@@ -288,7 +319,7 @@ function createElement({
   div.addEventListener('mouseleave', handleMouseLeave)
   for (const [eventName, cb] of Object.entries(events)) {
     if (eventName === 'click') {
-      div.addEventListener('click', () => handleClick(div, cb))
+      div.addEventListener('click', (e) => handleClick(e, div, cb))
     } else {
       div.addEventListener(eventName, cb)
     }

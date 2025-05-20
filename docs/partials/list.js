@@ -29,20 +29,25 @@ export function createList(config) {
 // -------------------------------
 
 /**
- * We preface selection-changed with standard work to
- * unselect all other items
+ * Respond to list item custom click events
  */
-function handleItemClick(e, listEl) {
-  const { target, selected } = e.detail
+function handleItemClick(e) {
+  const { selectedItem } = e.detail
 
-  listEl.querySelectorAll(`.${listEl.itemClass}`).forEach((item) => {
-    if (item !== target) {
+  this.dispatch('selection-changed', { selectedItem })
+}
+
+/**
+ * Respond to selection changed events that the list
+ * generates on add events and others.
+ */
+function handleSelectionChanged(e) {
+  const { selectedItem } = e.detail
+
+  this.querySelectorAll(`.${this.itemClass}`).forEach((item) => {
+    if (item !== selectedItem) {
       item.selected = false
     }
-  })
-
-  listEl.dispatch('selection-changed', {
-    detail: { selected },
   })
 }
 
@@ -77,8 +82,8 @@ function addChild(child, pos = 'top') {
   }
 
   this.dispatch('selection-changed', {
-    selected: !!this.getSelected(),
-    value: this.getSelected()?.querySelector('span').textContent,
+    target: child,
+    source: 'addChild',
   })
 
   this.dispatch('list-changed', {
@@ -100,12 +105,11 @@ function addChildren(children = []) {
     for (const child of children) {
       this.appendChild(child)
     }
-
-    this.dispatch('selection-changed', {
-      selected: !!this.getSelected(),
-      value: this.getSelected()?.value,
-    })
   }
+
+  this.dispatch('selection-changed', {
+    target: this.getChildren()[0],
+  })
 
   this.dispatch('list-changed')
 }
@@ -159,7 +163,9 @@ function dispatch(eventName, detail = {}) {
  * get all iistItems
  */
 function getChildren() {
-  return [...this.querySelectorAll(`.${this.itemClass}`)]
+  const itemClass = `.${this.itemClass}`
+  const children = [...this.querySelectorAll(itemClass)]
+  return children
 }
 
 /**
@@ -280,7 +286,10 @@ function createElement({
   }
 
   /* when list-item invokes a custom click event */
-  div.addEventListener('list-item-clicked', (e) => handleItemClick(e, div))
+  div.addEventListener('list-item-clicked', handleItemClick)
+
+  /** when the list receives a selection-changed */
+  div.addEventListener('selection-changed', handleSelectionChanged)
 
   /* when list-item or list itself invokes list-changed event */
   div.addEventListener('list-changed', handleListChanged)

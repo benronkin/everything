@@ -104,7 +104,9 @@ function handleClick(e) {
   div.selected = !div.selected
 
   // notify list of the click
-  this.dispatch('list-item-clicked', this.data)
+  this.dispatch('list-item-clicked', {
+    selectedItem: this.closest('.list-item'),
+  })
 }
 
 /**

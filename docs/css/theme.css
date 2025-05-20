@@ -96,8 +96,8 @@
 }
 
 .u-selected-primary {
-  color: var(--purple3) !important;
-  border: 1px solid var(--purple3) !important;
+  color: var(--purple3);
+  border: 1px solid var(--purple3);
 }
 .u-selected-secondary {
   color: var(--teal3) !important;

@@ -70,11 +70,19 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Handle DOMContentLoaded
  */
 async function handleDOMContentLoaded() {
-  // force login (temporary for setting token in db)
   const urlParams = new URLSearchParams(window.location.search)
-  const setupParam = urlParams.get('setup')
-  if (setupParam) {
-    showLoginForm('Upgrading the app. We need your email again')
+
+  let message
+
+  if (urlParams.get('message')) {
+    message = urlParams.get('message')
+  } else if (urlParams.get('setup')) {
+    message = 'Upgrading the app. We need your email again'
+  }
+
+  if (message) {
+    setMessage(message)
+    showLoginForm()
     return
   }
 
@@ -83,9 +91,10 @@ async function handleDOMContentLoaded() {
   const token = localStorage.getItem('authToken')
   if (!token) {
     console.log('handleDOMContentLoaded: no token')
-    showLoginForm(
+    setMessage(
       '<i class="fa-solid fa-circle-exclamation"></i> Authentication failed'
     )
+    showLoginForm()
     return
   }
 
@@ -104,11 +113,7 @@ async function handleDOMContentLoaded() {
 /**
  *
  */
-function showLoginForm(message) {
-  if (message) {
-    setMessage(message)
-  }
-
+function showLoginForm() {
   loginForm = createFormHorizontal({
     formId: 'login-form',
     inputType: 'email',

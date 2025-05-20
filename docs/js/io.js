@@ -39,7 +39,11 @@ export async function getWebApp(path) {
   let res
   try {
     res = await fetch(req)
-    const { status, message, data } = await res.json()
+    const { status, message, data, unauthorized } = await res.json()
+
+    if (unauthorized) {
+      window.location.href = `../index.html?message=${message}`
+    }
 
     if (status !== 200) {
       console.log(`getWebApp ${status} error for path: "${path}":`, message)

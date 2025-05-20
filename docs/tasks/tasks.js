@@ -6,7 +6,6 @@ import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createList } from '../partials/list.js'
 import { createTitleDetailsItem } from '../partials/titleDetailsItem.js'
-import { createIcon } from '../partials/icon.js'
 import { createField } from '../partials/formField.js'
 import { createSwitch } from '../partials/switch.js'
 import { setMessage } from '../js/ui.js'
@@ -42,6 +41,8 @@ document.addEventListener('clear-selection', clearSelection)
  * Handle DOMContentLoaded
  */
 async function handleDOMContentLoaded() {
+  state.setDefaultPage('tasks')
+
   handleTokenQueryParam()
 
   setMessage('Loading...')
@@ -52,17 +53,14 @@ async function handleDOMContentLoaded() {
     return
   }
 
+  addPageElements()
+
   const { tasks } = await getWebApp(
     `${state.getWebAppUrl()}/tasks/read?token=${token}`
   )
 
   setMessage('')
-
-  addPageElements()
-
   initTasks(tasks)
-
-  state.setDefaultPage('tasks')
 }
 
 /**
@@ -185,7 +183,7 @@ function handleTaskFormSubmit(e, pos) {
   const listItem = createTaskItem(payload, pos)
   tasksListEl.addChild(listItem)
   tasksFormEl.querySelector('form').reset()
-  listItem.selected = true
+  listItem.dispatch('click')
 }
 
 /**
@@ -281,13 +279,14 @@ function addPageElements() {
 /**
  * Add tasks item to list
  */
-function createTaskItem({ id, title, details }) {
+function createTaskItem({ id, title, details, selected, expanded }) {
   const taskEl = createTitleDetailsItem({
     id,
     title,
     details,
     draggable: false,
-    selected: false,
+    expanded,
+    selected,
     events: { click: handleTasksSelectionChange },
     icons: [
       {
