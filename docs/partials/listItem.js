@@ -8,31 +8,17 @@ import { createIcon } from './icon.js'
 // Globals
 // -------------------------------
 
-const html = `
-<div class="icons">
-  <i class="fa-solid fa-bars hidden"></i>
-</div>
-`
-
 const css = `
 .list-item {
+  align-items: center;
+  border-radius: var(--border-radius);
   cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--card-bg-translucent);
-  border: 1px solid var(--gray2);
-  border-radius: var(--border-radius);
-  padding: 8px 14px;
-  margin-bottom: 10px;
   font-weight: 500;
-  color: var(--text-default);
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 8px 14px;
   transition: all 0.2s ease-in-out;
-}
-
-.list-item:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transform: translateY(-1px);
 }
 .list-item .icons {
   display: flex;
@@ -59,32 +45,124 @@ const css = `
 // -------------------------------
 
 /**
- * Create a custom listItem element
- * (Params for VS Code:)
+ * Constructor for a custom listItem element
  */
 export function createListItem({
-  draggable,
-  selected,
-  type,
-  url,
-  value,
-  icons,
-  classes,
-  events,
+  draggable = false,
+  selected = false,
+  type = 'span',
+  value = '',
+  url = '',
+  icons = [],
+  classes = {
+    base: 'u-list-base',
+    selected: 'u-list-active-primary-bordered',
+    hover: 'u-list-hover-primary-bordered',
+  },
+  events = {},
   id,
 } = {}) {
   injectStyle(css)
-  return createElement({
-    draggable,
-    selected,
-    type,
-    url,
-    value,
-    icons,
-    classes,
-    events,
-    id,
+  const el = document.createElement('div')
+  const iconsEl = document.createElement('div')
+  iconsEl.className = 'icons'
+  el.appendChild(iconsEl)
+  const barsEl = createIcon({ className: 'fa-bars hidden' })
+  iconsEl.appendChild(barsEl)
+
+  el._classes = classes
+  el.dataset.id = id || crypto.randomUUID()
+
+  const subEl = getSubElement(type, value, url)
+  subEl.dataset.sub = 'true'
+  el.prepend(subEl)
+
+  for (const iconConfig of icons) {
+    const child = createIcon(iconConfig)
+    el.querySelector('.icons').appendChild(child)
+  }
+
+  el.dispatch = dispatch.bind(el)
+  el.getClass = getClass.bind(el)
+  el.className = `list-item draggable-target ${el.getClass('base')}`
+
+  Object.defineProperties(el, {
+    data: {
+      get() {
+        return {
+          id: el.dataset.id,
+          text: el.value,
+          selected: el.selected,
+        }
+      },
+    },
+    draggable: {
+      get() {
+        return el.dataset.draggable === 'true'
+      },
+      set(v) {
+        el.dataset.draggable = v
+        if (v) {
+          el.selected = false
+          el.setAttribute('draggable', 'true')
+        } else {
+          el.setAttribute('draggable', 'false')
+        }
+      },
+    },
+    hovered: {
+      set(v) {
+        if (el.selected || el.draggable) {
+          return
+        }
+        el.classList.toggle(el.getClass('hover'), v)
+        el.classList.toggle(el.getClass('base'), !v)
+      },
+    },
+    selected: {
+      get() {
+        return el.dataset.selected === 'true'
+      },
+      set(v) {
+        if (el.draggable) {
+          return
+        }
+        el.dataset.selected = v
+        if (v) {
+          el.classList.add(el.getClass('selected'))
+        } else {
+          el.classList.remove(el.getClass('selected'))
+        }
+      },
+    },
+    value: {
+      get() {
+        return el.querySelector('[data-sub]').value
+      },
+      set(newValue) {
+        el.querySelector('[data-sub]').value = newValue
+      },
+    },
+    url: {
+      get() {
+        return el.querySelector('[data-sub]').url
+      },
+      set(newUrl) {
+        el.querySelector('[data-sub]').url = newUrl
+      },
+    },
   })
+  el.selected = selected
+  el.draggable = draggable
+
+  el.addEventListener('click', handleClick)
+  el.addEventListener('mouseenter', () => (el.hovered = true))
+  el.addEventListener('mouseleave', () => (el.hovered = false))
+  for (const [eventName, cb] of Object.entries(events)) {
+    el.addEventListener(eventName, cb)
+  }
+
+  return el
 }
 
 // -------------------------------
@@ -95,40 +173,18 @@ export function createListItem({
  * Handle click on the item
  */
 function handleClick(e) {
-  const div = e.target.closest('.list-item')
+  const el = e.target.closest('.list-item')
 
-  if (div.draggable) {
+  if (el.draggable) {
     return
   }
 
-  div.selected = !div.selected
+  el.selected = !el.selected
 
   // notify list of the click
   this.dispatch('list-item-clicked', {
     selectedItem: this.closest('.list-item'),
   })
-}
-
-/**
- *
- */
-function handleMouseEnter(e) {
-  const div = e.target.closest('.list-item')
-  if (div.selected || div.draggable) {
-    return
-  }
-  div.classList.add(div.getClass('hover'))
-}
-
-/**
- *
- */
-function handleMouseLeave(e) {
-  const div = e.target.closest('.list-item')
-  if (div.selected || div.draggable) {
-    return
-  }
-  div.classList.remove(div.getClass('hover'))
 }
 
 // -------------------------------
@@ -154,113 +210,6 @@ function dispatch(eventName, detail = {}) {
  */
 function getClass(className) {
   return this._classes[className]
-}
-
-// -------------------------------
-// Constructor
-// -------------------------------
-
-/**
- *
- */
-function createElement({
-  draggable = false,
-  selected = false,
-  type = 'span',
-  value = '',
-  url = '',
-  icons = [],
-  classes = { selected: 'u-selected-primary', hover: 'u-selected-primary' },
-  events = {},
-  id,
-}) {
-  const div = document.createElement('div')
-  div.className = 'list-item draggable-target'
-  div.innerHTML = html
-  div._classes = classes
-
-  div.dataset.id = id || crypto.randomUUID()
-
-  const subEl = getSubElement(type, value, url)
-  subEl.dataset.sub = 'true'
-  div.prepend(subEl)
-
-  for (const iconConfig of icons) {
-    const child = createIcon(iconConfig)
-    div.querySelector('.icons').appendChild(child)
-  }
-
-  div.dispatch = dispatch.bind(div)
-  div.getClass = getClass.bind(div)
-
-  Object.defineProperties(div, {
-    data: {
-      get() {
-        return {
-          id: div.dataset.id,
-          text: div.value,
-          selected: div.selected,
-        }
-      },
-    },
-    draggable: {
-      get() {
-        return div.dataset.draggable === 'true'
-      },
-      set(v) {
-        div.dataset.draggable = v
-        if (v) {
-          div.selected = false
-          div.setAttribute('draggable', 'true')
-        } else {
-          div.setAttribute('draggable', 'false')
-        }
-      },
-    },
-    selected: {
-      get() {
-        return div.dataset.selected === 'true'
-      },
-      set(v) {
-        if (div.draggable) {
-          return
-        }
-        div.dataset.selected = v
-        if (v) {
-          div.classList.add(div.getClass('selected'))
-        } else {
-          div.classList.remove(div.getClass('selected'))
-        }
-      },
-    },
-    value: {
-      get() {
-        return div.querySelector('[data-sub]').value
-      },
-      set(newValue) {
-        div.querySelector('[data-sub]').value = newValue
-      },
-    },
-    url: {
-      get() {
-        return div.querySelector('[data-sub]').url
-      },
-      set(newUrl) {
-        div.querySelector('[data-sub]').url = newUrl
-      },
-    },
-  })
-  div.selected = selected
-  div.draggable = draggable
-
-  div.addEventListener('click', handleClick)
-  div.addEventListener('mouseenter', handleMouseEnter)
-  div.addEventListener('mouseleave', handleMouseLeave)
-  for (const [eventName, cb] of Object.entries(events)) {
-    div.addEventListener(eventName, cb)
-  }
-
-  return div
 }
 
 // -------------------------------

@@ -19,9 +19,23 @@ const html = `
 /**
  *
  */
-export function createList(config) {
+export function createList({
+  id,
+  itemClass = 'list-item',
+  className,
+  children,
+  emptyState,
+  onChange,
+}) {
   injectStyle(css)
-  return createElement(config)
+  return createElement({
+    id,
+    itemClass,
+    className,
+    children,
+    emptyState,
+    onChange,
+  })
 }
 
 // -------------------------------
@@ -242,7 +256,7 @@ function updateChild({ id, title, details }) {
  */
 function createElement({
   id,
-  itemClass = 'list-item',
+  itemClass,
   className,
   children,
   emptyState,
@@ -308,10 +322,10 @@ function createElement({
     },
     itemClass: {
       get() {
-        return this._itemClass
+        return this.dataset.itemClass
       },
       set(itemClass) {
-        this._itemClass = itemClass
+        this.dataset.itemClass = itemClass
       },
     },
     silent: {

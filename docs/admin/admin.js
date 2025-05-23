@@ -53,7 +53,7 @@ async function handleDOMContentLoaded() {
     inputType: 'password',
     inputName: 'key',
     inputPlaceholder: 'Enter admin key',
-    iClass: 'fa-key',
+    iconClass: 'fa-key',
     submitText: 'Submit',
     events: {
       submit: handleLoginFormSubmit,

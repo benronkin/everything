@@ -19,25 +19,11 @@ span {
 // -------------------------------
 
 /**
- *
+ * Constructor for custom span element
  */
-export function createSpan(config) {
+export function createSpan({ html = '' } = {}) {
   injectStyle(css)
-  return createElement(config)
-}
 
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
-// Constructor
-// -------------------------------
-
-/**
- *
- */
-function createElement({ html } = {}) {
   const el = document.createElement('span')
 
   Object.defineProperty(el, 'value', {

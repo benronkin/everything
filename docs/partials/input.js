@@ -6,18 +6,11 @@ import { injectStyle } from '../js/ui.js'
 
 const css = `
 input {
-  border-radius: var(--border-radius);
-  border: none;
-  background: inherit;
-  color: inherit;
   cursor: pointer;
   text-decoration: none;
   padding: 7px 3px;
 }
 `
-
-// const html = `
-// `
 
 // -------------------------------
 // Exported functions
@@ -26,35 +19,69 @@ input {
 /**
  *
  */
-export function createInput(config) {
+export function createInput({
+  id = '',
+  accept = '',
+  type = '',
+  name = '',
+  value = '',
+  placeholder = '',
+  autocomplete = true,
+  classes = {
+    active: 'u-input-active-primary',
+    base: 'u-input-base',
+    hover: 'u-input-hover-primary',
+  },
+} = {}) {
   injectStyle(css)
-  return createElement(config)
+
+  const el = document.createElement('input')
+  el._classes = classes
+  el.getClass = getClass.bind(el)
+  el.className = el.getClass('base')
+
+  Object.defineProperties(el, {
+    hovered: {
+      set(v) {
+        el.classList.toggle(el.getClass('hover'), v)
+      },
+    },
+    value: {
+      get() {
+        return el.dataset.value
+      },
+      set(newValue) {
+        el.dataset.value = newValue
+      },
+    },
+  })
+
+  el.value = value
+  el._classes = classes
+  el.dataset.id = id
+  el.id = id
+  el.accept = accept
+  el.type = type
+  el.name = name
+  el.placeholder = placeholder
+  el.dataset.testId = `${id}-input` // cypress
+  if (autocomplete) {
+    el.autocomplete = autocomplete
+  }
+
+  el.addEventListener('mouseenter', () => (el.hovered = true))
+  el.addEventListener('mouseleave', () => (el.hovered = false))
+
+  return el
 }
 
 // -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
-// Constructor
+// Object methods
 // -------------------------------
 
 /**
  *
  */
-function createElement({ value } = {}) {
-  const el = document.createElement('input')
-
-  Object.defineProperty(el, 'value', {
-    get() {
-      return el.value
-    },
-    set(newValue) {
-      el.value = newValue
-    },
-  })
-
-  el.value = value
-
-  return el
+function getClass(className) {
+  return this._classes[className]
 }

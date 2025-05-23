@@ -119,7 +119,7 @@ function showLoginForm() {
     inputType: 'email',
     inputName: 'email',
     inputPlaceholder: 'Email',
-    iClass: 'fa-envelope',
+    iconClass: 'fa-envelope',
     inputAutoComplete: false,
     submitText: 'Submit',
     events: { submit: handleLoginFormSubmit },

@@ -1,7 +1,7 @@
 import { state } from '../js/state.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
-import { createField } from '../partials/formField.js'
+import { createFormField } from '../partials/formField.js'
 import { createLeftPanelLink } from '../partials/leftPanelLink.js'
 import { createIcon } from '../partials/icon.js'
 import { createMainIconGroup } from '../partials/mainIconGroup.js'
@@ -9,6 +9,8 @@ import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createSelect } from '../partials/select.js'
 import { createSwitch } from '../partials/switch.js'
 import { createSearch } from '../partials/search.js'
+import { createList } from '../partials/list.js'
+import { createMenuItem } from '../partials/menuItem.js'
 import { MODAL, initDialog, setDialog } from '../sections/modal.js'
 import {
   // getElementValue,
@@ -38,6 +40,7 @@ let mainIconGroup
 let addRecipeBtn
 let shopIngredientsBtn
 let categorySelect
+let recipeListEl
 
 // ----------------------
 // Event handlers
@@ -120,11 +123,31 @@ async function handleDOMContentLoaded() {
   shopIngredientsBtn.addEventListener('click', handleShopIngredientsClick)
 
   const searchRecipesEl = createSearch({
-    searchResultsTarget: document.querySelector('#left-panel'),
+    iconClass: 'fa-magnifying-glass',
+    placeholder: 'Search recipes',
     searchCb: searchRecipes,
     searchResultsCb: handleSearchResult,
   })
   document.querySelector('#left-panel').prepend(searchRecipesEl)
+
+  recipeListEl = createList({
+    id: 'left-panel-list0',
+  })
+  document.querySelector('#left-panel').append(recipeListEl)
+  const children = state.getRecipes().map((recipe) =>
+    createMenuItem({
+      id: recipe.id,
+      value: recipe.title,
+      events: { click: handleRecipeLinkClick },
+      classes: {
+        base: 'u-menu-base-gradient',
+        selected: 'u-menu-active-primary',
+        hover: 'u-menu-hover-primary',
+      },
+    })
+  )
+  recipeListEl.addChildren(children)
+  columnsContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
 
   const switchEl = createSwitch({
     id: 'related-recipes-switch',
@@ -141,7 +164,7 @@ async function handleDOMContentLoaded() {
     options: categories,
   })
   categorySelect.addEventListener('change', handleFieldChange)
-  const categoryFormField = createField({
+  const categoryFormField = createFormField({
     element: categorySelect,
     label: 'category',
     labelPosition: 'top',
@@ -155,7 +178,7 @@ async function handleDOMContentLoaded() {
   wrapperEl.appendChild(footerEl)
   initDialog()
 
-  populateRecipes()
+  // populateRecipes()
 
   if (isMobile()) {
     mainPanelEl.classList.add('hidden')
@@ -192,7 +215,7 @@ async function handleRecipeCreate() {
   const li = createLeftPanelLink({
     id,
     title: newRecipe.title,
-    cb: handleLeftPanelLinkClick,
+    cb: handleRecipeLinkClick,
   })
   leftPanelList.appendChild(li)
   li.click()
@@ -231,7 +254,8 @@ async function handleFieldChange(e) {
 /**
  * Handle recipe link click
  */
-async function handleLeftPanelLinkClick(elem) {
+async function handleRecipeLinkClick(e) {
+  const elem = e.target.closest('.menu-item')
   shopIngredientsBtn.classList.remove('hidden')
   shopIngredientsBtn.disabled = false
 
@@ -239,7 +263,7 @@ async function handleLeftPanelLinkClick(elem) {
   const recipe = state.getRecipeById(recipeId)
   if (!recipe) {
     console.log(
-      `handleLeftPanelLinkClick error: Recipe not found for id: ${recipeId}`
+      `handleRecipeLinkClick error: Recipe not found for id: ${recipeId}`
     )
     console.log('recipes:', state.getRecipes())
     return
@@ -325,22 +349,22 @@ async function handleShopIngredientsClick() {
 /**
  * Populate the recipes list
  */
-function populateRecipes() {
-  const recipes = state.getRecipes()
-  if (!recipes) {
-    console.log(
-      `populateRecipes error: state does not have recipes: ${recipes}`
-    )
-    return
-  }
+// function populateRecipes() {
+//   const recipes = state.getRecipes()
+//   if (!recipes) {
+//     console.log(
+//       `populateRecipes error: state does not have recipes: ${recipes}`
+//     )
+//     return
+//   }
 
-  leftPanelList.innerHTML = ''
-  for (const { id, title } of recipes) {
-    const li = createLeftPanelLink({ id, title, cb: handleLeftPanelLinkClick })
-    leftPanelList.appendChild(li)
-  }
-  columnsContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
-}
+//   leftPanelList.innerHTML = ''
+//   for (const { id, title } of recipes) {
+//     const li = createLeftPanelLink({ id, title, cb: handleRecipeLinkClick })
+//     leftPanelList.appendChild(li)
+//   }
+//   columnsContainer.dispatchEvent(new CustomEvent('recipes-loaded'))
+// }
 
 /**
  * Load the recipe object to the page
@@ -392,7 +416,7 @@ async function handleSearchResult(results) {
     mainIconGroup.expand()
   }
   state.setRecipes(results)
-  populateRecipes()
+  // populateRecipes()
 }
 
 /**
@@ -419,7 +443,7 @@ function populateRelatedRecipes() {
       continue
     }
     const title = recipe.title
-    const li = createLeftPanelLink({ id, title, cb: handleLeftPanelLinkClick })
+    const li = createLeftPanelLink({ id, title, cb: handleRecipeLinkClick })
     ulEl.appendChild(li)
   }
   relatedRecipesEl.appendChild(ulEl)

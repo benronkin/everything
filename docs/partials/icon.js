@@ -25,9 +25,19 @@ i.shake {
 // Exported functions
 // -------------------------------
 
-export function createIcon(config) {
+export function createIcon({ id, className, events = {} } = {}) {
   injectStyle(css)
-  return createElement(config)
+  const el = document.createElement('i')
+  id && (el.dataset.id = id)
+  el.className = `fa-solid ${className}`
+
+  for (const [eventName, cb] of Object.entries(events)) {
+    el.addEventListener(eventName, cb)
+  }
+
+  el.shake = shake.bind(el)
+
+  return el
 }
 
 // -------------------------------
@@ -41,25 +51,4 @@ function shake() {
   this.classList.add('shake')
   setTimeout(() => this.classList.remove('shake'), 300)
   return
-}
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
-function createElement({ id, className, events = {} } = {}) {
-  const el = document.createElement('i')
-  id && (el.dataset.id = id)
-  el.className = `fa-solid ${className}`
-
-  for (const [eventName, cb] of Object.entries(events)) {
-    el.addEventListener(eventName, cb)
-  }
-
-  el.shake = shake.bind(el)
-
-  return el
 }

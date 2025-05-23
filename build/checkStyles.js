@@ -50,7 +50,7 @@ export async function checkStyles() {
   let resp = ''
 
   if (unusedClasses.length || unusedIds.length) {
-    resp = `\u001b[31m⚡️ Unused styles found in cs files:\u001b[0m`
+    resp = `\u001b[31m⚡️ Unused styles found in css files:\u001b[0m`
     if (unusedClasses.length) {
       resp += '\nUnused classes: ' + unusedClasses.join(', ')
     }
@@ -73,7 +73,7 @@ async function extractStyles(def) {
   const filePaths = await getFilePathsByType(def.folder, def.ext)
   const fileAsyncArr = []
   for (const filePath of filePaths) {
-    if (filePath.includes('theme')) {
+    if (!filePath.includes('styles.css')) {
       continue
     }
     fileAsyncArr.push(await readFile(filePath))
@@ -128,9 +128,6 @@ function extractStyle(def, text) {
   let match
 
   while ((match = def.class_re.exec(text)) !== null) {
-    // if (match[1].includes('bobo')) {
-    //   console.log(match[0])
-    // }
     const res = def.match_class_fn(match[1])
     if (Array.isArray(res)) {
       res.forEach((c) => {

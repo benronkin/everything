@@ -1,4 +1,8 @@
 import { injectStyle } from '../js/ui.js'
+import { createButton } from './button.js'
+import { createIcon } from './icon.js'
+import { createInput } from './input.js'
+import { createSpan } from './span.js'
 
 // -------------------------------
 // Globals
@@ -44,86 +48,75 @@ const css = `
 }
 `
 
-const html = `
-  <form class="form-horizontal">
-      <div class="input-group">
-        <i class="fa-solid"></i>
-        <input  />
-      </div>
-      <button class="primary hidden" type="submit"></button>
-  </form>
-  <span class="message"></span>
-`
-
 // -------------------------------
 // Exported functions
 // -------------------------------
 
-export function createFormHorizontal(config) {
-  injectStyle(css)
-  return createElement(config)
-}
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
- *
+ * Constructor for a custom horizontal form
  */
-function createElement({
+export function createFormHorizontal({
   formId,
   inputType,
   inputName,
-  inputPlaceholder,
+  placeholder,
   inputAutoComplete,
-  iClass,
+  buttonIconClass = '',
+  formIconClass = '',
   submitText,
   value,
   disabled = false,
   events,
 }) {
-  const wrapperEl = document.createElement('div')
-  wrapperEl.className = 'form-horizontal-wrapper'
-  wrapperEl.innerHTML = html
+  injectStyle(css)
 
-  const formEl = wrapperEl.querySelector('form')
+  const el = document.createElement('div')
+  el.className = 'form-horizontal-wrapper'
+  let buttonEl
+
+  const formEl = document.createElement('form')
   formEl.classList.add('form-horizontal')
   if (formId) {
     formEl.dataset.id = formId
   }
+  el.appendChild(formEl)
 
-  const inputEl = formEl.querySelector('input')
-  inputEl.type = inputType
-  inputEl.name = inputName
-  inputEl.placeholder = inputPlaceholder
-  inputEl.dataset.testId = `${formId}-input` // cypress
-  if (inputAutoComplete) {
-    inputEl.autocomplete = inputAutoComplete
+  const divEl = document.createElement('div')
+  divEl.className = 'input-group'
+  if (formIconClass) {
+    const formIcon = createIcon({ className: formIconClass })
+    divEl.appendChild(formIcon)
   }
-  if (value) {
-    inputEl.value = value
-  }
+  formEl.appendChild(divEl)
 
-  const iEl = formEl.querySelector('i')
-  iEl.classList.add(iClass)
+  const inputEl = createInput({
+    value,
+    type: inputType,
+    name: inputName,
+    placeholder,
+    inputAutoComplete,
+  })
+  divEl.appendChild(inputEl)
 
-  const submitEl = formEl.querySelector('[type="submit"]')
   if (submitText) {
-    submitEl.classList.remove('hidden')
-    submitEl.textContent = submitText
-    submitEl.dataset.testId = `${formId}-submit` //cypress
+    buttonEl = createButton({
+      iconClass: buttonIconClass,
+      value: submitText,
+      type: 'submit',
+      disabled,
+    })
+    formEl.appendChild(buttonEl)
   }
 
-  if (disabled) {
-    submitEl.disabled = true
-  }
+  const spanEl = createSpan({})
+  spanEl.className = 'message'
+  el.appendChild(spanEl)
 
   if (events) {
     for (const [k, v] of Object.entries(events)) {
       if (k === 'submit') {
         formEl.addEventListener('submit', (e) => {
-          if (!submitEl.disabled) {
+          if (!buttonEl || !buttonEl.disabled) {
             v(e)
           }
         })
@@ -133,32 +126,33 @@ function createElement({
     }
   }
 
-  wrapperEl.disable = disable.bind(wrapperEl)
-  wrapperEl.enable = enable.bind(wrapperEl)
-  wrapperEl.getValue = getValue.bind(wrapperEl)
-  wrapperEl.message = message.bind(wrapperEl)
-  wrapperEl.setSubmit = setSubmit.bind(wrapperEl)
-  wrapperEl.setValue = setValue.bind(wrapperEl)
+  el.disable = disable.bind(el)
+  el.enable = enable.bind(el)
+  el.getValue = getValue.bind(el)
+  el.message = message.bind(el)
+  el.setSubmit = setSubmit.bind(el)
+  el.setValue = setValue.bind(el)
 
-  Object.defineProperty(wrapperEl, 'message', {
-    get() {
-      return wrapperEl.querySelector('.message').textContent
+  Object.defineProperties(el, {
+    message: {
+      get() {
+        return el.querySelector('.message').textContent
+      },
+      set(message) {
+        el.querySelector('.message').textContent = message
+      },
     },
-    set(message) {
-      wrapperEl.querySelector('.message').textContent = message
+    value: {
+      get() {
+        return el.querySelector('input').value
+      },
+      set(value) {
+        el.querySelector('input').value = value
+      },
     },
   })
 
-  Object.defineProperty(wrapperEl, 'value', {
-    get() {
-      return wrapperEl.querySelector('input').value
-    },
-    set(value) {
-      wrapperEl.querySelector('input').value = value
-    },
-  })
-
-  return wrapperEl
+  return el
 }
 
 // -------------------------------

@@ -6,7 +6,7 @@ import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createList } from '../partials/list.js'
 import { createTitleDetailsItem } from '../partials/titleDetailsItem.js'
-import { createField } from '../partials/formField.js'
+import { createFormField } from '../partials/formField.js'
 import { createSwitch } from '../partials/switch.js'
 import { setMessage } from '../js/ui.js'
 
@@ -229,7 +229,7 @@ function addPageElements() {
   const switchWrapper = document.querySelector('#top-switches-wrapper')
   sortSwitch = createSwitch({ id: 'sort-switch' })
   sortSwitch.addEventListener('click', handleSortSwitchClick)
-  let field = createField({
+  let field = createFormField({
     element: sortSwitch,
     label: 'Sort',
     labelPosition: 'left',
@@ -243,7 +243,7 @@ function addPageElements() {
     inputName: 'task',
     inputPlaceholder: 'Add task',
     inputAutoComplete: 'off',
-    iClass: 'fa-thumbtack',
+    iconClass: 'fa-thumbtack',
     submitText: 'ADD',
     disabled: true,
   })
@@ -268,7 +268,7 @@ function addPageElements() {
   tasksListEl = createList({
     id: 'tasks-list',
     itemClass: 'td-item',
-    className: 'main-list-wrapper',
+    className: 'outer-wrapper',
     emptyState:
       '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
     onChange: handleTasksListChange,

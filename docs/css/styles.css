@@ -1,68 +1,20 @@
 :root {
-  font-size: 16px;
   --transition-duration: 300ms;
   --maxWidth: 500px;
   --nav-height: 75px;
   --sidebar-width: 220px;
 }
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--gray3);
-  border-radius: 8px;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
 }
-
 html {
   height: 100%;
   box-sizing: border-box;
 }
 body {
   height: 100%;
-  background: var(--gray0);
-  color: var(--gray6);
-}
-html,
-body,
-button,
-input,
-textarea {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-}
-a,
-a:visited {
-  text-decoration: none;
-  color: var(--purple3);
-}
-button {
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 10px;
-  border: none;
-  color: white;
-  height: 40px;
-}
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-button.primary,
-label.primary {
-  background-color: var(--purple2);
-  transition: background-color 200ms ease;
-}
-button.primary:hover,
-label.primary:hover {
-  background: var(--purple3);
-  box-shadow: 0 0 10px var(--purple3);
 }
 h2 {
   margin-bottom: 20px;
@@ -72,18 +24,11 @@ h3 {
   white-space: nowrap;
 }
 h4 {
-  font-weight: 400;
   margin: 20px 0 10px;
-  text-transform: uppercase;
-  color: var(--gray5);
 }
 h5,
 .u-h5 {
-  font-size: 0.9rem;
-  font-weight: 400;
   margin-top: 20px;
-  text-transform: uppercase;
-  color: var(--gray4);
 }
 i {
   padding: 7px;
@@ -91,33 +36,9 @@ i {
 }
 input,
 textarea {
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--gray3);
-  border-radius: 0;
-  color: var(--gray6);
   padding: 12px 4px;
-  font-size: 1rem;
   width: 100%;
   margin: 30px 0 10px 0;
-  transition: border-color 200ms ease;
-}
-input:focus,
-textarea:focus,
-#main-panel input:focus,
-#main-panel textarea:focus {
-  outline: none;
-  border-bottom: 2px solid transparent;
-  border-image: var(--border-image-horizontal);
-  border-image-slice: 1;
-}
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px var(--gray1) inset !important;
-  -webkit-text-fill-color: #fff !important;
-}
-
-main {
-  background: var(--body-bg);
 }
 select {
   cursor: pointer;
@@ -288,6 +209,9 @@ ul {
 }
 .hidden {
   display: none !important;
+}
+.u-align-start {
+  align-items: flex-start;
 }
 .u-column-start {
   align-items: flex-start !important;

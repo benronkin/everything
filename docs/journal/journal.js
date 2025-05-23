@@ -127,7 +127,7 @@ async function handleDOMContentLoaded() {
     id: 'photo-file-input',
     label: 'Select image',
     accept: 'image/*',
-    icon: 'fa-camera',
+    iconClass: 'fa-camera',
   })
   addPhotoForm.prepend(fileInput)
   photoFileEl = fileInput

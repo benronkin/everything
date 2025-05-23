@@ -15,9 +15,31 @@ const css = `
 /**
  *
  */
-export function createSearch(config) {
+export function createSearch({
+  iconClass,
+  placeholder,
+  searchCb,
+  searchResultsCb,
+}) {
   injectStyle(css)
-  return createElement(config)
+
+  const wrapper = document.createElement('div')
+
+  const searchForm = createFormHorizontal({
+    inputType: 'search',
+    inputName: 'search',
+    placeholder,
+    formIconClass: iconClass,
+  })
+
+  wrapper.appendChild(searchForm)
+  wrapper
+    .querySelector('form')
+    .addEventListener('submit', (e) =>
+      handleFormSubmit({ e, wrapper, searchCb, searchResultsCb })
+    )
+
+  return wrapper
 }
 
 // -------------------------------
@@ -46,32 +68,4 @@ async function handleFormSubmit({ e, wrapper, searchCb, searchResultsCb }) {
     message.textContent = `${results.length} results found`
   }
   searchResultsCb(results)
-}
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
-function createElement({ searchCb, searchResultsCb }) {
-  const wrapper = document.createElement('div')
-  wrapper.className = 'search-wrapper'
-
-  const searchForm = createFormHorizontal({
-    inputType: 'search',
-    inputName: 'search',
-    inputPlaceholder: 'Search recipes',
-    iClass: 'fa-magnifying-glass',
-  })
-
-  wrapper.appendChild(searchForm)
-  wrapper
-    .querySelector('form')
-    .addEventListener('submit', (e) =>
-      handleFormSubmit({ e, wrapper, searchCb, searchResultsCb })
-    )
-
-  return wrapper
 }

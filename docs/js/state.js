@@ -5,7 +5,7 @@ const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
 const stateObj = {
   data: {
     recipes: [],
-    WEB_APP_URL: prodUrl,
+    WEB_APP_URL: devUrl,
   },
 
   add(key, values) {

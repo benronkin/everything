@@ -1,7 +1,7 @@
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { log } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { createField } from '../partials/formField.js'
+import { createFormField } from '../partials/formField.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createIcon } from '../partials/icon.js'
 import { createList } from '../partials/list.js'
@@ -38,7 +38,7 @@ export async function listRecipeCategories() {
     inputType: 'text',
     inputName: 'category',
     inputPlaceholder: 'Add category',
-    iClass: 'fa-box-archive',
+    iconClass: 'fa-box-archive',
     submitText: 'Add',
     disabled: true,
     events: {
@@ -55,7 +55,7 @@ export async function listRecipeCategories() {
   const switchWrapper = document.querySelector('[data-role="top-switches"]')
   sortSwitch = createSwitch({ id: 'sort-switch' })
   sortSwitch.addEventListener('click', handleSortSwitchClick)
-  let field = createField({
+  let field = createFormField({
     element: sortSwitch,
     label: 'Sort',
     labelPosition: 'left',
@@ -65,7 +65,7 @@ export async function listRecipeCategories() {
   // create the categories super list
   categoriesEl = createList({
     id: 'categories-list',
-    className: 'main-list-wrapper u-mb-20',
+    className: 'outer-wrapper u-mb-20',
     draggable: true,
   })
   categoriesEl.addEventListener(

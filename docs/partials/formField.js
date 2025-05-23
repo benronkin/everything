@@ -7,7 +7,6 @@ import { injectStyle } from '../js/ui.js'
 const css = `
 .form-field {
   display: flex;
-  align-items: center;
   gap: 10px;
 }
 .form-field.column {
@@ -24,22 +23,20 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createField(config) {
-  injectStyle(css)
-  const el = createElement(config)
-  return el
-}
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
- * Create the HTML element.
+ * Constructor for a custom field element.
  * labelFor allows you to target elements
  * nested in wrappers, dynamic elements, etc
+ * @param {Object} config
+ * @param {Element} config.element - The custom or DOM element to wrap
+ * @param {String} config.label - Text for the label
+ * @param {String} [config.labelPosition='left'] - Position of label: top, right, bottom, left
+ * @param {Array<String>} [config.fieldClasses] - Extra classes for field wrapper
+ * @param {Array<String>} [config.labelClasses] - Extra classes for the label
+ * @param {String} [config.labelFor] - ID the label should target
+ 
  */
-function createElement({
+export function createFormField({
   element,
   label,
   labelPosition = 'left',
@@ -47,6 +44,7 @@ function createElement({
   labelClasses,
   labelFor,
 }) {
+  injectStyle(css)
   const fieldEl = document.createElement('div')
   fieldEl.className = 'form-field'
   fieldEl.appendChild(element)

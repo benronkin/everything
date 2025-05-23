@@ -6,7 +6,7 @@ import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createList } from '../partials/list.js'
 import { createListItem } from '../partials/listItem.js'
-import { createField } from '../partials/formField.js'
+import { createFormField } from '../partials/formField.js'
 import { createSwitch } from '../partials/switch.js'
 import { setMessage } from '../js/ui.js'
 
@@ -289,7 +289,7 @@ function addPageElements() {
   const switchWrapper = document.querySelector('#top-switches-wrapper')
   sortSwitch = createSwitch({ id: 'sort-switch' })
   sortSwitch.addEventListener('click', handleSortSwitchClick)
-  let field = createField({
+  let field = createFormField({
     element: sortSwitch,
     label: 'Sort',
     labelPosition: 'left',
@@ -298,7 +298,7 @@ function addPageElements() {
 
   suggestSwitch = createSwitch({ id: 'suggest-switch' })
   suggestSwitch.addEventListener('click', handleSuggestSwitchClick)
-  field = createField({
+  field = createFormField({
     element: suggestSwitch,
     label: 'Suggest',
     labelPosition: 'left',
@@ -312,7 +312,7 @@ function addPageElements() {
     inputName: 'add-item-input',
     inputPlaceholder: 'Add item',
     inputAutoComplete: 'off',
-    iClass: 'fa-carrot',
+    iconClass: 'fa-carrot',
     submitText: 'ADD',
   })
   formWrapper.prepend(shoppingFormEl)
@@ -332,7 +332,7 @@ function addPageElements() {
   // shopping-list
   shoppingListEl = createList({
     id: 'shopping-list',
-    className: 'main-list-wrapper',
+    className: 'outer-wrapper',
     draggable: true,
     emptyState: 'Nothing to buy, chef 👨‍🍳',
     onChange: handleShoppingListChange,
@@ -354,7 +354,7 @@ function createShoppingSuggestion({ text, selected = false }) {
   const suggestion = createListItem({
     value: text,
     selected,
-    classes: { selected: 'u-selected-secondary', hover: 'u-hover-secondary' },
+    classes: { selected: 'u-active-secondary', hover: 'u-hover-secondary' },
     icons: [
       {
         className: 'fa-plus hidden',
