@@ -40,6 +40,7 @@
       import { createList } from '../partials/list.js'
       import { createListItem } from '../partials/listItem.js'
       import { createMenuItem } from '../partials/MenuItem.js'
+      import { createModalDelete } from '../sections/modalDelete.js'
 
       const parent = document.querySelector('#parent')
 
@@ -87,6 +88,14 @@
           ],
         })
       )
+
+      const modalDelete = createModalDelete({
+        password: true,
+        header: 'Delete recipe',
+      })
+      parent.appendChild(modalDelete)
+      modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
+      modalDelete.show()
     </script>
   </body>
 </html>

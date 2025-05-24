@@ -17,7 +17,7 @@ input {
 // -------------------------------
 
 /**
- *
+ * Constructor for a custom input element
  */
 export function createInput({
   id = '',
@@ -41,6 +41,14 @@ export function createInput({
   el.className = el.getClass('base')
 
   Object.defineProperties(el, {
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+      },
+    },
     hovered: {
       set(v) {
         el.classList.toggle(el.getClass('hover'), v)
@@ -52,6 +60,7 @@ export function createInput({
       },
       set(newValue) {
         el.dataset.value = newValue
+        el.dataset.testId = `${id}-input`
       },
     },
   })
@@ -59,7 +68,7 @@ export function createInput({
   el.value = value
   el._classes = classes
   el.dataset.id = id
-  el.id = id
+  el.dataId = id
   el.accept = accept
   el.type = type
   el.name = name

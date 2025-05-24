@@ -5,10 +5,6 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
-span {
-  padding: 7px 0;
-  border-radius: var(--border-radius);
-}
 `
 
 // const html = `
@@ -21,10 +17,10 @@ span {
 /**
  * Constructor for custom span element
  */
-export function createSpan({ html = '', id } = {}) {
+export function createDiv({ html = '', id } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('span')
+  const el = document.createElement('div')
 
   Object.defineProperties(el, {
     dataId: {
@@ -33,7 +29,6 @@ export function createSpan({ html = '', id } = {}) {
       },
       set(newValue = '') {
         el.dataset.id = newValue
-        el.dataset.testId = `${id}-span`
       },
     },
     value: {
@@ -41,14 +36,11 @@ export function createSpan({ html = '', id } = {}) {
         return el.innerHTML
       },
       set(newValue) {
-        if (typeof newValue === 'string') {
-          newValue = document.createTextNode(newValue)
-        }
-        el.innerHTML = ''
-        el.appendChild(newValue)
+        el.innerHTML = newValue
       },
     },
   })
+
   el.value = html
   el.dataId = id
 

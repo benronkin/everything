@@ -188,11 +188,11 @@ function createElement({ id, className, name, options = [] }) {
   const el = document.createElement('div')
   el.className = 'select-wrapper'
   el.innerHTML = html
-  const selectEl = el.querySelector('select')
   if (id) {
-    selectEl.setAttribute('id', id)
+    el.dataset.id = id
   }
 
+  const selectEl = el.querySelector('select')
   if (name) {
     selectEl.setAttribute('name', name)
   }

@@ -58,9 +58,9 @@ function handleItemClick(e) {
 function handleSelectionChanged(e) {
   const { selectedItem } = e.detail
 
-  this.querySelectorAll(`.${this.itemClass}`).forEach((item) => {
-    if (item !== selectedItem) {
-      item.selected = false
+  this.getChildren().forEach((child) => {
+    if (child !== selectedItem) {
+      child.selected = false
     }
   })
 }

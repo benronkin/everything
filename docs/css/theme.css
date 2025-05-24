@@ -244,6 +244,8 @@ button {
   border-radius: var(--border-radius);
   border: none;
   color: white;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 button:disabled {
   background-color: var(--gray2);
@@ -260,6 +262,16 @@ button.primary:hover,
 label.primary:hover {
   background: var(--purple3);
   box-shadow: 0 0 10px var(--purple3);
+}
+dialog {
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--gray2);
+  color: var(--gray6);
+  box-shadow: var(--card-shadow);
+}
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 h4 {
   font-weight: 400;

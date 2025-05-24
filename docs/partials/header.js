@@ -5,10 +5,6 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
-span {
-  padding: 7px 0;
-  border-radius: var(--border-radius);
-}
 `
 
 // const html = `
@@ -19,12 +15,14 @@ span {
 // -------------------------------
 
 /**
- * Constructor for custom span element
+ * Constructor for custom header element
+ * @param {String} type - h1... h6
+ * @param {String} html - the contents of the header
  */
-export function createSpan({ html = '', id } = {}) {
+export function createHeader({ html = '', id, type = 'h2' } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('span')
+  const el = document.createElement(type)
 
   Object.defineProperties(el, {
     dataId: {
@@ -33,7 +31,6 @@ export function createSpan({ html = '', id } = {}) {
       },
       set(newValue = '') {
         el.dataset.id = newValue
-        el.dataset.testId = `${id}-span`
       },
     },
     value: {
@@ -41,14 +38,11 @@ export function createSpan({ html = '', id } = {}) {
         return el.innerHTML
       },
       set(newValue) {
-        if (typeof newValue === 'string') {
-          newValue = document.createTextNode(newValue)
-        }
-        el.innerHTML = ''
-        el.appendChild(newValue)
+        el.innerHTML = newValue
       },
     },
   })
+
   el.value = html
   el.dataId = id
 

@@ -10,6 +10,13 @@ let sharedStyleEl = null
 // ------------------------
 
 /**
+ * Get an element using its data-id attribute
+ */
+export function getEl(id) {
+  return document.querySelector(`[data-id="${id}"]`)
+}
+
+/**
  * Detect if mobile device
  */
 export function isMobile() {

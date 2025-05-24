@@ -1,12 +1,12 @@
-import { createIcon } from './icon.js'
-import { injectStyle, setMessage } from '../js/ui.js'
+import { createIcon } from '../partials/icon.js'
+import { getEl, injectStyle, setMessage } from '../js/ui.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
-#main-icon-group {
+[data-id="main-icon-group"] {
   margin: 20px 0;
   display: flex;
   justify-content: space-between;
@@ -20,11 +20,11 @@ const css = `
   font-size: 1.1rem;
   transition: all 200ms ease;
 }
-#main-icon-group.collapsed {
+[data-id="main-icon-group"].collapsed {
   width: 40px;
   padding: 6px 4px;
 }
-#left-panel {
+[data-id="left-panel"] {
   transition: width 300ms ease;
   margin-right: 0;
   color: var(--gray6);
@@ -34,10 +34,10 @@ const css = `
   gap: 10px;
   width: var(--sidebar-width);
 }
-#left-panel.collapsed {
+[data-id="left-panel"].collapsed {
   display: none;
 }
-#left-panel.collapsed + #main-panel {
+[data-id="left-panel"].collapsed + #main-panel {
   border-left: none;
   padding-left: 5px;
 }
@@ -47,9 +47,9 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createMainIconGroup(config) {
+export function createMainIconGroup({ children, shouldAllowCollapse } = {}) {
   injectStyle(css)
-  const el = createElement(config)
+  const el = createElement({ children, shouldAllowCollapse })
   return el
 }
 
@@ -61,10 +61,10 @@ export function createMainIconGroup(config) {
  * Handle left panel toggle
  */
 function handleLeftPanelToggle() {
-  const group = document.querySelector('#main-icon-group')
+  const group = getEl('main-icon-group')
   if (!group.shouldAllowCollapse()) {
     setMessage('Select a recipe first', 2000)
-    document.querySelector('[data-id="left-panel-toggle"]').shake()
+    getEl('left-panel-toggle').shake()
     return
   }
 
@@ -83,12 +83,12 @@ function handleLeftPanelToggle() {
  *
  */
 function collapse() {
-  document.querySelector('#left-panel').classList.add('collapsed')
-  document.querySelector('#main-panel').classList.remove('hidden')
+  getEl('left-panel').classList.add('collapsed')
+  getEl('main-panel').classList.remove('hidden')
   const toggle = document.querySelector('[data-id="left-panel-toggle"]')
   toggle.classList.add('fa-chevron-right')
   toggle.classList.remove('fa-chevron-left')
-  const group = document.querySelector('#main-icon-group')
+  const group = getEl('main-icon-group')
   group.classList.add('collapsed')
   for (const el of group.children) {
     if (el !== toggle) {
@@ -101,14 +101,14 @@ function collapse() {
  *
  */
 function expand() {
-  document.querySelector('#left-panel').classList.remove('collapsed')
+  getEl('left-panel').classList.remove('collapsed')
   if (isMobile()) {
-    document.querySelector('#main-panel').classList.add('hidden')
+    getEl('main-panel').classList.add('hidden')
   }
   const toggle = document.querySelector('[data-id="left-panel-toggle"]')
   toggle.classList.remove('fa-chevron-right')
   toggle.classList.add('fa-chevron-left')
-  const group = document.querySelector('#main-icon-group')
+  const group = getEl('main-icon-group')
   group.classList.remove('collapsed')
   for (const el of group.children) {
     el.classList.remove('hidden')
@@ -122,9 +122,10 @@ function expand() {
 /**
  * Create the HTML element.
  */
-function createElement({ children, shouldAllowCollapse } = {}) {
+function createElement({ children, shouldAllowCollapse }) {
   const el = document.createElement('div')
-  el.setAttribute('id', 'main-icon-group')
+  el.dataset.id = 'main-icon-group'
+  el.dataset.testId = 'main-icon-group-test'
   el.appendChild(
     createIcon({
       id: 'left-panel-toggle',

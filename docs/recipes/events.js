@@ -1,0 +1,274 @@
+/* 
+  This mMdule handles recipe events so that the recipes.js stays leaner. 
+  This module loads aftr all dynamic fields have been created.
+*/
+
+import { state } from '../js/state.js'
+import { getEl, isMobile, resizeTextarea } from '../js/ui.js'
+import { getWebApp, postWebAppJson } from '../js/io.js'
+import { createMenuItem } from '../partials/menuItem.js'
+import { createModalDelete } from '../sections/modalDelete.js'
+
+// ----------------------
+// Exports
+// ----------------------
+
+/**
+ * Set multiple the event handlers of the recipes page
+ */
+export function setEvents() {
+  /* When recipes array state changes */
+  document.addEventListener('recipes-state-changed', handleRecipesStateChanged)
+
+  /* When active recipe state changes */
+  document.addEventListener(
+    'active-recipe-state-changed',
+    handleActiveRecipeStateChanged
+  )
+  /* When recipe field loses focus */
+  document.querySelectorAll('.field').forEach((field) => {
+    field.addEventListener('change', handleFieldChange)
+  })
+
+  /* When new recipe is created */
+  getEl('add-recipe').addEventListener('click', handleRecipeCreate)
+
+  /* When related recipe is changed */
+  getEl('recipe-related').addEventListener('change', populateRelatedRecipes)
+
+  /* When the trash recipe button is clicked */
+  getEl('bottom-btn-group')
+    .querySelector('.fa-trash')
+    .addEventListener('click', handleRecipeDeleteBtnClick)
+
+  /* When a recipe is confirmed delete */
+  document.addEventListener('delete-confirmed', handleDeleteRecipe)
+
+  /* When shop-ingredients button is clicked */
+  getEl('shop-ingredients').addEventListener(
+    'click',
+    handleShopIngredientsClick
+  )
+}
+
+// ----------------------
+// Event handlers
+// ----------------------
+
+/**
+ * This reactive function is called when the document receives
+ * recipes-state-changed event from state.set('reicpes).
+ */
+function handleRecipesStateChanged(e) {
+  if (isMobile()) {
+    getEl('main-icon-group').expand()
+  }
+  const children = e.detail.map((recipe) =>
+    createMenuItem({
+      id: recipe.id,
+      value: recipe.title,
+      events: { click: handleRecipeLinkClick },
+    })
+  )
+  getEl('left-panel-list').addChildren(children)
+  state.set('active-recipe', null)
+}
+
+/**
+ * This reactive function is called when the document receives
+ * active-recipe-state-changed event from state.set('active-recipe).
+ */
+async function handleActiveRecipeStateChanged(e) {
+  const id = e.detail
+  if (!id) {
+    // active recipe has been cleared
+    getEl('main-icon-group').expand()
+    return
+  }
+  const recipeIngredients = getEl('recipe-ingredients')
+  const recipeMethod = getEl('recipe-method')
+  const recipeNotes = getEl('recipe-notes')
+  const recipeTags = getEl('recipe-tags')
+  const recipeIdEl = getEl('recipe-id')
+  const categorySelect = getEl('recipe-category')
+
+  const recipe = state.getRecipeById(id)
+
+  getEl('related-recipes-switch').setOff()
+  getEl('main-panel').classList.remove('hidden')
+  getEl('recipe-title').value = recipe.title
+  getEl('recipe-related').value = recipe.related
+  // populateRelatedRecipes()
+  recipeIngredients.value = recipe.ingredients
+  resizeTextarea(recipeIngredients)
+  recipeMethod.value = recipe.method
+  resizeTextarea(recipeMethod)
+  recipeNotes.value = recipe.notes
+  resizeTextarea(recipeNotes)
+  if (categorySelect.hasOptionValue(recipe.category)) {
+    categorySelect.selectByValue(recipe.category)
+  } else {
+    categorySelect.unselect()
+  }
+
+  recipeTags.value = recipe.tags
+  resizeTextarea(recipeTags)
+  recipeIdEl.textContent = recipe.id
+
+  const resp = await postWebAppJson(
+    `${state.getWebAppUrl()}/recipes/update-access`,
+    {
+      id,
+    }
+  )
+  const { message } = resp
+  console.log(message)
+}
+
+/**
+ * Handle recipe create
+ */
+async function handleRecipeCreate() {
+  getEl('add-recipe').disabled = true
+  const { id } = await getWebApp(`${state.getWebAppUrl()}/recipes/create`)
+
+  const newRecipe = {
+    id,
+    title: 'New recipe',
+    ingredients: '',
+    method: '',
+    notes: '',
+    tags: '',
+    related: '',
+  }
+  getEl('recipe-category').unselect()
+  state.push('recipes', newRecipe)
+  state.set('active-recipe', id)
+}
+
+/**
+ * Handle recipe field change
+ */
+async function handleFieldChange(e) {
+  const elem = e.target
+
+  const section = elem.name
+  if (section === 'title') {
+    document.querySelector('.left-panel-link.active').textContent = elem.value
+  }
+
+  const id = getEl('recipe-id').textContent
+  const value = elem.value
+  state.setRecipeSection(id, section, value)
+
+  try {
+    const { message, error } = await postWebAppJson(
+      `${state.getWebAppUrl()}/recipes/update`,
+      { id, section, value }
+    )
+    if (error) {
+      throw new Error(error)
+    }
+    console.log(message)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+/**
+ * Populate related recipes
+ */
+function populateRelatedRecipes() {
+  const relatedRecipesEl = getEl('related-recipes-links')
+  const ids = getEl('recipe-related').value
+
+  relatedRecipesEl.innerHTML = ''
+  if (!ids) {
+    return
+  }
+  const splitRegEx = /,|\n|\s/
+  const idsArr = ids
+    .split(splitRegEx)
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0)
+
+  for (const id of idsArr) {
+    const recipe = state.getRecipeById(id)
+    if (!recipe) {
+      console.warn(`populateRelatedRecipes: Oops, id ${id} was not found`)
+      continue
+    }
+    const title = recipe.title
+    getEl('related-recipes-list').addChild(
+      createMenuItem({ id, title, events: { click: handleRecipeLinkClick } })
+    )
+  }
+}
+
+/**
+ * Handle recipe link click.
+ */
+async function handleRecipeLinkClick(e) {
+  const elem = e.target.closest('.menu-item')
+  // console.log('elem', elem, elem.dataId)
+  state.set('active-recipe', elem.dataId)
+}
+
+/**
+ * Handle button click to show delete modal
+ */
+function handleRecipeDeleteBtnClick() {
+  const modalDelete = createModalDelete({
+    header: 'Delete recipe',
+    body: `Delete the ${getEl('recipe-title').value} recipe?`,
+    id: getEl('recipe-id').innerText,
+  })
+  modalDelete.showModal()
+}
+
+/**
+ * Handle delete recipe confirmation
+ */
+async function handleDeleteRecipe(e) {
+  const modalMessageEl = getEl('modal-message')
+  modalMessageEl.innerText = ''
+  const id = e.detail.id
+  const password = getEl('modal-delete-input').value
+  const { error } = await getWebApp(
+    `${state.getWebAppUrl()}/recipes/delete?id=${id}&password=${password}`
+  )
+
+  if (error) {
+    modalMessageEl.innerText = error
+    return
+  }
+  state.delete('recipes', id)
+  document.querySelector(`.left-panel-link[data-id="${id}"`).remove()
+  document.querySelector('dialog').close()
+  getEl('main-panel').classList.add('hidden')
+}
+
+/**
+ * Handle shop ingredients click
+ */
+async function handleShopIngredientsClick(e) {
+  e.target.disabled = true
+  // get the recipe's ingredients
+  const newItems = getEl('recipe-ingredients')
+    .value.split('\n')
+    .map((i) => i.trim().toLowerCase())
+  if (!newItems.length || newItems[0] === '') {
+    return
+  }
+  // get the server's shopping list
+  let { shoppingList } = await getWebApp(
+    `${state.getWebAppUrl()}/shopping/read`
+  )
+  // combine recipe ingredients with shopping list and dedup ingredients
+  shoppingList = shoppingList.split(',').map((i) => i.trim().toLowerCase())
+  const allItems = [...new Set([...newItems, ...shoppingList])].filter(Boolean)
+  // updat the server's shopping list
+  await postWebAppJson(`${state.getWebAppUrl()}/shopping/update`, {
+    value: allItems.join(','),
+  })
+}

@@ -55,8 +55,8 @@ export function createMenuItem({
   url = '',
   icons = [],
   classes = {
+    active: 'u-menu-active-primary',
     base: 'u-menu-base',
-    selected: 'u-menu-active-primary',
     hover: 'u-menu-hover-primary',
   },
   events = {},
@@ -96,6 +96,15 @@ export function createMenuItem({
         }
       },
     },
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = `${id}-span`
+      },
+    },
     draggable: {
       get() {
         return el.dataset.draggable === 'true'
@@ -115,8 +124,13 @@ export function createMenuItem({
         if (el.selected || el.draggable) {
           return
         }
-        el.classList.toggle(el.getClass('hover'), v)
-        el.classList.toggle(el.getClass('base'), !v)
+        if (v) {
+          el.classList.add(el.getClass('hover'))
+          el.classList.remove(el.getClass('base'))
+        } else {
+          el.classList.remove(el.getClass('hover'))
+          el.classList.add(el.getClass('base'))
+        }
       },
     },
     selected: {
@@ -129,9 +143,12 @@ export function createMenuItem({
         }
         el.dataset.selected = v
         if (v) {
-          el.classList.add(el.getClass('selected'))
+          el.classList.add(el.getClass('active'))
+          el.classList.remove(el.getClass('base'))
+          el.classList.remove(el.getClass('hover'))
         } else {
-          el.classList.remove(el.getClass('selected'))
+          el.classList.remove(el.getClass('active'))
+          el.classList.add(el.getClass('base'))
         }
       },
     },

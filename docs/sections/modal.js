@@ -1,3 +1,6 @@
+/* 
+  Don't use this file. Instead, use a specific modal (e.g modalDelete)
+*/
 // -------------------------------
 // Globals
 // -------------------------------

@@ -46,6 +46,14 @@ export function createButton({
     el._icon = icon
   }
   Object.defineProperties(el, {
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+      },
+    },
     hovered: {
       set(v) {
         el.classList.toggle(el.getClass('base'), !v)
@@ -67,7 +75,7 @@ export function createButton({
   })
   el.value = value
   if (id) {
-    el.dataset.id = id
+    el.btnId = id
     el.dataset.testId = `${id}-button`
   }
   if (type) {

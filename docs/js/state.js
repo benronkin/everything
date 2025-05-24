@@ -1,9 +1,23 @@
+/* 
+  The big deal about this state is recipe managment. 
+  All create/delete/update/push is done via the set function.
+  Set dispatches a custom event that recipes.js listens to.
+  The handler reactively updates the recipe list, and takes
+  other actions on the list based on a function registry.
+
+  Set throws custom events for any stateObj.data[collection],
+  so it can be extended in the future.
+*/
+
+// eslint-disable-next-line no-unused-vars
 const devMobileUrl = 'http://192.168.1.193:8787'
 const devUrl = 'http://127.0.0.1:8787'
+// eslint-disable-next-line no-unused-vars
 const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
 
 const stateObj = {
   data: {
+    'active-recipe': null,
     recipes: [],
     WEB_APP_URL: devUrl,
   },
@@ -37,40 +51,44 @@ const stateObj = {
     return arr
   },
 
-  get: function (key) {
+  get(key) {
     return this.data[key]
   },
 
-  getAll: function () {
+  getAll() {
     return this.data
   },
 
-  getById: function (collection, id) {
+  getById(collection, id) {
     return this.data[collection].find((doc) => doc.id === id)
   },
 
-  getCollection: function (collection) {
+  getCollection(collection) {
     return this.data[collection]
   },
 
-  set: function (key, value) {
+  set(key, value) {
     this.data[key] = value
+    const eventName = `${key}-state-changed`
+    document.dispatchEvent(new CustomEvent(eventName, { detail: value }))
   },
 
-  setById: function ({ collection, id, key, value }) {
+  setById({ collection, id, key, value }) {
     const doc = this.getById(collection, id)
     doc[key] = value
   },
 
-  push: function (key, value) {
-    this.data[key].push(value)
+  push(key, value) {
+    const arr = this.get(key)
+    arr.push(value)
+    this.set(key, arr)
   },
 
   // -----------------------
   // misc
   // -----------------------
 
-  getWebAppUrl: function () {
+  getWebAppUrl() {
     console.log(`state.getWebAppUrl is using ${this.data.WEB_APP_URL}`)
     return this.data.WEB_APP_URL
   },
@@ -79,11 +97,11 @@ const stateObj = {
   // default page
   // -----------------------
 
-  getDefaultPage: function () {
+  getDefaultPage() {
     return localStorage.getItem('mode') || 'recipes'
   },
 
-  setDefaultPage: function (mode) {
+  setDefaultPage(mode) {
     localStorage.setItem('mode', mode)
   },
 
@@ -91,21 +109,25 @@ const stateObj = {
   // recipes
   // -----------------------
 
-  getRecipeById: function (id) {
+  getRecipeById(id) {
     return this.data.recipes.find((recipe) => recipe.id === id)
   },
 
-  getRecipes: function () {
+  getRecipes() {
     return [...this.data.recipes]
   },
 
-  setRecipes: function (newRecipes) {
-    this.data.recipes = newRecipes ? [...newRecipes] : []
+  setRecipes(newRecipes = []) {
+    this.set('recipes', [...newRecipes])
   },
 
-  setRecipeSection: function (id, section, value) {
-    const recipe = this.getRecipeById(id)
-    recipe[section] = value
+  setRecipeSection(id, section, value) {
+    const recipes = this.get('recipes')
+    const recipe = recipes.find((r) => r.id === id)
+    if (recipe) {
+      recipe[section] = value
+      this.set('recipes', recipes)
+    }
   },
 }
 

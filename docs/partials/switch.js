@@ -60,9 +60,32 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createSwitch(config) {
+/**
+ * Constructor for the custom switch element
+ */
+export function createSwitch({
+  id,
+  iconOff,
+  iconOn,
+  classList = [],
+  events = {},
+}) {
   injectStyle(css)
-  const el = createElement(config)
+
+  const el = document.createElement('div')
+  el.dataset.id = id
+
+  for (const [eventName, cb] of Object.entries(events)) {
+    if (eventName === 'click') {
+      el.addEventListener('click', () => {
+        handleClick(el, cb)
+      })
+    } else {
+      el.addEventListener(eventName, cb)
+    }
+  }
+
+  createElement({ el, iconOff, iconOn, classList })
   return el
 }
 
@@ -73,42 +96,41 @@ export function createSwitch(config) {
 /**
  * Create the HTML element
  */
-function createElement({ id, iconOff, iconOn, classList = [] }) {
-  const switchEl = document.createElement('div')
-  switchEl.innerHTML = html
-  switchEl.setAttribute('id', id)
-  switchEl.addEventListener('click', handleSwitchElClick)
+function createElement({ el, iconOff, iconOn, classList }) {
+  el.innerHTML = html
 
-  switchEl.className = 'switch'
+  el.className = 'switch'
   if (classList.length) {
-    switchEl.classList.add(...classList)
+    el.classList.add(...classList)
   }
   if (iconOff && iconOn) {
-    switchEl.className = `switch iconed`
-    switchEl.querySelector('i').className = `fa-solid ${iconOff}`
-    switchEl._iconOff = iconOff
-    switchEl._iconOn = iconOn
+    el.className = `switch iconed`
+    el.querySelector('i').className = `fa-solid ${iconOff}`
+    el._iconOff = iconOff
+    el._iconOn = iconOn
   }
-  // using bind to eliminate global switchEl,
+  // using bind to eliminate global el,
   // to support multiple switches on page
-  switchEl.isOn = isOn.bind(switchEl)
-  switchEl.setOn = setOn.bind(switchEl)
-  switchEl.setOff = setOff.bind(switchEl)
-  switchEl.toggle = handleSwitchElClick.bind(switchEl)
-  switchEl.disable = disable.bind(switchEl)
-  switchEl.enable = enable.bind(switchEl)
-  switchEl.isDisabled = isDisabled.bind(switchEl)
-
-  return switchEl
+  el.isOn = isOn.bind(el)
+  el.setOn = setOn.bind(el)
+  el.setOff = setOff.bind(el)
+  el.toggle = handleClick.bind(el)
+  el.disable = disable.bind(el)
+  el.enable = enable.bind(el)
+  el.isDisabled = isDisabled.bind(el)
 }
 
 /**
- *
+ * Respond to switch clicks
+ * @param {Function} cb - The consumer's callback to run
  */
-function handleSwitchElClick() {
-  this.classList.toggle('on')
-  this.querySelector('i').classList.toggle(this._iconOff)
-  this.querySelector('i').classList.toggle(this._iconOn)
+function handleClick(el, cb) {
+  el.classList.toggle('on')
+  el.querySelector('i').classList.toggle(el._iconOff)
+  el.querySelector('i').classList.toggle(el._iconOn)
+  if (cb) {
+    cb()
+  }
 }
 
 /**
