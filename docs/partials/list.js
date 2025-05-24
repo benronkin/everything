@@ -153,6 +153,7 @@ function deleteChildren() {
   this.dispatch('list-changed', {
     action: 'delete',
   })
+  return this // for chaining
 }
 
 /**
@@ -210,7 +211,7 @@ function getNthChild(n) {
  * Get the selected listItem
  */
 function getSelected() {
-  return this.querySelector('.list-item[data-selected="true"]')
+  return this.querySelector('[data-selected="true"]')
 }
 
 /**

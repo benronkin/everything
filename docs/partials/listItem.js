@@ -50,6 +50,7 @@ const css = `
 export function createListItem({
   draggable = false,
   selected = false,
+  hidden = false,
   type = 'span',
   value = '',
   url = '',
@@ -108,6 +109,15 @@ export function createListItem({
         } else {
           el.setAttribute('draggable', 'false')
         }
+      },
+    },
+    hidden: {
+      get() {
+        return el.dataset.hidden === 'true'
+      },
+      set(v) {
+        el.dataset.hidden = v
+        el.classList.toggle('hidden', v)
       },
     },
     hovered: {

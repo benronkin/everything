@@ -62,10 +62,16 @@ async function handleFormSubmit({ e, wrapper, searchCb, searchResultsCb }) {
   message.textContent = 'Searching...'
 
   const results = await searchCb(value)
-  if (results.length === 0) {
+
+  // remove from counting the hidden results such as related recipes
+  // that must ne set to hidden in the left pane list by default
+  const cleanResults = results.filter((r) => !r.hidden)
+
+  if (cleanResults.length === 0) {
     message.textContent = 'No results found'
   } else {
-    message.textContent = `${results.length} results found`
+    message.textContent = `${cleanResults.length} results found`
   }
+  // return all results, including the hidden ones
   searchResultsCb(results)
 }

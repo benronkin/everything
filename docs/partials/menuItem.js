@@ -50,6 +50,7 @@ const css = `
 export function createMenuItem({
   draggable = false,
   selected = false,
+  hidden = false,
   type = 'span',
   value = '',
   url = '',
@@ -119,6 +120,15 @@ export function createMenuItem({
         }
       },
     },
+    hidden: {
+      get() {
+        return el.dataset.hidden === 'true'
+      },
+      set(v) {
+        el.dataset.hidden = v
+        el.classList.toggle('hidden', v)
+      },
+    },
     hovered: {
       set(v) {
         if (el.selected || el.draggable) {
@@ -169,6 +179,7 @@ export function createMenuItem({
       },
     },
   })
+  el.hidden = hidden
   el.selected = selected
   el.draggable = draggable
 

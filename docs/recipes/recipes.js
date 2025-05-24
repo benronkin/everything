@@ -101,7 +101,7 @@ async function handleDOMContentLoaded() {
     })
   )
 
-  getEl('related-recipes-links').appendChild(
+  getEl('related-links-wrapper').appendChild(
     createList({
       id: 'related-recipes-list',
       itemClass: 'menu-item',

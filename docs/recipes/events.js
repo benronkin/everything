@@ -67,11 +67,26 @@ function handleRecipesStateChanged(e) {
     createMenuItem({
       id: recipe.id,
       value: recipe.title,
+      // related recipes are hidden until
+      // clicked on in the related recipes recipe section
+      hidden: recipe.hidden,
       events: { click: handleRecipeLinkClick },
     })
   )
-  getEl('left-panel-list').addChildren(children)
-  state.set('active-recipe', null)
+  getEl('left-panel-list').deleteChildren().addChildren(children)
+  if (!state.get('active-recipe')) {
+    return
+  }
+
+  // select the active recipe if it exists in the updated list
+  const priorRecipe = getEl('left-panel-list').getChildById(
+    state.get('active-recipe')
+  )
+  if (!priorRecipe) {
+    state.set('active-recipe', null)
+    return
+  }
+  priorRecipe.selected = true
 }
 
 /**
@@ -85,6 +100,17 @@ async function handleActiveRecipeStateChanged(e) {
     getEl('main-icon-group').expand()
     return
   }
+
+  // select item in left links list in case this
+  // click was a related recipe link click
+  let leftPanelItem = getEl('left-panel-list').getChildById(id)
+
+  // related links are hidden by default in the left
+  // pane list
+  leftPanelItem.hidden = false
+  leftPanelItem.click()
+
+  // Handle main-column
   const recipeIngredients = getEl('recipe-ingredients')
   const recipeMethod = getEl('recipe-method')
   const recipeNotes = getEl('recipe-notes')
@@ -98,7 +124,7 @@ async function handleActiveRecipeStateChanged(e) {
   getEl('main-panel').classList.remove('hidden')
   getEl('recipe-title').value = recipe.title
   getEl('recipe-related').value = recipe.related
-  // populateRelatedRecipes()
+  populateRelatedRecipes()
   recipeIngredients.value = recipe.ingredients
   resizeTextarea(recipeIngredients)
   recipeMethod.value = recipe.method
@@ -154,7 +180,8 @@ async function handleFieldChange(e) {
 
   const section = elem.name
   if (section === 'title') {
-    document.querySelector('.left-panel-link.active').textContent = elem.value
+    getEl('left-panel-list').getSelected().value = elem.value
+    // document.querySelector('.left-panel-link.active').textContent = elem.value
   }
 
   const id = getEl('recipe-id').textContent
@@ -179,10 +206,9 @@ async function handleFieldChange(e) {
  * Populate related recipes
  */
 function populateRelatedRecipes() {
-  const relatedRecipesEl = getEl('related-recipes-links')
-  const ids = getEl('recipe-related').value
+  getEl('related-recipes-list').deleteChildren()
 
-  relatedRecipesEl.innerHTML = ''
+  const ids = getEl('recipe-related').value
   if (!ids) {
     return
   }
@@ -193,14 +219,21 @@ function populateRelatedRecipes() {
     .filter((id) => id.length > 0)
 
   for (const id of idsArr) {
+    if (!id.trim().length || id === 'undefined') {
+      continue
+    }
     const recipe = state.getRecipeById(id)
     if (!recipe) {
-      console.warn(`populateRelatedRecipes: Oops, id ${id} was not found`)
+      console.warn(`populateRelatedRecipes: Oops, id "${id}" was not found`)
       continue
     }
     const title = recipe.title
     getEl('related-recipes-list').addChild(
-      createMenuItem({ id, title, events: { click: handleRecipeLinkClick } })
+      createMenuItem({
+        id,
+        value: title,
+        events: { click: handleRecipeLinkClick },
+      })
     )
   }
 }
@@ -210,7 +243,6 @@ function populateRelatedRecipes() {
  */
 async function handleRecipeLinkClick(e) {
   const elem = e.target.closest('.menu-item')
-  // console.log('elem', elem, elem.dataId)
   state.set('active-recipe', elem.dataId)
 }
 
