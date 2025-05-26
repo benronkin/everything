@@ -1,5 +1,5 @@
 /* 
-  This mMdule handles recipe events so that the recipes.js stays leaner. 
+  This module handles recipe events so that the recipes.js stays leaner. 
   This module loads aftr all dynamic fields have been created.
 */
 
@@ -7,7 +7,6 @@ import { state } from '../js/state.js'
 import { getEl, isMobile, resizeTextarea } from '../js/ui.js'
 import { getWebApp, postWebAppJson } from '../js/io.js'
 import { createMenuItem } from '../partials/menuItem.js'
-import { createModalDelete } from '../sections/modalDelete.js'
 
 // ----------------------
 // Exports
@@ -25,6 +24,7 @@ export function setEvents() {
     'active-recipe-state-changed',
     handleActiveRecipeStateChanged
   )
+
   /* When recipe field loses focus */
   document.querySelectorAll('.field').forEach((field) => {
     field.addEventListener('change', handleFieldChange)
@@ -63,6 +63,7 @@ function handleRecipesStateChanged(e) {
   if (isMobile()) {
     getEl('main-icon-group').expand()
   }
+
   const children = e.detail.map((recipe) =>
     createMenuItem({
       id: recipe.id,
@@ -110,7 +111,7 @@ async function handleActiveRecipeStateChanged(e) {
   leftPanelItem.hidden = false
   leftPanelItem.click()
 
-  // Handle main-column
+  // Handle main-panel
   const recipeIngredients = getEl('recipe-ingredients')
   const recipeMethod = getEl('recipe-method')
   const recipeNotes = getEl('recipe-notes')
@@ -177,15 +178,15 @@ async function handleRecipeCreate() {
  */
 async function handleFieldChange(e) {
   const elem = e.target
-
   const section = elem.name
+  let value = elem.value
+
   if (section === 'title') {
-    getEl('left-panel-list').getSelected().value = elem.value
-    // document.querySelector('.left-panel-link.active').textContent = elem.value
+    value = value.toLowerCase()
+    getEl('left-panel-list').getSelected().value = value
   }
 
   const id = getEl('recipe-id').textContent
-  const value = elem.value
   state.setRecipeSection(id, section, value)
 
   try {
@@ -250,34 +251,33 @@ async function handleRecipeLinkClick(e) {
  * Handle button click to show delete modal
  */
 function handleRecipeDeleteBtnClick() {
-  const modalDelete = createModalDelete({
-    header: 'Delete recipe',
-    body: `Delete the ${getEl('recipe-title').value} recipe?`,
-    id: getEl('recipe-id').innerText,
-  })
-  modalDelete.showModal()
+  const modal = document.querySelector('dialog[data-id="modal-delete"]')
+  const title = getEl('recipe-title').value
+  modal.body = `Delete recipe "${title}"?`
+  modal.showModal()
 }
 
 /**
  * Handle delete recipe confirmation
  */
-async function handleDeleteRecipe(e) {
-  const modalMessageEl = getEl('modal-message')
-  modalMessageEl.innerText = ''
-  const id = e.detail.id
+async function handleDeleteRecipe() {
+  const modal = getEl('modal-delete')
+  modal.message = ''
+
+  const id = getEl('recipe-id').value
   const password = getEl('modal-delete-input').value
   const { error } = await getWebApp(
     `${state.getWebAppUrl()}/recipes/delete?id=${id}&password=${password}`
   )
 
   if (error) {
-    modalMessageEl.innerText = error
+    modal.message = error
     return
   }
+  modal.close()
   state.delete('recipes', id)
-  document.querySelector(`.left-panel-link[data-id="${id}"`).remove()
-  document.querySelector('dialog').close()
-  getEl('main-panel').classList.add('hidden')
+  getEl('left-panel-list').deleteChild(id)
+  getEl('main-panel').hidden = true
 }
 
 /**

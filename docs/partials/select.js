@@ -188,9 +188,6 @@ function createElement({ id, className, name, options = [] }) {
   const el = document.createElement('div')
   el.className = 'select-wrapper'
   el.innerHTML = html
-  if (id) {
-    el.dataset.id = id
-  }
 
   const selectEl = el.querySelector('select')
   if (name) {
@@ -214,6 +211,19 @@ function createElement({ id, className, name, options = [] }) {
   el.unselect = unselect.bind(el)
 
   el.setOptions(options)
+
+  Object.defineProperties(el, {
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = id
+      },
+    },
+  })
+  id && (el.dataId = id)
 
   return el
 }

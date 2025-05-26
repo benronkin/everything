@@ -1,7 +1,11 @@
+/*
+  This module creates a custom form. 
+  It expects one or more children (fully formed input or fileInput)
+  as opposed to creating an input like formHorizontal does.
+*/
+
 import { injectStyle } from '../js/ui.js'
 import { createButton } from './button.js'
-import { createIcon } from './icon.js'
-import { createInput } from './input.js'
 import { createSpan } from './span.js'
 
 // -------------------------------
@@ -9,40 +13,33 @@ import { createSpan } from './span.js'
 // -------------------------------
 
 const css = `
-.form-horizontal-wrapper {
+.form {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
 }
-.form-horizontal-wrapper button {
+.form button {
   margin-left: 20px;
 }
-.form-horizontal-wrapper button:disabled {
+.form button:disabled {
   cursor: not-allowed;
   pointer-events: none;
 }
-.form-horizontal-wrapper .form-horizontal {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  width: 100%;
-}
-.form-horizontal-wrapper .input-group {
+.form .input-group {
   width: 100%;
   display: flex;
   align-items: center;
 }  
-.form-horizontal-wrapper .input-group i {
+.form .input-group i {
   padding-left: 0;  
 }
-.form-horizontal-wrapper .form-horizontal input {
+.form input {
   margin: 0;
   width: 100%;
 }
-.form-horizontal-wrapper .message {
+.form .message {
   padding: 10px;
   font-size: 0.75rem;
 }
@@ -53,60 +50,35 @@ const css = `
 // -------------------------------
 
 /**
- * Constructor for a custom horizontal form
+ * Constructor for a custom form
  */
-export function createFormHorizontal({
-  formId,
-  inputType,
-  inputName,
-  placeholder,
-  inputAutoComplete,
+export function createForm({
+  id,
+  className,
   buttonIconClass = '',
-  formIconClass = '',
-  submitText,
-  value,
+  submitText = 'Submit',
   disabled = false,
   events,
+  children,
 }) {
   injectStyle(css)
 
-  const el = document.createElement('div')
-  el.className = 'form-horizontal-wrapper'
   let buttonEl
 
-  const formEl = document.createElement('form')
-  formEl.classList.add('form-horizontal')
-  if (formId) {
-    formEl.dataset.id = formId
-  }
-  el.appendChild(formEl)
+  const el = document.createElement('form')
+  el.classList.add('form')
 
-  const divEl = document.createElement('div')
-  divEl.className = 'input-group'
-  if (formIconClass) {
-    const formIcon = createIcon({ className: formIconClass })
-    divEl.appendChild(formIcon)
+  for (const child of children) {
+    el.appendChild(child)
   }
-  formEl.appendChild(divEl)
 
-  const inputEl = createInput({
-    value,
-    type: inputType,
-    name: inputName,
-    placeholder,
-    inputAutoComplete,
+  buttonEl = createButton({
+    iconClass: buttonIconClass,
+    value: submitText,
+    type: 'submit',
+    disabled,
   })
-  divEl.appendChild(inputEl)
-
-  if (submitText) {
-    buttonEl = createButton({
-      iconClass: buttonIconClass,
-      value: submitText,
-      type: 'submit',
-      disabled,
-    })
-    formEl.appendChild(buttonEl)
-  }
+  el.appendChild(buttonEl)
 
   const spanEl = createSpan({})
   spanEl.className = 'message'
@@ -115,18 +87,28 @@ export function createFormHorizontal({
   if (events) {
     for (const [k, v] of Object.entries(events)) {
       if (k === 'submit') {
-        formEl.addEventListener('submit', (e) => {
+        el.addEventListener('submit', (e) => {
           if (!buttonEl || !buttonEl.disabled) {
             v(e)
           }
         })
       } else {
-        formEl.addEventListener(k, v)
+        el.addEventListener(k, v)
       }
     }
   }
+  el.fieldValue = fieldValue.bind(el)
 
   Object.defineProperties(el, {
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = id
+      },
+    },
     disabled: {
       get() {
         return el.disabled
@@ -161,5 +143,29 @@ export function createFormHorizontal({
     },
   })
 
+  id && (el.dataId = id)
+  className && (el.className = className)
+
   return el
+}
+
+// -------------------------------
+// Element methods
+// -------------------------------
+
+/**
+ * Get the value of a specific input inside the form
+ */
+function fieldValue(id, value) {
+  const el = this.querySelector(`[data-id="${id}"]`)
+  if (!el) {
+    throw new Error(
+      `fieldValue: Oops, no input field with data-id "${id}" found`
+    )
+  }
+  if (!value) {
+    return el.value
+  }
+  el.value = value
+  return el // for chaining
 }

@@ -191,9 +191,9 @@ export function createTitleDetailsItem({
         }
         div.dataset.selected = v
         if (v) {
-          div.classList.add(div.getClass('selected'))
+          div.classList.add(div.getClass('active'))
         } else {
-          div.classList.remove(div.getClass('selected'))
+          div.classList.remove(div.getClass('active'))
         }
       },
     },
@@ -240,11 +240,12 @@ function handleClick(e, div, cb) {
   }
 
   if (e.target.closest('input') || e.target.closest('textarea')) {
-    return
+    div.selected = true
+    div.expanded = true
+  } else {
+    div.selected = !div.selected
+    div.expanded = !div.expanded
   }
-
-  div.selected = !div.selected
-  div.expanded = !div.expanded
 
   // notify list of the click
   div.dispatch('list-item-clicked', { selectedItem: div.closest('.td-item') })

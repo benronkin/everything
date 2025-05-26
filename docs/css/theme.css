@@ -241,7 +241,7 @@ a:visited {
   color: var(--purple3);
 }
 button {
-  border-radius: var(--border-radius);
+  border-radius: 4px;
   border: none;
   color: white;
   cursor: pointer;
@@ -253,13 +253,20 @@ button:disabled {
   color: var(--gray4);
   opacity: 0.6;
 }
+button.bordered {
+  background-color: transparent;
+  color: var(--gray6);
+  border: 1px solid var(--gray6);
+}
 button.primary,
 label.primary {
+  border: 1px solid var(--purple2);
   background-color: var(--purple2);
   transition: background-color 200ms ease;
 }
 button.primary:hover,
 label.primary:hover {
+  border: 1px solid var(--purple3);
   background: var(--purple3);
   box-shadow: 0 0 10px var(--purple3);
 }

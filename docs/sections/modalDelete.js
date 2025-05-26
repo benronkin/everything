@@ -2,7 +2,7 @@
   Don't use this file. Instead, use a specific modal (e.g modalDelete)
 */
 
-import { injectStyle } from '../js/ui.js'
+import { getEl, injectStyle } from '../js/ui.js'
 import { createButton } from '../partials/button.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
@@ -30,7 +30,7 @@ const css = `
   }
   [data-id="delete-modal-btn-group"] {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     gap: 10px;
     margin: 40px 0 20px;
@@ -52,16 +52,12 @@ const css = `
 export function createModalDelete({ header, body, id, password = false }) {
   injectStyle(css)
 
-  let el = document.querySelector('dialog')
-  if (!el) {
-    el = document.createElement('dialog')
-    document.querySelector('body').appendChild(el)
-  }
+  const el = document.createElement('dialog')
 
   Object.defineProperties(el, {
     body: {
       get() {
-        return el.querySelector('[d]ata-id="delete-modal-body"]').innerHTML
+        return el.querySelector('[data-id="delete-modal-body"]').innerHTML
       },
       set(newValue = '') {
         el.querySelector('[data-id="delete-modal-body"]').innerHTML = newValue
@@ -83,10 +79,33 @@ export function createModalDelete({ header, body, id, password = false }) {
         el.querySelector('[data-id="delete-modal-header"]').innerHTML = newValue
       },
     },
+    message: {
+      get() {
+        return el.querySelector('[data-id="delete-modal-message"]').innerHTML
+      },
+      set(newValue = '') {
+        el.querySelector('[data-id="delete-modal-message"]').innerHTML =
+          newValue
+      },
+    },
+    password: {
+      get() {
+        return el.dataset.password === 'true'
+      },
+      set(newValue = false) {
+        el.dataset.password = newValue
+      },
+    },
   })
 
-  createElement({ el, header, body, id, password })
+  createElement({ el, password })
 
+  el.addEventListener('click', handleOutsideModalDeleteClick)
+
+  id && (el.dataId = id)
+  password && (el.password = password)
+  el.header = header
+  el.body = body
   return el
 }
 
@@ -98,17 +117,16 @@ export function createModalDelete({ header, body, id, password = false }) {
  * Close modal if clicked outside its visible area
  */
 function handleOutsideModalDeleteClick(e) {
-  document.querySelectorAll('dialog').forEach((modal) => {
-    const dialogDimensions = modal.getBoundingClientRect()
-    if (
-      e.clientX < dialogDimensions.left ||
-      e.clientX > dialogDimensions.right ||
-      e.clientY < dialogDimensions.top ||
-      e.clientY > dialogDimensions.bottom
-    ) {
-      modal.close()
-    }
-  })
+  const modal = e.target.closest('dialog')
+  const dialogDimensions = modal.getBoundingClientRect()
+  if (
+    e.clientX < dialogDimensions.left ||
+    e.clientX > dialogDimensions.right ||
+    e.clientY < dialogDimensions.top ||
+    e.clientY > dialogDimensions.bottom
+  ) {
+    modal.close()
+  }
 }
 
 /**
@@ -138,7 +156,7 @@ function handleModalCancelClick(e) {
 /**
  *
  */
-function createElement({ el, header, body, id, password }) {
+function createElement({ el, password }) {
   const headerEl = createHeader({
     id: 'delete-modal-header',
     type: 'h3',
@@ -150,37 +168,45 @@ function createElement({ el, header, body, id, password }) {
   })
   el.appendChild(spanEl)
 
-  let divEl = createDiv({ id: 'delete-modal-btn-group' })
-  el.appendChild(divEl)
-
   if (password) {
     const inputEl = createInput({
       type: 'password',
       name: 'password',
+      autocomplete: 'new-password',
       placeholder: 'Password',
-      id: 'delete-modal-input',
+      id: 'modal-delete-input',
     })
-    divEl.appendChild(inputEl)
+    el.appendChild(inputEl)
   }
+
+  let divEl = createDiv({ id: 'delete-modal-btn-group' })
+  el.appendChild(divEl)
 
   let buttonEl = createButton({
     id: 'delete-modal-delete-btn',
     value: 'Delete',
+    // classes: {
+    //   base: 'primary',
+    //   hover: 'bordered',
+    // },
   })
   buttonEl.addEventListener('click', handleModalConfirmDeleteClick)
   divEl.appendChild(buttonEl)
 
-  buttonEl = createButton({ id: 'cancel-modal-delete-btn', value: 'Cancel' })
+  buttonEl = createButton({
+    id: 'cancel-modal-delete-btn',
+    value: 'Cancel',
+    classes: {
+      active: 'primary',
+      base: 'bordered',
+      hover: 'primary',
+    },
+  })
   buttonEl.addEventListener('click', handleModalCancelClick)
   divEl.appendChild(buttonEl)
 
   spanEl = createSpan({
     id: 'delete-modal-message',
   })
-
-  el.dataId = id
-  el.header = header
-  el.body = body
-  document.addEventListener('click', handleOutsideModalDeleteClick)
-  el.appendChild(spanEl)
+  divEl.appendChild(spanEl)
 }

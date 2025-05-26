@@ -52,6 +52,7 @@ export function createButton({
       },
       set(newValue = '') {
         el.dataset.id = newValue
+        el.dataset.testId = id
       },
     },
     hovered: {
@@ -73,17 +74,10 @@ export function createButton({
       },
     },
   })
+  id && (el.dataId = id)
+  disabled && (el.disabled = true)
   el.value = value
-  if (id) {
-    el.btnId = id
-    el.dataset.testId = `${id}-button`
-  }
-  if (type) {
-    el.type = type
-  }
-  if (disabled) {
-    el.disabled = true
-  }
+  type && (el.type = type)
 
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))

@@ -21,27 +21,18 @@
     <div class="wrapper">
       <main>
         <div class="container">
-          <span id="message"></span>
-          <div id="main-icon-group-wrapper"></div>
-          <div id="columns-container">
-            <div id="left-panel">
-              <input
-                type="search"
-                id="search-journals"
-                placeholder="Search journal"
-                style="width: calc(var(--sidebar-width) - 20px)"
-              />
-              <span id="search-journals-message"></span>
-              <ul id="left-panel-list"></ul>
-            </div>
-            <div id="main-panel" class="hidden">
+          <span id="message" data-id="message"></span>
+          <div data-id="main-icon-group-wrapper"></div>
+          <div id="columns-container" data-id="columns-container">
+            <div id="left-panel" data-id="left-panel"></div>
+            <div id="main-panel" data-id="main-panel" class="hidden">
               <h5>Location</h5>
-              <input name="location" id="journal-location" class="field" />
+              <input name="location" data-id="journal-location" class="field" />
               <h5>Visted on</h5>
               <div class="date-input-wrapper">
                 <input
                   name="visit_date"
-                  id="journal-visit-date"
+                  data-id="journal-visit-date"
                   class="field"
                   type="date"
                 />
@@ -50,42 +41,25 @@
               <h5>Notes</h5>
               <textarea
                 name="notes"
-                id="journal-notes"
+                data-id="journal-notes"
                 class="field"
               ></textarea>
               <h5>City</h5>
-              <input name="city" id="journal-city" class="field" />
+              <input name="city" data-id="journal-city" class="field" />
               <h5>State</h5>
-              <input name="state" id="journal-state" class="field" />
+              <input name="state" data-id="journal-state" class="field" />
               <h5>Country</h5>
-              <input name="country" id="journal-country" class="field" />
-              <div class="flex u-mt-20">
+              <input name="country" data-id="journal-country" class="field" />
+              <div data-id="photos-header-wrapper" class="flex u-mt-20">
                 <h4>Photos</h4>
-                <i id="add-photo-toggle" class="fa-solid fa-camera primary"></i>
               </div>
-              <form id="add-photo-form" class="hidden">
-                <input
-                  id="photo-caption-input"
-                  class="bb-white"
-                  name="caption"
-                  type="text"
-                  placeholder="Describe this photo..."
-                  maxlength="200"
-                />
-                <input id="photo-entry-id" type="hidden" name="entry" />
-                <div class="flex">
-                  <button id="add-photo-submit" class="primary" type="submit">
-                    Upload
-                  </button>
-                  <span id="add-photo-message"></span>
-                </div>
-              </form>
-              <div id="image-gallery"></div>
+              <div data-id="upload-photo-wrapper"></div>
+              <div id="image-gallery" data-id="image-gallery"></div>
               <h5>Id</h5>
-              <p id="journal-id" class="smaller"></p>
+              <p data-id="journal-id" class="smaller"></p>
               <div class="flex danger-box u-mt-40 u-mb-20">
                 <span>Delete entry</span>
-                <i id="delete-entry-btn" class="fa fa-trash"></i>
+                <i data-id="delete-entry-btn" class="fa fa-trash"></i>
               </div>
             </div>
           </div>

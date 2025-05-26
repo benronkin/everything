@@ -62,8 +62,8 @@ export function createMainIconGroup({ children, shouldAllowCollapse } = {}) {
  */
 function handleLeftPanelToggle() {
   const group = getEl('main-icon-group')
-  if (!group.shouldAllowCollapse()) {
-    setMessage('Select a recipe first', 2000)
+  if (!group.shouldAllowCollapse.cb()) {
+    setMessage(group.shouldAllowCollapse.message, 2000)
     getEl('left-panel-toggle').shake()
     return
   }
@@ -143,7 +143,11 @@ function createElement({ children, shouldAllowCollapse }) {
   }
 
   // if and when to block the collapse
-  el.shouldAllowCollapse = shouldAllowCollapse || (() => true)
+  el.shouldAllowCollapse = shouldAllowCollapse || {
+    cb() {
+      return true
+    },
+  }
 
   el.expand = expand.bind(el)
   el.collapse = collapse.bind(el)

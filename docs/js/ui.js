@@ -2,7 +2,7 @@
 // Globals
 // ----------------------
 
-const messageEl = document.querySelector('#message')
+const messageEl = getEl('message')
 let sharedStyleEl = null
 
 // ------------------------
@@ -13,7 +13,45 @@ let sharedStyleEl = null
  * Get an element using its data-id attribute
  */
 export function getEl(id) {
-  return document.querySelector(`[data-id="${id}"]`)
+  const el = document.querySelector(`[data-id="${id}"]`)
+  if (!el) {
+    console.warn(`Unable to locate element with data-id="${id}"`)
+    return null
+  }
+
+  if (!el._enhanced) {
+    el.toggleClass = function (className) {
+      el.classList.toggle(className)
+      return el // for chainng
+    }
+
+    Object.defineProperties(el, {
+      hidden: {
+        get() {
+          return el.classList.contains('hidden')
+        },
+        set(v) {
+          el.classList.toggle('hidden', v)
+        },
+      },
+    })
+    el._enhanced = true // prevent redefining every time
+  }
+
+  if (!('value' in el)) {
+    // Fallback for dealing with elements that
+    // lack native or my custom value method
+    Object.defineProperty(el, 'value', {
+      get() {
+        return el.innerHTML
+      },
+      set(newValue) {
+        el.innerHTML = newValue
+      },
+    })
+  }
+
+  return el
 }
 
 /**
@@ -78,13 +116,15 @@ export function setMessage(value, timeout) {
   messageEl.innerHTML = value
   messageEl.classList.toggle('hidden', !value)
 
+  messageEl.style.animation = 'fadeInSlideDown 300ms ease-out'
+
   if (timeout) {
     setTimeout(() => {
-      messageEl.style.animation = 'fadeOutSlideUp 300ms ease-out'
+      messageEl.style.animation = 'fadeOutSlideUp 300ms ease-in'
       setTimeout(() => {
-        messageEl.innerHTML = ''
         messageEl.classList.add('hidden')
-        messageEl.style.animation = '' // reset so future fadeInSlideDown can fire again
+        messageEl.innerHTML = ''
+        messageEl.style.animation = ''
       }, 300)
     }, timeout)
   }

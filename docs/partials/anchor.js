@@ -24,10 +24,6 @@ export function createAnchor({ className, id, html, url } = {}) {
 }
 
 // -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
 // Constructor
 // -------------------------------
 
@@ -38,6 +34,15 @@ function createElement({ className, id, html, url }) {
   const el = document.createElement('a')
 
   Object.defineProperties(el, {
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = id
+      },
+    },
     url: {
       get() {
         return el.href
@@ -58,13 +63,8 @@ function createElement({ className, id, html, url }) {
 
   el.value = html
   el.url = url
-
-  if (className) {
-    el.className = className
-  }
-  if (id) {
-    el.id = id
-  }
+  className && (el.className = className)
+  id && (el.dataId = id)
 
   return el
 }

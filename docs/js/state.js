@@ -17,7 +17,9 @@ const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
 
 const stateObj = {
   data: {
+    'active-journal': null,
     'active-recipe': null,
+    journal: [],
     recipes: [],
     WEB_APP_URL: devUrl,
   },
@@ -85,7 +87,7 @@ const stateObj = {
   },
 
   // -----------------------
-  // misc
+  // defaults
   // -----------------------
 
   getWebAppUrl() {
@@ -93,16 +95,20 @@ const stateObj = {
     return this.data.WEB_APP_URL
   },
 
-  // -----------------------
-  // default page
-  // -----------------------
-
   getDefaultPage() {
     return localStorage.getItem('mode') || 'recipes'
   },
 
   setDefaultPage(mode) {
     localStorage.setItem('mode', mode)
+  },
+
+  // -----------------------
+  // Journal
+  // -----------------------
+
+  getJournalById(id) {
+    return this.data.journal.find((j) => j.id === id)
   },
 
   // -----------------------

@@ -61,6 +61,7 @@ async function handleDOMContentLoaded() {
 
   setMessage('')
   initTasks(tasks)
+  tasksFormEl.querySelector('input').focus()
 }
 
 /**
@@ -79,7 +80,7 @@ function handleSortSwitchClick() {
  */
 function handleTaskInputKeyUp(e) {
   const tasksFormEl = e.target.closest('.form-horizontal-wrapper')
-  const value = tasksFormEl.getValue().trim()
+  const value = tasksFormEl.value.trim()
   if (value.length) {
     tasksFormEl.enable()
   } else {
@@ -249,7 +250,6 @@ function addPageElements() {
   })
   formWrapper.prepend(tasksFormEl)
   tasksInput = tasksFormEl.querySelector('input')
-  tasksInput.focus()
 
   /* when tasks input key is pressed */
   tasksInput.addEventListener('keyup', handleTaskInputKeyUp)

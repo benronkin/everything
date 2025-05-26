@@ -21,10 +21,12 @@ input {
  */
 export function createInput({
   id = '',
+  className = '',
   accept = '',
   type = '',
   name = '',
   value = '',
+  maxLength,
   placeholder = '',
   autocomplete = true,
   classes = {
@@ -38,7 +40,10 @@ export function createInput({
   const el = document.createElement('input')
   el._classes = classes
   el.getClass = getClass.bind(el)
-  el.className = el.getClass('base')
+  el.className = `${className} el.getClass('base')`
+  if (maxLength) {
+    el.maxlength = maxLength
+  }
 
   Object.defineProperties(el, {
     dataId: {
@@ -54,24 +59,16 @@ export function createInput({
         el.classList.toggle(el.getClass('hover'), v)
       },
     },
-    value: {
-      get() {
-        return el.dataset.value
-      },
-      set(newValue) {
-        el.dataset.value = newValue
-        el.dataset.testId = `${id}-input`
-      },
-    },
+    // don't override input.value: it just creates stack overflow
   })
 
-  el.value = value
   el._classes = classes
   el.dataset.id = id
   el.dataId = id
   el.accept = accept
   el.type = type
   el.name = name
+  el.value = value
   el.placeholder = placeholder
   el.dataset.testId = `${id}-input` // cypress
   if (autocomplete) {

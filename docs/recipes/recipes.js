@@ -3,22 +3,23 @@
 */
 
 import { state } from '../js/state.js'
+import { getEl, setMessage, resizeTextarea, isMobile } from '../js/ui.js'
 import { setEvents } from './events.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
 import { createFormField } from '../partials/formField.js'
 import { createIcon } from '../partials/icon.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
+import { createModalDelete } from '../sections/modalDelete.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
+import { createSearch } from '../partials/search.js'
 import { createSelect } from '../partials/select.js'
 import { createSwitch } from '../partials/switch.js'
-import { createSearch } from '../partials/search.js'
 import { createList } from '../partials/list.js'
-import { getEl, setMessage, resizeTextarea, isMobile } from '../js/ui.js'
 import { handleTokenQueryParam, getWebApp } from '../js/io.js'
 
 // ----------------------
-// Globals
+// Event handlers
 // ----------------------
 
 /* When page is loaded */
@@ -65,7 +66,10 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   const mainIconGroup = createMainIconGroup({
-    shouldAllowCollapse: () => !!state.get('active-recipe'),
+    shouldAllowCollapse: {
+      message: 'Select a recipe first',
+      cb: () => !!state.get('active-recipe'),
+    },
     children: [
       createIcon({ id: 'add-recipe', className: 'fa-plus' }),
       createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' }),
@@ -73,15 +77,16 @@ async function handleDOMContentLoaded() {
   })
   getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
 
-  const searchRecipesEl = createSearch({
-    iconClass: 'fa-magnifying-glass',
-    placeholder: 'Search recipes',
-    searchCb: searchRecipes,
-    searchResultsCb: handleSearchResult,
-  })
-  getEl('left-panel').prepend(searchRecipesEl)
+  getEl('left-panel').prepend(
+    createSearch({
+      iconClass: 'fa-magnifying-glass',
+      placeholder: 'Search recipes',
+      searchCb: searchRecipes,
+      searchResultsCb: handleSearchResult,
+    })
+  )
 
-  getEl('left-panel').append(
+  getEl('left-panel').appendChild(
     createList({
       id: 'left-panel-list',
       itemClass: 'menu-item',
@@ -124,6 +129,15 @@ async function handleDOMContentLoaded() {
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)
+
+  document.querySelector('body').appendChild(
+    createModalDelete({
+      header: 'Delete recipe',
+      body: `Delete the ${getEl('recipe-title').value} recipe?`,
+      id: 'modal-delete',
+      password: true,
+    })
+  )
 
   if (isMobile()) {
     getEl('main-panel').classList.add('hidden')

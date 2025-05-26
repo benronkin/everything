@@ -258,7 +258,7 @@ function updateChild({ id, title, details }) {
 function createElement({
   id,
   itemClass,
-  className,
+  className = '',
   children,
   emptyState,
   onChange,
@@ -273,13 +273,6 @@ function createElement({
     div._emptyState = emptyState
     div.querySelector('.empty-state').innerHTML = emptyState
   }
-
-  if (id) {
-    // div.setAttribute('id', id) canceling that. Change code that uses it
-    div.dataset.id = id
-  }
-  div.dataset.testId = id || 'list'
-  div.className = `list${className ? ' ' + className : ''}`
 
   div._onChange = onChange
   div.addChild = addChild.bind(div)
@@ -316,6 +309,15 @@ function createElement({
         return this.getChildren().map((child) => child.data)
       },
     },
+    dataId: {
+      get() {
+        return this.dataset.id
+      },
+      set(newValue = '') {
+        this.dataset.id = newValue
+        this.dataset.testId = id
+      },
+    },
     length: {
       get() {
         return this.getData().length
@@ -348,6 +350,9 @@ function createElement({
   } else {
     div.querySelector('.empty-state').classList.remove('hidden')
   }
+
+  id && (div.dataId = id)
+  div.className = `list ${className}`
 
   return div
 }

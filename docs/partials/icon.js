@@ -28,8 +28,42 @@ i.shake {
 export function createIcon({ id, className, events = {} } = {}) {
   injectStyle(css)
   const el = document.createElement('i')
-  id && (el.dataset.id = id)
-  el.className = `fa-solid ${className}`
+
+  Object.defineProperties(el, {
+    classes: {
+      get() {
+        return el.className
+      },
+      set(newValue = '') {
+        el.className = newValue
+      },
+    },
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = `id-span`
+      },
+    },
+    value: {
+      get() {
+        return el.innerHTML
+      },
+      set(newValue) {
+        if (typeof newValue === 'string') {
+          newValue = document.createTextNode(newValue)
+        }
+        el.innerHTML = ''
+        el.appendChild(newValue)
+      },
+    },
+  })
+  id && (el.dataId = id)
+  className && (el.classes = `fa-solid ${className}`)
+  el.role = 'button'
+  el.tabIndex = 0
 
   for (const [eventName, cb] of Object.entries(events)) {
     el.addEventListener(eventName, cb)
