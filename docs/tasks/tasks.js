@@ -82,9 +82,9 @@ function handleTaskInputKeyUp(e) {
   const tasksFormEl = e.target.closest('.form-horizontal-wrapper')
   const value = tasksFormEl.value.trim()
   if (value.length) {
-    tasksFormEl.enable()
+    tasksFormEl.disabled = false
   } else {
-    tasksFormEl.disable()
+    tasksFormEl.disabled = true
   }
 }
 

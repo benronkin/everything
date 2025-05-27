@@ -129,10 +129,11 @@ export function createFormHorizontal({
   Object.defineProperties(el, {
     disabled: {
       get() {
-        return el.disabled
+        return el.dataset.disabled === 'true'
       },
       set(v) {
-        el.disabled = v
+        el.dataset.disabled = v
+        el.querySelector('button').disabled = v
       },
     },
     message: {

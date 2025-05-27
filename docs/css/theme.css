@@ -85,6 +85,13 @@
   --teal4: #7be3e5;
   --teal5: #b8f5f6;
   --teal6: #e6ffff;
+  --yellow0: #2a2100; /* near-black with golden undertone */
+  --yellow1: #4a3900; /* dark mustard */
+  --yellow2: #806000; /* old gold */
+  --yellow3: #b68f00; /* rich amber */
+  --yellow4: #f0c000; /* classic yellow gold */
+  --yellow5: #ffe766; /* soft butter */
+  --yellow6: #fff9e6; /* pale ivory */
   --body-bg: linear-gradient(180deg, var(--gray1), var(--gray0));
   --menu-gradient: linear-gradient(
     90deg,
@@ -431,11 +438,20 @@ main {
   color: var(--gray6);
   transition: all 0.2s ease-in-out;
 }
-
 .u-active-secondary {
   color: var(--teal3) !important;
   border: 1px solid var(--teal3) !important;
   border-radius: 0;
+}
+.u-warn,
+.toast.u-warn {
+  background-color: var(--yellow4);
+  color: var(--gray2);
+}
+.u-danger,
+.toast.u-danger {
+  background-color: var(--red3);
+  color: var(--gray6);
 }
 
 footer {

@@ -91,9 +91,10 @@ async function handleDOMContentLoaded() {
   const token = localStorage.getItem('authToken')
   if (!token) {
     console.log('handleDOMContentLoaded: no token')
-    setMessage(
-      '<i class="fa-solid fa-circle-exclamation"></i> Authentication failed'
-    )
+    setMessage({
+      type: 'danger',
+      message: 'Authentication failed',
+    })
     showLoginForm()
     return
   }

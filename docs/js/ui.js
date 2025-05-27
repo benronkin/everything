@@ -1,8 +1,11 @@
+import { createIcon } from '../partials/icon.js'
+import { createSpan } from '../partials/span.js'
+import { createToast } from '../partials/toast.js'
+
 // ----------------------
 // Globals
 // ----------------------
 
-const messageEl = getEl('message')
 let sharedStyleEl = null
 
 // ------------------------
@@ -15,7 +18,8 @@ let sharedStyleEl = null
 export function getEl(id) {
   const el = document.querySelector(`[data-id="${id}"]`)
   if (!el) {
-    console.warn(`Unable to locate element with data-id="${id}"`)
+    console.trace(`Oops, unable to locate element with data-id="${id}"`)
+
     return null
   }
 
@@ -110,24 +114,48 @@ export function resizeTextarea(textarea) {
 }
 
 /**
- * Set message at top of page
+ * Show message toast
  */
-export function setMessage(value, timeout) {
-  messageEl.innerHTML = value
-  messageEl.classList.toggle('hidden', !value)
+export function setMessage({
+  message,
+  type = 'message',
+  autoClose = 3000,
+  position = 'BOTTOM_RIGHT',
+}) {
+  let value = message
+  let className = null
 
-  messageEl.style.animation = 'fadeInSlideDown 300ms ease-out'
-
-  if (timeout) {
-    setTimeout(() => {
-      messageEl.style.animation = 'fadeOutSlideUp 300ms ease-in'
-      setTimeout(() => {
-        messageEl.classList.add('hidden')
-        messageEl.innerHTML = ''
-        messageEl.style.animation = ''
-      }, 300)
-    }, timeout)
+  function _createWarnMessage(message) {
+    const iconEl = createIcon({ className: 'fa-circle-exclamation' })
+    const el = createSpan()
+    el.appendChild(iconEl)
+    el.appendChild(document.createTextNode(message))
+    return el
   }
+
+  switch (type) {
+    case 'danger':
+      value = _createWarnMessage(message)
+      className = 'u-danger'
+      position = 'TOP_RIGHT'
+      autoClose = null
+      break
+    case 'warn':
+      value = _createWarnMessage(message)
+      className = 'u-warn'
+      position = 'TOP_RIGHT'
+      break
+  }
+
+  const toast = createToast({
+    value,
+    className,
+    autoClose,
+    showProgress: true,
+    position,
+  })
+
+  document.querySelector('body').appendChild(toast)
 }
 
 /**
