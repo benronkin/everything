@@ -167,6 +167,9 @@ ul {
   margin: 10px 0;
   border-bottom: 1px solid var(--gray3);
 }
+#main-panel textarea.field {
+  min-height: 52px;
+}
 #related-recipes-header {
   margin: 20px 0;
   display: flex;

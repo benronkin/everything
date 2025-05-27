@@ -96,21 +96,24 @@ export function log(...args) {
  * Resize the textarea
  */
 export function resizeTextarea(textarea) {
-  // First, set the textarea to the default height
-  textarea.style.height = 'auto'
-  textarea.style.height = '0'
+  // allow page to lay out the elements
+  requestAnimationFrame(() => {
+    // First, set the textarea to the default height
+    textarea.style.height = 'auto'
+    textarea.style.height = '0'
 
-  // Get the scroll height of the textarea content
-  let minHeight = textarea.scrollHeight
+    // Get the scroll height of the textarea content
+    let minHeight = textarea.scrollHeight
 
-  // If the scroll height is more than the default height, expand the textarea
-  if (minHeight > textarea.clientHeight) {
-    const height = parseFloat(minHeight) || 52
-    textarea.style.height = height + 5 + 'px'
-    if (isMobile()) {
-      textarea.style.height = height / 1.5 + 'px'
+    // If the scroll height is more than the default height, expand the textarea
+    if (minHeight > textarea.clientHeight) {
+      const height = parseFloat(minHeight) || 52
+      textarea.style.height = height + 5 + 'px'
+      if (isMobile()) {
+        textarea.style.height = height / 1.5 + 'px'
+      }
     }
-  }
+  })
 }
 
 /**
