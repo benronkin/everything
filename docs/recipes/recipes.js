@@ -117,6 +117,7 @@ async function handleDOMContentLoaded() {
     element: createSelect({
       id: 'recipe-category',
       name: 'category',
+      className: 'field',
       options: categories,
     }),
     label: 'category',

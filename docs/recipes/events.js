@@ -180,26 +180,30 @@ async function handleFieldChange(e) {
   const elem = e.target
   const section = elem.name
   let value = elem.value
+  let id
 
   if (section === 'title') {
     value = value.toLowerCase()
     getEl('left-panel-list').getSelected().value = value
   }
 
-  const id = getEl('recipe-id').textContent
+  id = getEl('recipe-id').textContent
   state.setRecipeSection(id, section, value)
 
   try {
-    const { message, error } = await postWebAppJson(
+    const { status, message } = await postWebAppJson(
       `${state.getWebAppUrl()}/recipes/update`,
       { id, section, value }
     )
-    if (error) {
-      throw new Error(error)
+    if (status !== 200) {
+      throw new Error(message)
     }
     console.log(message)
   } catch (err) {
-    console.log(err)
+    console.trace(err)
+    console.log('id:', id)
+    console.log('section:', section)
+    console.log('value:', value)
   }
 }
 

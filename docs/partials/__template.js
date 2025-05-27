@@ -14,7 +14,12 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({ id, className, events = {}, html } = {}) {
+export function create({
+  id = '',
+  className = '',
+  events = {},
+  html = '',
+} = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -25,7 +30,7 @@ export function create({ id, className, events = {}, html } = {}) {
         return el.className
       },
       set(newValue = '') {
-        el.className = newValue
+        el.className = `${newValue}`.trim()
       },
     },
     dataId: {
@@ -51,8 +56,8 @@ export function create({ id, className, events = {}, html } = {}) {
     },
   })
   el.value = html
-  id && (el.dataId = id)
-  className && (el.classes = `fa-solid ${className}`)
+  el.dataId = id
+  el.classes = `${className}`
 
   addElementParts(el)
   addEventHandlers(el, events)

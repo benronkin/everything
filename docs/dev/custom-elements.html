@@ -33,13 +33,16 @@
       </main>
     </div>
     <script type="module">
+      import { getWebApp } from '../js/io.js'
+      import { state } from '../js/state.js'
       import { createFileInput } from '../partials/fileInput.js'
       import { createFormHorizontal } from '../partials/formHorizontal.js'
       import { createFormField } from '../partials/formField.js'
       import { createTextarea } from '../partials/textarea.js'
       import { createList } from '../partials/list.js'
       import { createListItem } from '../partials/listItem.js'
-      import { createMenuItem } from '../partials/MenuItem.js'
+      import { createMenuItem } from '../partials/menuItem.js'
+      import { createSelect } from '../partials/select.js'
       import { createModalDelete } from '../sections/modalDelete.js'
 
       const parent = document.querySelector('#parent')
@@ -95,7 +98,17 @@
       })
       parent.appendChild(modalDelete)
       modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
-      modalDelete.show()
+      // modalDelete.show()
+
+      getWebApp(`${state.getWebAppUrl()}/recipes/categories/read`).then(
+        ({ categories }) => {
+          const selectEl = createSelect({
+            options: categories,
+            name: 'category',
+          })
+          parent.appendChild(selectEl)
+        }
+      )
     </script>
   </body>
 </html>

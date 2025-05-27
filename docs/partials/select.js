@@ -1,4 +1,5 @@
 import { injectStyle } from '../js/ui.js'
+import { createIcon } from './icon.js'
 
 // -------------------------------
 // Globals
@@ -23,6 +24,7 @@ const css = `
   font-size: 0.9rem; 
   padding: 0 1.5rem 0 0.8rem;
   z-index: 2;
+  width: 100%;
 }
 
 .custom-select:focus {
@@ -44,13 +46,6 @@ const css = `
 }
 `
 
-const html = `
-<select class="custom-select"></select>
-<div class="caret-wrapper">
-  <i class="fa-solid fa-caret-down"></i>
-</div>
-`
-
 // -------------------------------
 // Exported
 // -------------------------------
@@ -58,21 +53,61 @@ const html = `
 /**
  *
  */
-export function createSelect(config) {
+export function createSelect({
+  id = '',
+  value = '',
+  className = '',
+  name = '',
+  options = [],
+}) {
   injectStyle(css)
-  return createElement(config)
+
+  const el = document.createElement('div')
+
+  Object.defineProperties(el, {
+    classes: {
+      get() {
+        return el.className
+      },
+      set(newValue = '') {
+        el.className = `select-wrapper ${newValue}`.trim()
+      },
+    },
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = `${id}-select-wrapper`
+      },
+    },
+  })
+
+  addElementParts({ el, name })
+
+  el.value = value
+  el.dataId = id
+  el.classes = className
+
+  el.getOptionByLabel = getOptionByLabel.bind(el)
+  el.getOptionByValue = getOptionByValue.bind(el)
+  el.getSelected = getSelected.bind(el)
+  el.hasOptionLabel = hasOptionLabel.bind(el)
+  el.hasOptionValue = hasOptionValue.bind(el)
+  el.selectByLabel = selectByLabel.bind(el)
+  el.selectByValue = selectByValue.bind(el)
+  el.setOptions = setOptions.bind(el)
+  el.unselect = unselect.bind(el)
+
+  el.setOptions(options)
+
+  return el
 }
 
 // -------------------------------
 // Object methods
 // -------------------------------
-
-/**
- *
- */
-function getName() {
-  return this.querySelector('select').getAttribute('name')
-}
 
 /**
  *
@@ -97,13 +132,6 @@ function getOptionByValue(value) {
  */
 function getSelected() {
   return this.querySelector('option[selected="true"]')
-}
-
-/**
- *
- */
-function getValue() {
-  return this.querySelector('select').value
 }
 
 /**
@@ -153,7 +181,6 @@ function selectByValue(value) {
  *
  */
 function setOptions(options) {
-  const selectEl = this.querySelector('select')
   options.forEach((opt) => {
     const optEl = document.createElement('option')
     optEl.value = opt.value
@@ -161,8 +188,7 @@ function setOptions(options) {
     if (opt.selected) {
       optEl.setAttribute('selected', true)
     }
-
-    selectEl.appendChild(optEl)
+    this.querySelector('select').appendChild(optEl)
   })
 }
 
@@ -184,46 +210,14 @@ function unselect() {
 /**
  *
  */
-function createElement({ id, className, name, options = [] }) {
-  const el = document.createElement('div')
-  el.className = 'select-wrapper'
-  el.innerHTML = html
-
-  const selectEl = el.querySelector('select')
-  if (name) {
-    selectEl.setAttribute('name', name)
-  }
-
-  if (className) {
-    selectEl.className = className
-  }
-
-  el.getName = getName.bind(el)
-  el.getOptionByLabel = getOptionByLabel.bind(el)
-  el.getOptionByValue = getOptionByValue.bind(el)
-  el.getSelected = getSelected.bind(el)
-  el.getValue = getValue.bind(el)
-  el.hasOptionLabel = hasOptionLabel.bind(el)
-  el.hasOptionValue = hasOptionValue.bind(el)
-  el.selectByLabel = selectByLabel.bind(el)
-  el.selectByValue = selectByValue.bind(el)
-  el.setOptions = setOptions.bind(el)
-  el.unselect = unselect.bind(el)
-
-  el.setOptions(options)
-
-  Object.defineProperties(el, {
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.dataset.id = newValue
-        el.dataset.testId = id
-      },
-    },
-  })
-  id && (el.dataId = id)
-
-  return el
+function addElementParts({ el, name }) {
+  const selectEl = document.createElement('select')
+  selectEl.className = 'custom-select'
+  selectEl.name = name
+  el.appendChild(selectEl)
+  const divEl = document.createElement('div')
+  divEl.className = 'caret-wrapper'
+  el.appendChild(divEl)
+  const iconEl = createIcon({ className: 'fa-caret-down' })
+  divEl.appendChild(iconEl)
 }
