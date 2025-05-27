@@ -269,11 +269,9 @@ async function handleAddPhotoSubmit(e) {
   addPhotoForm.message = 'Uploading...'
 
   const compressionOptions = {
-    maxSizeMB: 0.5,
     maxWidthOrHeight: 600,
     useWebWorker: true,
     fileType: 'image/jpeg',
-    initialQuality: 0.8,
     exifOrientation: null,
   }
 
