@@ -19,17 +19,6 @@ export function create({ id, className, events = {}, html } = {}) {
 
   const el = document.createElement('div')
 
-  for (const [k, v] of Object.entries(events)) {
-    if (k === 'click') {
-      el.addEventListener('click', (e) => {
-        // do something locally, then:
-        v()
-      })
-    } else {
-      el.addEventListener(k, v)
-    }
-  }
-
   Object.defineProperties(el, {
     classes: {
       get() {
@@ -65,8 +54,15 @@ export function create({ id, className, events = {}, html } = {}) {
   id && (el.dataId = id)
   className && (el.classes = `fa-solid ${className}`)
 
-  return addElementParts(el)
+  addElementParts(el)
+  addEventHandlers(el, events)
+
+  return el
 }
+
+// -------------------------------
+// Object methods
+// -------------------------------
 
 // -------------------------------
 // Event handlers
@@ -81,3 +77,19 @@ export function create({ id, className, events = {}, html } = {}) {
  * to return the element.
  */
 function addElementParts(el) {}
+
+/**
+ * Add the various event handlers for the element
+ */
+function addEventHandlers(el, events) {
+  for (const [k, v] of Object.entries(events)) {
+    if (k === 'click') {
+      el.addEventListener('click', (e) => {
+        // do something locally, then:
+        v()
+      })
+    } else {
+      el.addEventListener(k, v)
+    }
+  }
+}

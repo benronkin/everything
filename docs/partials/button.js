@@ -21,7 +21,7 @@ button {
  */
 export function createButton({
   id,
-  disabled,
+  disabled = false,
   iconClass,
   value,
   type,
@@ -75,7 +75,7 @@ export function createButton({
     },
   })
   id && (el.dataId = id)
-  disabled && (el.disabled = true)
+  disabled && (el.disabled = 'disabled')
   el.value = value
   type && (el.type = type)
 

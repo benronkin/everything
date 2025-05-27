@@ -37,66 +37,16 @@ const css = `
  *
  * Constructor for custom file input element
  */
-export function createFileInput({
-  id,
-  iconClass,
-  label,
-  accept = '',
-  classes = {},
-}) {
+export function createFileInput({ iconClass, label, accept = '' }) {
   injectStyle(css)
 
   const el = document.createElement('div')
-  el.className = 'file-upload'
-  el._classes = classes
-
-  const inputEl = createInput({
-    classes,
-    id,
-    accept,
-    type: 'file',
-    name: 'file',
-  })
-  inputEl.classList.add('hidden-file-input')
-  el.appendChild(inputEl)
-
-  const labelEl = createLabel({
-    iconClass,
-    value: label,
-    classes: {
-      base: 'u-active-primary',
-      hover: 'u-hover-primary',
-    },
-  })
-  labelEl.setAttribute('for', id)
-  el.appendChild(labelEl)
-
-  const spanEl = createSpan({})
-  spanEl.classList.add('file-name')
-  el.appendChild(spanEl)
+  el.className = `file-upload`
 
   el.clear = clear.bind(el)
-  el.getClass = getClass.bind(el)
-  el.className = `file-upload ${el.getClass('base')}`
 
-  Object.defineProperties(el, {
-    hovered: {
-      set(v) {
-        el.classList.toggle(el.getClass('base'), !v)
-        el.classList.toggle(el.getClass('hover'), v)
-        el.querySelector('label').classList.toggle(el.getClass('hover'), v)
-        el.querySelector('input').classList.toggle(el.getClass('hover'), v)
-      },
-    },
-  })
-
-  el.addEventListener('mouseenter', () => (el.hovered = true))
-  el.addEventListener('mouseleave', () => (el.hovered = false))
-
-  el.addEventListener('change', (e) => {
-    const span = e.target.closest('.file-upload').querySelector('.file-name')
-    span.textContent = e.target.files[0]?.name || ''
-  })
+  addElementParts({ el, iconClass, label, accept })
+  addEventHandlers(el)
 
   return el
 }
@@ -113,9 +63,45 @@ function clear() {
   this.querySelector('.file-name').value = ''
 }
 
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ * Add sub elements to the element. No need
+ * to return the element.
+ */
+function addElementParts({ el, iconClass, label, accept }) {
+  const inputEl = createInput({
+    id: 'hidden-file-input',
+    accept,
+    type: 'file',
+    name: 'file',
+  })
+  inputEl.classList.add('hidden-file-input')
+  el.appendChild(inputEl)
+
+  const labelEl = createLabel({
+    id: 'file-name',
+    iconClass,
+    value: label,
+    classes: {
+      base: 'u-active-primary',
+      hover: 'u-hover-primary',
+    },
+  })
+  labelEl.setAttribute('for', 'hidden-file-input')
+  el.appendChild(labelEl)
+
+  const spanEl = createSpan({})
+  spanEl.classList.add('file-name')
+  el.appendChild(spanEl)
+}
+
 /**
  *
  */
-function getClass(className) {
-  return this._classes[className]
+function addEventHandlers(el) {
+  el.addEventListener('mouseenter', () => (el.hovered = true))
+  el.addEventListener('mouseleave', () => (el.hovered = false))
 }

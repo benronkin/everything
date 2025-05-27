@@ -19,9 +19,7 @@ const css = `
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-}
-.form button {
-  margin-left: 20px;
+  gap: 1rem;
 }
 .form button:disabled {
   cursor: not-allowed;
@@ -53,51 +51,19 @@ const css = `
  * Constructor for a custom form
  */
 export function createForm({
-  id,
-  className,
+  id = '',
+  className = '',
   buttonIconClass = '',
   submitText = 'Submit',
   disabled = false,
-  events,
-  children,
+  events = {},
+  children = [],
 }) {
   injectStyle(css)
-
-  let buttonEl
-
   const el = document.createElement('form')
-  el.classList.add('form')
 
-  for (const child of children) {
-    el.appendChild(child)
-  }
-
-  buttonEl = createButton({
-    iconClass: buttonIconClass,
-    value: submitText,
-    type: 'submit',
-    disabled,
-  })
-  el.appendChild(buttonEl)
-
-  const spanEl = createSpan({})
-  spanEl.className = 'message'
-  el.appendChild(spanEl)
-
-  if (events) {
-    for (const [k, v] of Object.entries(events)) {
-      if (k === 'submit') {
-        el.addEventListener('submit', (e) => {
-          if (!buttonEl || !buttonEl.disabled) {
-            v(e)
-          }
-        })
-      } else {
-        el.addEventListener(k, v)
-      }
-    }
-  }
   el.fieldValue = fieldValue.bind(el)
+  el.clear = clear.bind(el)
 
   Object.defineProperties(el, {
     dataId: {
@@ -115,7 +81,11 @@ export function createForm({
       },
       set(v) {
         el.dataset.disabled = v
-        el.querySelector('button').disabled = v
+        if (v) {
+          el.querySelector('button').disabled = 'disabled'
+        } else {
+          el.querySelector('button').removeAttribute('disabled')
+        }
       },
     },
     message: {
@@ -143,9 +113,11 @@ export function createForm({
       },
     },
   })
-
   id && (el.dataId = id)
-  className && (el.className = className)
+  el.className = `form ${className}`
+
+  addElementParts({ el, children, buttonIconClass, submitText, disabled })
+  addEventHandlers(el, events)
 
   return el
 }
@@ -169,4 +141,64 @@ function fieldValue(id, value) {
   }
   el.value = value
   return el // for chaining
+}
+
+/**
+ * Clear all elements of the form
+ */
+function clear() {
+  this.reset()
+  this.message = ''
+  this.disabled = true
+  return
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ * Add sub elements to the element. No need
+ * to return the element.
+ */
+function addElementParts({
+  el,
+  children,
+  buttonIconClass,
+  submitText,
+  disabled,
+}) {
+  for (const child of children) {
+    el.appendChild(child)
+  }
+
+  const buttonEl = createButton({
+    iconClass: buttonIconClass,
+    value: submitText,
+    type: 'submit',
+    disabled,
+  })
+  el.appendChild(buttonEl)
+
+  const spanEl = createSpan({})
+  spanEl.className = 'message'
+  el.appendChild(spanEl)
+}
+
+/**
+ * Add the various event handlers for the element
+ */
+function addEventHandlers(el, events) {
+  for (const [k, v] of Object.entries(events)) {
+    if (k === 'submit') {
+      el.addEventListener('submit', (e) => {
+        const buttonEl = el.querySelector('buton')
+        if (!buttonEl || !buttonEl.disabled) {
+          v(e)
+        }
+      })
+    } else {
+      el.addEventListener(k, v)
+    }
+  }
 }

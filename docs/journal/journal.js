@@ -81,12 +81,12 @@ async function handleDOMContentLoaded() {
       className: 'fa-camera primary',
     })
   )
-
   getEl('upload-photo-wrapper').appendChild(
     createForm({
       id: 'add-photo-form',
       className: 'hidden',
       submitText: 'Upload',
+      disabled: true,
       children: [
         createFileInput({
           id: 'photo-file-input',
@@ -108,6 +108,15 @@ async function handleDOMContentLoaded() {
           name: 'entry',
         }),
       ],
+      events: {
+        // set the form's button's disabled
+        // based on file input contents
+        change: () => {
+          const el = getEl('add-photo-form')
+          const fileInput = el.querySelector('input[type="file"]')
+          el.disabled = !(fileInput?.files?.length > 0)
+        },
+      },
     })
   )
 
@@ -117,7 +126,6 @@ async function handleDOMContentLoaded() {
   document.querySelector('body').appendChild(
     createModalDelete({
       header: 'Delete entry',
-      body: `Delete the ${getEl('journal-location').value} entry?`,
       id: 'modal-delete',
       password: true,
     })

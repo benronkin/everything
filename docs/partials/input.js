@@ -40,7 +40,7 @@ export function createInput({
   const el = document.createElement('input')
   el._classes = classes
   el.getClass = getClass.bind(el)
-  el.className = `${className} el.getClass('base')`
+  el.className = `${className} ${el.getClass('base')}`
   if (maxLength) {
     el.maxlength = maxLength
   }
@@ -52,6 +52,7 @@ export function createInput({
       },
       set(newValue = '') {
         el.dataset.id = newValue
+        el.id = newValue
       },
     },
     hovered: {

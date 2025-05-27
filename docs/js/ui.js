@@ -1,6 +1,6 @@
 import { createIcon } from '../partials/icon.js'
 import { createSpan } from '../partials/span.js'
-import { createToast } from '../partials/toast.js'
+import { createToast, removeToasts } from '../partials/toast.js'
 
 // ----------------------
 // Globals
@@ -122,6 +122,12 @@ export function setMessage({
   autoClose = 3000,
   position = 'BOTTOM_RIGHT',
 }) {
+  if (!message) {
+    // user wishes to clear all toasts
+    removeToasts()
+    return
+  }
+
   let value = message
   let className = null
 

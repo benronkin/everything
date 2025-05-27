@@ -63,7 +63,10 @@ export function createMainIconGroup({ children, shouldAllowCollapse } = {}) {
 function handleLeftPanelToggle() {
   const group = getEl('main-icon-group')
   if (!group.shouldAllowCollapse.cb()) {
-    setMessage(group.shouldAllowCollapse.message, 2000)
+    setMessage({
+      message: group.shouldAllowCollapse.message,
+      position: 'TOP_LEFT',
+    })
     getEl('left-panel-toggle').shake()
     return
   }

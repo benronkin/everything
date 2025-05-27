@@ -64,22 +64,6 @@ ul {
 #image-gallery img {
   width: inherit;
 }
-#message {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  border-radius: var(--border-radius);
-  font-weight: 500;
-  font-size: 0.95rem;
-  position: fixed;
-  top: 0;
-  left: 5%;
-  width: 90%;
-  margin: 50px auto;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(90deg, var(--purple1), var(--purple2));
-  color: var(--gray6);
-  text-align: left;
-  z-index: 1000;
-}
 @keyframes fadeInSlideDown {
   0% {
     opacity: 0;
@@ -233,7 +217,7 @@ ul {
   position: relative;
   z-index: 2;
 }
-.date-input-wrapper .circle {
+/* .date-input-wrapper .circle {
   position: absolute;
   right: 2px;
   bottom: 24px;
@@ -242,7 +226,7 @@ ul {
   border-radius: 50%;
   background-color: var(--purple4);
   z-index: 1;
-}
+} */
 .danger-box {
   color: var(--red3);
   border: 1px solid var(--red3);

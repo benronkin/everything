@@ -2,7 +2,7 @@
   Don't use this file. Instead, use a specific modal (e.g modalDelete)
 */
 
-import { getEl, injectStyle } from '../js/ui.js'
+import { injectStyle } from '../js/ui.js'
 import { createButton } from '../partials/button.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
@@ -101,11 +101,13 @@ export function createModalDelete({ header, body, id, password = false }) {
   createElement({ el, password })
 
   el.addEventListener('click', handleOutsideModalDeleteClick)
+  el.addEventListener('close', handleModalClose)
 
   id && (el.dataId = id)
   password && (el.password = password)
   el.header = header
   el.body = body
+
   return el
 }
 
@@ -125,6 +127,7 @@ function handleOutsideModalDeleteClick(e) {
     e.clientY < dialogDimensions.top ||
     e.clientY > dialogDimensions.bottom
   ) {
+    // modal.password = ''
     modal.close()
   }
 }
@@ -146,7 +149,9 @@ function handleModalConfirmDeleteClick(e) {
  */
 function handleModalCancelClick(e) {
   e.preventDefault()
-  e.target.closest('dialog').close()
+  const modal = e.target.closest('dialog')
+  // modal.password = ''
+  modal.close()
 }
 
 // -------------------------------
@@ -185,10 +190,6 @@ function createElement({ el, password }) {
   let buttonEl = createButton({
     id: 'delete-modal-delete-btn',
     value: 'Delete',
-    // classes: {
-    //   base: 'primary',
-    //   hover: 'bordered',
-    // },
   })
   buttonEl.addEventListener('click', handleModalConfirmDeleteClick)
   divEl.appendChild(buttonEl)
@@ -209,4 +210,11 @@ function createElement({ el, password }) {
     id: 'delete-modal-message',
   })
   divEl.appendChild(spanEl)
+}
+
+/**
+ *
+ */
+function handleModalClose(e) {
+  e.target.querySelector('input').value = ''
 }

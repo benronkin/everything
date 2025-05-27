@@ -3,6 +3,8 @@
   This module loads aftr all dynamic fields have been created.
 */
 
+/* global imageCompression */
+
 import { state } from '../js/state.js'
 import { getEl, isMobile, resizeTextarea, toggleExpander } from '../js/ui.js'
 import { getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
@@ -124,10 +126,8 @@ function handleAddPhotoToggle() {
   getEl('add-photo-toggle').toggleClass('fa-close').toggleClass('fa-camera')
 
   const addPhotoForm = getEl('add-photo-form')
-  addPhotoForm.toggleClass('hidden').reset()
-  addPhotoForm.disabled = false
-
-  getEl('photo-file-input').clear()
+  addPhotoForm.toggleClass('hidden')
+  addPhotoForm.clear()
 }
 
 /**
@@ -169,7 +169,7 @@ async function handleFieldChange(e) {
   if (['location', 'visit_date'].includes(section)) {
     getEl('left-panel-list').getSelected().value = createEntryTitle(
       getEl('journal-location').value,
-      getEl('visit_date').value
+      getEl('journal-visit-date').value
     )
   }
 
@@ -218,16 +218,16 @@ function handleJournalDeleteBtnClick() {
   const modal = document.querySelector('dialog[data-id="modal-delete"]')
   const name = createEntryTitle(
     getEl('journal-location').value,
-    getEl('visit_date').value
+    getEl('journal-visit-date').value
   )
-  modal.body = `Delete entry ${name}?`
+  modal.body = `Delete entry: ${name.textContent}?`
   modal.showModal()
 }
 
 /**
  * Handle delete journal confirmation
  */
-async function handleDeleteConfirmed(e) {
+async function handleDeleteConfirmed() {
   const modal = getEl('modal-delete')
   modal.message = ''
 
@@ -252,18 +252,21 @@ async function handleDeleteConfirmed(e) {
  */
 async function handleAddPhotoSubmit(e) {
   e.preventDefault()
+
+  const addPhotoForm = getEl('add-photo-form')
+
   const formData = new FormData(addPhotoForm)
 
   const file = formData.get('file')
   if (!file || file.size === 0) {
     const message = 'Please select an image'
     console.log(message)
-    addPhotoMessage.textContent = message
+    addPhotoForm.message = message
     return
   }
 
-  addPhotoSubmit.setAttribute('disabled', true)
-  addPhotoMessage.textContent = 'Loading...'
+  addPhotoForm.disabled = true
+  addPhotoForm.message = 'Uploading...'
 
   const compressionOptions = {
     maxSizeMB: 0.5,
@@ -284,16 +287,14 @@ async function handleAddPhotoSubmit(e) {
       formData
     )
     if (message) {
+      addPhotoForm.message = message
       console.log(message)
-      addPhotoMessage.textContent = message
     }
-    addPhotoForm.reset()
-    getEl('add-photo-submit').setAttribute('disabled', false)
-    photoFileEl.clear()
+    addPhotoForm.clear()
     await populateJournalImages(formData.get('entry'))
   } catch (err) {
     console.log(err)
-    addPhotoMessage.textContent = err.message
+    addPhotoForm.message = err.message
   }
 }
 

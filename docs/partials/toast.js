@@ -23,7 +23,7 @@ const css = `
   top: 0.6rem; 
   left: 1rem; 
   bottom: auto; 
-  auto: auto; 
+  right: auto; 
 }
 .toast[data-position="top-right"] { 
   top: 0.6rem; 
@@ -185,6 +185,13 @@ export function createToast({
   } 300ms ease forwards`
 
   return el
+}
+
+/**
+ * Remove all toasts
+ */
+export function removeToasts() {
+  document.querySelectorAll('.toast').forEach((el) => el.removeToast())
 }
 
 // -------------------------------
