@@ -57,7 +57,7 @@ export function create({
   })
   el.value = html
   el.dataId = id
-  el.classes = `${className}`
+  el.classes = className
 
   addElementParts(el)
   addEventHandlers(el, events)

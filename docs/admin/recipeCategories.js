@@ -101,7 +101,7 @@ export async function listRecipeCategories() {
  * Handle sort switch click
  */
 function handleSortSwitchClick() {
-  if (sortSwitch.isOn()) {
+  if (sortSwitch.value) {
     categoriesEl.enableDragging()
   } else {
     categoriesEl.enableClicking()

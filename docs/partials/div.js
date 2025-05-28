@@ -17,12 +17,20 @@ const css = `
 /**
  * Constructor for custom span element
  */
-export function createDiv({ html = '', id } = {}) {
+export function createDiv({ className = '', html = '', id = '' } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
 
   Object.defineProperties(el, {
+    classes: {
+      get() {
+        return el.className
+      },
+      set(newValue = '') {
+        el.className = newValue
+      },
+    },
     dataId: {
       get() {
         return el.dataset.id
@@ -43,6 +51,7 @@ export function createDiv({ html = '', id } = {}) {
 
   el.value = html
   el.dataId = id
+  el.classes = className
 
   return el
 }

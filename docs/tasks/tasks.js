@@ -68,7 +68,7 @@ async function handleDOMContentLoaded() {
  * Handle sort switch click
  */
 function handleSortSwitchClick() {
-  if (sortSwitch.isOn()) {
+  if (sortSwitch.value) {
     tasksListEl.enableDragging()
   } else {
     tasksListEl.enableClicking()

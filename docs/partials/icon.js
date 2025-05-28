@@ -25,7 +25,7 @@ i.shake {
 // Exported functions
 // -------------------------------
 
-export function createIcon({ id, className, events = {} } = {}) {
+export function createIcon({ id = '', className = '', events = {} } = {}) {
   injectStyle(css)
   const el = document.createElement('i')
 
@@ -35,7 +35,7 @@ export function createIcon({ id, className, events = {} } = {}) {
         return el.className
       },
       set(newValue = '') {
-        el.className = newValue
+        el.className = `fa-solid ${newValue}`
       },
     },
     dataId: {
@@ -60,16 +60,17 @@ export function createIcon({ id, className, events = {} } = {}) {
       },
     },
   })
-  id && (el.dataId = id)
-  className && (el.classes = `fa-solid ${className}`)
-  el.role = 'button'
-  el.tabIndex = 0
 
   for (const [eventName, cb] of Object.entries(events)) {
     el.addEventListener(eventName, cb)
   }
 
   el.shake = shake.bind(el)
+
+  el.dataId = id
+  el.classes = className
+  el.role = 'button'
+  el.tabIndex = 0
 
   return el
 }

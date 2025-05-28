@@ -109,7 +109,7 @@ async function handleDOMContentLoaded() {
  * Handle sort switch click
  */
 function handleSortSwitchClick() {
-  if (sortSwitch.isOn()) {
+  if (sortSwitch.value) {
     shoppingListEl.enableDragging()
     clearSelection()
   } else {

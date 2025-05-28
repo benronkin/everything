@@ -1,4 +1,6 @@
 import { injectStyle } from '../js/ui.js'
+import { createDiv } from './div.js'
+import { createIcon } from './icon.js'
 
 // -------------------------------
 // Globals
@@ -50,12 +52,6 @@ const css = `
 }
 `
 
-const html = `
-<div class="thumb">
-  <i class="fa-solid"></i>
-</div>
-`
-
 // -------------------------------
 // Exported functions
 // -------------------------------
@@ -67,13 +63,53 @@ export function createSwitch({
   id,
   iconOff,
   iconOn,
-  classList = [],
-  events = {},
+  events = { click: () => {} },
+  className = '',
 }) {
   injectStyle(css)
 
   const el = document.createElement('div')
-  el.dataset.id = id
+
+  Object.defineProperties(el, {
+    classes: {
+      get() {
+        return el.className
+      },
+      set(newValue = '') {
+        el.className = `switch ${iconOff && 'iconed'} ${newValue}`.trim()
+      },
+    },
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.dataset.id = newValue
+        el.dataset.testId = `id-span`
+      },
+    },
+    disabled: {
+      get() {
+        return this.classList.includes('disabled')
+      },
+      set(v) {
+        this.classList.toggle('disabled', v)
+      },
+    },
+    value: {
+      get() {
+        return el.classList.contains('on')
+      },
+      set(newValue) {
+        el.classList.toggle('on', newValue)
+      },
+    },
+    toggle: {
+      value: function () {
+        el.classList.toggle('on', !el.value)
+      },
+    },
+  })
 
   for (const [eventName, cb] of Object.entries(events)) {
     if (eventName === 'click') {
@@ -85,8 +121,35 @@ export function createSwitch({
     }
   }
 
-  createElement({ el, iconOff, iconOn, classList })
+  addElementParts({ el, iconOff })
+
+  el.dataId = id
+  el.classes = className
+  el._iconOff = iconOff
+  el._iconOn = iconOn
+
   return el
+}
+
+// -------------------------------
+// Event handlers
+// -------------------------------
+
+/**
+ * Respond to switch clicks
+ * @param {Function} cb - The consumer's callback to run
+ */
+function handleClick(el, cb) {
+  el.toggle()
+
+  if (el._iconOff) {
+    el.querySelector('i').classList.toggle(el._iconOff)
+    el.querySelector('i').classList.toggle(el._iconOn)
+  }
+
+  if (cb) {
+    cb()
+  }
 }
 
 // -------------------------------
@@ -96,88 +159,14 @@ export function createSwitch({
 /**
  * Create the HTML element
  */
-function createElement({ el, iconOff, iconOn, classList }) {
-  el.innerHTML = html
+function addElementParts({ el, iconOff }) {
+  const divEl = createDiv({ className: 'thumb' })
+  el.appendChild(divEl)
 
-  el.className = 'switch'
-  if (classList.length) {
-    el.classList.add(...classList)
+  const iconEl = createIcon()
+  divEl.appendChild(iconEl)
+
+  if (iconOff) {
+    iconEl.className = iconOff
   }
-  if (iconOff && iconOn) {
-    el.className = `switch iconed`
-    el.querySelector('i').className = `fa-solid ${iconOff}`
-    el._iconOff = iconOff
-    el._iconOn = iconOn
-  }
-  // using bind to eliminate global el,
-  // to support multiple switches on page
-  el.isOn = isOn.bind(el)
-  el.setOn = setOn.bind(el)
-  el.setOff = setOff.bind(el)
-  el.toggle = handleClick.bind(el)
-  el.disable = disable.bind(el)
-  el.enable = enable.bind(el)
-  el.isDisabled = isDisabled.bind(el)
-}
-
-/**
- * Respond to switch clicks
- * @param {Function} cb - The consumer's callback to run
- */
-function handleClick(el, cb) {
-  el.classList.toggle('on')
-  el.querySelector('i').classList.toggle(el._iconOff)
-  el.querySelector('i').classList.toggle(el._iconOn)
-  if (cb) {
-    cb()
-  }
-}
-
-/**
- *
- */
-function isOn() {
-  return this.classList.contains('on')
-}
-
-/**
- *
- */
-function setOn() {
-  if (this.isOn()) {
-    return
-  }
-  this.dispatchEvent(new Event('click'))
-}
-
-/**
- *
- */
-function setOff() {
-  if (!this.isOn()) {
-    return
-  }
-  this.dispatchEvent(new Event('click'))
-}
-
-/**
- *
- */
-function disable() {
-  this.classList.add('disabled')
-}
-
-/**
- *
- */
-function enable() {
-  this.classList.remove('disabled')
-}
-
-/**
- *
- * @returns
- */
-function isDisabled() {
-  return this.classList.contains('disabled')
 }
