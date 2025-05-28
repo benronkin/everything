@@ -8,27 +8,27 @@ import { createListItem } from '../partials/listItem.js'
 
 const items = [
   {
-    html: 'Tasks',
+    html: '<i class="fa-solid fa-list-check"></i> Tasks',
     url: '../tasks/index.html',
     id: 'rd-item-tasks',
   },
   {
-    html: 'Recipes',
+    html: '<i class="fa-solid fa-cake-candles"></i> Recipes',
     url: '../recipes/index.html',
     id: 'rd-item-recipes',
   },
   {
-    html: 'Shopping',
+    html: '<i class="fa-solid fa-cart-shopping"></i> Shopping',
     url: '../shopping/index.html',
     id: 'rd-item-shopping',
   },
   {
-    html: 'Journal',
+    html: '<i class="fa-solid fa-book"></i> Journal',
     url: '../journal/index.html',
     id: 'rd-item-journal',
   },
   {
-    html: 'Admin',
+    html: '<i class="fa-solid fa-lock"></i> Admin',
     url: '../admin/index.html',
     id: 'rd-item-admin',
   },
@@ -84,6 +84,7 @@ const css = `
 [data-id="right-drawer"].open {
   transform: translateX(0);
 }
+
 `
 
 // -------------------------------

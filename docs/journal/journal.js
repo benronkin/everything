@@ -44,7 +44,7 @@ async function handleDOMContentLoaded() {
   // create and add page elements
   const wrapperEl = document.querySelector('.wrapper')
 
-  const navEl = createNav({ title: 'Journal' })
+  const navEl = createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
   wrapperEl.prepend(navEl)
 
   const rightDrawerEl = createRightDrawer({ active: 'journal' })

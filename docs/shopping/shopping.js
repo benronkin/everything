@@ -277,7 +277,10 @@ async function initShopping(shoppingStr, suggestionsStr) {
 function addPageElements() {
   // create nav and footer
   const wrapperEl = document.querySelector('.wrapper')
-  const navEl = createNav({ title: 'Shopping', active: 'shopping' })
+  const navEl = createNav({
+    title: '<i class="fa-solid fa-cart-shopping"></i> Shopping',
+    active: 'shopping',
+  })
   wrapperEl.prepend(navEl)
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)

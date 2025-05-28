@@ -218,7 +218,10 @@ async function initTasks(tasks) {
 function addPageElements() {
   // create nav and footer
   const wrapperEl = document.querySelector('.wrapper')
-  const navEl = createNav({ title: 'tasks', active: 'tasks' })
+  const navEl = createNav({
+    title: '<i class="fa-solid fa-list-check"></i> tasks',
+    active: 'tasks',
+  })
   wrapperEl.prepend(navEl)
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)

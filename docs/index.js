@@ -130,7 +130,7 @@ function showLoginForm() {
   loginContainer.classList.remove('hidden')
   const wrapperEl = document.querySelector('.wrapper')
   const navEl = createNav({
-    title: 'The Everything App',
+    title: '<i class="fa-solid fa-house"></i> The Everything App',
     disableRightDrawer: true,
   })
   wrapperEl.prepend(navEl)
