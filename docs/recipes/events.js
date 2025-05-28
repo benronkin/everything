@@ -247,6 +247,11 @@ function populateRelatedRecipes() {
  * Handle recipe link click.
  */
 async function handleRecipeLinkClick(e) {
+  // hide the left panel if mobile
+  if (isMobile()) {
+    getEl('main-icon-group').collapse()
+  }
+
   const elem = e.target.closest('.menu-item')
   state.set('active-recipe', elem.dataId)
 }
