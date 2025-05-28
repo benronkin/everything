@@ -258,10 +258,11 @@ function handleClick(e, div, cb) {
  */
 function handleTitleInputChange(e) {
   const div = e.target.closest('.td-item')
+  console.log('div.data', div.data)
   div.dispatch('list-changed', {
     action: 'update-task',
-    targetId: div.data.id,
-    title: div.data.value,
+    targetId: div.data.targetId,
+    title: div.data.title,
   })
 }
 
@@ -272,8 +273,8 @@ function handleDetailsInputChange(e) {
   const div = e.target.closest('.td-item')
   div.dispatch('list-changed', {
     action: 'update-task',
-    targetId: div.data.id,
-    details: div.data.value,
+    targetId: div.data.targetId,
+    details: div.data.details,
   })
 }
 
