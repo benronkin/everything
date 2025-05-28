@@ -50,14 +50,13 @@ const css = `
 export function createListItem({
   draggable = false,
   selected = false,
-  hidden = false,
   type = 'span',
   value = '',
   url = '',
   icons = [],
   classes = {
     base: 'u-list-base',
-    selected: 'u-list-active-primary-bordered',
+    active: 'u-list-active-primary-bordered',
     hover: 'u-list-hover-primary-bordered',
   },
   events = {},
@@ -122,7 +121,7 @@ export function createListItem({
     },
     hovered: {
       set(v) {
-        if (el.selected || el.draggable) {
+        if (el.draggable) {
           return
         }
         el.classList.toggle(el.getClass('hover'), v)
@@ -139,9 +138,9 @@ export function createListItem({
         }
         el.dataset.selected = v
         if (v) {
-          el.classList.add(el.getClass('selected'))
+          el.classList.add(el.getClass('active'))
         } else {
-          el.classList.remove(el.getClass('selected'))
+          el.classList.remove(el.getClass('active'))
         }
       },
     },

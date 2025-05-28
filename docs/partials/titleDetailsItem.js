@@ -174,7 +174,7 @@ export function createTitleDetailsItem({
     },
     hovered: {
       set(v) {
-        if (div.sdivected || div.draggable) {
+        if (div.selected || div.draggable) {
           return
         }
         div.classList.toggle(div.getClass('hover'), v)

@@ -131,16 +131,11 @@ export function createMenuItem({
     },
     hovered: {
       set(v) {
-        if (el.selected || el.draggable) {
+        if (el.draggable) {
           return
         }
-        if (v) {
-          el.classList.add(el.getClass('hover'))
-          el.classList.remove(el.getClass('base'))
-        } else {
-          el.classList.remove(el.getClass('hover'))
-          el.classList.add(el.getClass('base'))
-        }
+        el.classList.toggle(el.getClass('hover'), v)
+        el.classList.toggle(el.getClass('base'), !v)
       },
     },
     selected: {
@@ -154,11 +149,8 @@ export function createMenuItem({
         el.dataset.selected = v
         if (v) {
           el.classList.add(el.getClass('active'))
-          el.classList.remove(el.getClass('base'))
-          el.classList.remove(el.getClass('hover'))
         } else {
           el.classList.remove(el.getClass('active'))
-          el.classList.add(el.getClass('base'))
         }
       },
     },

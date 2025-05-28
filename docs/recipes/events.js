@@ -109,7 +109,7 @@ async function handleActiveRecipeStateChanged(e) {
   // related links are hidden by default in the left
   // pane list
   leftPanelItem.hidden = false
-  leftPanelItem.click()
+  leftPanelItem.selected = true
 
   // Handle main-panel
   const recipeIngredients = getEl('recipe-ingredients')

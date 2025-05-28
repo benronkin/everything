@@ -100,7 +100,7 @@ function handleTaskFormFocus() {
  */
 function handleTasksSelectionChange(el) {
   if (el.selected) {
-    tasksFormEl.setValue('')
+    tasksFormEl.value = ''
   }
 }
 
