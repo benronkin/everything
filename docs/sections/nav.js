@@ -75,7 +75,7 @@ export function createNav({
  */
 function handleToggleRightDrawer() {
   const drawer = document.querySelector('[data-id="right-drawer"]')
-  drawer.classList.toggle('open')
+  drawer.toggle()
 }
 
 // -------------------------------

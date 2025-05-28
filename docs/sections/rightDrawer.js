@@ -91,11 +91,45 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createRightDrawer(config) {
+export function createRightDrawer({ active }) {
   injectStyle(css)
-  const el = createElement(config)
+  const el = createElement({ active })
+
+  Object.defineProperties(el, {
+    open: {
+      get() {
+        return el.dataset.open === 'true'
+      },
+      set(value) {
+        el.dataset.open = value
+        el.classList.toggle('open', value)
+      },
+    },
+    toggle: {
+      value() {
+        el.open = !el.open
+      },
+    },
+  })
+
   return el
 }
+
+// -------------------------------
+// Event handlers
+// -------------------------------
+
+document.addEventListener('click', (e) => {
+  if (
+    e.target.closest('[data-id="right-drawer"]') ||
+    e.target.closest('#toggle-right-drawer')
+  ) {
+    // ignore clicks on above items
+    return
+  }
+  const drawer = document.querySelector('[data-id="right-drawer"]')
+  drawer.open = false
+})
 
 // -------------------------------
 // Helpers
