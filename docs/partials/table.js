@@ -66,33 +66,27 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createTable(config) {
+export function createTable({ id = '', className = '', headers = [] } = {}) {
   injectStyle(css)
-  return createElement(config)
-}
-
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
-function createElement({ className, headers = [] } = {}) {
   const el = document.createElement('table')
-  el.className = className
   el.innerHTML = html
+  el.className = className
+  el.id = id
+  el.dataset.id = id
+  el.dataset.testId = id
 
   el.addHeaders = addHeaders.bind(el)
   el.addRow = addRow.bind(el)
+  el.addRows = addRows.bind(el)
+  el.clearRows = clearRows.bind(el)
 
   el.addHeaders(headers)
   return el
 }
+
+// -------------------------------
+// Helpers
+// -------------------------------
 
 /**
  * Add the supplied headers
@@ -123,4 +117,21 @@ function addRow({ id, fields }) {
     tr.appendChild(td)
   }
   tbody.appendChild(tr)
+}
+
+/**
+ *
+ */
+function addRows(rows) {
+  for (const row of rows) {
+    this.addRow(row)
+  }
+}
+
+/**
+ * Remove all rows
+ */
+function clearRows() {
+  this.querySelector('tbody').innerHTML = ''
+  return this // for chaining
 }

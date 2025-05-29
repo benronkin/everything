@@ -1,0 +1,153 @@
+import { state } from '../js/state.js'
+import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
+import { getEl, setMessage } from '../js/ui.js'
+import { createFooter } from '../sections/footer.js'
+import { createNav } from '../sections/nav.js'
+import { createRightDrawer } from '../sections/rightDrawer.js'
+import { createMainIconGroup } from '../sections/mainIconGroup.js'
+import { createAnchor } from '../partials/anchor.js'
+import { createIcon } from '../partials/icon.js'
+import { createTable } from '../partials/table.js'
+import { createSelect } from '../partials/select.js'
+
+// ---------------------------------------
+// Event listeners
+// ---------------------------------------
+
+/* When page is loaded */
+document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+
+// -------------------------------
+// Event handlers
+// -------------------------------
+
+/**
+ * Handle DOMContentLoaded
+ */
+async function handleDOMContentLoaded() {
+  setMessage({ message: 'Loading...' })
+
+  handleTokenQueryParam()
+
+  addPageElements()
+
+  populateSinglePanel()
+
+  await fetchNotes()
+
+  setMessage()
+
+  state.setDefaultPage('notes')
+}
+
+/**
+ *
+ */
+function handleSortSelectChange(e) {
+  const sort = e.target.value
+  localStorage.setItem('note-sort', sort)
+  fetchNotes()
+}
+
+/**
+ *
+ */
+async function handleAddNoteClick() {
+  setMessage({ message: 'Creating...' })
+  const { id, error } = await getWebApp(`${state.getWebAppUrl()}/notes/create`)
+
+  if (error) {
+    setMessage({ message: error, type: 'danger' })
+    return
+  }
+
+  window.location.href = `note.html?id=${id}`
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ * Set nav, footer and other page elements
+ */
+function addPageElements() {
+  // create nav and footer
+  const wrapperEl = document.querySelector('.wrapper')
+  const navEl = createNav({
+    title: '<i class="fa-solid fa-note-sticky"></i> notes',
+    active: 'notes',
+  })
+  wrapperEl.prepend(navEl)
+  const footerEl = createFooter()
+  wrapperEl.appendChild(footerEl)
+
+  const rightDrawerEl = createRightDrawer({ active: 'notes' })
+  document.querySelector('main').prepend(rightDrawerEl)
+}
+
+/**
+ *
+ */
+function populateSinglePanel() {
+  const sort = localStorage.getItem('note-sort') || 'title'
+
+  getEl('single-panel').value = ''
+
+  getEl('single-panel').appendChild(
+    createMainIconGroup({
+      collapsable: false,
+      children: [
+        createSelect({
+          id: 'sort-select',
+          options: [
+            { label: 'Title', value: 'title' },
+            { label: 'Recent', value: 'recent' },
+            { label: 'Updated', value: 'updated' },
+            { label: 'Created', value: 'created' },
+          ],
+          value: sort,
+          events: { change: handleSortSelectChange },
+        }),
+        createIcon({
+          id: 'add-btn',
+          className: 'fa-plus',
+          events: { click: handleAddNoteClick },
+        }),
+      ],
+    })
+  )
+
+  getEl('single-panel').appendChild(
+    createTable({
+      id: 'notes-table',
+      headers: ['Title'],
+    })
+  )
+}
+
+/**
+ *
+ */
+async function fetchNotes() {
+  const sort = localStorage.getItem('note-sort') || 'title'
+  const { notes, error } = await getWebApp(
+    `${state.getWebAppUrl()}/notes/read?sort=${sort}`
+  )
+
+  if (error) {
+    setMessage({ message: error, type: 'danger' })
+    return
+  }
+
+  getEl('notes-table')
+    .clearRows()
+    .addRows(
+      notes.map((note) => ({
+        id: note.id,
+        fields: [
+          createAnchor({ html: note.title, url: `./note.html?id=${note.id}` }),
+        ],
+      }))
+    )
+}

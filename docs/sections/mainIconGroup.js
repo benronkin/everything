@@ -47,9 +47,13 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createMainIconGroup({ children, shouldAllowCollapse } = {}) {
+export function createMainIconGroup({
+  collapsable = true,
+  children,
+  shouldAllowCollapse,
+} = {}) {
   injectStyle(css)
-  const el = createElement({ children, shouldAllowCollapse })
+  const el = createElement({ children, collapsable, shouldAllowCollapse })
   return el
 }
 
@@ -125,17 +129,19 @@ function expand() {
 /**
  * Create the HTML element.
  */
-function createElement({ children, shouldAllowCollapse }) {
+function createElement({ collapsable, children, shouldAllowCollapse }) {
   const el = document.createElement('div')
   el.dataset.id = 'main-icon-group'
   el.dataset.testId = 'main-icon-group-test'
-  el.appendChild(
-    createIcon({
-      id: 'left-panel-toggle',
-      className: 'fa-chevron-left',
-      events: { click: handleLeftPanelToggle },
-    })
-  )
+  if (collapsable) {
+    el.appendChild(
+      createIcon({
+        id: 'left-panel-toggle',
+        className: 'fa-chevron-left',
+        events: { click: handleLeftPanelToggle },
+      })
+    )
+  }
 
   // undefined is not iterable
   // hence the check

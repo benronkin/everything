@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
  * Handle DOMContentLoaded
  */
 async function handleDOMContentLoaded() {
-  setMessage('Loading...')
+  setMessage({ message: 'Loading...' })
 
   handleTokenQueryParam()
 
@@ -139,7 +139,7 @@ async function handleDOMContentLoaded() {
   state.set('journal', journal)
   state.setDefaultPage('journal')
 
-  setMessage('')
+  setMessage()
 }
 
 // ------------------------

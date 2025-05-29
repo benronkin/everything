@@ -43,6 +43,7 @@ export function createIcon({ id = '', className = '', events = {} } = {}) {
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
         el.dataset.testId = `id-span`
       },

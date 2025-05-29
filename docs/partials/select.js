@@ -59,6 +59,7 @@ export function createSelect({
   className = '',
   name = '',
   options = [],
+  events = { change: () => {} },
 }) {
   injectStyle(css)
 
@@ -78,17 +79,14 @@ export function createSelect({
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
         el.dataset.testId = `${id}-select-wrapper`
       },
     },
   })
 
-  addElementParts({ el, name })
-
-  el.value = value
-  el.dataId = id
-  el.classes = className
+  addElementParts({ el, name, events })
 
   el.getOptionByLabel = getOptionByLabel.bind(el)
   el.getOptionByValue = getOptionByValue.bind(el)
@@ -101,6 +99,11 @@ export function createSelect({
   el.unselect = unselect.bind(el)
 
   el.setOptions(options)
+
+  el.value = value
+  el.selectByValue(value)
+  el.dataId = id
+  el.classes = className
 
   return el
 }
@@ -210,7 +213,7 @@ function unselect() {
 /**
  *
  */
-function addElementParts({ el, name }) {
+function addElementParts({ el, name, events }) {
   const selectEl = document.createElement('select')
   selectEl.className = 'custom-select'
   selectEl.name = name
@@ -220,4 +223,8 @@ function addElementParts({ el, name }) {
   el.appendChild(divEl)
   const iconEl = createIcon({ className: 'fa-caret-down' })
   divEl.appendChild(iconEl)
+
+  for (const [k, v] of Object.entries(events)) {
+    selectEl.addEventListener(k, v)
+  }
 }

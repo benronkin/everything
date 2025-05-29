@@ -36,7 +36,9 @@ export function createDiv({ className = '', html = '', id = '' } = {}) {
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
+        el.dataset.testId = id
       },
     },
     value: {

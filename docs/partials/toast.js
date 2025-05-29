@@ -143,8 +143,9 @@ export function createToast({
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
-        el.dataset.testId = `id-span`
+        el.dataset.testId = newValue
       },
     },
     position: {

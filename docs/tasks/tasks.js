@@ -45,7 +45,7 @@ async function handleDOMContentLoaded() {
 
   handleTokenQueryParam()
 
-  setMessage('Loading...')
+  setMessage({ message: 'Loading...' })
 
   token = localStorage.getItem('authToken')
   if (!token) {
@@ -59,7 +59,7 @@ async function handleDOMContentLoaded() {
     `${state.getWebAppUrl()}/tasks/read?token=${token}`
   )
 
-  setMessage('')
+  setMessage()
   initTasks(tasks)
   tasksFormEl.querySelector('input').focus()
 }

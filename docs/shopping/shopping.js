@@ -90,13 +90,13 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  setMessage('Loading...')
+  setMessage({ message: 'Loading...' })
 
   const { shoppingList, shoppingSuggestions } = await getWebApp(
     `${state.getWebAppUrl()}/shopping/read`
   )
 
-  setMessage('')
+  setMessage()
 
   addPageElements()
 
@@ -131,7 +131,7 @@ function handleSuggestSwitchClick() {
  */
 function handleShoppingFormSubmit(e) {
   e.preventDefault()
-  setMessage('')
+  setMessage()
 
   const itemId = shoppingInput.dataset.index
   const value = shoppingInput.value
@@ -146,7 +146,7 @@ function handleShoppingFormSubmit(e) {
   } else {
     // new item is added
     if (shoppingListEl.has(value)) {
-      setMessage('Already in list')
+      setMessage({ message: 'Already in list' })
       return
     }
 
@@ -188,7 +188,7 @@ async function handleShoppingListChange(e) {
       }
     )
     if (status !== 200) {
-      setMessage(message)
+      setMessage({ message })
       console.warn(message)
       if (retryTimeout >= 200) {
         retryTimeout = 10
@@ -204,7 +204,7 @@ async function handleShoppingListChange(e) {
       }, retryTimeout)
     }
   } catch (error) {
-    setMessage(error)
+    setMessage({ message: error.message })
     console.warn(error)
   }
 }

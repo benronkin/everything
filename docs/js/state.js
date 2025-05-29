@@ -19,6 +19,7 @@ const stateObj = {
   data: {
     'active-journal': null,
     'active-recipe': null,
+    'active-note': {},
     journal: [],
     recipes: [],
     WEB_APP_URL: prodUrl,

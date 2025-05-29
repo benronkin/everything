@@ -145,7 +145,7 @@ async function handleLoginFormSubmit(e) {
   e.preventDefault()
   loginForm.disable()
   loginForm.message = 'Checking. Please wait...'
-  setMessage('')
+  setMessage()
 
   const email = loginForm.value
   try {

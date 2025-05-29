@@ -31,6 +31,7 @@ export function createButton({
     disabled: 'u-disable',
     hover: 'u-hover-primary',
   },
+  events = {},
 } = {}) {
   injectStyle(css)
 
@@ -51,6 +52,7 @@ export function createButton({
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
         el.dataset.testId = id
       },
@@ -81,6 +83,10 @@ export function createButton({
 
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))
+
+  for (const [k, v] of Object.entries(events)) {
+    el.addEventListener(k, v)
+  }
 
   return el
 }

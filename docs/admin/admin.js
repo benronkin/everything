@@ -77,7 +77,7 @@ async function handleLoginFormSubmit(e) {
   const btn = form.querySelector('button')
 
   btn.disabled = true
-  setMessage('Validating key. Please wait...')
+  setMessage({ message: 'Validating key. Please wait...' })
 
   const formData = new FormData(form)
   const key = formData.get('key')
@@ -90,7 +90,7 @@ async function handleLoginFormSubmit(e) {
     )
     if (error) {
       console.error(error)
-      setMessage(error.message)
+      setMessage({ message: error.message })
       return
     }
     if (message) {
@@ -98,14 +98,14 @@ async function handleLoginFormSubmit(e) {
       return
     }
     if (!data) {
-      setMessage("Didn't recieve data")
+      setMessage({ message: "Didn't recieve data" })
       return
     }
-    setMessage('')
+    setMessage()
     showAdminRoutes(data)
   } catch (error) {
     console.error(error)
-    setMessage(error.message)
+    setMessage({ message: error.message })
   }
   btn.disabled = false
 }

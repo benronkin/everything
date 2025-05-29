@@ -30,7 +30,9 @@ export function createHeader({ html = '', id, type = 'h2' } = {}) {
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
+        el.dataset.testId = newValue
       },
     },
     value: {

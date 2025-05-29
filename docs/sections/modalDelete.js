@@ -68,7 +68,9 @@ export function createModalDelete({ header, body, id, password = false }) {
         return el.dataset.id
       },
       set(newValue = '') {
+        el.id = newValue
         el.dataset.id = newValue
+        el.dataset.testId = newValue
       },
     },
     header: {

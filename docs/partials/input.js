@@ -34,6 +34,7 @@ export function createInput({
     base: 'u-input-base',
     hover: 'u-input-hover-primary',
   },
+  events = {},
 } = {}) {
   injectStyle(css)
 
@@ -51,8 +52,9 @@ export function createInput({
         return el.dataset.id
       },
       set(newValue = '') {
-        el.dataset.id = newValue
         el.id = newValue
+        el.dataset.id = newValue
+        el.dataset.testId = newValue
       },
     },
     hovered: {
@@ -78,6 +80,10 @@ export function createInput({
 
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))
+
+  for (const [k, v] of Object.entries(events)) {
+    el.addEventListener(k, v)
+  }
 
   return el
 }

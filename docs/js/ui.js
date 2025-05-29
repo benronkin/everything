@@ -124,7 +124,7 @@ export function setMessage({
   type = 'message',
   autoClose = 3000,
   position = 'BOTTOM_RIGHT',
-}) {
+} = {}) {
   if (!message) {
     // user wishes to clear all toasts
     removeToasts()
@@ -144,6 +144,7 @@ export function setMessage({
 
   switch (type) {
     case 'danger':
+      removeToasts()
       value = _createWarnMessage(message)
       className = 'u-danger'
       position = 'TOP_RIGHT'

@@ -23,6 +23,11 @@ const items = [
     id: 'rd-item-shopping',
   },
   {
+    html: '<i class="fa-solid fa-note-sticky"></i> notes',
+    url: '../notes/index.html',
+    id: 'rd-item-notes',
+  },
+  {
     html: '<i class="fa-solid fa-book"></i> Journal',
     url: '../journal/index.html',
     id: 'rd-item-journal',

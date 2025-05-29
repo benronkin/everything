@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
  * Handle DOMContentLoaded
  */
 async function handleDOMContentLoaded() {
-  setMessage('Loading...')
+  setMessage({ message: 'Loading...' })
 
   handleTokenQueryParam()
 
@@ -154,7 +154,7 @@ async function handleDOMContentLoaded() {
   state.setRecipes(recipes)
   state.setDefaultPage('recipes')
 
-  setMessage('')
+  setMessage()
 }
 
 // ------------------------
