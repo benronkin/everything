@@ -34,7 +34,7 @@ export async function listRecipeCategories() {
 
   // set the add category form
   categoryFormEl = createFormHorizontal({
-    formId: 'add-category-form',
+    id: 'add-category-form',
     inputType: 'text',
     inputName: 'category',
     inputPlaceholder: 'Add category',

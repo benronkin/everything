@@ -9,40 +9,40 @@ import { createSpan } from './span.js'
 // -------------------------------
 
 const css = `
-.form-horizontal {
+.form-horizontal-wrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
 }
-.form-horizontal button {
+.form-horizontal-wrapper button {
   margin-left: 20px;
 }
-.form-horizontal button:disabled {
+.form-horizontal-wrapper button:disabled {
   cursor: not-allowed;
   pointer-events: none;
 }
-.form-horizontal-input-wrapper {
+.form-horizontal-wrapper .form-horizontal {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
   width: 100%;
 }
-.form-horizontal .input-group {
+.form-horizontal-wrapper .input-group {
   width: 100%;
   display: flex;
   align-items: center;
 }  
-.form-horizontal .input-group i {
+.form-horizontal-wrapper .input-group i {
   padding-left: 0;  
 }
-.form-horizontal .form-horizontal input {
+.form-horizontal-wrapper .form-horizontal input {
   margin: 0;
   width: 100%;
 }
-.form-horizontal .message {
+.form-horizontal-wrapper .message {
   padding: 10px;
   font-size: 0.75rem;
 }
@@ -71,7 +71,7 @@ export function createFormHorizontal({
 }) {
   injectStyle(css)
 
-  const el = document.createElement('form')
+  const el = document.createElement('div')
 
   Object.defineProperties(el, {
     disabled: {
@@ -83,7 +83,10 @@ export function createFormHorizontal({
         el.querySelector('button').disabled = v
       },
     },
-    focused: {
+    focus: {
+      get() {
+        return this.querySelector('input').hasFocus()
+      },
       set(v) {
         if (v) {
           this.querySelector('input').focus()
@@ -137,9 +140,7 @@ export function createFormHorizontal({
   addEventHandlers({ el, events, inputEvents })
 
   el.value = value
-  el.id = id
-  el.dataset.id = id
-  el.className = 'form-horizontal'
+  el.className = 'form-horizontal-wrapper'
 
   return el
 }
@@ -154,6 +155,7 @@ export function createFormHorizontal({
  */
 function addElementParts({
   el,
+  id,
   inputType,
   inputName,
   placeholder,
@@ -166,10 +168,11 @@ function addElementParts({
 }) {
   let buttonEl
 
-  const inputWrapper = document.createElement('div')
-  inputWrapper.classList.add('form-horizontal-input-wrapper')
-
-  el.appendChild(inputWrapper)
+  const formEl = document.createElement('form')
+  formEl.classList.add('form-horizontal')
+  formEl.id = id
+  formEl.dataset.id = id
+  el.appendChild(formEl)
 
   const divEl = document.createElement('div')
   divEl.className = 'input-group'
@@ -177,7 +180,7 @@ function addElementParts({
     const formIcon = createIcon({ className: formIconClass })
     divEl.appendChild(formIcon)
   }
-  inputWrapper.appendChild(divEl)
+  formEl.appendChild(divEl)
 
   const inputEl = createInput({
     value,
@@ -195,7 +198,7 @@ function addElementParts({
       type: 'submit',
       disabled,
     })
-    inputWrapper.appendChild(buttonEl)
+    formEl.appendChild(buttonEl)
   }
 
   const spanEl = createSpan({})

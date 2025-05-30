@@ -124,9 +124,9 @@ export function resizeTextarea(textarea) {
     if (minHeight > textarea.clientHeight) {
       const height = parseFloat(minHeight) || 52
       textarea.style.height = height + 5 + 'px'
-      if (isMobile()) {
-        textarea.style.height = height / 1.5 + 'px'
-      }
+      // if (isMobile()) {
+      //   textarea.style.height = height / 1.5 + 'px'
+      // }
     }
   })
 }

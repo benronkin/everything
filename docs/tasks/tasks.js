@@ -19,7 +19,6 @@ const formWrapper = document.querySelector('#form-wrapper')
 const tasksWrapper = document.querySelector('#tasks-wrapper')
 let tasksListEl
 let sortSwitch
-let tasksFormEl
 let tasksInput
 let token
 let retryTimeout = 10
@@ -62,7 +61,7 @@ async function handleDOMContentLoaded() {
 
   setMessage()
   initTasks(tasks)
-  getEl('tasks-form').focus()
+  getEl('tasks-form').focused = true
 }
 
 /**
@@ -80,7 +79,7 @@ function handleSortSwitchClick() {
  * Handle key up
  */
 function handleTaskInputKeyUp(e) {
-  const tasksFormEl = e.target.closest('.form-horizontal-wrapper')
+  const tasksFormEl = e.target.closest('.form-horizontal')
   const value = tasksFormEl.value.trim()
   if (value.length) {
     tasksFormEl.disabled = false
@@ -101,7 +100,7 @@ function handleTaskFormFocus() {
  */
 function handleTasksSelectionChange(el) {
   if (el.selected) {
-    tasksFormEl.value = ''
+    getEl('tasks-form').value = ''
   }
 }
 
@@ -172,7 +171,7 @@ async function handleTasksListChange(e) {
 function handleTaskFormSubmit(e, pos) {
   e.preventDefault()
 
-  const title = tasksFormEl.value.trim()
+  const title = getEl('tasks-form').value.trim()
 
   if (!title.length) {
     return
@@ -184,7 +183,7 @@ function handleTaskFormSubmit(e, pos) {
 
   const listItem = createTaskItem(payload, pos)
   tasksListEl.addChild(listItem)
-  tasksFormEl.querySelector('form').reset()
+  getEl('tasks-form').reset()
   listItem.dispatch('click')
 }
 
@@ -244,7 +243,7 @@ function addPageElements() {
           labelPosition: 'left',
         }),
         createFormHorizontal({
-          formId: 'tasks-form',
+          id: 'tasks-form',
           inputType: 'text',
           inputName: 'task',
           inputPlaceholder: 'Add task',

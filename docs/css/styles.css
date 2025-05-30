@@ -34,8 +34,8 @@ i {
   padding: 7px;
   cursor: pointer;
 }
-input,
-textarea {
+input.field,
+textarea.field {
   padding: 12px 4px;
   width: 100%;
   margin: 30px 0 10px 0;
@@ -267,6 +267,9 @@ ul {
 }
 .hidden {
   display: none !important;
+}
+.input-group input {
+  width: 100%;
 }
 .u-align-start {
   align-items: flex-start;

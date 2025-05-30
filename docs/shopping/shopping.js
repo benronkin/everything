@@ -310,7 +310,7 @@ function addPageElements() {
 
   // create shopping form
   const shoppingFormEl = createFormHorizontal({
-    formId: 'shopping-form',
+    id: 'shopping-form',
     inputType: 'text',
     inputName: 'add-item-input',
     inputPlaceholder: 'Add item',

@@ -52,7 +52,7 @@ async function handleDOMContentLoaded() {
 
   // set the login form
   const loginFormEl = createFormHorizontal({
-    formId: 'login-form',
+    id: 'login-form',
     inputType: 'password',
     inputName: 'key',
     inputPlaceholder: 'Enter admin key',

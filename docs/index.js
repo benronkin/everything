@@ -116,7 +116,7 @@ async function handleDOMContentLoaded() {
  */
 function showLoginForm() {
   loginForm = createFormHorizontal({
-    formId: 'login-form',
+    id: 'login-form',
     inputType: 'email',
     inputName: 'email',
     inputPlaceholder: 'Email',
