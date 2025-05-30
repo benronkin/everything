@@ -314,8 +314,9 @@ function createElement({
         return this.dataset.id
       },
       set(newValue = '') {
+        this.id = newValue
         this.dataset.id = newValue
-        this.dataset.testId = id
+        this.dataset.testId = newValue
       },
     },
     length: {
@@ -341,7 +342,6 @@ function createElement({
       },
     },
   })
-  div.itemClass = itemClass
 
   if (children) {
     div.silent = true
@@ -353,6 +353,7 @@ function createElement({
 
   id && (div.dataId = id)
   div.className = `list ${className}`
+  div.itemClass = itemClass
 
   return div
 }

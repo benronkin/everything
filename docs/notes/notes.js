@@ -1,6 +1,6 @@
 import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
-import { getEl, setMessage } from '../js/ui.js'
+import { handleTokenQueryParam, getWebApp } from '../js/io.js'
+import { getEl, isoToReadable, setMessage } from '../js/ui.js'
 import { createFooter } from '../sections/footer.js'
 import { createNav } from '../sections/nav.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
@@ -9,6 +9,7 @@ import { createAnchor } from '../partials/anchor.js'
 import { createIcon } from '../partials/icon.js'
 import { createTable } from '../partials/table.js'
 import { createSelect } from '../partials/select.js'
+import { createSpan } from '../partials/span.js'
 
 // ---------------------------------------
 // Event listeners
@@ -35,8 +36,6 @@ async function handleDOMContentLoaded() {
 
   await fetchNotes()
 
-  setMessage()
-
   state.setDefaultPage('notes')
 }
 
@@ -45,7 +44,7 @@ async function handleDOMContentLoaded() {
  */
 function handleSortSelectChange(e) {
   const sort = e.target.value
-  localStorage.setItem('note-sort', sort)
+  localStorage.setItem('note-sort-field', sort)
   fetchNotes()
 }
 
@@ -62,6 +61,13 @@ async function handleAddNoteClick() {
   }
 
   window.location.href = `note.html?id=${id}`
+}
+
+/**
+ *
+ */
+function handleTableHeaderClick() {
+  fetchNotes()
 }
 
 // -------------------------------
@@ -90,7 +96,7 @@ function addPageElements() {
  *
  */
 function populateSinglePanel() {
-  const sort = localStorage.getItem('note-sort') || 'title'
+  const sort = localStorage.getItem('note-sort-field') || 'title'
 
   getEl('single-panel').value = ''
 
@@ -102,9 +108,9 @@ function populateSinglePanel() {
           id: 'sort-select',
           options: [
             { label: 'Title', value: 'title' },
-            { label: 'Recent', value: 'recent' },
-            { label: 'Updated', value: 'updated' },
-            { label: 'Created', value: 'created' },
+            { label: 'Recent', value: 'accessed_at' },
+            { label: 'Updated', value: 'updated_at' },
+            { label: 'Created', value: 'created_at' },
           ],
           value: sort,
           events: { change: handleSortSelectChange },
@@ -121,7 +127,9 @@ function populateSinglePanel() {
   getEl('single-panel').appendChild(
     createTable({
       id: 'notes-table',
-      headers: ['Title'],
+      events: {
+        'header-click': handleTableHeaderClick,
+      },
     })
   )
 }
@@ -130,24 +138,59 @@ function populateSinglePanel() {
  *
  */
 async function fetchNotes() {
-  const sort = localStorage.getItem('note-sort') || 'title'
-  const { notes, error } = await getWebApp(
-    `${state.getWebAppUrl()}/notes/read?sort=${sort}`
-  )
+  const sortField = localStorage.getItem('note-sort-field') || 'title'
+  const sortDirection = localStorage.getItem('note-sort-direction') || 'ASC'
+
+  const endpoint = `${state.getWebAppUrl()}/notes/read?sort=${sortField}&direction=${sortDirection}`
+  const { notes, error } = await getWebApp(endpoint)
 
   if (error) {
     setMessage({ message: error, type: 'danger' })
     return
   }
 
-  getEl('notes-table')
-    .clearRows()
-    .addRows(
-      notes.map((note) => ({
-        id: note.id,
-        fields: [
-          createAnchor({ html: note.title, url: `./note.html?id=${note.id}` }),
-        ],
-      }))
-    )
+  let headers
+
+  switch (sortField) {
+    case 'title':
+    case 'accessed_at':
+      headers = [
+        { label: 'title', name: 'title' },
+        { label: 'accessed', name: 'accessed_at' },
+      ]
+      break
+    case 'created_at':
+      headers = [
+        { label: 'title', name: 'title' },
+        { label: 'created', name: 'created_at' },
+      ]
+      break
+    case 'updated_at':
+      headers = [
+        { label: 'title', name: 'title' },
+        { label: 'updated', name: 'updated_at' },
+      ]
+      break
+  }
+
+  if (!notes.length) {
+    setMessage({ message: 'No notes found' })
+    return
+  } else {
+    setMessage()
+  }
+
+  getEl('notes-table').clear().headers = headers
+
+  getEl('notes-table').rows = notes.map((note) => ({
+    id: note.id,
+    fields: [
+      createAnchor({ html: note.title, url: `./note.html?id=${note.id}` }),
+      createSpan({
+        html: isoToReadable(note[sortField]),
+      }),
+    ],
+  }))
+
+  getEl('notes-table').sort = { name: sortField, direction: sortDirection }
 }

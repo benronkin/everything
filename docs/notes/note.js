@@ -1,6 +1,7 @@
 import { state } from '../js/state.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 import { getEl, setMessage } from '../js/ui.js'
+import { createDangerZone } from '../sections/dangerZone.js'
 import { createFooter } from '../sections/footer.js'
 import { createNav } from '../sections/nav.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
@@ -182,6 +183,10 @@ function populateSinglePanel({ id, title, note = '' } = {}) {
     div: divEl,
     events: { 'text-change': handleCheckChanges },
   })
+
+  getEl('single-panel').appendChild(
+    createDangerZone({ id, header: 'Delete note' })
+  )
 
   state.set('active-note', { id, title, note: quill.value })
 }

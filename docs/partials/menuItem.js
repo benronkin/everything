@@ -29,15 +29,6 @@ const css = `
 .menu-item i {
   color: inherit;
 }
-.menu-item[data-draggable="true"] i.fa-bars {
-  display: inline-block !important;
-}
-.menu-item[data-draggable="true"] i:not(.fa-bars) {
-  display: none;
-}
-.menu-item[data-selected="true"] i:not(.fa-bars) {
-  display: inline-block !important;
-}
 `
 
 // -------------------------------
@@ -48,7 +39,6 @@ const css = `
  * Constructor for a custom menuItem element
  */
 export function createMenuItem({
-  draggable = false,
   selected = false,
   hidden = false,
   type = 'span',
@@ -68,8 +58,6 @@ export function createMenuItem({
   const iconsEl = document.createElement('div')
   iconsEl.className = 'icons'
   el.appendChild(iconsEl)
-  const barsEl = createIcon({ className: 'fa-bars hidden' })
-  iconsEl.appendChild(barsEl)
 
   el._classes = classes
   el.dataset.id = id || crypto.randomUUID()
@@ -85,7 +73,7 @@ export function createMenuItem({
 
   el.dispatch = dispatch.bind(el)
   el.getClass = getClass.bind(el)
-  el.className = `menu-item draggable-target ${el.getClass('base')}`
+  el.className = `menu-item ${el.getClass('base')}`
 
   Object.defineProperties(el, {
     data: {
@@ -107,20 +95,6 @@ export function createMenuItem({
         el.dataset.testId = `${id}-span`
       },
     },
-    draggable: {
-      get() {
-        return el.dataset.draggable === 'true'
-      },
-      set(v) {
-        el.dataset.draggable = v
-        if (v) {
-          el.selected = false
-          el.setAttribute('draggable', 'true')
-        } else {
-          el.setAttribute('draggable', 'false')
-        }
-      },
-    },
     hidden: {
       get() {
         return el.dataset.hidden === 'true'
@@ -132,9 +106,6 @@ export function createMenuItem({
     },
     hovered: {
       set(v) {
-        if (el.draggable) {
-          return
-        }
         el.classList.toggle(el.getClass('hover'), v)
         el.classList.toggle(el.getClass('base'), !v)
       },
@@ -144,9 +115,6 @@ export function createMenuItem({
         return el.dataset.selected === 'true'
       },
       set(v) {
-        if (el.draggable) {
-          return
-        }
         el.dataset.selected = v
         if (v) {
           el.classList.add(el.getClass('active'))
@@ -174,7 +142,6 @@ export function createMenuItem({
   })
   el.hidden = hidden
   el.selected = selected
-  el.draggable = draggable
 
   el.addEventListener('click', handleClick)
   el.addEventListener('mouseenter', () => (el.hovered = true))
@@ -195,10 +162,6 @@ export function createMenuItem({
  */
 function handleClick(e) {
   const el = e.target.closest('.menu-item')
-
-  if (el.draggable) {
-    return
-  }
 
   el.selected = !el.selected
 

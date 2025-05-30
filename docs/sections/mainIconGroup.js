@@ -6,25 +6,24 @@ import { getEl, injectStyle, setMessage } from '../js/ui.js'
 // -------------------------------
 
 const css = `
-[data-id="main-icon-group"] {
+#main-icon-group {
   margin: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
   background-color: var(--gray1);
-  border: 1px solid var(--gray3);
+  border: 1px solid var(--gray2);
   border-radius: 10px;
-  padding: 6px 10px;
-  width: max-content;
+  padding: 6px 20px;
   font-size: 1.1rem;
   transition: all 200ms ease;
 }
-[data-id="main-icon-group"].collapsed {
+#main-icon-group.collapsed {
   width: 40px;
   padding: 6px 4px;
 }
-[data-id="left-panel"] {
+#left-panel {
   transition: width 300ms ease;
   margin-right: 0;
   color: var(--gray6);
@@ -34,10 +33,10 @@ const css = `
   gap: 10px;
   width: var(--sidebar-width);
 }
-[data-id="left-panel"].collapsed {
+#left-panel.collapsed {
   display: none;
 }
-[data-id="left-panel"].collapsed + #main-panel {
+#left-panel.collapsed + #main-panel {
   border-left: none;
   padding-left: 5px;
 }
@@ -48,12 +47,26 @@ const css = `
 // -------------------------------
 
 export function createMainIconGroup({
+  className = 'w-fc',
   collapsable = true,
   children,
   shouldAllowCollapse,
 } = {}) {
   injectStyle(css)
-  const el = createElement({ children, collapsable, shouldAllowCollapse })
+
+  const el = document.createElement('div')
+
+  addElementParts({ el, children, collapsable, shouldAllowCollapse })
+
+  el.expand = expand.bind(el)
+  el.collapse = collapse.bind(el)
+  el.toggle = handleLeftPanelToggle.bind(el)
+
+  el.id = 'main-icon-group'
+  el.dataset.id = 'main-icon-group'
+  el.dataset.testId = 'main-icon-group'
+  el.className = className
+
   return el
 }
 
@@ -129,10 +142,7 @@ function expand() {
 /**
  * Create the HTML element.
  */
-function createElement({ collapsable, children, shouldAllowCollapse }) {
-  const el = document.createElement('div')
-  el.dataset.id = 'main-icon-group'
-  el.dataset.testId = 'main-icon-group-test'
+function addElementParts({ el, collapsable, children, shouldAllowCollapse }) {
   if (collapsable) {
     el.appendChild(
       createIcon({
@@ -157,11 +167,6 @@ function createElement({ collapsable, children, shouldAllowCollapse }) {
       return true
     },
   }
-
-  el.expand = expand.bind(el)
-  el.collapse = collapse.bind(el)
-  el.toggle = handleLeftPanelToggle.bind(el)
-  return el
 }
 
 // -------------------------------

@@ -1,6 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { createList } from '../partials/list.js'
-import { createListItem } from '../partials/listItem.js'
+import { createMenuItem } from '../partials/menuItem.js'
 
 // -------------------------------
 // Globals
@@ -44,9 +44,9 @@ const css = `
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
-.nav .list-item {
+.nav .menu-item {
   padding: 0;
   margin-bottom: 0;
   border: 1px solid transparent;
@@ -56,25 +56,25 @@ const css = `
   width: 100%;
   transition: background 200ms ease;
 }
-.nav .list-item:last-child {
+.nav .menu-item:last-child {
   margin-top: auto;
 }
-.nav .list-item a,
-.nav .list-item a:visited {
+.nav .menu-item a,
+.nav .menu-item a:visited {
   padding: 12px 20px;
   display: block;
   width: 100%;
   color: var(--gray5);
   text-shadow: none;
 }
-.nav .list-item:hover {
+.nav .menu-item:hover {
   background: var(--gray2);
   transform: none;
 }
-.nav .list-item[data-selected="true"] {
+.nav .menu-item[data-selected="true"] {
   background: var(--purple2);
 }
-[data-id="right-drawer"] {
+#right-drawer {
   position: fixed;
   top: var(--nav-height);
   right: 0;
@@ -86,7 +86,7 @@ const css = `
   transition: transform 300ms ease;
   z-index: 10;
 }
-[data-id="right-drawer"].open {
+#right-drawer.open {
   transform: translateX(0);
 }
 
@@ -147,7 +147,7 @@ function createElement({ active }) {
   const listEl = createList({ id: 'right-drawer', className: 'nav' })
 
   const listItems = items.map(({ html, url, id }) =>
-    createListItem({ value: html, url, id, type: 'anchor' })
+    createMenuItem({ value: html, url, id, type: 'anchor' })
   )
   listEl.addChildren(listItems)
   if (active) {

@@ -295,6 +295,12 @@ ul {
 .smaller {
   font-size: 0.85rem;
 }
+.w-100 {
+  width: 100%;
+}
+.w-fc {
+  width: fit-content;
+}
 .wrapper {
   min-height: 100%;
   display: grid;

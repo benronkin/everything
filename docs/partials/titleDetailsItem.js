@@ -50,6 +50,7 @@ color: inherit;
   gap: 12px;
   align-items: center;
   justify-content: flex-end;
+  margin-left: auto;
 }
 .td-item i {
   color: inherit;

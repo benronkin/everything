@@ -8,6 +8,7 @@ const css = `
 .form-field {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 .form-field.column {
   flex-direction: column;

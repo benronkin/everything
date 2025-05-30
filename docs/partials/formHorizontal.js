@@ -56,29 +56,122 @@ const css = `
  * Constructor for a custom horizontal form
  */
 export function createFormHorizontal({
+  formId = '',
+  inputType = 'text',
+  inputName = '',
+  placeholder = '',
+  inputAutoComplete = '',
+  buttonIconClass = '',
+  formIconClass = '',
+  submitText,
+  value = '',
+  disabled = false,
+  events = {},
+  inputEvents = {},
+}) {
+  injectStyle(css)
+
+  const el = document.createElement('div')
+
+  Object.defineProperties(el, {
+    disabled: {
+      get() {
+        return el.dataset.disabled === 'true'
+      },
+      set(v) {
+        el.dataset.disabled = v
+        el.querySelector('button').disabled = v
+      },
+    },
+    focus: {
+      get() {
+        return this.querySelector('input').hasFocus()
+      },
+      set(v) {
+        if (v) {
+          this.querySelector('input').focus()
+        } else {
+          this.querySelector('input').blur()
+        }
+      },
+    },
+    message: {
+      get() {
+        return el.querySelector('.message').textContent
+      },
+      set(message) {
+        el.querySelector('.message').textContent = message
+      },
+    },
+    submit: {
+      get() {
+        return el.querySelector('button').textContent
+      },
+      set(value) {
+        el.querySelector('button').textContent = value
+      },
+    },
+    value: {
+      get() {
+        return el.querySelector('input').value
+      },
+      set(value) {
+        el.querySelector('input').value = value
+      },
+    },
+  })
+
+  addElementParts({
+    el,
+    formId,
+    inputType,
+    inputName,
+    placeholder,
+    inputAutoComplete,
+    buttonIconClass,
+    formIconClass,
+    submitText,
+    value,
+    disabled,
+    events,
+    inputEvents,
+  })
+
+  addEventHandlers({ el, events, inputEvents })
+
+  el.value = value
+  el.className = 'form-horizontal-wrapper'
+
+  return el
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ * Add sub elements to the element. No need
+ * to return the element.
+ */
+function addElementParts({
+  el,
   formId,
   inputType,
   inputName,
   placeholder,
   inputAutoComplete,
-  buttonIconClass = '',
-  formIconClass = '',
+  buttonIconClass,
+  formIconClass,
   submitText,
   value,
-  disabled = false,
-  events,
+  disabled,
 }) {
-  injectStyle(css)
-
-  const el = document.createElement('div')
-  el.className = 'form-horizontal-wrapper'
   let buttonEl
 
   const formEl = document.createElement('form')
   formEl.classList.add('form-horizontal')
-  if (formId) {
-    formEl.dataset.id = formId
-  }
+  formEl.id = formId
+  formEl.dataset.id = formId
   el.appendChild(formEl)
 
   const divEl = document.createElement('div')
@@ -111,56 +204,17 @@ export function createFormHorizontal({
   const spanEl = createSpan({})
   spanEl.className = 'message'
   el.appendChild(spanEl)
+}
 
-  if (events) {
-    for (const [k, v] of Object.entries(events)) {
-      if (k === 'submit') {
-        formEl.addEventListener('submit', (e) => {
-          if (!buttonEl || !buttonEl.disabled) {
-            v(e)
-          }
-        })
-      } else {
-        formEl.addEventListener(k, v)
-      }
-    }
+/**
+ * Add the various event handlers for the element
+ */
+function addEventHandlers({ el, events, inputEvents }) {
+  for (const [k, v] of Object.entries(events)) {
+    el.addEventListener(k, v)
   }
 
-  Object.defineProperties(el, {
-    disabled: {
-      get() {
-        return el.dataset.disabled === 'true'
-      },
-      set(v) {
-        el.dataset.disabled = v
-        el.querySelector('button').disabled = v
-      },
-    },
-    message: {
-      get() {
-        return el.querySelector('.message').textContent
-      },
-      set(message) {
-        el.querySelector('.message').textContent = message
-      },
-    },
-    submit: {
-      get() {
-        return el.querySelector('button').textContent
-      },
-      set(value) {
-        el.querySelector('button').textContent = value
-      },
-    },
-    value: {
-      get() {
-        return el.querySelector('input').value
-      },
-      set(value) {
-        el.querySelector('input').value = value
-      },
-    },
-  })
-
-  return el
+  for (const [k, v] of Object.entries(inputEvents)) {
+    el.querySelector('input').addEventListener(k, v)
+  }
 }

@@ -1,4 +1,7 @@
 import { injectStyle } from '../js/ui.js'
+import { createDiv } from '../partials/div.js'
+import { createIcon } from '../partials/icon.js'
+import { createSpan } from '../partials/span.js'
 
 // -------------------------------
 // Globals
@@ -14,55 +17,19 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({
-  id = '',
-  className = '',
+export function createDangerZone({
+  id,
   events = {},
-  html = '',
+  header = 'Delete entry',
 } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('div')
+  const el = createDiv({ className: 'flex danger-box u-mt-40 u-mb-20' })
 
-  Object.defineProperties(el, {
-    classes: {
-      get() {
-        return el.className
-      },
-      set(newValue = '') {
-        el.className = `${newValue}`.trim()
-      },
-    },
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = newValue
-      },
-    },
-    value: {
-      get() {
-        return el.innerHTML
-      },
-      set(newValue) {
-        if (typeof newValue === 'string') {
-          newValue = document.createTextNode(newValue)
-        }
-        el.innerHTML = ''
-        el.appendChild(newValue)
-      },
-    },
-  })
-
-  addElementParts(el)
+  addElementParts({ el, header })
   addEventHandlers(el, events)
 
-  el.value = html
   id && (el.dataId = id)
-  className && (el.classes = className)
 
   return el
 }
@@ -83,7 +50,10 @@ export function create({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function addElementParts(el) {}
+function addElementParts({ el, header }) {
+  el.appendChild(createSpan({ html: header }))
+  el.appendChild(createIcon({ id: 'delete-entry-btn', className: 'fa-trash' }))
+}
 
 /**
  * Add the various event handlers for the element

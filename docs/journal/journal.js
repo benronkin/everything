@@ -2,15 +2,16 @@ import { state } from '../js/state.js'
 import { getEl, setMessage } from '../js/ui.js'
 import { setEvents } from './events.js'
 import { createNav } from '../sections/nav.js'
-import { createFileInput } from '../partials/fileInput.js'
 import { createFooter } from '../sections/footer.js'
+import { createMainIconGroup } from '../sections/mainIconGroup.js'
+import { createModalDelete } from '../sections/modalDelete.js'
+import { createRightDrawer } from '../sections/rightDrawer.js'
+import { createFileInput } from '../partials/fileInput.js'
+import { createDangerZone } from '../sections/dangerZone.js'
 import { createForm } from '../partials/form.js'
 import { createIcon } from '../partials/icon.js'
 import { createInput } from '../partials/input.js'
 import { createList } from '../partials/list.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createModalDelete } from '../sections/modalDelete.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createSearch } from '../partials/search.js'
 import { handleTokenQueryParam, getWebApp } from '../js/io.js'
 
@@ -119,6 +120,8 @@ async function handleDOMContentLoaded() {
       },
     })
   )
+
+  getEl('main-panel').appendChild(createDangerZone({ header: 'Delete entry' }))
 
   const footerEl = createFooter()
   wrapperEl.appendChild(footerEl)

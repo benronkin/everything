@@ -124,7 +124,7 @@ export function createToast({
         clearInterval(el._progressInterval)
         if (el._showProgress) {
           el._progressInterval = setInterval(() => {
-            el._timeRemaining -= 12
+            el._timeRemaining -= 10
             el.style.setProperty('--progress', el._timeRemaining / parsed)
           }, 10)
         }

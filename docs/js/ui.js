@@ -84,6 +84,21 @@ export function injectStyle(css) {
 }
 
 /**
+ *
+ */
+export function isoToReadable(isoString) {
+  const date = new Date(isoString)
+  const now = new Date()
+  const isThisYear = date.getFullYear() === now.getFullYear()
+
+  const options = isThisYear
+    ? { month: 'short', day: '2-digit' }
+    : { month: 'long', day: '2-digit', year: 'numeric' }
+
+  return date.toLocaleDateString('en-US', options)
+}
+
+/**
  * Log in debug
  */
 export function log(...args) {

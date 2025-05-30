@@ -34,7 +34,7 @@ export function createSpan({ html = '', id } = {}) {
       set(newValue = '') {
         el.id = newValue
         el.dataset.id = newValue
-        el.dataset.testId = `${id}-span`
+        el.dataset.testId = newValue
       },
     },
     value: {
@@ -51,7 +51,7 @@ export function createSpan({ html = '', id } = {}) {
     },
   })
   el.value = html
-  el.dataId = id
+  id && (el.dataId = id)
 
   return el
 }

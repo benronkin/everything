@@ -3,12 +3,13 @@ import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
+import { createMainIconGroup } from '../sections/mainIconGroup.js'
 import { createFormHorizontal } from '../partials/formHorizontal.js'
 import { createList } from '../partials/list.js'
 import { createTitleDetailsItem } from '../partials/titleDetailsItem.js'
 import { createFormField } from '../partials/formField.js'
 import { createSwitch } from '../partials/switch.js'
-import { setMessage } from '../js/ui.js'
+import { getEl, setMessage } from '../js/ui.js'
 
 // -------------------------------
 // Globals
@@ -61,7 +62,7 @@ async function handleDOMContentLoaded() {
 
   setMessage()
   initTasks(tasks)
-  tasksFormEl.querySelector('input').focus()
+  getEl('tasks-form').focus()
 }
 
 /**
@@ -120,7 +121,7 @@ async function handleTasksListChange(e) {
   // resorting on the server
   const _setTasks = () => {
     const tasks = tasksListEl.getData()
-    payload.tasks = tasks.map((t) => t.id)
+    payload.tasks = tasks.map((t) => t.targetId)
   }
 
   switch (e.detail.action) {
@@ -229,43 +230,41 @@ function addPageElements() {
   const rightDrawerEl = createRightDrawer({ active: 'tasks' })
   document.querySelector('main').prepend(rightDrawerEl)
 
-  // switches
-  const switchWrapper = document.querySelector('#top-switches-wrapper')
-  sortSwitch = createSwitch({ id: 'sort-switch' })
-  sortSwitch.addEventListener('click', handleSortSwitchClick)
-  let field = createFormField({
-    element: sortSwitch,
-    label: 'Sort',
-    labelPosition: 'left',
-  })
-  switchWrapper.appendChild(field)
-
-  // create tasks form
-  tasksFormEl = createFormHorizontal({
-    formId: 'tasks-form',
-    inputType: 'text',
-    inputName: 'task',
-    inputPlaceholder: 'Add task',
-    inputAutoComplete: 'off',
-    iconClass: 'fa-thumbtack',
-    submitText: 'ADD',
-    disabled: true,
-  })
-  formWrapper.prepend(tasksFormEl)
-  tasksInput = tasksFormEl.querySelector('input')
-
-  /* when tasks input key is pressed */
-  tasksInput.addEventListener('keyup', handleTaskInputKeyUp)
-
-  /* when tasks form is submitted */
-  tasksFormEl.addEventListener('submit', (e) =>
-    handleTaskFormSubmit(e, 'prepend')
+  formWrapper.prepend(
+    createMainIconGroup({
+      collapsable: false,
+      className: 'w-100',
+      children: [
+        createFormField({
+          element: createSwitch({
+            id: 'sort-switch',
+            events: { click: handleSortSwitchClick },
+          }),
+          label: 'Sort',
+          labelPosition: 'left',
+        }),
+        createFormHorizontal({
+          formId: 'tasks-form',
+          inputType: 'text',
+          inputName: 'task',
+          inputPlaceholder: 'Add task',
+          inputAutoComplete: 'off',
+          iconClass: 'fa-thumbtack',
+          submitText: 'ADD',
+          disabled: true,
+          events: {
+            submit: (e) => {
+              handleTaskFormSubmit(e, 'prepend')
+            },
+          },
+          inputEvents: {
+            focus: handleTaskFormFocus,
+            keyup: handleTaskInputKeyUp,
+          },
+        }),
+      ],
+    })
   )
-
-  /* when user focuses on input */
-  tasksFormEl
-    .querySelector('input')
-    .addEventListener('focus', handleTaskFormFocus)
 
   // tasks-list
   tasksListEl = createList({

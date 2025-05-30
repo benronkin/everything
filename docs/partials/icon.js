@@ -68,7 +68,7 @@ export function createIcon({ id = '', className = '', events = {} } = {}) {
 
   el.shake = shake.bind(el)
 
-  el.dataId = id
+  id && (el.dataId = id)
   el.classes = className
   el.role = 'button'
   el.tabIndex = 0
