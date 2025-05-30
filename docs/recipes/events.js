@@ -121,7 +121,7 @@ async function handleActiveRecipeStateChanged(e) {
 
   const recipe = state.getRecipeById(id)
 
-  getEl('related-recipes-switch').setOff()
+  getEl('related-recipes-switch').value = false
   getEl('main-panel').classList.remove('hidden')
   getEl('recipe-title').value = recipe.title
   getEl('recipe-related').value = recipe.related
