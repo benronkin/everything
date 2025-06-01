@@ -36,6 +36,7 @@ const css = `
   min-height: 35px;
   padding: 7px 3px;
   margin: 0;
+  width: 100%;
 }
 .td-item .header {
 color: inherit;
