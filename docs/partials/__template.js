@@ -14,12 +14,7 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({
-  id = '',
-  className = '',
-  events = {},
-  html = '',
-} = {}) {
+export function create({ id = '', className = '', events = {} } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -30,7 +25,7 @@ export function create({
         return el.className
       },
       set(newValue = '') {
-        el.className = `${newValue}`.trim()
+        el.className = newValue
       },
     },
     dataId: {
@@ -40,19 +35,7 @@ export function create({
       set(newValue = '') {
         el.id = newValue
         el.dataset.id = newValue
-        el.dataset.testId = newValue
-      },
-    },
-    value: {
-      get() {
-        return el.innerHTML
-      },
-      set(newValue) {
-        if (typeof newValue === 'string') {
-          newValue = document.createTextNode(newValue)
-        }
-        el.innerHTML = ''
-        el.appendChild(newValue)
+        el.dataset.testId = 'test-'
       },
     },
   })
@@ -60,9 +43,8 @@ export function create({
   addElementParts(el)
   addEventHandlers(el, events)
 
-  el.value = html
   id && (el.dataId = id)
-  className && (el.classes = className)
+  el.classes = `${className}`.trim()
 
   return el
 }

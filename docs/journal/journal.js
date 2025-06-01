@@ -1,10 +1,12 @@
-import { state } from '../js/state.js'
-import { getEl, setMessage } from '../js/ui.js'
+import { setStateBeforePartials } from './stateBeforePartials.js'
+import { makeReactive } from './reactivity.js'
 import { setEvents } from './events.js'
+import { newState } from '../js/newState.js'
+import { getEl, setMessage } from '../js/ui.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createModalDelete } from '../sections/modalDelete.js'
+import { createDelete } from '../sections/delete.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createFileInput } from '../partials/fileInput.js'
 import { createDangerZone } from '../sections/dangerZone.js'
@@ -40,8 +42,47 @@ async function handleDOMContentLoaded() {
     return
   }
 
-  const { journal } = await getWebApp(`${state.getWebAppUrl()}/journal/read`)
+  // setStateBeforePartials() must run before any partials
+  // are created, so that they can set their reactivity during
+  // their construction
+  setStateBeforePartials()
 
+  // makeReactive registers the callbacks for the paritals.
+  // can run before or after partial construction, but
+  // definitely before setStateAfterPartials
+  makeReactive()
+
+  createSectionsAndPartials()
+
+  // imported from the events.js module
+  setEvents()
+
+  // setStateAfterPartials() must run aftr all partials
+  // are created and instrumented with state and event
+  // listeners
+  const { journal } = await getWebApp(`${newState.getAppUrl()}/journal/read`)
+  setStateAfterPartials(journal)
+
+  setMessage()
+}
+
+// ------------------------
+// Helper functions
+// ------------------------
+
+/**
+ * Set various state variables
+ * @param {Array<Object>} journal - list of journal entries
+ */
+function setStateAfterPartials(journal) {
+  newState.set('journal', journal)
+  newState.setDefaultPage('journal')
+}
+
+/**
+ *
+ */
+function createSectionsAndPartials() {
   // create and add page elements
   const wrapperEl = document.querySelector('.wrapper')
 
@@ -54,7 +95,7 @@ async function handleDOMContentLoaded() {
   const mainIconGroup = createMainIconGroup({
     shouldAllowCollapse: {
       message: 'Select a jounral entry first',
-      cb: () => !!state.get('active-journal'),
+      cb: () => !!newState.get('active-journal'),
     },
     children: [createIcon({ id: 'add-journal', className: 'fa-plus' })],
   })
@@ -127,34 +168,18 @@ async function handleDOMContentLoaded() {
   wrapperEl.appendChild(footerEl)
 
   document.querySelector('body').appendChild(
-    createModalDelete({
-      header: 'Delete entry',
+    createDelete({
       id: 'modal-delete',
-      password: true,
     })
   )
-
-  // imported from the events.js module
-  setEvents()
-
-  // must run after journal-state-changed EH is added
-  // so as to trigger journal list population
-  state.set('journal', journal)
-  state.setDefaultPage('journal')
-
-  setMessage()
 }
-
-// ------------------------
-// Helper functions
-// ------------------------
 
 /**
  * Get the searched journals
  */
 async function searchJournal(q) {
   const data = await getWebApp(
-    `${state.getWebAppUrl()}/journal/search?q=${q.trim().toLowerCase()}`
+    `${newState.getAppUrl()}/journal/search?q=${q.trim().toLowerCase()}`
   )
 
   const { journal, message } = data
@@ -169,5 +194,5 @@ async function searchJournal(q) {
  * Handle results coming from the search partial
  */
 async function handleSearchResult(results) {
-  state.set('journa', results)
+  newState.set('journa', results)
 }

@@ -1,8 +1,5 @@
-/* 
-  Don't use this file. Instead, use a specific modal (e.g modalDelete)
-*/
-
 import { injectStyle } from '../js/ui.js'
+import { newState } from '../js/newState.js'
 import { createButton } from '../partials/button.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
@@ -19,23 +16,23 @@ const css = `
     max-width: 400px;
     margin: auto;
   }
-  [data-id="delete-modal-header"] {
+  #delete-modal-header {
     font-size: 1.4rem;
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 20px;
   }
-  [data-id="delete-modal-body"] {
+  #delete-modal-body {
     margin-bottom: 20px;
   }
-  [data-id="delete-modal-btn-group"] {
+  #delete-modal-btn-group {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
     margin: 40px 0 20px;
   }
-  [data-id="delete-modal-input"] {
+  #delete-modal-input {
     width: 100%;
     padding: 8px 10px;
     margin: 0;
@@ -49,20 +46,12 @@ const css = `
 /**
  * Constructor for a modal-delete
  */
-export function createModalDelete({ header, body, id, password = false }) {
+export function createModalDelete({ id, password }) {
   injectStyle(css)
 
   const el = document.createElement('dialog')
 
   Object.defineProperties(el, {
-    body: {
-      get() {
-        return el.querySelector('[data-id="delete-modal-body"]').innerHTML
-      },
-      set(newValue = '') {
-        el.querySelector('[data-id="delete-modal-body"]').innerHTML = newValue
-      },
-    },
     dataId: {
       get() {
         return el.dataset.id
@@ -70,45 +59,22 @@ export function createModalDelete({ header, body, id, password = false }) {
       set(newValue = '') {
         el.id = newValue
         el.dataset.id = newValue
-        el.dataset.testId = newValue
+        el.dataset.testId = 'modal-delete'
       },
     },
     header: {
       get() {
-        return el.querySelector('[data-id="delete-modal-header"]').innerHTML
+        return el.querySelector('h3').value
       },
       set(newValue = '') {
-        el.querySelector('[data-id="delete-modal-header"]').innerHTML = newValue
-      },
-    },
-    message: {
-      get() {
-        return el.querySelector('[data-id="delete-modal-message"]').innerHTML
-      },
-      set(newValue = '') {
-        el.querySelector('[data-id="delete-modal-message"]').innerHTML =
-          newValue
-      },
-    },
-    password: {
-      get() {
-        return el.dataset.password === 'true'
-      },
-      set(newValue = false) {
-        el.dataset.password = newValue
+        el.querySelector('h3').value = newValue
       },
     },
   })
 
   createElement({ el, password })
 
-  el.addEventListener('click', handleOutsideModalDeleteClick)
-  el.addEventListener('close', handleModalClose)
-
-  id && (el.dataId = id)
-  password && (el.password = password)
-  el.header = header
-  el.body = body
+  el.dataId = id
 
   return el
 }
@@ -120,41 +86,41 @@ export function createModalDelete({ header, body, id, password = false }) {
 /**
  * Close modal if clicked outside its visible area
  */
-function handleOutsideModalDeleteClick(e) {
-  const modal = e.target.closest('dialog')
-  const dialogDimensions = modal.getBoundingClientRect()
-  if (
-    e.clientX < dialogDimensions.left ||
-    e.clientX > dialogDimensions.right ||
-    e.clientY < dialogDimensions.top ||
-    e.clientY > dialogDimensions.bottom
-  ) {
-    // modal.password = ''
-    modal.close()
-  }
-}
+// function handleOutsideModalDeleteClick(e) {
+//   const modal = e.target.closest('dialog')
+//   const dialogDimensions = modal.getBoundingClientRect()
+//   if (
+//     e.clientX < dialogDimensions.left ||
+//     e.clientX > dialogDimensions.right ||
+//     e.clientY < dialogDimensions.top ||
+//     e.clientY > dialogDimensions.bottom
+//   ) {
+//     // modal.password = ''
+//     modal.close()
+//   }
+// }
 
 /**
  * Handle modal confirm delete click
  */
-function handleModalConfirmDeleteClick(e) {
-  const modal = e.target.closest('dialog')
-  document.dispatchEvent(
-    new CustomEvent('delete-confirmed', {
-      detail: { id: modal.dataset.id },
-    })
-  )
-}
+// function handleModalConfirmDeleteClick(e) {
+//   const modal = e.target.closest('dialog')
+//   document.dispatchEvent(
+//     new CustomEvent('modal-delete-confirmed', {
+//       detail: { id: modal.dataset.id },
+//     })
+//   )
+// }
 
 /**
  * Handle modal cancel click
  */
-function handleModalCancelClick(e) {
-  e.preventDefault()
-  const modal = e.target.closest('dialog')
-  // modal.password = ''
-  modal.close()
-}
+// function handleModalCancelClick(e) {
+//   e.preventDefault()
+//   const modal = e.target.closest('dialog')
+//   modal.password = ''
+//   modal.close()
+// }
 
 // -------------------------------
 // Helpers
@@ -163,19 +129,19 @@ function handleModalCancelClick(e) {
 /**
  *
  */
-function createElement({ el, password }) {
+function createElement({ el }) {
   const headerEl = createHeader({
-    id: 'delete-modal-header',
+    id: 'modal-delete-header',
     type: 'h3',
   })
   el.appendChild(headerEl)
 
   let spanEl = createSpan({
-    id: 'delete-modal-body',
+    id: 'modal-delete-body',
   })
   el.appendChild(spanEl)
 
-  if (password) {
+  if (newState.get('modal-delete-password')) {
     const inputEl = createInput({
       type: 'password',
       name: 'password',
@@ -193,7 +159,7 @@ function createElement({ el, password }) {
     id: 'delete-modal-delete-btn',
     value: 'Delete',
   })
-  buttonEl.addEventListener('click', handleModalConfirmDeleteClick)
+  // buttonEl.addEventListener('click', handleModalConfirmDeleteClick)
   divEl.appendChild(buttonEl)
 
   buttonEl = createButton({
@@ -205,7 +171,7 @@ function createElement({ el, password }) {
       hover: 'primary',
     },
   })
-  buttonEl.addEventListener('click', handleModalCancelClick)
+  // buttonEl.addEventListener('click', handleModalCancelClick)
   divEl.appendChild(buttonEl)
 
   spanEl = createSpan({
@@ -217,6 +183,6 @@ function createElement({ el, password }) {
 /**
  *
  */
-function handleModalClose(e) {
-  e.target.querySelector('input').value = ''
-}
+// function handleModalClose(e) {
+//   e.target.querySelector('input').value = ''
+// }

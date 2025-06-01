@@ -1,4 +1,5 @@
 import { injectStyle } from '../js/ui.js'
+import { createDangerZone } from './dangerZone.js'
 
 // -------------------------------
 // Globals
@@ -7,17 +8,14 @@ import { injectStyle } from '../js/ui.js'
 const css = `
 `
 
-// const html = `
-// `
-
 // -------------------------------
 // Exported functions
 // -------------------------------
 
 /**
- * Constructor for custom span element
+ * Constuctor of a custom element
  */
-export function createDiv({ className = '', html = '', id = '' } = {}) {
+export function createDelete({ id = '', className = '' } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -35,28 +33,31 @@ export function createDiv({ className = '', html = '', id = '' } = {}) {
       get() {
         return el.dataset.id
       },
-      set(newValue) {
-        if (!newValue) {
-          return
-        }
+      set(newValue = '') {
         el.id = newValue
         el.dataset.id = newValue
-        el.dataset.testId = id
-      },
-    },
-    value: {
-      get() {
-        return el.innerHTML
-      },
-      set(newValue) {
-        el.innerHTML = newValue
+        el.dataset.testId = 'test-delete'
       },
     },
   })
 
-  el.value = html
-  el.dataId = id
-  el.classes = className
+  addElementParts({ el })
+
+  id && (el.dataId = id)
+  el.classes = `delete-wrapper ${className}`
 
   return el
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ * Add sub elements to the element. No need
+ * to return the element.
+ */
+function addElementParts({ el }) {
+  const dz = createDangerZone()
+  el.appendChild(dz)
 }

@@ -1,5 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { createIcon } from './icon.js'
+import { newState } from '../js/newState.js'
 
 // -------------------------------
 // Globals
@@ -83,6 +84,14 @@ export function createButton({
 
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))
+
+  if (id) {
+    const stateVar = `${id}-click`
+    el.addEventListener('click', () => {
+      console.log('stateVar', stateVar)
+      newState.set(stateVar, { id })
+    })
+  }
 
   for (const [k, v] of Object.entries(events)) {
     el.addEventListener(k, v)

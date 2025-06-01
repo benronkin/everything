@@ -1,5 +1,6 @@
 import { createIcon } from '../partials/icon.js'
-import { getEl, injectStyle, setMessage } from '../js/ui.js'
+import { getEl, injectStyle, isMobile, setMessage } from '../js/ui.js'
+import { newState } from '../js/newState.js'
 
 // -------------------------------
 // Globals
@@ -66,6 +67,13 @@ export function createMainIconGroup({
   el.dataset.id = 'main-icon-group'
   el.dataset.testId = 'main-icon-group'
   el.className = className
+
+  // reactivity
+  newState.on('left-panel-list', () => {
+    if (isMobile()) {
+      el.expand()
+    }
+  })
 
   return el
 }

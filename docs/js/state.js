@@ -1,20 +1,3 @@
-/* 
-  The big deal about this state is recipe managment. 
-  All create/delete/update/push is done via the set function.
-  Set dispatches a custom event that recipes.js listens to.
-  The handler reactively updates the recipe list, and takes
-  other actions on the list based on a function registry.
-
-  Set throws custom events for any stateObj.data[collection],
-  so it can be extended in the future.
-*/
-
-// eslint-disable-next-line no-unused-vars
-const devMobileUrl = 'http://192.168.1.193:8787'
-const devUrl = 'http://127.0.0.1:8787'
-// eslint-disable-next-line no-unused-vars
-const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
-
 const stateObj = {
   data: {
     'active-journal': null,
@@ -22,7 +5,6 @@ const stateObj = {
     'active-note': {},
     journal: [],
     recipes: [],
-    WEB_APP_URL: prodUrl,
   },
 
   add(key, values) {
@@ -85,23 +67,6 @@ const stateObj = {
     const arr = this.get(key)
     arr.push(value)
     this.set(key, arr)
-  },
-
-  // -----------------------
-  // defaults
-  // -----------------------
-
-  getWebAppUrl() {
-    console.log(`state.getWebAppUrl is using ${this.data.WEB_APP_URL}`)
-    return this.data.WEB_APP_URL
-  },
-
-  getDefaultPage() {
-    return localStorage.getItem('mode') || 'recipes'
-  },
-
-  setDefaultPage(mode) {
-    localStorage.setItem('mode', mode)
   },
 
   // -----------------------

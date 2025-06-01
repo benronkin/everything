@@ -1,7 +1,9 @@
+import { newState } from '../js/newState.js'
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from '../partials/div.js'
 import { createIcon } from '../partials/icon.js'
 import { createSpan } from '../partials/span.js'
+import { createModalDelete } from './modalDelete.js'
 
 // -------------------------------
 // Globals
@@ -17,19 +19,26 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function createDangerZone({
-  id,
-  events = {},
-  header = 'Delete entry',
-} = {}) {
+export function createDangerZone({ id } = {}) {
   injectStyle(css)
 
-  const el = createDiv({ className: 'flex danger-box u-mt-40 u-mb-20' })
+  const el = createDiv({
+    className: 'danger-zone flex danger-box u-mt-40 u-mb-20',
+  })
 
-  addElementParts({ el, header })
-  addEventHandlers(el, events)
+  addElementParts({ el })
 
   id && (el.dataId = id)
+
+  newState.on('show-delete-modal-icon-click', () => {
+    const modal = el.querySelector('#modal-delete')
+    modal.dataset.vitest = 'modal-open'
+    try {
+      modal.showModal()
+    } catch (e) {
+      // fail silently for vitest
+    }
+  })
 
   return el
 }
@@ -50,23 +59,21 @@ export function createDangerZone({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function addElementParts({ el, header }) {
-  el.appendChild(createSpan({ html: header }))
-  el.appendChild(createIcon({ id: 'delete-entry-btn', className: 'fa-trash' }))
-}
+function addElementParts({ el }) {
+  const modalEl = createModalDelete({
+    id: 'modal-delete',
+  })
+  el.appendChild(modalEl)
 
-/**
- * Add the various event handlers for the element
- */
-function addEventHandlers(el, events) {
-  for (const [k, v] of Object.entries(events)) {
-    if (k === 'click') {
-      el.addEventListener('click', (e) => {
-        // do something locally, then:
-        v(e)
-      })
-    } else {
-      el.addEventListener(k, v)
-    }
-  }
+  el.appendChild(
+    createSpan({
+      id: 'danger-zone-header',
+    })
+  )
+  el.appendChild(
+    createIcon({
+      id: 'show-delete-modal-icon',
+      className: 'fa-trash',
+    })
+  )
 }

@@ -1,4 +1,5 @@
 import { injectStyle } from '../js/ui.js'
+import { newState } from '../js/newState.js'
 
 // -------------------------------
 // Globals
@@ -25,7 +26,7 @@ i.shake {
 // Exported functions
 // -------------------------------
 
-export function createIcon({ id = '', className = '', events = {} } = {}) {
+export function createIcon({ id = '', className = '' } = {}) {
   injectStyle(css)
   const el = document.createElement('i')
 
@@ -62,16 +63,19 @@ export function createIcon({ id = '', className = '', events = {} } = {}) {
     },
   })
 
-  for (const [eventName, cb] of Object.entries(events)) {
-    el.addEventListener(eventName, cb)
-  }
-
   el.shake = shake.bind(el)
 
   id && (el.dataId = id)
   el.classes = className
   el.role = 'button'
   el.tabIndex = 0
+
+  if (id) {
+    const stateVar = `${id}-click`
+    el.addEventListener('click', () => {
+      newState.set(stateVar, { id })
+    })
+  }
 
   return el
 }

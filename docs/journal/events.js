@@ -1,15 +1,14 @@
 /* 
   This module handles journal events so that the journal.js stays leaner. 
-  This module loads aftr all dynamic fields have been created.
+  This module loads aftr all partials were created.
 */
 
 /* global imageCompression */
 
-import { state } from '../js/state.js'
-import { getEl, isMobile, resizeTextarea, toggleExpander } from '../js/ui.js'
+import { newState } from '../js/newState.js'
+import { getEl, toggleExpander } from '../js/ui.js'
 import { getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
 import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
-import { createMenuItem } from '../partials/menuItem.js'
 
 // ----------------------
 // Exports
@@ -19,15 +18,6 @@ import { createMenuItem } from '../partials/menuItem.js'
  * Set multiple the event handlers of the recipes page
  */
 export function setEvents() {
-  /* When recipes array state changes */
-  document.addEventListener('journal-state-changed', handleJournalStateChanged)
-
-  /* When active recipe state changes */
-  document.addEventListener(
-    'active-journal-state-changed',
-    handleActiveJournalStateChanged
-  )
-
   /* When the add photo toggle is clicked */
   getEl('add-photo-toggle').addEventListener('click', handleAddPhotoToggle)
 
@@ -39,85 +29,36 @@ export function setEvents() {
   /* When a new journal entry is created */
   getEl('add-journal').addEventListener('click', handleJournalCreate)
 
-  /* When the trash journal button is clicked */
-  getEl('delete-entry-btn').addEventListener(
-    'click',
-    handleJournalDeleteBtnClick
-  )
-
   /* When a journal entry is confirmed delete */
-  document.addEventListener('delete-confirmed', handleDeleteConfirmed)
+  document.addEventListener('modal-delete-confirmed', handleDeleteConfirmed)
 
   /* When the add photo form is submitted */
   getEl('add-photo-form').addEventListener('submit', handleAddPhotoSubmit)
 }
 
+/**
+ * Format an entry title
+ */
+export function createEntryTitle(location, visit_date) {
+  const [, month, day] = visit_date.split('T')[0].split('-')
+  const formatted = `(${month}/${day})`
+
+  const el = document.createElement('span')
+  let textNode = document.createTextNode(`${location} `)
+  el.appendChild(textNode)
+  const innerSpan = document.createElement('span')
+  innerSpan.className = 'smaller'
+  innerSpan.style.fontWeight = '200'
+  textNode = document.createTextNode(formatted)
+  innerSpan.appendChild(textNode)
+  el.appendChild(innerSpan)
+
+  return el
+}
+
 // ----------------------
 // Event handlers
 // ----------------------
-
-/**
- * This reactive function is called when the document receives
- * journal-state-changed event from state.set('journal).
- */
-function handleJournalStateChanged(e) {
-  if (isMobile()) {
-    getEl('main-icon-group').expand()
-  }
-  const children = e.detail.map((j) =>
-    createMenuItem({
-      id: j.id,
-      value: createEntryTitle(j.location, j.visit_date),
-      events: { click: handleJournalLinkClick },
-    })
-  )
-  getEl('left-panel-list').deleteChildren().addChildren(children)
-  if (!state.get('active-journal')) {
-    return
-  }
-
-  // select the active recipe if it exists in the updated list
-  const priorRecipe = getEl('left-panel-list').getChildById(
-    state.get('active-journal')
-  )
-  if (!priorRecipe) {
-    state.set('active-journal', null)
-    return
-  }
-  priorRecipe.selected = true
-}
-
-/**
- * Load the journal object to the page
- */
-function handleActiveJournalStateChanged(e) {
-  const id = e.detail
-  if (!id) {
-    // active recipe has been cleared
-    getEl('main-icon-group').expand()
-    return
-  }
-
-  // Handle main-panel
-
-  const journal = state.getJournalById(id)
-
-  getEl('journal-location').value = journal.location
-  getEl('journal-visit-date').value = new Date(journal.visit_date)
-    .toISOString()
-    .split('T')[0]
-  const notesEl = getEl('journal-notes')
-  notesEl.value = journal.notes
-  resizeTextarea(notesEl)
-  getEl('journal-city').value = journal.city
-  getEl('journal-state').value = journal.state
-  getEl('journal-country').value = journal.country
-  getEl('journal-id').textContent = journal.id
-  getEl('photo-entry-id').value = journal.id
-  getEl('image-gallery').value = ''
-  populateJournalImages(journal.id)
-  getEl('main-panel').hidden = false
-}
 
 /**
  * Handle the add photo toggle
@@ -209,19 +150,6 @@ async function handleFieldChange(e) {
 async function handleJournalLinkClick(e) {
   const elem = e.target.closest('.menu-item')
   state.set('active-journal', elem.dataId)
-}
-
-/**
- * Handle button click to show delete modal
- */
-function handleJournalDeleteBtnClick() {
-  const modal = document.querySelector('dialog[data-id="modal-delete"]')
-  const name = createEntryTitle(
-    getEl('journal-location').value,
-    getEl('journal-visit-date').value
-  )
-  modal.body = `Delete entry: ${name.textContent}?`
-  modal.showModal()
 }
 
 /**
@@ -369,24 +297,4 @@ async function populateJournalImages(id) {
     })
     getEl('image-gallery').appendChild(el)
   }
-}
-
-/**
- * Format an entry title
- */
-function createEntryTitle(location, visit_date) {
-  const [, month, day] = visit_date.split('T')[0].split('-')
-  const formatted = `(${month}/${day})`
-
-  const el = document.createElement('span')
-  let textNode = document.createTextNode(`${location} `)
-  el.appendChild(textNode)
-  const innerSpan = document.createElement('span')
-  innerSpan.className = 'smaller'
-  innerSpan.style.fontWeight = '200'
-  textNode = document.createTextNode(formatted)
-  innerSpan.appendChild(textNode)
-  el.appendChild(innerSpan)
-
-  return el
 }

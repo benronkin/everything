@@ -42,7 +42,7 @@ export function setEvents() {
     .addEventListener('click', handleRecipeDeleteBtnClick)
 
   /* When a recipe is confirmed delete */
-  document.addEventListener('delete-confirmed', handleDeleteRecipe)
+  document.addEventListener('modal-delete-confirmed', handleDeleteRecipe)
 
   /* When shop-ingredients button is clicked */
   getEl('shop-ingredients').addEventListener(
