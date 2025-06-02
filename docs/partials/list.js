@@ -1,5 +1,5 @@
-import { newState } from '../js/newState.js'
 import { enableDragging, enableClicking } from '../js/drag.js'
+import { newState } from '../js/newState.js'
 import { injectStyle, log } from '../js/ui.js'
 
 // -------------------------------
@@ -36,7 +36,7 @@ export function createList({
     )
   }
 
-  return createElement({
+  const el = createElement({
     id,
     itemClass,
     className,
@@ -44,6 +44,10 @@ export function createList({
     emptyState,
     onChange,
   })
+
+  newState.on('item-click', 'list.js', (id) => handleSelectionChanged(el, id))
+
+  return el
 }
 
 // -------------------------------
@@ -51,37 +55,15 @@ export function createList({
 // -------------------------------
 
 /**
- * Respond to list item custom click events
- */
-function handleItemClick(e) {
-  const { selectedItem } = e.detail
-
-  this.dispatch('selection-changed', { selectedItem })
-}
-
-/**
  * Respond to selection changed events that the list
  * generates on add events and others.
  */
-function handleSelectionChanged(e) {
-  const { selectedItem } = e.detail
-
-  this.getChildren().forEach((child) => {
-    if (child !== selectedItem) {
-      child.selected = false
-    }
+function handleSelectionChanged(el, id) {
+  el.getChildren().forEach((child) => {
+    // select the clicked child
+    // and unselect the rest
+    child.selected = child.dataId == id
   })
-}
-
-/**
- *
- */
-function handleListChanged(e) {
-  this.querySelector('.empty-state').classList.toggle('hidden', !!this.length)
-
-  if (!this.silent && this._onChange) {
-    this._onChange(e)
-  }
 }
 
 // -------------------------------
@@ -102,16 +84,6 @@ function addChild(child, pos = 'top') {
   } else {
     this.appendChild(child)
   }
-
-  this.dispatch('selection-changed', {
-    target: child,
-    source: 'addChild',
-  })
-
-  this.dispatch('list-changed', {
-    action: 'create',
-    ...child.data,
-  })
 }
 
 /**
@@ -128,12 +100,6 @@ function addChildren(children = []) {
       this.appendChild(child)
     }
   }
-
-  this.dispatch('selection-changed', {
-    target: this.getChildren()[0],
-  })
-
-  this.dispatch('list-changed')
 }
 
 /**
@@ -144,12 +110,6 @@ function deleteChild(id) {
   if (item) {
     item.remove()
   }
-
-  this.dispatch('list-changed', {
-    action: 'delete',
-    targetId: id,
-  })
-  return item
 }
 
 /**
@@ -157,29 +117,7 @@ function deleteChild(id) {
  */
 function deleteChildren() {
   this.getChildren().forEach((i) => i.remove())
-
-  this.dispatch('list-changed', {
-    action: 'delete',
-  })
   return this // for chaining
-}
-
-/**
- * Dispatch a custom event
- */
-function dispatch(eventName, detail = {}) {
-  if (this.silent) {
-    log(`${this.id} is silent, canceling dispatch`)
-    return
-  }
-  detail.target = this
-  detail.dispatcherId = this.getAttribute('id')
-  const event = new CustomEvent(eventName, {
-    bubbles: true,
-    detail,
-  })
-
-  this.dispatchEvent(event)
 }
 
 /**
@@ -285,7 +223,6 @@ function createElement({
   div._onChange = onChange
   div.addChild = addChild.bind(div)
   div.addChildren = addChildren.bind(div)
-  div.dispatch = dispatch.bind(div)
   div.getChildren = getChildren.bind(div)
   div.getData = getData.bind(div)
   div.getChildById = getChildById.bind(div)
@@ -301,14 +238,13 @@ function createElement({
     div.onChange = onChange.bind(div)
   }
 
-  /* when list-item invokes a custom click event */
-  div.addEventListener('list-item-clicked', handleItemClick)
+  // /* when list-item invokes a custom click event */
+  // div.addEventListener('list-item-clicked', handleItemClick)
+  // /* when list-item or list itself invokes list-changed event */
+  // div.addEventListener('list-changed', handleListChanged)
 
   /** when the list receives a selection-changed */
   div.addEventListener('selection-changed', handleSelectionChanged)
-
-  /* when list-item or list itself invokes list-changed event */
-  div.addEventListener('list-changed', handleListChanged)
 
   // sets custom props
   Object.defineProperties(div, {
@@ -359,24 +295,6 @@ function createElement({
     div.silent = true
     div.addChildren(children)
     div.silent = false
-  }
-
-  // Reactivity for main-document lists
-  // ----------------------------------
-  if (itemClass === 'md-item') {
-    newState.on('main-documents', 'list.js', ({ docs, render }) => {
-      // populate children
-      const children = docs.map(render)
-      div.deleteChildren().addChildren(children)
-      // select previously active child
-      const priorDoc = newState.get('active-doc')
-      if (priorDoc) {
-        const child = div.getChildById(priorDoc.id)
-        child && (child.selected = true)
-      }
-    })
-  } else {
-    // console.log(`List with id "${div.dataId}" has itemClass: ${div.itemClass}`)
   }
 
   if (div.getChildren().length) {

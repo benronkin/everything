@@ -4,17 +4,18 @@ import { makeReactive } from './reactivity.js'
 import { setEvents } from './events.js'
 import { newState } from '../js/newState.js'
 import { getEl, setMessage } from '../js/ui.js'
+import { createDangerZone } from '../sections/dangerZone.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
+import { createMainPanel } from '../sections/mainPanel.js'
 import { createDelete } from '../sections/delete.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createFileInput } from '../partials/fileInput.js'
-import { createDangerZone } from '../sections/dangerZone.js'
 import { createForm } from '../partials/form.js'
 import { createIcon } from '../partials/icon.js'
 import { createInput } from '../partials/input.js'
-import { createList } from '../partials/list.js'
+import { createMainDocumentsList } from '../partials/MainDocumentslist.js'
 import { createSearch } from '../partials/search.js'
 import { handleTokenQueryParam, getWebApp } from '../js/io.js'
 
@@ -103,9 +104,45 @@ function createSectionsAndPartials() {
   )
 
   getEl('left-panel').appendChild(
-    createList({
+    createMainDocumentsList({
       id: 'left-panel-list',
-      itemClass: 'md-item',
+    })
+  )
+
+  getEl('columns-container').appendChild(
+    createMainPanel({
+      html: `
+      <h5>Location</h5>
+      <input name="location" data-id="journal-location" class="field" />
+      <h5>Visted on</h5>
+      <div class="date-input-wrapper">
+        <input
+          name="visit_date"
+          data-id="journal-visit-date"
+          class="field"
+          type="date"
+        />
+      </div>
+      <h5>Notes</h5>
+      <textarea
+        name="notes"
+        data-id="journal-notes"
+        class="field"
+      ></textarea>
+      <h5>City</h5>
+      <input name="city" data-id="journal-city" class="field" />
+      <h5>State</h5>
+      <input name="state" data-id="journal-state" class="field" />
+      <h5>Country</h5>
+      <input name="country" data-id="journal-country" class="field" />
+      <div data-id="photos-header-wrapper" class="flex u-mt-20">
+        <h4>Photos</h4>
+      </div>
+      <div data-id="upload-photo-wrapper"></div>
+      <div id="image-gallery" data-id="image-gallery"></div>
+      <h5>Id</h5>
+      <p data-id="journal-id" class="smaller"></p>
+    `,
     })
   )
 
@@ -154,16 +191,13 @@ function createSectionsAndPartials() {
     })
   )
 
-  getEl('main-panel').appendChild(createDangerZone({ header: 'Delete entry' }))
-
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
-
-  document.querySelector('body').appendChild(
+  getEl('main-panel').appendChild(
     createDelete({
       id: 'modal-delete',
     })
   )
+
+  wrapperEl.appendChild(createFooter())
 }
 
 /**

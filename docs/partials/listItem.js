@@ -1,3 +1,4 @@
+import { newState } from '../js/newState.js'
 import { injectStyle } from '../js/ui.js'
 import { createAnchor } from './anchor.js'
 import { createSpan } from './span.js'
@@ -70,9 +71,6 @@ export function createListItem({
   const barsEl = createIcon({ className: 'fa-bars hidden' })
   iconsEl.appendChild(barsEl)
 
-  el._classes = classes
-  el.dataset.id = id || crypto.randomUUID()
-
   const subEl = getSubElement(type, value, url)
   subEl.dataset.sub = 'true'
   el.prepend(subEl)
@@ -84,9 +82,26 @@ export function createListItem({
 
   el.dispatch = dispatch.bind(el)
   el.getClass = getClass.bind(el)
-  el.className = `list-item draggable-target ${el.getClass('base')}`
 
   Object.defineProperties(el, {
+    classes: {
+      get() {
+        return el.className
+      },
+      set(newValue = '') {
+        el.className = `list-item draggable-target ${newValue}`.trim()
+      },
+    },
+    dataId: {
+      get() {
+        return el.dataset.id
+      },
+      set(newValue = '') {
+        el.id = newValue
+        el.dataset.id = newValue
+        el.dataset.testId = newValue
+      },
+    },
     data: {
       get() {
         return {
@@ -133,9 +148,6 @@ export function createListItem({
         return el.dataset.selected === 'true'
       },
       set(v) {
-        if (el.draggable) {
-          return
-        }
         el.dataset.selected = v
         if (v) {
           el.classList.add(el.getClass('active'))
@@ -161,6 +173,9 @@ export function createListItem({
       },
     },
   })
+  el._classes = classes
+  el.dataId = id || crypto.randomUUID()
+  el.className = `list-item draggable-target ${el.getClass('base')}`
   el.selected = selected
   el.draggable = draggable
 
@@ -190,10 +205,7 @@ function handleClick(e) {
 
   el.selected = !el.selected
 
-  // notify list of the click
-  this.dispatch('list-item-clicked', {
-    selectedItem: this.closest('.list-item'),
-  })
+  newState.set('item-click', el.dataId)
 }
 
 // -------------------------------

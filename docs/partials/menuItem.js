@@ -5,7 +5,6 @@
  */
 
 import { injectStyle } from '../js/ui.js'
-import { newState } from '../js/newState.js'
 import { createAnchor } from './anchor.js'
 import { createSpan } from './span.js'
 import { createInput } from './input.js'
@@ -43,18 +42,6 @@ const css = `
 // -------------------------------
 
 /**
- * Handle click on the item. Exported for
- * mainDocumentItem to overeride
- */
-export function handleMemuItemClick(e) {
-  const el = e.target.closest('.menu-item')
-
-  el.selected = !el.selected
-
-  newState.set('item-click', el.dataId)
-}
-
-/**
  * Constructor for a custom menuItem element
  */
 export function createMenuItem({
@@ -87,7 +74,6 @@ export function createMenuItem({
     el.querySelector('.icons').appendChild(child)
   }
 
-  el.dispatch = dispatch.bind(el)
   el.getClass = getClass.bind(el)
 
   Object.defineProperties(el, {
@@ -161,7 +147,6 @@ export function createMenuItem({
   el.hidden = hidden
   el.selected = selected
 
-  el.addEventListener('click', handleMemuItemClick)
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))
   for (const [eventName, cb] of Object.entries(events)) {
@@ -174,20 +159,6 @@ export function createMenuItem({
 // -------------------------------
 // Object methods
 // -------------------------------
-
-/**
- * Dispatch a custom event
- */
-function dispatch(eventName, detail = {}) {
-  detail.target = this
-  detail.dispatcherId = this.dataset.id
-  const event = new CustomEvent(eventName, {
-    bubbles: true,
-    detail,
-  })
-
-  this.dispatchEvent(event)
-}
 
 /**
  *

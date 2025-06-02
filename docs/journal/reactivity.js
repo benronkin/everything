@@ -53,16 +53,14 @@ export function makeReactive() {
     },
     {
       selector: '[data-id="image-gallery"]',
-      trnasform: () => {
-        ''
-      },
+      val: '',
     },
 
     // delete.js
-    { selector: '#danger-zone-header', transform: () => 'Delete entry' },
+    { selector: '#danger-zone-header', val: 'Delete entry' },
     {
       selector: '#modal-delete-header',
-      transform: () => 'Delete entry',
+      val: 'Delete entry',
     },
     {
       selector: '#modal-delete-body',

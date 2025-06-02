@@ -5,7 +5,7 @@
  */
 
 import { injectStyle } from '../js/ui.js'
-import { createMenuItem, handleMemuItemClick } from './menuItem.js'
+import { createListItem } from './listItem.js'
 import { newState } from '../js/newState.js'
 
 // -------------------------------
@@ -52,7 +52,7 @@ export function createMainDocumentItem({
 } = {}) {
   injectStyle(css)
 
-  const el = createMenuItem({
+  const el = createListItem({
     id,
     selected,
     hidden,
@@ -66,10 +66,7 @@ export function createMainDocumentItem({
   el.classList.remove('menu-item')
   el.classList.add('md-item')
 
-  // replace menuItem's click event hanlder that sets item-click
-  // with active-doc, since mainDocumentItem works exclusively
-  // with the main documents
-  el.removeEventListener('click', handleMemuItemClick)
+  // Augment the base listItem click state with active-doc
   el.addEventListener('click', handleMainDocumentClick)
 
   return el
@@ -86,7 +83,7 @@ export function createMainDocumentItem({
 export function handleMainDocumentClick(e) {
   const el = e.target.closest('.md-item')
 
-  el.selected = !el.selected
-
-  newState.set('active-doc', el.dataId)
+  const mainDocuments = newState.get('main-documents').docs
+  const activeDoc = mainDocuments.find((doc) => doc.id === el.dataId)
+  newState.set('active-doc', activeDoc)
 }

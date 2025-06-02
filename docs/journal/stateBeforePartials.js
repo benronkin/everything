@@ -15,16 +15,4 @@ import { newState } from '../js/newState.js'
  */
 export function setStateBeforePartials() {
   newState.set('modal-delete-password', () => true)
-
-  // ----------------------
-  // State subscribers
-  // ----------------------
-
-  newState.on('main-documents', 'journal stateBeforePartials', () => {
-    // >>>>>> CONTINUE FROM HERE <<<<<<<<<<<<<<<<<
-    // update click events to house active-doc full document not just id
-    // getEl('image-gallery').value = ''
-    // populateJournalImages(journal.id)
-    // getEl('main-panel').hidden = false
-  })
 }

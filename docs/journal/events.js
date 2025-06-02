@@ -5,10 +5,8 @@
 
 /* global imageCompression */
 
-import { newState } from '../js/newState.js'
-import { getEl, toggleExpander } from '../js/ui.js'
+import { getEl } from '../js/ui.js'
 import { getWebApp, postWebAppForm, postWebAppJson } from '../js/io.js'
-import { createImageGalleryItem } from '../partials/imageGalleryItem.js'
 
 // ----------------------
 // Exports
@@ -94,7 +92,7 @@ async function handleJournalCreate() {
     notes: '',
   }
   state.push('journal', newEntry)
-  state.set('active-journal', id)
+  state.set('active-doc', newEntry)
 
   getEl('add-journal').disabled = false
 }
@@ -142,14 +140,6 @@ async function handleFieldChange(e) {
   } catch (err) {
     console.log(err)
   }
-}
-
-/**
- * Handle sidebar link click
- */
-async function handleJournalLinkClick(e) {
-  const elem = e.target.closest('.menu-item')
-  state.set('active-journal', elem.dataId)
 }
 
 /**
@@ -270,31 +260,4 @@ async function handlePhotoDelete(e) {
     return
   }
   parent.remove()
-}
-
-// ----------------------
-// Helpers
-// ----------------------
-
-/**
- * Populate the journal photos
- */
-async function populateJournalImages(id) {
-  const { photos } = await getWebApp(
-    `${state.getWebAppUrl()}/journal/photos/read?entry=${id}`
-  )
-  if (!photos.length) {
-    return
-  }
-  for (const photo of photos) {
-    const el = createImageGalleryItem({
-      id: photo.id,
-      imgSrc: photo.url,
-      caption: photo.caption,
-      expanderCb: toggleExpander,
-      inputCb: handleCaptionChange,
-      trashCb: handlePhotoDelete,
-    })
-    getEl('image-gallery').appendChild(el)
-  }
 }

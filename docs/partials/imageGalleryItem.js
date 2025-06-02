@@ -43,19 +43,16 @@ const html = `
 // Exported functions
 // -------------------------------
 
-export function createImageGalleryItem(config) {
+export function createImageGalleryItem({
+  id,
+  imgSrc,
+  caption,
+  expanderCb,
+  inputCb,
+  trashCb,
+}) {
   injectStyle(css)
-  return createElement(config)
-}
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
-function createElement({ id, imgSrc, caption, expanderCb, inputCb, trashCb }) {
   const el = document.createElement('div')
   el.dataset.id = id
   el.innerHTML = html
@@ -66,9 +63,9 @@ function createElement({ id, imgSrc, caption, expanderCb, inputCb, trashCb }) {
 
   // Event handlers
 
-  el.querySelector('.i-group-expander').addEventListener('click', expanderCb)
-  el.querySelector('.fa-trash').addEventListener('click', trashCb)
-  el.querySelector('input').addEventListener('change', inputCb)
+  // el.querySelector('.i-group-expander').addEventListener('click', expanderCb)
+  // el.querySelector('.fa-trash').addEventListener('click', trashCb)
+  // el.querySelector('input').addEventListener('change', inputCb)
 
   return el
 }
