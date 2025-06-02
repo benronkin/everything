@@ -1,4 +1,5 @@
 import { setStateBeforePartials } from './stateBeforePartials.js'
+import { setStateAfterPartials } from './stateAfterPartials.js'
 import { makeReactive } from './reactivity.js'
 import { setEvents } from './events.js'
 import { newState } from '../js/newState.js'
@@ -71,15 +72,6 @@ async function handleDOMContentLoaded() {
 // ------------------------
 
 /**
- * Set various state variables
- * @param {Array<Object>} journal - list of journal entries
- */
-function setStateAfterPartials(journal) {
-  newState.set('journal', journal)
-  newState.setDefaultPage('journal')
-}
-
-/**
  *
  */
 function createSectionsAndPartials() {
@@ -113,7 +105,7 @@ function createSectionsAndPartials() {
   getEl('left-panel').appendChild(
     createList({
       id: 'left-panel-list',
-      itemClass: 'menu-item',
+      itemClass: 'md-item',
     })
   )
 

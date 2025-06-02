@@ -19,14 +19,21 @@ export const newState = {
     return this._data[key]
   },
 
+  getSubscribers(stateVar) {
+    if (!this._listeners[stateVar]) {
+      return null
+    }
+    return this._listeners[stateVar].map((obj) => obj.subscriber)
+  },
+
   set(key, value) {
     this._data[key] = value
     if (this._listeners[key]) {
-      this._listeners[key].forEach((cb) => cb(value))
+      this._listeners[key].forEach(({ callback }) => callback(value))
     }
   },
 
-  on(key, callback) {
+  on(key, subscriber, callback) {
     if (typeof callback !== 'function') {
       throw new Error('Pass only functions to .on')
     }
@@ -35,17 +42,24 @@ export const newState = {
       this._listeners[key] = []
     }
 
-    this._listeners[key].push(callback)
+    this._listeners[key].push({ subscriber, callback })
   },
 
-  off(key, callback) {
+  off(key, fn) {
     const cbs = this._listeners[key]
     if (!cbs) return
-    this._listeners[key] = cbs.filter((cb) => cb !== callback)
+    this._listeners[key] = cbs.filter(({ callback }) => fn !== callback)
   },
 
+  // auto-update dom elements using each one's value setting property and
+  // a transformation function
   makeReactive(stateVar, bindings) {
-    this.on(stateVar, (val) => {
+    // subscribe to this stateVar and
+    // push this callback to _listeners for this stateVar
+    // the callback executes on whatevere is set as value for the stateVar
+    this.on(stateVar, 'state.makeReactive', (val) => {
+      // go thru the bindings array and use each object member
+      // to set the value of the passed-in element
       bindings.forEach(({ selector, prop = 'value', transform = (x) => x }) => {
         const el = document.querySelector(selector)
         if (el) {

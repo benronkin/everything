@@ -69,9 +69,14 @@ export function createMainIconGroup({
   el.className = className
 
   // reactivity
-  newState.on('left-panel-list', () => {
+  newState.on('main-documents', 'mainIconGroup', () => {
     if (isMobile()) {
       el.expand()
+    }
+  })
+  newState.on('active-doc', 'mainIconGroup', () => {
+    if (isMobile()) {
+      el.collapse()
     }
   })
 
@@ -176,16 +181,4 @@ function addElementParts({ el, collapsable, children, shouldAllowCollapse }) {
     },
   }
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Check if the client is mobile
- */
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
-}
+//

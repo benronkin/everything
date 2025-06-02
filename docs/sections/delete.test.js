@@ -13,6 +13,7 @@ beforeAll(() => {
   document.querySelector('body').appendChild(el)
 
   newState.set('active-doc', {
+    id: 'abc123',
     location: 'Kirkland Brewery',
     visit_date: '2024-04-18T',
   })

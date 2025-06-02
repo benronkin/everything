@@ -1,4 +1,11 @@
+/* 
+ This module creates a geneeric menu item that can include a span, 
+ or as in rightDrawer an anchor. So you need to pass a type that 
+ tells the item what sub-partial to insert.
+ */
+
 import { injectStyle } from '../js/ui.js'
+import { newState } from '../js/newState.js'
 import { createAnchor } from './anchor.js'
 import { createSpan } from './span.js'
 import { createInput } from './input.js'
@@ -36,6 +43,18 @@ const css = `
 // -------------------------------
 
 /**
+ * Handle click on the item. Exported for
+ * mainDocumentItem to overeride
+ */
+export function handleMemuItemClick(e) {
+  const el = e.target.closest('.menu-item')
+
+  el.selected = !el.selected
+
+  newState.set('item-click', el.dataId)
+}
+
+/**
  * Constructor for a custom menuItem element
  */
 export function createMenuItem({
@@ -59,9 +78,6 @@ export function createMenuItem({
   iconsEl.className = 'icons'
   el.appendChild(iconsEl)
 
-  el._classes = classes
-  el.dataset.id = id || crypto.randomUUID()
-
   const subEl = getSubElement(type, value, url)
   subEl.dataset.sub = 'true'
   el.prepend(subEl)
@@ -73,7 +89,6 @@ export function createMenuItem({
 
   el.dispatch = dispatch.bind(el)
   el.getClass = getClass.bind(el)
-  el.className = `menu-item ${el.getClass('base')}`
 
   Object.defineProperties(el, {
     data: {
@@ -140,10 +155,13 @@ export function createMenuItem({
       },
     },
   })
+  el.dataId = id || crypto.randomUUID()
+  el._classes = classes
+  el.className = `menu-item ${el.getClass('base')}`
   el.hidden = hidden
   el.selected = selected
 
-  el.addEventListener('click', handleClick)
+  el.addEventListener('click', handleMemuItemClick)
   el.addEventListener('mouseenter', () => (el.hovered = true))
   el.addEventListener('mouseleave', () => (el.hovered = false))
   for (const [eventName, cb] of Object.entries(events)) {
@@ -151,24 +169,6 @@ export function createMenuItem({
   }
 
   return el
-}
-
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-/**
- * Handle click on the item
- */
-function handleClick(e) {
-  const el = e.target.closest('.menu-item')
-
-  el.selected = !el.selected
-
-  // notify list of the click
-  this.dispatch('list-item-clicked', {
-    selectedItem: this.closest('.menu-item'),
-  })
 }
 
 // -------------------------------

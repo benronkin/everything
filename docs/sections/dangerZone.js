@@ -30,7 +30,7 @@ export function createDangerZone({ id } = {}) {
 
   id && (el.dataId = id)
 
-  newState.on('show-delete-modal-icon-click', () => {
+  newState.on('show-delete-modal-icon-click', 'dangerZone', () => {
     const modal = el.querySelector('#modal-delete')
     modal.dataset.vitest = 'modal-open'
     try {

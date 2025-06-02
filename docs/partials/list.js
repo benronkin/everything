@@ -1,3 +1,4 @@
+import { newState } from '../js/newState.js'
 import { enableDragging, enableClicking } from '../js/drag.js'
 import { injectStyle, log } from '../js/ui.js'
 
@@ -21,13 +22,20 @@ const html = `
  */
 export function createList({
   id,
-  itemClass = 'list-item',
+  itemClass,
   className,
   children,
   emptyState,
   onChange,
 }) {
   injectStyle(css)
+
+  if (!itemClass) {
+    throw new Error(
+      `list partial with id ${id} was set without an itemClass parameter`
+    )
+  }
+
   return createElement({
     id,
     itemClass,
@@ -343,17 +351,37 @@ function createElement({
     },
   })
 
+  id && (div.dataId = id)
+  div.className = `list ${className}`
+  div.itemClass = itemClass
+
   if (children) {
     div.silent = true
     div.addChildren(children)
     div.silent = false
-  } else {
-    div.querySelector('.empty-state').classList.remove('hidden')
   }
 
-  id && (div.dataId = id)
-  div.className = `list ${className}`
-  div.itemClass = itemClass
+  // Reactivity for main-document lists
+  // ----------------------------------
+  if (itemClass === 'md-item') {
+    newState.on('main-documents', 'list.js', ({ docs, render }) => {
+      // populate children
+      const children = docs.map(render)
+      div.deleteChildren().addChildren(children)
+      // select previously active child
+      const priorDoc = newState.get('active-doc')
+      if (priorDoc) {
+        const child = div.getChildById(priorDoc.id)
+        child && (child.selected = true)
+      }
+    })
+  } else {
+    // console.log(`List with id "${div.dataId}" has itemClass: ${div.itemClass}`)
+  }
+
+  if (div.getChildren().length) {
+    div.querySelector('.empty-state').classList.remove('hidden')
+  }
 
   return div
 }

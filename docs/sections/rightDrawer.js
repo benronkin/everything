@@ -144,7 +144,11 @@ document.addEventListener('click', (e) => {
  *
  */
 function createElement({ active }) {
-  const listEl = createList({ id: 'right-drawer', className: 'nav' })
+  const listEl = createList({
+    id: 'right-drawer',
+    className: 'nav',
+    itemClass: 'list-item',
+  })
 
   const listItems = items.map(({ html, url, id }) =>
     createMenuItem({ value: html, url, id, type: 'anchor' })

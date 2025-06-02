@@ -14,7 +14,7 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({ id = '', className = '', events = {} } = {}) {
+export function create({ id = '', className = '' } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -41,7 +41,6 @@ export function create({ id = '', className = '', events = {} } = {}) {
   })
 
   addElementParts(el)
-  addEventHandlers(el, events)
 
   id && (el.dataId = id)
   el.classes = `${className}`.trim()
@@ -54,10 +53,6 @@ export function create({ id = '', className = '', events = {} } = {}) {
 // -------------------------------
 
 // -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
 // Helpers
 // -------------------------------
 
@@ -66,19 +61,3 @@ export function create({ id = '', className = '', events = {} } = {}) {
  * to return the element.
  */
 function addElementParts(el) {}
-
-/**
- * Add the various event handlers for the element
- */
-function addEventHandlers(el, events) {
-  for (const [k, v] of Object.entries(events)) {
-    if (k === 'click') {
-      el.addEventListener('click', (e) => {
-        // do something locally, then:
-        v(e)
-      })
-    } else {
-      el.addEventListener(k, v)
-    }
-  }
-}
