@@ -22,7 +22,7 @@ const stateObj = {
     'active-note': {},
     journal: [],
     recipes: [],
-    WEB_APP_URL: prodUrl,
+    WEB_APP_URL: devUrl,
   },
 
   add(key, values) {
