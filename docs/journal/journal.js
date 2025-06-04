@@ -54,7 +54,7 @@ function build() {
 
   // footer
   const footerEl = createDiv({ id: 'footer-wrapper' })
-  // mainEl.after(footerEl)
+
   headerEl.after(toolbarEl, mainEl, footerEl)
 
   return

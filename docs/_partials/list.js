@@ -1,6 +1,6 @@
 import { enableDragging, enableClicking } from '../_assets/js/drag.js'
 import { newState } from '../_assets/js/newState.js'
-import { injectStyle, log } from '../_assets/js/ui.js'
+import { injectStyle } from '../_assets/js/ui.js'
 
 // -------------------------------
 // Globals
@@ -209,97 +209,52 @@ function createElement({
   emptyState,
   onChange,
 } = {}) {
-  const div = document.createElement('div')
-  div.innerHTML = html
+  const el = document.createElement('div')
+  el.innerHTML = html
 
-  div.enableDragging = () => enableDragging(div)
-  div.enableClicking = () => enableClicking(div)
+  el.enableDragging = () => enableDragging(el)
+  el.enableClicking = () => enableClicking(el)
 
   if (emptyState) {
-    div._emptyState = emptyState
-    div.querySelector('.empty-state').innerHTML = emptyState
+    el._emptyState = emptyState
+    el.querySelector('.empty-state').innerHTML = emptyState
   }
 
-  div._onChange = onChange
-  div.addChild = addChild.bind(div)
-  div.addChildren = addChildren.bind(div)
-  div.getChildren = getChildren.bind(div)
-  div.getData = getData.bind(div)
-  div.getChildById = getChildById.bind(div)
-  div.getNthChild = getNthChild.bind(div)
-  div.getSelected = getSelected.bind(div)
-  div.has = has.bind(div)
-  div.deleteChild = deleteChild.bind(div)
-  div.deleteChildren = deleteChildren.bind(div)
-  div.reset = reset.bind(div)
-  div.updateChild = updateChild.bind(div)
+  el._onChange = onChange
+  el.addChild = addChild.bind(el)
+  el.addChildren = addChildren.bind(el)
+  el.getChildren = getChildren.bind(el)
+  el.getData = getData.bind(el)
+  el.getChildById = getChildById.bind(el)
+  el.getNthChild = getNthChild.bind(el)
+  el.getSelected = getSelected.bind(el)
+  el.has = has.bind(el)
+  el.deleteChild = deleteChild.bind(el)
+  el.deleteChildren = deleteChildren.bind(el)
+  el.reset = reset.bind(el)
+  el.updateChild = updateChild.bind(el)
 
   if (onChange) {
-    div.onChange = onChange.bind(div)
+    el.onChange = onChange.bind(el)
   }
-
-  // /* when list-item invokes a custom click event */
-  // div.addEventListener('list-item-clicked', handleItemClick)
-  // /* when list-item or list itself invokes list-changed event */
-  // div.addEventListener('list-changed', handleListChanged)
 
   /** when the list receives a selection-changed */
-  div.addEventListener('selection-changed', handleSelectionChanged)
+  el.addEventListener('selection-changed', handleSelectionChanged)
 
-  // sets custom props
-  Object.defineProperties(div, {
-    data: {
-      get() {
-        return this.getChildren().map((child) => child.data)
-      },
-    },
-    dataId: {
-      get() {
-        return this.dataset.id
-      },
-      set(newValue = '') {
-        this.id = newValue
-        this.dataset.id = newValue
-        this.dataset.testId = newValue
-      },
-    },
-    length: {
-      get() {
-        return this.getData().length
-      },
-    },
-    itemClass: {
-      get() {
-        return this.dataset.itemClass
-      },
-      set(itemClass) {
-        this.dataset.itemClass = itemClass
-      },
-    },
-    silent: {
-      get() {
-        return this._silent
-      },
-      set(isSilent) {
-        log(`${this.id} is ${isSilent ? 'silent' : 'unsilent'}`)
-        this._silent = isSilent
-      },
-    },
-  })
-
-  id && (div.dataId = id)
-  div.className = `list ${className}`
-  div.itemClass = itemClass
+  el.id = id
+  el.dataset.id = id
+  el.className = `list ${className}`
+  el.itemClass = itemClass
 
   if (children) {
-    div.silent = true
-    div.addChildren(children)
-    div.silent = false
+    el.silent = true
+    el.addChildren(children)
+    el.silent = false
   }
 
-  if (div.getChildren().length) {
-    div.querySelector('.empty-state').classList.remove('hidden')
+  if (el.getChildren().length) {
+    el.querySelector('.empty-state').classList.remove('hidden')
   }
 
-  return div
+  return el
 }

@@ -37,10 +37,10 @@ export function createIcon({
 
   const el = document.createElement('i')
 
-  listen({ el, id, classes })
-
   el.shake = shake.bind(el)
 
+  el.id = id
+  el.dataset.id = id
   classes.other || (classes.other = ['fa-solid'])
   for (const c of classes.other) {
     el.classList.add(c)
@@ -49,6 +49,8 @@ export function createIcon({
   el._classes = classes
   el.role = 'button'
   el.tabIndex = 0
+
+  listen(el)
 
   return el
 }
@@ -60,17 +62,17 @@ export function createIcon({
 /**
  *
  */
-function listen({ el, id, classes }) {
+function listen(el) {
   el.addEventListener('click', () => {
-    if (classes.secondary) {
+    if (el._classes.secondary) {
       el._onPrimaryClass = !el._onPrimaryClass
       el.classList.toggle(el._classes.primary)
       el.classList.toggle(el._classes.secondary)
     }
 
-    const stateKey = `icon-click:${id}`
+    const stateKey = `icon-click:${el.id}`
     newState.set(stateKey, {
-      id,
+      id: el.id,
       className: el.classList.contains(el._classes.primary)
         ? el._classes.primary
         : el._classes.secondary,
