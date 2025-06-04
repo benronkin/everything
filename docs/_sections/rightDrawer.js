@@ -146,13 +146,20 @@ function react(el) {
  */
 function listen({ el }) {
   document.addEventListener('click', (e) => {
-    if (
-      e.target.closest('[data-id="right-drawer"]') ||
-      e.target.closest('#toggle-right-drawer')
-    ) {
-      // ignore clicks on above items
-      return
-    }
-    el.classList.remove('open')
+    hanleRightDrawerClose(e, el)
   })
+}
+
+/**
+ * Close rightDrawer when clicking on document
+ */
+function hanleRightDrawerClose(e, el) {
+  if (
+    e.target.closest('[data-id="right-drawer"]') ||
+    e.target.closest('#toggle-right-drawer')
+  ) {
+    // ignore clicks on above items
+    return
+  }
+  el.classList.remove('open')
 }

@@ -1,7 +1,10 @@
 import { setMessage } from '../_assets/js/ui.js'
 import { createNav } from '../_sections/nav.js'
 import { createRightDrawer } from '../_sections/rightDrawer.js'
+import { createFooter } from '../_sections/footer.js'
+import { createToolbar } from '../_sections/toolbar.js'
 import { createDiv } from '../_partials/div.js'
+import { createIcon } from '../_partials/icon.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -42,20 +45,24 @@ function build() {
   headerEl.appendChild(
     createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
   )
-  b.prepend(headerEl)
 
-  // toolbar
-  const toolbarEl = createDiv({ id: 'toolbar-wrapper' })
+  // columns wrapper
+  const cwEl = createDiv({
+    id: 'columns-wrapper',
+    className: 'columns-wrapper',
+  })
+  cwEl.prepend(createRightDrawer({ active: 'journal' }))
 
-  // main
-  const mainEl = createDiv({ id: 'main-wrapper' })
-  mainEl.prepend(createRightDrawer({ active: 'journal' }))
-  // toolbarEl.after(mainEl)
-
-  // footer
-  const footerEl = createDiv({ id: 'footer-wrapper' })
-
-  headerEl.after(toolbarEl, mainEl, footerEl)
+  // dom assembly
+  b.prepend(createDiv({ className: 'wrapper' }))
+  document.querySelector('.wrapper').prepend(headerEl)
+  headerEl.after(
+    createToolbar({
+      children: [createIcon({ classes: { primary: 'fa-plus' } })],
+    }),
+    cwEl,
+    createFooter()
+  )
 
   return
 
