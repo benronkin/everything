@@ -2,7 +2,7 @@
 const devMobileUrl = 'http://192.168.1.193:8787'
 const devUrl = 'http://127.0.0.1:8787'
 // eslint-disable-next-line no-unused-vars
-const prodUrl = 'https://recipes-prod.ba201220a.workers.dev'
+const prodUrl = 'https://recipes-prod.ba2020a.workers.dev'
 
 export const newState = {
   _data: {},
