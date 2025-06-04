@@ -1,15 +1,15 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
-import { getEl, isoToReadable, setMessage } from '../js/ui.js'
+import { state } from '../_assets/js/state.js'
+import { handleTokenQueryParam, getWebApp } from '../_assets/js/io.js'
+import { getEl, isoToReadable, setMessage } from '../_assets/js/ui.js'
 import { createFooter } from '../sections/footer.js'
 import { createNav } from '../sections/nav.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createAnchor } from '../partials/anchor.js'
-import { createIcon } from '../partials/icon.js'
-import { createTable } from '../partials/table.js'
-import { createSelect } from '../partials/select.js'
-import { createSpan } from '../partials/span.js'
+import { createAnchor } from '../_partials/anchor.js'
+import { createIcon } from '../_partials/icon.js'
+import { createTable } from '../_partials/table.js'
+import { createSelect } from '../_partials/select.js'
+import { createSpan } from '../_partials/span.js'
 
 // ---------------------------------------
 // Event listeners

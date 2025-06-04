@@ -1,72 +1,28 @@
-import { setStateBeforePartials } from './stateBeforePartials.js'
-import { setStateAfterPartials } from './stateAfterPartials.js'
-import { makeReactive } from './reactivity.js'
-import { setEvents } from './events.js'
-import { newState } from '../js/newState.js'
-import { getEl, setMessage } from '../js/ui.js'
-import { createDangerZone } from '../sections/dangerZone.js'
-import { createNav } from '../sections/nav.js'
-import { createFooter } from '../sections/footer.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createMainPanel } from '../sections/mainPanel.js'
-import { createDelete } from '../sections/delete.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createFileInput } from '../partials/fileInput.js'
-import { createForm } from '../partials/form.js'
-import { createIcon } from '../partials/icon.js'
-import { createInput } from '../partials/input.js'
-import { createMainDocumentsList } from '../partials/MainDocumentslist.js'
-import { createSearch } from '../partials/search.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { createNav } from '../_sections/nav.js'
+import { createRightDrawer } from '../_sections/rightDrawer.js'
+import { createDiv } from '../_partials/div.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
 
-// ----------------------
-// Event handlers
-// ----------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
 
-// ------------------------
-// Event handler functions
-// ------------------------
+    handleTokenQueryParam()
 
-/**
- * Handle DOMContentLoaded
- */
-async function handleDOMContentLoaded() {
-  setMessage({ message: 'Loading...' })
-
-  handleTokenQueryParam()
-
-  const token = localStorage.getItem('authToken')
-  if (!token) {
-    window.location.href = '../index.html'
-    return
+    build()
+  } catch (error) {
+    console.trace(error)
+    // window.location.href = `../index.html?error=${error.message}`
   }
 
-  // setStateBeforePartials() must run before any partials
-  // are created, so that they can set their reactivity during
-  // their construction
-  setStateBeforePartials()
-
-  // makeReactive registers the callbacks for the paritals.
-  // can run before or after partial construction, but
-  // definitely before setStateAfterPartials
-  makeReactive()
-
-  createSectionsAndPartials()
-
-  // imported from the events.js module
-  setEvents()
-
-  // setStateAfterPartials() must run aftr all partials
-  // are created and instrumented with state and event
-  // listeners
-  const { journal } = await getWebApp(`${newState.getAppUrl()}/journal/read`)
-  setStateAfterPartials(journal)
-
-  setMessage()
-}
+  // const { journal } = await getWebApp(`${newState.getAppUrl()}/journal/read`)
+})
 
 // ------------------------
 // Helper functions
@@ -75,15 +31,35 @@ async function handleDOMContentLoaded() {
 /**
  *
  */
-function createSectionsAndPartials() {
+function build() {
+  document.head.title = 'Journal | Ben'
+  const b = document.body
+
+  b.classList.add('u-dark-mode')
+
+  // header
+  const headerEl = createDiv({ id: 'header-wrapper' })
+  headerEl.appendChild(
+    createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
+  )
+  b.prepend(headerEl)
+
+  // toolbar
+  const toolbarEl = createDiv({ id: 'toolbar-wrapper' })
+  toolbarEl.after(headerEl)
+
+  // main
+  const mainEl = createDiv({ id: 'main-wrapper' })
+  mainEl.prepend(createRightDrawer({ active: 'journal' }))
+  mainEl.after(toolbarEl)
+
+  // footer
+  const footerEl = createDiv({ id: 'footer-wrapper' })
+  footerEl.after(mainEl)
+
+  return
+
   // create and add page elements
-  const wrapperEl = document.querySelector('.wrapper')
-
-  const navEl = createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
-  wrapperEl.prepend(navEl)
-
-  const rightDrawerEl = createRightDrawer({ active: 'journal' })
-  document.querySelector('main').prepend(rightDrawerEl)
 
   const mainIconGroup = createMainIconGroup({
     shouldAllowCollapse: {

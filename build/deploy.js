@@ -133,7 +133,7 @@ function commitChanges() {
       stdio: 'inherit',
       shell: true,
     })
-    execSync('git push origin main', { stdio: 'inherit', shell: true })
+    execSync('git push', { stdio: 'inherit', shell: true })
 
     console.log('✅ Changes committed successfully.')
   } catch (error) {

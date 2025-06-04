@@ -3,10 +3,10 @@
   This module loads aftr all dynamic fields have been created.
 */
 
-import { state } from '../js/state.js'
-import { getEl, isMobile, resizeTextarea } from '../js/ui.js'
-import { getWebApp, postWebAppJson } from '../js/io.js'
-import { createMenuItem } from '../partials/menuItem.js'
+import { state } from '../_assets/js/state.js'
+import { getEl, isMobile, resizeTextarea } from '../_assets/js/ui.js'
+import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
+import { createMenuItem } from '../_partials/menuItem.js'
 
 // ----------------------
 // Exports

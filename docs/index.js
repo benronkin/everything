@@ -1,5 +1,5 @@
 import { createNav } from './sections/nav.js'
-import { createFormHorizontal } from './partials/formHorizontal.js'
+import { createFormHorizontal } from './_partials/formHorizontal.js'
 import { createFooter } from './sections/footer.js'
 import { handleTokenQueryParam, getWebApp, postWebAppJson } from './js/io.js'
 import { setMessage } from './js/ui.js'

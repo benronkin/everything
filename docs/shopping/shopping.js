@@ -1,14 +1,18 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
+import { state } from '../_assets/js/state.js'
+import {
+  handleTokenQueryParam,
+  getWebApp,
+  postWebAppJson,
+} from '../_assets/js/io.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createList } from '../partials/list.js'
-import { createListItem } from '../partials/listItem.js'
-import { createFormField } from '../partials/formField.js'
-import { createSwitch } from '../partials/switch.js'
-import { setMessage } from '../js/ui.js'
+import { createFormHorizontal } from '../_partials/formHorizontal.js'
+import { createList } from '../_partials/list.js'
+import { createListItem } from '../_partials/listItem.js'
+import { createFormField } from '../_partials/formField.js'
+import { createSwitch } from '../_partials/switch.js'
+import { setMessage } from '../_assets/js/ui.js'
 
 // ----------------------
 // Globals

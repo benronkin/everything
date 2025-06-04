@@ -2,21 +2,26 @@
   Event handlers are loaded from events.js for convenience. 
 */
 
-import { state } from '../js/state.js'
-import { getEl, setMessage, resizeTextarea, isMobile } from '../js/ui.js'
+import { state } from '../_assets/js/state.js'
+import {
+  getEl,
+  setMessage,
+  resizeTextarea,
+  isMobile,
+} from '../_assets/js/ui.js'
 import { setEvents } from './events.js'
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
-import { createFormField } from '../partials/formField.js'
-import { createIcon } from '../partials/icon.js'
+import { createFormField } from '../_partials/formField.js'
+import { createIcon } from '../_partials/icon.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
 import { createModalDelete } from '../sections/modalDelete.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createSearch } from '../partials/search.js'
-import { createSelect } from '../partials/select.js'
-import { createSwitch } from '../partials/switch.js'
-import { createList } from '../partials/list.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
+import { createSearch } from '../_partials/search.js'
+import { createSelect } from '../_partials/select.js'
+import { createSwitch } from '../_partials/switch.js'
+import { createList } from '../_partials/list.js'
+import { handleTokenQueryParam, getWebApp } from '../_assets/js/io.js'
 
 // ----------------------
 // Event handlers

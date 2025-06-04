@@ -1,16 +1,20 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
-import { getEl, setMessage } from '../js/ui.js'
+import { state } from '../_assets/js/state.js'
+import {
+  handleTokenQueryParam,
+  getWebApp,
+  postWebAppJson,
+} from '../_assets/js/io.js'
+import { getEl, setMessage } from '../_assets/js/ui.js'
 import { createDangerZone } from '../sections/dangerZone.js'
 import { createFooter } from '../sections/footer.js'
 import { createNav } from '../sections/nav.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createDivQuill } from '../partials/divQuill.js'
-import { createButton } from '../partials/button.js'
-import { createDiv } from '../partials/div.js'
-import { createIcon } from '../partials/icon.js'
-import { createInput } from '../partials/input.js'
+import { createDivQuill } from '../_partials/divQuill.js'
+import { createButton } from '../_partials/button.js'
+import { createDiv } from '../_partials/div.js'
+import { createIcon } from '../_partials/icon.js'
+import { createInput } from '../_partials/input.js'
 
 // ---------------------------------------
 // Globals
