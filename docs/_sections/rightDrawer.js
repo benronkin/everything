@@ -137,7 +137,7 @@ function build({ el, active }) {
  */
 function react(el) {
   newState.on('icon-click:toggle-right-drawer', 'rightDrawer', () => {
-    el.classList.toggle('open')
+    el.classList.add('open')
   })
 }
 
