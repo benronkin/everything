@@ -46,16 +46,16 @@ function build() {
 
   // toolbar
   const toolbarEl = createDiv({ id: 'toolbar-wrapper' })
-  toolbarEl.after(headerEl)
 
   // main
   const mainEl = createDiv({ id: 'main-wrapper' })
   mainEl.prepend(createRightDrawer({ active: 'journal' }))
-  mainEl.after(toolbarEl)
+  // toolbarEl.after(mainEl)
 
   // footer
   const footerEl = createDiv({ id: 'footer-wrapper' })
-  footerEl.after(mainEl)
+  // mainEl.after(footerEl)
+  headerEl.after(toolbarEl, mainEl, footerEl)
 
   return
 
