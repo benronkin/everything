@@ -11,7 +11,7 @@ import { injectStyle } from '../_assets/js/ui.js'
 // -------------------------------
 
 const css = `
-.form {
+form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -19,23 +19,23 @@ const css = `
   justify-content: space-between;
   gap: 1rem;
 }
-.form button:disabled {
+form button:disabled {
   cursor: not-allowed;
   pointer-events: none;
 }
-.form .input-group {
+form .input-group {
   width: 100%;
   display: flex;
   align-items: center;
 }  
-.form .input-group i {
+form .input-group i {
   padding-left: 0;  
 }
-.form input {
+form input {
   margin: 0;
   width: 100%;
 }
-.form .message {
+form .message {
   padding: 10px;
   font-size: 0.75rem;
 }
@@ -62,7 +62,7 @@ export function createForm({ id, className, children = [] }) {
   }
 
   if (className) {
-    el.className = `form ${className}`
+    el.className = className
   }
 
   build({ el, children })

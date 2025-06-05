@@ -1,3 +1,4 @@
+import { newState } from '../../_assets/js/newState.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
@@ -95,7 +96,7 @@ function build(el) {
   el.appendChild(
     createTextarea({
       name: 'notes',
-      id: 'journal-location',
+      id: 'journal-notes',
       className: 'field',
     })
   )
@@ -156,7 +157,9 @@ function build(el) {
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
 
-  el.appendChild(createParagraph({ id: 'journal-id', className: 'smaller' }))
+  el.appendChild(
+    createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
+  )
 
   upw.appendChild(form())
 
@@ -170,7 +173,21 @@ function build(el) {
 /**
  * Subscribe to and set state.
  */
-function react(el) {}
+function react(el) {
+  newState.on('active-doc', 'mainPanel', (doc) => {
+    el.querySelector('[data-id="journal-location"]').value = doc.location
+    el.querySelector('[data-id="journal-visit-date"]').value =
+      doc.visit_date.split('T')[0]
+    el.classList.remove('hidden')
+    el.querySelector('[data-id="journal-notes"]').value = doc.notes
+    el.querySelector('[data-id="journal-city"]').value = doc.city
+    el.querySelector('[data-id="journal-state"]').value = doc.state
+    el.querySelector('[data-id="journal-country"]').value = doc.country
+    el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
+  })
+
+  newState.on('main-documents', 'mainPanel', () => el.classList.add('hidden'))
+}
 
 /**
  *

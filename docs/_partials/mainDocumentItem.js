@@ -76,6 +76,6 @@ export function handleMainDocumentClick(e) {
   const el = e.target.closest('.md-item')
 
   const mainDocuments = newState.get('main-documents')
-  const activeDoc = mainDocuments.find((doc) => doc.id === el.dataId)
+  const activeDoc = mainDocuments.find((doc) => doc.id === el.id)
   newState.set('active-doc', activeDoc)
 }
