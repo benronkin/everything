@@ -10,7 +10,7 @@ const css = `
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  margin-top: 20px;
+  margin: 20px 0;
 
 }
 #toolbar .container div {
@@ -18,8 +18,7 @@ const css = `
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  background-color: var(--gray1);
-  border: 1px solid var(--gray2);
+  border: 1px solid var(--gray1);
   border-radius: 10px;
   padding: 6px 20px;
   font-size: 1.1rem;

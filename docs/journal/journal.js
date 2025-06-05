@@ -1,11 +1,14 @@
-import { setMessage } from '../_assets/js/ui.js'
-import { createNav } from '../_sections/nav.js'
-import { createRightDrawer } from '../_sections/rightDrawer.js'
-import { createFooter } from '../_sections/footer.js'
-import { createToolbar } from '../_sections/toolbar.js'
+import { newState } from '../_assets/js/newState.js'
+import { nav } from './tiles/nav.js'
+import { toolbar } from './tiles/toolbar.js'
+import { rightDrawer } from './tiles/rightDrawer.js'
+import { leftPanel } from './tiles/leftPanel.js'
+import { mainPanel } from './tiles/mainPanel.js'
 import { createDiv } from '../_partials/div.js'
-import { createIcon } from '../_partials/icon.js'
+import { createFooter } from '../_sections/footer.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { fetchMainDocuments } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -23,8 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.trace(error)
     // window.location.href = `../index.html?error=${error.message}`
   }
-
-  // const { journal } = await getWebApp(`${newState.getAppUrl()}/journal/read`)
 })
 
 // ------------------------
@@ -34,63 +35,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 /**
  *
  */
-function build() {
+async function build() {
   document.head.title = 'Journal | Ben'
-  const b = document.body
+  const body = document.body
+  body.classList.add('dark-mode')
 
-  b.classList.add('u-dark-mode')
+  const wrapperEl = createDiv({ className: 'wrapper' })
 
-  // header
-  const headerEl = createDiv({ id: 'header-wrapper' })
-  headerEl.appendChild(
-    createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
-  )
-
-  // columns wrapper
-  const cwEl = createDiv({
-    id: 'columns-wrapper',
+  const columnsWrapperEl = createDiv({
     className: 'columns-wrapper',
   })
-  cwEl.prepend(createRightDrawer({ active: 'journal' }))
 
-  // dom assembly
-  b.prepend(createDiv({ className: 'wrapper' }))
-  document.querySelector('.wrapper').prepend(headerEl)
-  headerEl.after(
-    createToolbar({
-      children: [createIcon({ classes: { primary: 'fa-plus' } })],
-    }),
-    cwEl,
-    createFooter()
-  )
+  body.prepend(wrapperEl)
 
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
+  wrapperEl.appendChild(columnsWrapperEl)
+  wrapperEl.appendChild(createFooter())
+
+  columnsWrapperEl.appendChild(leftPanel())
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
+
+  newState.set('main-documents', await fetchMainDocuments())
   return
-
-  // create and add page elements
-
-  const mainIconGroup = createMainIconGroup({
-    shouldAllowCollapse: {
-      message: 'Select a jounral entry first',
-      cb: () => !!newState.get('active-journal'),
-    },
-    children: [createIcon({ id: 'add-journal', className: 'fa-plus' })],
-  })
-  getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
-
-  getEl('left-panel').prepend(
-    createSearch({
-      iconClass: 'fa-magnifying-glass',
-      placeholder: 'Search journals',
-      searchCb: searchJournal,
-      searchResultsCb: handleSearchResult,
-    })
-  )
-
-  getEl('left-panel').appendChild(
-    createMainDocumentsList({
-      id: 'left-panel-list',
-    })
-  )
 
   getEl('columns-container').appendChild(
     createMainPanel({

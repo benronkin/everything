@@ -20,29 +20,12 @@ const html = `
 /**
  *
  */
-export function createList({
-  id,
-  itemClass,
-  className,
-  children,
-  emptyState,
-  onChange,
-}) {
+export function createList({ id, emptyState }) {
   injectStyle(css)
-
-  if (!itemClass) {
-    throw new Error(
-      `list partial with id ${id} was set without an itemClass parameter`
-    )
-  }
 
   const el = createElement({
     id,
-    itemClass,
-    className,
-    children,
     emptyState,
-    onChange,
   })
 
   newState.on('item-click', 'list.js', (id) => handleSelectionChanged(el, id))
@@ -201,14 +184,7 @@ function updateChild({ id, title, details }) {
 /**
  *
  */
-function createElement({
-  id,
-  itemClass,
-  className = '',
-  children,
-  emptyState,
-  onChange,
-} = {}) {
+function createElement({ id, emptyState } = {}) {
   const el = document.createElement('div')
   el.innerHTML = html
 
@@ -220,7 +196,6 @@ function createElement({
     el.querySelector('.empty-state').innerHTML = emptyState
   }
 
-  el._onChange = onChange
   el.addChild = addChild.bind(el)
   el.addChildren = addChildren.bind(el)
   el.getChildren = getChildren.bind(el)
@@ -234,23 +209,12 @@ function createElement({
   el.reset = reset.bind(el)
   el.updateChild = updateChild.bind(el)
 
-  if (onChange) {
-    el.onChange = onChange.bind(el)
-  }
-
   /** when the list receives a selection-changed */
   el.addEventListener('selection-changed', handleSelectionChanged)
 
   el.id = id
   el.dataset.id = id
-  el.className = `list ${className}`
-  el.itemClass = itemClass
-
-  if (children) {
-    el.silent = true
-    el.addChildren(children)
-    el.silent = false
-  }
+  el.className = 'list'
 
   if (el.getChildren().length) {
     el.querySelector('.empty-state').classList.remove('hidden')

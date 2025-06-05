@@ -7,6 +7,7 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { createListItem } from './listItem.js'
 import { newState } from '../_assets/js/newState.js'
+import { insertHtml } from '../_assets/js/format.js'
 
 // -------------------------------
 // Globals
@@ -42,28 +43,20 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function createMainDocumentItem({
-  id,
-  selected,
-  hidden,
-  value,
-  icons,
-  classes,
-} = {}) {
+export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
   injectStyle(css)
 
   const el = createListItem({
     id,
     selected,
     hidden,
-    type: 'span',
-    value,
-    icons,
-    classes,
+    html,
   })
 
+  insertHtml(el, html)
+
   // replace the element type class
-  el.classList.remove('menu-item')
+  el.classList.remove('list-item')
   el.classList.add('md-item')
 
   // Augment the base listItem click state with active-doc
