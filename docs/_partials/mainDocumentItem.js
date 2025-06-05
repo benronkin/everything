@@ -7,7 +7,6 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { createListItem } from './listItem.js'
 import { newState } from '../_assets/js/newState.js'
-import { insertHtml } from '../_assets/js/format.js'
 
 // -------------------------------
 // Globals
@@ -53,7 +52,7 @@ export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
     html,
   })
 
-  insertHtml(el, html)
+  el.insertHtml(html)
 
   // replace the element type class
   el.classList.remove('list-item')
@@ -76,7 +75,7 @@ export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
 export function handleMainDocumentClick(e) {
   const el = e.target.closest('.md-item')
 
-  const mainDocuments = newState.get('main-documents').docs
+  const mainDocuments = newState.get('main-documents')
   const activeDoc = mainDocuments.find((doc) => doc.id === el.dataId)
   newState.set('active-doc', activeDoc)
 }

@@ -289,6 +289,17 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
+#toolbar i {
+  color: var(--gray6);
+  background-color: var(--purple2);
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+#toolbar i:hover {
+  color: var(--gray6);
+  background-color: var(--purple3);
+  border-radius: 8px;
+}
 .md-item {
   border: 1px dotted var(--gray1);
   transition: all 0.2s ease-in-out;

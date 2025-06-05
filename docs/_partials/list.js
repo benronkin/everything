@@ -1,16 +1,13 @@
 import { enableDragging, enableClicking } from '../_assets/js/drag.js'
 import { newState } from '../_assets/js/newState.js'
 import { injectStyle } from '../_assets/js/ui.js'
+import { createDiv } from '../_partials/div.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
-`
-
-const html = `
-  <span class="empty-state hidden"></span>
 `
 
 // -------------------------------
@@ -20,32 +17,72 @@ const html = `
 /**
  *
  */
-export function createList({ id, emptyState }) {
+export function createList({ id, emptyState, enableDrag = false }) {
   injectStyle(css)
 
-  const el = createElement({
-    id,
-    emptyState,
-  })
+  const el = createDiv()
 
-  newState.on('item-click', 'list.js', (id) => handleSelectionChanged(el, id))
+  build({ el, emptyState, enableDrag })
+  listen(el)
+
+  el.addChild = addChild.bind(el)
+  el.addChildren = addChildren.bind(el)
+  el.getChildren = getChildren.bind(el)
+  el.getData = getData.bind(el)
+  el.getChildById = getChildById.bind(el)
+  el.getNthChild = getNthChild.bind(el)
+  el.getSelected = getSelected.bind(el)
+  el.has = has.bind(el)
+  el.deleteChild = deleteChild.bind(el)
+  el.deleteChildren = deleteChildren.bind(el)
+  el.reset = reset.bind(el)
+  el.updateChild = updateChild.bind(el)
+
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
+  el.className = 'list'
+
+  if (el.getChildren().length) {
+    el.querySelector('.empty-state').classList.remove('hidden')
+  }
 
   return el
 }
 
 // -------------------------------
-// Event handlers
+// Helpers
 // -------------------------------
+
+/**
+ *
+ */
+function build({ el, emptyState, enableDrag } = {}) {
+  if (enableDrag) {
+    el.enableDragging = () => enableDragging(el)
+    el.enableClicking = () => enableClicking(el)
+  }
+
+  if (emptyState) {
+    el._emptyState = emptyState
+    const emptyStateDiv = createDiv({ className: 'empty-state hidden' })
+    el.appendChild(emptyStateDiv)
+    emptyStateDiv.setHtml(emptyState)
+  }
+}
 
 /**
  * Respond to selection changed events that the list
  * generates on add events and others.
  */
-function handleSelectionChanged(el, id) {
-  el.getChildren().forEach((child) => {
-    // select the clicked child
-    // and unselect the rest
-    child.selected = child.dataId == id
+function listen(el) {
+  newState.on('item-click', 'list', (id) => {
+    el.getChildren().forEach((child) => {
+      // select the clicked child
+      // and unselect the rest
+      child.classList.toggle('active', child.dataset.id == id)
+    })
   })
 }
 
@@ -57,11 +94,6 @@ function handleSelectionChanged(el, id) {
  * Add item to list
  */
 function addChild(child, pos = 'top') {
-  if (!child.className.includes(this.itemClass)) {
-    throw new Error(
-      `Oops, list "#${this.dataset.id}" is set with itemClass "${this.itemClass}" but you loaded it with a "${child.className}" item`
-    )
-  }
   if (pos === 'top') {
     this.insertBefore(child, this.firstChild)
   } else {
@@ -73,10 +105,12 @@ function addChild(child, pos = 'top') {
  * Children can be added post creation of list
  */
 function addChildren(children = []) {
-  this.querySelector('.empty-state').classList.toggle(
-    'hidden',
-    !!children.length
-  )
+  if (this._emptyState) {
+    this.querySelector('.empty-state').classList.toggle(
+      'hidden',
+      !!children.length
+    )
+  }
 
   if (children.length) {
     for (const child of children) {
@@ -107,8 +141,7 @@ function deleteChildren() {
  * get all iistItems
  */
 function getChildren() {
-  const itemClass = `.${this.itemClass}`
-  const children = [...this.querySelectorAll(itemClass)]
+  const children = [...this.querySelectorAll('[data-list-item]')]
   return children
 }
 
@@ -123,7 +156,7 @@ function getChildById(id) {
  * Get ids, texts, and selected status of all items
  */
 function getData() {
-  return [...this.querySelectorAll(`.${this.itemClass}`)].map((el, i) => ({
+  return [...this.querySelectorAll('[data-list-item]')].map((el, i) => ({
     ...el.data,
     sortOrder: i,
   }))
@@ -155,11 +188,9 @@ function has(text) {
  *
  */
 function reset() {
-  this.querySelectorAll(`.${this.itemClass}`).forEach(
+  this.querySelectorAll('[data-list-item]').forEach(
     (child) => (child.selected = false)
   )
-
-  this.dispatch('selection-changed')
 }
 
 /**
@@ -172,53 +203,5 @@ function updateChild({ id, title, details }) {
     item.querySelector('[name="details"]').value = details
   }
 
-  this.dispatch('list-changed')
-
   return item
-}
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
-function createElement({ id, emptyState } = {}) {
-  const el = document.createElement('div')
-  el.innerHTML = html
-
-  el.enableDragging = () => enableDragging(el)
-  el.enableClicking = () => enableClicking(el)
-
-  if (emptyState) {
-    el._emptyState = emptyState
-    el.querySelector('.empty-state').innerHTML = emptyState
-  }
-
-  el.addChild = addChild.bind(el)
-  el.addChildren = addChildren.bind(el)
-  el.getChildren = getChildren.bind(el)
-  el.getData = getData.bind(el)
-  el.getChildById = getChildById.bind(el)
-  el.getNthChild = getNthChild.bind(el)
-  el.getSelected = getSelected.bind(el)
-  el.has = has.bind(el)
-  el.deleteChild = deleteChild.bind(el)
-  el.deleteChildren = deleteChildren.bind(el)
-  el.reset = reset.bind(el)
-  el.updateChild = updateChild.bind(el)
-
-  /** when the list receives a selection-changed */
-  el.addEventListener('selection-changed', handleSelectionChanged)
-
-  el.id = id
-  el.dataset.id = id
-  el.className = 'list'
-
-  if (el.getChildren().length) {
-    el.querySelector('.empty-state').classList.remove('hidden')
-  }
-
-  return el
 }

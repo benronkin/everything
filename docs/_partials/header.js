@@ -1,4 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
+import { insertHtml } from '../_assets/js/format.js'
 
 // -------------------------------
 // Globals
@@ -21,6 +22,8 @@ export function createHeader({ html, id, className, type = 'h2' } = {}) {
 
   const el = document.createElement(type)
 
+  el.insertHtml = insertHtml.bind(el)
+
   if (id) {
     el.id = id
     el.dataset.id = id
@@ -31,7 +34,7 @@ export function createHeader({ html, id, className, type = 'h2' } = {}) {
   }
 
   if (html) {
-    el.innerHTML = html
+    el.insertHtml(html)
   }
 
   return el

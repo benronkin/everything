@@ -24,10 +24,6 @@ const css = `
   font-size: 1.1rem;
   // transition: all 200ms ease;
 }
-#toolbar i {
-  background-color: var(--purple2);
-  border-radius: 8px;
-}
 `
 
 // -------------------------------

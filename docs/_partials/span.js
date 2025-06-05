@@ -24,9 +24,10 @@ export function createSpan({ html, id } = {}) {
 
   const el = document.createElement('span')
 
-  insertHtml(el, html)
+  el.insertHtml = insertHtml.bind(el)
 
   id && (el.dataId = id)
+  el.insertHtml(html)
 
   return el
 }

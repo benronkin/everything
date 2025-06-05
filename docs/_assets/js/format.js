@@ -1,19 +1,20 @@
 /**
- * Handle content that is string or html elements
+ * Handle content that is string or html elements.
+ * Bind this to a DOM element and use as an object method
  */
-export function insertHtml(el, content) {
-  el.innerHTML = ''
+export function insertHtml(content) {
+  this.innerHTML = ''
   if (!content) {
     return
   }
   if (typeof content === 'string') {
-    el.innerHTML = content
+    this.innerHTML = content
   } else if (content.outerHTML) {
-    el.appendChild(content.cloneNode(true))
+    this.appendChild(content.cloneNode(true))
   } else if (Array.isArray(content)) {
     content.forEach((c) => {
       if (c.outerHTML) {
-        el.appendChild(c.cloneNode(true))
+        this.appendChild(c.cloneNode(true))
       }
     })
   }

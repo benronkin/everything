@@ -1,9 +1,6 @@
 import { newState } from '../_assets/js/newState.js'
 import { injectStyle } from '../_assets/js/ui.js'
-import { createAnchor } from './anchor.js'
-import { createSpan } from './span.js'
-import { createInput } from './input.js'
-import { createIcon } from './icon.js'
+import { createDiv } from './div.js'
 
 // -------------------------------
 // Globals
@@ -50,12 +47,19 @@ const css = `
  */
 export function createListItem({ html, id } = {}) {
   injectStyle(css)
-  const el = document.createElement('div')
+  const el = createDiv()
 
-  el.dataId = id || crypto.randomUUID()
+  el.id = id || crypto.randomUUID()
+  el.dataset.id = el.id
   el.className = 'list-item'
 
-  listen({ el, id })
+  el.dataset.listItem = true
+
+  if (html) {
+    el.insertHtml(html)
+  }
+
+  listen({ el })
 
   return el
 }
@@ -67,16 +71,14 @@ export function createListItem({ html, id } = {}) {
 /**
  *
  */
-function listen({ el, id }) {
-  el.addEventListener('click', (e) => {
-    const el = e.target.closest('.list-item')
-
+function listen({ el }) {
+  el.addEventListener('click', () => {
     if (el.draggable) {
       return
     }
 
-    el.selected = !el.selected
+    el.classList.toggle('active')
 
-    newState.set('item-click', el.dataId)
+    newState.set('item-click', el.dataset.id)
   })
 }

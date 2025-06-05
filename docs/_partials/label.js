@@ -1,4 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
+import { insertHtml } from '../_assets/js/format.js'
 import { createIcon } from './icon.js'
 
 // -------------------------------
@@ -18,63 +19,25 @@ label {
 /**
  *
  */
-export function createLabel({
-  iconClass,
-  value,
-  classes = {
-    active: 'u-active-primary',
-    base: 'u-base',
-    hover: 'u-hover-primary',
-  },
-} = {}) {
+export function createLabel({ id, html, className } = {}) {
   injectStyle(css)
 
   const el = document.createElement('label')
-  el._classes = classes
-  el.getClass = getClass.bind(el)
-  el.className = el.getClass('base')
 
-  if (iconClass) {
-    const icon = createIcon({
-      className: iconClass,
-    })
-    el.appendChild(icon)
+  el.insertHtml = insertHtml.bind(el)
+
+  if (id) {
+    el.id = id
+    el.dataset.id = id
   }
-  Object.defineProperties(el, {
-    hovered: {
-      set(v) {
-        el.classList.toggle(el.getClass('base'), !v)
-        el.classList.toggle(el.getClass('hover'), v)
-      },
-    },
-    value: {
-      get() {
-        return el.textContent
-      },
-      set(newValue) {
-        if (!iconClass) {
-          el.textContent = newValue
-        } else {
-          el.innerHTML += newValue
-        }
-      },
-    },
-  })
-  el.value = value
 
-  el.addEventListener('mouseenter', () => (el.hovered = true))
-  el.addEventListener('mouseleave', () => (el.hovered = false))
+  if (className) {
+    el.className = className
+  }
+
+  if (html) {
+    el.insertHtml(html)
+  }
 
   return el
-}
-
-// -------------------------------
-// Object methods
-// -------------------------------
-
-/**
- *
- */
-function getClass(className) {
-  return this._classes[className]
 }
