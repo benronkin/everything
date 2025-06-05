@@ -16,23 +16,28 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({ id, className, html } = {}) {
+export function createParagraph({ id, className, html } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('')
-
+  const el = document.createElement('p')
   el.insertHtml = insertHtml.bind(el)
 
   build(el)
   react(el)
-  listen(el)
+  listen({ el, id })
 
   if (id) {
     el.id = id
     el.dataset.id = id
   }
-  className && (el.className = className)
-  html && el.insertHtml(html)
+
+  if (className) {
+    el.className = className
+  }
+
+  if (html) {
+    el.insertHtml(html)
+  }
 
   return el
 }
@@ -56,6 +61,6 @@ function react(el) {
 /**
  *
  */
-function listen(el) {
+function listen({ el, id }) {
   el.addEventListener('click', () => {})
 }

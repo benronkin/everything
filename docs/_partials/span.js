@@ -19,15 +19,20 @@ span {
 /**
  * Constructor for custom span element
  */
-export function createSpan({ html, id } = {}) {
+export function createSpan({ html, className, id } = {}) {
   injectStyle(css)
 
   const el = document.createElement('span')
 
   el.insertHtml = insertHtml.bind(el)
 
-  id && (el.dataId = id)
-  el.insertHtml(html)
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
+
+  className && (el.className = className)
+  html && el.insertHtml(html)
 
   return el
 }

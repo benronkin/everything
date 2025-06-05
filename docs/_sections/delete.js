@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { createDangerZone } from './dangerZone.js'
+import { createDangerZone } from '../_partials/dangerZone.js'
 
 // -------------------------------
 // Globals

@@ -27,7 +27,7 @@ h4 {
   margin: 20px 0 10px;
 }
 h5,
-.u-h5 {
+.h5 {
   margin-top: 20px;
 }
 i {
@@ -246,28 +246,28 @@ ul {
 .input-group input {
   width: 100%;
 }
-.u-align-start {
+.align-start {
   align-items: flex-start;
 }
-.u-column-start {
+.column-start {
   align-items: flex-start !important;
 }
-.u-m-0 {
+.m-0 {
   margin: 0;
 }
-.u-mb-20 {
+.mb-20 {
   margin-bottom: 20px;
 }
-.u-ml-20 {
+.ml-20 {
   margin-left: 20px;
 }
-.u-mr-20 {
+.mr-20 {
   margin-right: 20px;
 }
-.u-mt-20 {
+.mt-20 {
   margin-top: 20px;
 }
-.u-mt-40 {
+.mt-40 {
   margin-top: 40px;
 }
 .smaller {

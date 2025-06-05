@@ -5,8 +5,6 @@
 */
 
 import { injectStyle } from '../_assets/js/ui.js'
-import { createButton } from './button.js'
-import { createSpan } from './span.js'
 
 // -------------------------------
 // Globals
@@ -44,114 +42,32 @@ const css = `
 `
 
 // -------------------------------
-// Exported functions
+// Exports
 // -------------------------------
 
 /**
  * Constructor for a custom form
  */
-export function createForm({
-  id = '',
-  className = '',
-  buttonIconClass = '',
-  submitText = 'Submit',
-  disabled = false,
-  events = {},
-  children = [],
-}) {
+export function createForm({ id, className, children = [] }) {
   injectStyle(css)
+
   const el = document.createElement('form')
 
-  el.fieldValue = fieldValue.bind(el)
   el.clear = clear.bind(el)
+  el.disableButton = disableButton.bind(el)
 
-  Object.defineProperties(el, {
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = id
-      },
-    },
-    disabled: {
-      get() {
-        return el.dataset.disabled === 'true'
-      },
-      set(v) {
-        el.dataset.disabled = v
-        if (v) {
-          el.querySelector('button').disabled = 'disabled'
-        } else {
-          el.querySelector('button').removeAttribute('disabled')
-        }
-      },
-    },
-    message: {
-      get() {
-        return el.querySelector('.message').textContent
-      },
-      set(message) {
-        el.querySelector('.message').textContent = message
-      },
-    },
-    submit: {
-      get() {
-        return el.querySelector('button').textContent
-      },
-      set(value) {
-        el.querySelector('button').textContent = value
-      },
-    },
-    value: {
-      get() {
-        return el.querySelector('input').value
-      },
-      set(value) {
-        el.querySelector('input').value = value
-      },
-    },
-  })
-  id && (el.dataId = id)
-  el.className = `form ${className}`
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
 
-  addElementParts({ el, children, buttonIconClass, submitText, disabled })
-  addEventHandlers(el, events)
+  if (className) {
+    el.className = `form ${className}`
+  }
+
+  build({ el, children })
 
   return el
-}
-
-// -------------------------------
-// Element methods
-// -------------------------------
-
-/**
- * Get the value of a specific input inside the form
- */
-function fieldValue(id, value) {
-  const el = this.querySelector(`[data-id="${id}"]`)
-  if (!el) {
-    throw new Error(
-      `fieldValue: Oops, no input field with data-id "${id}" found`
-    )
-  }
-  if (!value) {
-    return el.value
-  }
-  el.value = value
-  return el // for chaining
-}
-
-/**
- * Clear all elements of the form
- */
-function clear() {
-  this.reset()
-  this.message = ''
-  this.disabled = true
-  return
 }
 
 // -------------------------------
@@ -159,47 +75,36 @@ function clear() {
 // -------------------------------
 
 /**
- * Add sub elements to the element. No need
- * to return the element.
+ * Add sub elements to the element.
  */
-function addElementParts({
-  el,
-  children,
-  buttonIconClass,
-  submitText,
-  disabled,
-}) {
+function build({ el, children }) {
   for (const child of children) {
     el.appendChild(child)
   }
+}
 
-  const buttonEl = createButton({
-    iconClass: buttonIconClass,
-    value: submitText,
-    type: 'submit',
-    disabled,
-  })
-  el.appendChild(buttonEl)
+// -------------------------------
+// Element methods
+// -------------------------------
 
-  const spanEl = createSpan({})
-  spanEl.className = 'message'
-  el.appendChild(spanEl)
+/**
+ * Clear all elements of the form
+ */
+function clear() {
+  this.reset()
+  if (this.message) {
+    this.message = ''
+  }
+  disableButton()
 }
 
 /**
- * Add the various event handlers for the element
+ *
  */
-function addEventHandlers(el, events) {
-  for (const [k, v] of Object.entries(events)) {
-    if (k === 'submit') {
-      el.addEventListener('submit', (e) => {
-        const buttonEl = el.querySelector('buton')
-        if (!buttonEl || !buttonEl.disabled) {
-          v(e)
-        }
-      })
-    } else {
-      el.addEventListener(k, v)
-    }
+function disableButton() {
+  const button = this.querySelector('button')
+  if (!button) {
+    return
   }
+  button.disabled = true
 }

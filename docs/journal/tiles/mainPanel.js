@@ -1,5 +1,12 @@
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
+import { createHeader } from '../../_partials/header.js'
+import { createIcon } from '../../_partials/icon.js'
+import { createInput } from '../../_partials/input.js'
+import { createParagraph } from '../../_partials/paragraph.js'
+import { createTextarea } from '../../_partials/textarea.js'
+import { form } from './photo.form.js'
+import { createDelete } from '../../_sections/delete.js'
 
 // -------------------------------
 // Globals
@@ -61,7 +68,104 @@ export function mainPanel() {
 /**
  * Add sub elements to the element
  */
-function build(el) {}
+function build(el) {
+  el.appendChild(createHeader({ type: 'h5', html: 'Location' }))
+
+  el.appendChild(
+    createInput({
+      name: 'location',
+      id: 'journal-location',
+      className: 'field',
+    })
+  )
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Visited on' }))
+
+  el.appendChild(
+    createInput({
+      name: 'visit-date',
+      id: 'journal-visit-date',
+      className: 'field',
+      type: 'date',
+    })
+  )
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Notes' }))
+
+  el.appendChild(
+    createTextarea({
+      name: 'notes',
+      id: 'journal-location',
+      className: 'field',
+    })
+  )
+
+  el.appendChild(createHeader({ type: 'h5', html: 'City' }))
+
+  el.appendChild(
+    createInput({
+      name: 'city',
+      id: 'journal-city',
+      className: 'field',
+    })
+  )
+
+  el.appendChild(createHeader({ type: 'h5', html: 'State' }))
+
+  el.appendChild(
+    createInput({
+      name: 'state',
+      id: 'journal-state',
+      className: 'field',
+    })
+  )
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Country' }))
+
+  el.appendChild(
+    createInput({
+      name: 'country',
+      id: 'journal-country',
+      className: 'field',
+    })
+  )
+
+  const phw = createDiv({
+    id: 'photos-header-wrapper',
+    className: 'flex mt-20',
+  })
+
+  el.appendChild(phw)
+
+  phw.appendChild(createHeader({ type: 'h4', html: 'Photos' }))
+
+  phw.appendChild(
+    createIcon({
+      id: 'add-photo-toggle',
+      className: 'fa-camera primary',
+    })
+  )
+
+  const upw = createDiv({
+    id: 'upload-photo-wrapper',
+  })
+
+  el.appendChild(upw)
+
+  el.appendChild(createDiv({ id: 'image-gallery' }))
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
+
+  el.appendChild(createParagraph({ id: 'journal-id', className: 'smaller' }))
+
+  upw.appendChild(form())
+
+  el.appendChild(
+    createDelete({
+      id: 'modal-delete',
+    })
+  )
+}
 
 /**
  * Subscribe to and set state.

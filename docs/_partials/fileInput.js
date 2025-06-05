@@ -1,4 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
+import { createDiv } from './div.js'
 import { createInput } from './input.js'
 import { createLabel } from './label.js'
 import { createSpan } from './span.js'
@@ -30,7 +31,7 @@ const css = `
 `
 
 // -------------------------------
-// Exported functions
+// Exportedd
 // -------------------------------
 
 /**
@@ -40,27 +41,13 @@ const css = `
 export function createFileInput({ iconClass, label, accept = '' }) {
   injectStyle(css)
 
-  const el = document.createElement('div')
-  el.className = `file-upload`
+  const el = createDiv({ className: 'file-upload' })
 
   el.clear = clear.bind(el)
 
-  addElementParts({ el, iconClass, label, accept })
-  addEventHandlers(el)
+  build({ el, iconClass, label, accept })
 
   return el
-}
-
-// -------------------------------
-// Object methods
-// -------------------------------
-
-/**
- *
- */
-function clear() {
-  this.querySelector('input').value = ''
-  this.querySelector('.file-name').value = ''
 }
 
 // -------------------------------
@@ -68,10 +55,9 @@ function clear() {
 // -------------------------------
 
 /**
- * Add sub elements to the element. No need
- * to return the element.
+ * Add sub elements to the element.
  */
-function addElementParts({ el, iconClass, label, accept }) {
+function build({ el, iconClass, label, accept }) {
   const inputEl = createInput({
     id: 'hidden-file-input',
     accept,
@@ -84,11 +70,7 @@ function addElementParts({ el, iconClass, label, accept }) {
   const labelEl = createLabel({
     id: 'file-name',
     iconClass,
-    value: label,
-    classes: {
-      base: 'u-active-primary',
-      hover: 'u-hover-primary',
-    },
+    html: label,
   })
   labelEl.setAttribute('for', 'hidden-file-input')
   el.appendChild(labelEl)
@@ -98,10 +80,14 @@ function addElementParts({ el, iconClass, label, accept }) {
   el.appendChild(spanEl)
 }
 
+// -------------------------------
+// Object methods
+// -------------------------------
+
 /**
  *
  */
-function addEventHandlers(el) {
-  el.addEventListener('mouseenter', () => (el.hovered = true))
-  el.addEventListener('mouseleave', () => (el.hovered = false))
+function clear() {
+  this.querySelector('input').value = ''
+  this.querySelector('.file-name').value = ''
 }
