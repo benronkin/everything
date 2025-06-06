@@ -263,6 +263,16 @@ h5,
   text-transform: uppercase;
   color: var(--gray4);
 }
+i.btn:hover {
+  color: var(--purple2);
+}
+i.primary {
+  background-color: var(--purple2);
+}
+i.primary:hover {
+  color: var(--gray6);
+  background-color: var(--purple3);
+}
 input,
 textarea {
   background-color: transparent;

@@ -22,7 +22,7 @@ const css = `
   border-radius: 10px;
   padding: 6px 20px;
   font-size: 1.1rem;
-  // transition: all 200ms ease;
+  transition: all 200ms ease;
 }
 `
 

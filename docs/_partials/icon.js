@@ -9,9 +9,8 @@ const css = `
 i {
   border-radius: var(--border-radius);
   cursor: pointer;
-}
-i.btn:hover {
-  color: var(--purple2);
+  transition: all 0.2s ease-in-out;
+
 }
 i.shake {
   animation: shake-it 300ms ease;

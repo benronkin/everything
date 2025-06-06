@@ -142,7 +142,7 @@ function build(el) {
   phw.appendChild(
     createIcon({
       id: 'add-photo-toggle',
-      classes: { primary: 'fa-camera', other: 'primary' },
+      classes: { primary: 'fa-camera', other: 'primary btn' },
     })
   )
 

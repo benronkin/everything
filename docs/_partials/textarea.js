@@ -15,88 +15,59 @@ textarea {
 `
 
 // -------------------------------
-// Exported functions
+// Exports
 // -------------------------------
 
 /**
  *
  */
-export function createTextarea({
-  id = '',
-  name = '',
-  value = '',
-  classes = {
-    active: 'u-input-active-primary',
-    base: 'u-input-base',
-    hover: 'u-input-hover-primary',
-  },
-} = {}) {
+export function createTextarea({ id, name, value, className } = {}) {
   injectStyle(css)
 
   const el = document.createElement('textarea')
-  el._classes = classes
-  el.getClass = getClass.bind(el)
-  el.className = el.getClass('base')
-  el.resize = resize.bind(el)
 
-  Object.defineProperties(el, {
-    hovered: {
-      set(v) {
-        el.classList.toggle(el.getClass('hover'), v)
-      },
-    },
-    value: {
-      get() {
-        return el.dataset.value
-      },
-      set(newValue) {
-        el.dataset.value = newValue
-        el.resize()
-      },
-    },
-  })
+  listen(el)
 
-  el.value = value
-  el._classes = classes
-  el.dataset.id = id
-  el.id = id
-  el.name = name
-  el.dataset.testId = `${id}-textarea` // cypress
-  el.addEventListener('mouseenter', () => (el.hovered = true))
-  el.addEventListener('mouseleave', () => (el.hovered = false))
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
+  className && (el.className = className)
+  value && (el.value = value)
+  name && (el.name = name)
 
   return el
 }
 
 // -------------------------------
-// Object methods
+// Helpers
 // -------------------------------
 
 /**
  *
  */
-function getClass(className) {
-  return this._classes[className]
+function listen(el) {
+  el.addEventListener('change', () => resize(el))
 }
 
 /**
  * Resize the textarea
  */
-export function resize() {
+export function resize(el) {
   // First, set the textarea to the default height
-  this.style.height = 'auto'
-  this.style.height = '0'
+  el.style.height = 'auto'
+  el.style.height = '0'
 
   // Get the scroll height of the TA content
-  let minHeight = this.scrollHeight
+  let minHeight = el.scrollHeight
 
   // If the scroll height is more than the default height, expand TA
-  if (minHeight > this.clientHeight) {
-    this.style.height = Math.max(minHeight + 5, 51) + 'px'
+  if (minHeight > el.clientHeight) {
+    el.style.height = Math.max(minHeight + 5, 51) + 'px'
   }
 
   if (isMobile()) {
-    const height = parseFloat(this.style.height) || 0
-    this.style.height = Math.max(height / 2.4, 51) + 'px'
+    const height = parseFloat(el.style.height) || 0
+    el.style.height = Math.max(height / 2.4, 51) + 'px'
   }
 }
