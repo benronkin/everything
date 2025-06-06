@@ -82,7 +82,7 @@ async function handleDOMContentLoaded() {
       createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' }),
     ],
   })
-  getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
+  getEl('main-group-wrapper').appendChild(mainIconGroup)
 
   getEl('left-panel').prepend(
     createSearch({

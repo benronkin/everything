@@ -37,7 +37,7 @@ export function setEvents() {
   getEl('recipe-related').addEventListener('change', populateRelatedRecipes)
 
   /* When the trash recipe button is clicked */
-  getEl('bottom-btn-group')
+  getEl('bottom-group')
     .querySelector('.fa-trash')
     .addEventListener('click', handleRecipeDeleteBtnClick)
 
@@ -61,7 +61,7 @@ export function setEvents() {
  */
 function handleRecipesStateChanged(e) {
   if (isMobile()) {
-    getEl('main-icon-group').expand()
+    getEl('main-group').expand()
   }
 
   const children = e.detail.map((recipe) =>
@@ -98,7 +98,7 @@ async function handleActiveRecipeStateChanged(e) {
   const id = e.detail
   if (!id) {
     // active recipe has been cleared
-    getEl('main-icon-group').expand()
+    getEl('main-group').expand()
     return
   }
 
@@ -249,7 +249,7 @@ function populateRelatedRecipes() {
 async function handleRecipeLinkClick(e) {
   // hide the left panel if mobile
   if (isMobile()) {
-    getEl('main-icon-group').collapse()
+    getEl('main-group').collapse()
   }
 
   const elem = e.target.closest('.menu-item')

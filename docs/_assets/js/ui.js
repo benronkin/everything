@@ -191,7 +191,7 @@ export function toggleExpander(e) {
   const el = e.target || e
   el.classList.toggle('fa-chevron-left')
   el.classList.toggle('fa-chevron-right')
-  const group = el.closest('.i-group')
+  const group = el.closest('.group')
   group.classList.toggle('collapsed')
 
   group.querySelectorAll('i').forEach((i) => {

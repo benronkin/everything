@@ -51,7 +51,7 @@ ul {
   margin-bottom: 20px;
   background-color: var(--gray0);
 }
-#bottom-btn-group {
+#bottom-group {
   display: flex;
   margin-left: auto;
   margin-top: 20px;

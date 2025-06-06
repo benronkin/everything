@@ -92,7 +92,7 @@ function createSectionsAndPartials() {
     },
     children: [createIcon({ id: 'add-journal', className: 'fa-plus' })],
   })
-  getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
+  getEl('main-group-wrapper').appendChild(mainIconGroup)
 
   getEl('left-panel').prepend(
     createSearch({

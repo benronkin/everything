@@ -37,7 +37,7 @@ const css = `
   #modal-delete-body {
     margin-bottom: 20px;
   }
-  #modal-delete-btn-group {
+  #modal-delete-group {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -111,7 +111,7 @@ function build({ el, password }) {
     )
   }
 
-  let divEl = createDiv({ id: 'modal-delete-btn-group' })
+  let divEl = createDiv({ id: 'modal-delete-group' })
   el.appendChild(divEl)
 
   let buttonEl = createButton({

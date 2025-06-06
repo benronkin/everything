@@ -48,7 +48,7 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup()
-  document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
+  document.querySelector('#main-group-wrapper').appendChild(mainIconGroup)
 
   // set the login form
   const loginFormEl = createFormHorizontal({
