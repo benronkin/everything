@@ -1,4 +1,4 @@
-import { createToolbar } from '../../_sections/toolbar.js'
+import { createToolbar } from '../../_instances/toolbar.js'
 import { createIcon } from '../../_partials/icon.js'
 
 // -------------------------------

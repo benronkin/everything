@@ -20,7 +20,7 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function form() {
+export function createPhotoForm() {
   injectStyle(css)
 
   const el = createForm({

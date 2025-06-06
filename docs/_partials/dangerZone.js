@@ -1,4 +1,3 @@
-import { newState } from '../_assets/js/newState.js'
 import { injectStyle } from '../_assets/js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
@@ -19,49 +18,29 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function createDangerZone({ id } = {}) {
+export function createDangerZone({ id, modalId } = {}) {
   injectStyle(css)
 
   const el = createDiv({
+    id,
     className: 'danger-zone flex danger-box u-mt-40 u-mb-20',
   })
 
-  addElementParts({ el })
-
-  id && (el.dataId = id)
-
-  newState.on('show-delete-modal-icon-click', 'dangerZone', () => {
-    const modal = el.querySelector('#modal-delete')
-    modal.dataset.vitest = 'modal-open'
-    try {
-      modal.showModal()
-    } catch (e) {
-      // fail silently for vitest
-    }
-  })
+  build({ el, modalId })
 
   return el
 }
-
-// -------------------------------
-// Object methods
-// -------------------------------
-
-// -------------------------------
-// Event handlers
-// -------------------------------
 
 // -------------------------------
 // Helpers
 // -------------------------------
 
 /**
- * Add sub elements to the element. No need
- * to return the element.
+ * Add sub elements to the element.
  */
-function addElementParts({ el }) {
+function build({ el, modalId }) {
   const modalEl = createModalDelete({
-    id: 'modal-delete',
+    id: modalId,
   })
   el.appendChild(modalEl)
 
@@ -73,7 +52,7 @@ function addElementParts({ el }) {
   el.appendChild(
     createIcon({
       id: 'show-delete-modal-icon',
-      className: 'fa-trash',
+      classes: { primary: 'fa-trash' },
     })
   )
 }

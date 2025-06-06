@@ -6,8 +6,8 @@ import { createIcon } from '../../_partials/icon.js'
 import { createInput } from '../../_partials/input.js'
 import { createParagraph } from '../../_partials/paragraph.js'
 import { createTextarea } from '../../_partials/textarea.js'
-import { form } from './photo.form.js'
-import { createDelete } from '../../_sections/delete.js'
+import { createPhotoForm } from './photo.form.js'
+import { dangerZone } from './dangerZone.js'
 
 // -------------------------------
 // Globals
@@ -54,7 +54,6 @@ export function mainPanel() {
 
   build(el)
   react(el)
-  listen({ el, id: 'main-panel' })
 
   el.id = 'main-panel'
   el.dataset.id = 'main-panel'
@@ -143,7 +142,7 @@ function build(el) {
   phw.appendChild(
     createIcon({
       id: 'add-photo-toggle',
-      className: 'fa-camera primary',
+      classes: { primary: 'fa-camera', other: 'primary' },
     })
   )
 
@@ -161,24 +160,28 @@ function build(el) {
     createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
   )
 
-  upw.appendChild(form())
+  upw.appendChild(createPhotoForm())
 
-  el.appendChild(
-    createDelete({
-      id: 'modal-delete',
-    })
-  )
+  el.appendChild(dangerZone())
 }
 
 /**
  * Subscribe to and set state.
  */
 function react(el) {
+  // if there is an active doc then show the panel
+  // and populate the fields
   newState.on('active-doc', 'mainPanel', (doc) => {
+    if (!doc) {
+      el.classList.add('hidden')
+      return
+    }
+
+    el.classList.remove('hidden')
+
     el.querySelector('[data-id="journal-location"]').value = doc.location
     el.querySelector('[data-id="journal-visit-date"]').value =
       doc.visit_date.split('T')[0]
-    el.classList.remove('hidden')
     el.querySelector('[data-id="journal-notes"]').value = doc.notes
     el.querySelector('[data-id="journal-city"]').value = doc.city
     el.querySelector('[data-id="journal-state"]').value = doc.state
@@ -186,12 +189,18 @@ function react(el) {
     el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
   })
 
-  newState.on('main-documents', 'mainPanel', () => el.classList.add('hidden'))
-}
+  // When new docs come in, hide the panel.
+  // If there is an active-doc and it does not appear
+  // in main-documents then delete active-doc
+  newState.on('main-documents', 'mainPanel', (docs) => {
+    el.classList.add('hidden')
 
-/**
- *
- */
-function listen({ el, id }) {
-  el.addEventListener('click', () => {})
+    const currentId = newState.get('active-doc')?.id
+    if (!currentId) return
+
+    const docExists = docs.findIndex((el) => el.id === currentId)
+    if (docExists) return
+
+    newState.set('active-doc', null)
+  })
 }

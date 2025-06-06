@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { newState } from '../_assets/js/newState.js'
 import { makeReactive } from '../journal/reactivity.js'
 import { setStateBeforePartials } from '../journal/stateBeforePartials.js'
-import { createDelete } from './delete.js'
+import { createDelete } from '../journal/sections/delete.js'
 
 let el
 

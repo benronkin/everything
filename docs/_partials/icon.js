@@ -41,14 +41,20 @@ export function createIcon({
 
   el.id = id
   el.dataset.id = id
+  el.role = 'button'
+  el.tabIndex = 0
+
+  if (!classes.primary) {
+    throw new Error(
+      `Oops, button accepts a "classes" object with "primary", "secondary", and "other" attributes`
+    )
+  }
   classes.other || (classes.other = ['fa-solid'])
   for (const c of classes.other) {
     el.classList.add(c)
   }
   el.classList.add(classes.primary)
   el._classes = classes
-  el.role = 'button'
-  el.tabIndex = 0
 
   listen(el)
 

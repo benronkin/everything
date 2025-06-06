@@ -49,22 +49,22 @@ const css = `
 `
 
 // -------------------------------
-// Exported functions
+// Exports
 // -------------------------------
 
 /**
  * Constructor for a custom horizontal form
  */
 export function createFormHorizontal({
-  id = '',
+  id,
   inputType = 'text',
-  inputName = '',
-  placeholder = '',
-  inputAutoComplete = '',
-  buttonIconClass = '',
-  formIconClass = '',
+  inputName,
+  placeholder,
+  inputAutoComplete,
+  buttonIconClass,
+  formIconClass,
   submitText,
-  value = '',
+  value,
   disabled = false,
   events = {},
   inputEvents = {},
@@ -73,52 +73,7 @@ export function createFormHorizontal({
 
   const el = document.createElement('form')
 
-  Object.defineProperties(el, {
-    disabled: {
-      get() {
-        return el.dataset.disabled === 'true'
-      },
-      set(v) {
-        el.dataset.disabled = v
-        el.querySelector('button').disabled = v
-      },
-    },
-    focused: {
-      set(v) {
-        if (v) {
-          this.querySelector('input').focus()
-        } else {
-          this.querySelector('input').blur()
-        }
-      },
-    },
-    message: {
-      get() {
-        return el.querySelector('.message').textContent
-      },
-      set(message) {
-        el.querySelector('.message').textContent = message
-      },
-    },
-    submit: {
-      get() {
-        return el.querySelector('button').textContent
-      },
-      set(value) {
-        el.querySelector('button').textContent = value
-      },
-    },
-    value: {
-      get() {
-        return el.querySelector('input').value
-      },
-      set(value) {
-        el.querySelector('input').value = value
-      },
-    },
-  })
-
-  addElementParts({
+  build({
     el,
     id,
     inputType,
@@ -156,7 +111,7 @@ export function createFormHorizontal({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function addElementParts({
+function build({
   el,
   inputType,
   inputName,
@@ -178,7 +133,7 @@ function addElementParts({
   const divEl = document.createElement('div')
   divEl.className = 'input-group'
   if (formIconClass) {
-    const formIcon = createIcon({ className: formIconClass })
+    const formIcon = createIcon({ classes: { primary: formIconClass } })
     divEl.appendChild(formIcon)
   }
   inputWrapper.appendChild(divEl)

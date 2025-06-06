@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { createIcon } from './icon.js'
+import { newState } from '../_assets/js/newState.js'
 import { insertHtml } from '../_assets/js/format.js'
 
 // -------------------------------
@@ -32,6 +32,8 @@ export function createButton({ id, className, disabled, html, type } = {}) {
     el.dataset.id = id
   }
 
+  listen(el)
+
   type && (el.type = type)
   className && (el.className = className)
   html && el.insertHtml(html)
@@ -42,4 +44,20 @@ export function createButton({ id, className, disabled, html, type } = {}) {
   }
 
   return el
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function listen(el) {
+  el.addEventListener('click', () => {
+    const stateKey = `button-click:${el.id}`
+    newState.set(stateKey, {
+      id: el.id,
+    })
+  })
 }

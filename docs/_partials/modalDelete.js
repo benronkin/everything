@@ -1,8 +1,10 @@
 import { injectStyle } from '../_assets/js/ui.js'
+import { getWebApp } from '../_assets/js/io.js'
 import { newState } from '../_assets/js/newState.js'
 import { createButton } from './button.js'
 import { createDiv } from './div.js'
 import { createHeader } from './header.js'
+import { createIcon } from './icon.js'
 import { createInput } from './input.js'
 import { createSpan } from './span.js'
 
@@ -16,111 +18,61 @@ const css = `
     max-width: 400px;
     margin: auto;
   }
-  #delete-modal-header {
+  #modal-delete .input-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}  
+#modal-delete .input-group i {
+  padding: 8px 0;  
+  color: var(--gray6);
+}
+  #modal-delete-header {
     font-size: 1.4rem;
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 20px;
   }
-  #delete-modal-body {
+  #modal-delete-body {
     margin-bottom: 20px;
   }
-  #delete-modal-btn-group {
+  #modal-delete-btn-group {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
     margin: 40px 0 20px;
   }
-  #delete-modal-input {
+  #modal-delete-input {
     width: 100%;
     padding: 8px 10px;
-    margin: 0;
   }
 `
 
 // -------------------------------
-// Exported functions
+// Exports
 // -------------------------------
 
 /**
  * Constructor for a modal-delete
  */
-export function createModalDelete({ id, password }) {
+export function createModalDelete({ id, password = true }) {
   injectStyle(css)
 
   const el = document.createElement('dialog')
 
-  Object.defineProperties(el, {
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = 'modal-delete'
-      },
-    },
-    header: {
-      get() {
-        return el.querySelector('h3').value
-      },
-      set(newValue = '') {
-        el.querySelector('h3').value = newValue
-      },
-    },
-  })
+  build({ el, password })
+  react(el)
+  listen(el)
 
-  createElement({ el, password })
-
-  el.dataId = id
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
 
   return el
 }
-
-// -------------------------------
-// Event listener handlers
-// -------------------------------
-
-/**
- * Close modal if clicked outside its visible area
- */
-// function handleOutsideModalDeleteClick(e) {
-//   const modal = e.target.closest('dialog')
-//   const dialogDimensions = modal.getBoundingClientRect()
-//   if (
-//     e.clientX < dialogDimensions.left ||
-//     e.clientX > dialogDimensions.right ||
-//     e.clientY < dialogDimensions.top ||
-//     e.clientY > dialogDimensions.bottom
-//   ) {
-//     // modal.password = ''
-//     modal.close()
-//   }
-// }
-
-/**
- * Handle modal confirm delete click
- */
-// function handleModalConfirmDeleteClick(e) {
-//   const modal = e.target.closest('dialog')
-//   document.dispatchEvent(
-//     new CustomEvent('modal-delete-confirmed', {
-//       detail: { id: modal.dataset.id },
-//     })
-//   )
-// }
-
-/**
- * Handle modal cancel click
- */
-// function handleModalCancelClick(e) {
-//   e.preventDefault()
-//   const modal = e.target.closest('dialog')
-//   modal.password = ''
-//   modal.close()
-// }
 
 // -------------------------------
 // Helpers
@@ -129,7 +81,7 @@ export function createModalDelete({ id, password }) {
 /**
  *
  */
-function createElement({ el }) {
+function build({ el, password }) {
   const headerEl = createHeader({
     id: 'modal-delete-header',
     type: 'h3',
@@ -141,41 +93,45 @@ function createElement({ el }) {
   })
   el.appendChild(spanEl)
 
-  if (newState.get('modal-delete-password')) {
-    const inputEl = createInput({
-      type: 'password',
-      name: 'password',
-      autocomplete: 'new-password',
-      placeholder: 'Password',
-      id: 'modal-delete-input',
-    })
-    el.appendChild(inputEl)
+  if (password) {
+    el.appendChild(
+      createDiv({
+        className: 'input-group',
+        html: [
+          createIcon({ classes: { primary: 'fa-key' } }),
+          createInput({
+            type: 'password',
+            name: 'password',
+            autocomplete: 'new-password', // to block auto complete
+            placeholder: 'Password',
+            id: 'modal-delete-input',
+          }),
+        ],
+      })
+    )
   }
 
-  let divEl = createDiv({ id: 'delete-modal-btn-group' })
+  let divEl = createDiv({ id: 'modal-delete-btn-group' })
   el.appendChild(divEl)
 
   let buttonEl = createButton({
-    id: 'delete-modal-delete-btn',
-    value: 'Delete',
+    id: 'modal-delete-btn',
+    html: 'Delete',
+    className: 'primary',
   })
-  // buttonEl.addEventListener('click', handleModalConfirmDeleteClick)
+
   divEl.appendChild(buttonEl)
 
   buttonEl = createButton({
-    id: 'cancel-modal-delete-btn',
-    value: 'Cancel',
-    classes: {
-      active: 'primary',
-      base: 'bordered',
-      hover: 'primary',
-    },
+    id: 'modal-cancel-btn',
+    html: 'Cancel',
+    className: 'bordered',
   })
-  // buttonEl.addEventListener('click', handleModalCancelClick)
+
   divEl.appendChild(buttonEl)
 
   spanEl = createSpan({
-    id: 'delete-modal-message',
+    id: 'modal-delete-message',
   })
   divEl.appendChild(spanEl)
 }
@@ -183,6 +139,51 @@ function createElement({ el }) {
 /**
  *
  */
-// function handleModalClose(e) {
-//   e.target.querySelector('input').value = ''
-// }
+function react(el) {
+  newState.on('button-click:modal-cancel-btn', 'modalDelete', () => {
+    el.querySelector('#modal-delete-input').value = ''
+    el.close()
+  })
+
+  newState.on('button-click:modal-delete-btn', 'modalDelete', async () => {
+    const messageEl = el.querySelector('#modal-delete-message')
+    messageEl.insertHtml()
+
+    const id = newState.get('active-doc').id
+    const password = el.querySelector('#modal-delete-input').value
+    const { error } = await getWebApp(
+      `${newState.const(
+        'APP_URL'
+      )}/journal/delete?id=${id}&password=${password}`
+    )
+
+    if (error) {
+      messageEl.insertHtml(error)
+      return
+    }
+
+    el.close()
+    newState.set(
+      'main-documents',
+      newState.get('main-documents').filter((doc) => doc.id !== id)
+    )
+  })
+}
+
+/**
+ *
+ */
+function listen(el) {
+  el.addEventListener('click', (e) => {
+    const dialogDimensions = el.getBoundingClientRect()
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      el.querySelector('#modal-delete-input').value = ''
+      el.close()
+    }
+  })
+}

@@ -1,4 +1,4 @@
-import { createRightDrawer } from '../../_sections/rightDrawer.js'
+import { createRightDrawer } from '../../_instances/rightDrawer.js'
 
 // -------------------------------
 // Exports

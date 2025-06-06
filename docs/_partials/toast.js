@@ -213,7 +213,7 @@ function addElementParts(el, autoClose) {
   el.appendChild(messageDiv)
 
   if (autoClose) {
-    const iconEl = createIcon({ className: 'fa-close' })
+    const iconEl = createIcon({ classes: { primary: 'fa-close' } })
     el.prepend(iconEl)
 
     const progressDiv = document.createElement('div')
