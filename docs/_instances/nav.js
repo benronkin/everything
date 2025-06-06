@@ -83,7 +83,7 @@ function build({ el, disableRightDrawer }) {
     containerEl.appendChild(
       createIcon({
         id: 'toggle-right-drawer',
-        classes: { primary: 'fa-bars' },
+        classes: { primary: 'fa-bars', other: ['btn'] },
       })
     )
   }

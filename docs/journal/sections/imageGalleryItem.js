@@ -1,4 +1,4 @@
-import { injectStyle } from '../_assets/js/ui.js'
+import { injectStyle } from '../../_assets/js/ui.js'
 
 // -------------------------------
 // Globals

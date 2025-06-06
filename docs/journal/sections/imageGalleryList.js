@@ -4,11 +4,11 @@
 main-documents and builds its children by itself.
  */
 
-import { injectStyle } from '../_assets/js/ui.js'
-import { createList } from './list.js'
-import { newState } from '../_assets/js/newState.js'
+import { injectStyle } from '../../_assets/js/ui.js'
+import { createList } from '../../_partials/list.js'
+import { newState } from '../../_assets/js/newState.js'
 import { createImageGalleryItem } from './imageGalleryItem.js'
-import { getR2MetaData } from '../_assets/js/r2MetaData.js'
+import { getR2MetaData } from '../../_assets/js/r2MetaData.js'
 
 // -------------------------------
 // Globals

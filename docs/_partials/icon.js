@@ -10,7 +10,7 @@ i {
   border-radius: var(--border-radius);
   cursor: pointer;
 }
-i:hover {
+i.btn:hover {
   color: var(--purple2);
 }
 i.shake {
@@ -31,7 +31,8 @@ i.shake {
 
 export function createIcon({
   id = `i=${crypto.randomUUID()}`,
-  classes = {},
+  classes,
+  role,
 } = {}) {
   injectStyle(css)
 
@@ -41,20 +42,9 @@ export function createIcon({
 
   el.id = id
   el.dataset.id = id
-  el.role = 'button'
-  el.tabIndex = 0
+  role && (el.role = role)
 
-  if (!classes.primary) {
-    throw new Error(
-      `Oops, button accepts a "classes" object with "primary", "secondary", and "other" attributes`
-    )
-  }
-  classes.other || (classes.other = ['fa-solid'])
-  for (const c of classes.other) {
-    el.classList.add(c)
-  }
-  el.classList.add(classes.primary)
-  el._classes = classes
+  handleClasses({ el, classes })
 
   listen(el)
 
@@ -84,6 +74,33 @@ function listen(el) {
         : el._classes.secondary,
     })
   })
+}
+
+/**
+ * Covert the object of classes to a string
+ * and set as className
+ * @param {Object} classes - must include classes.primary, may inclde classes.secondary (string), and/o classes.other (array)
+ */
+function handleClasses({ el, classes = {} }) {
+  if (!classes.primary) {
+    throw new Error(
+      `Oops, button accepts a "classes" object with "primary" (required), "secondary", and "other" attributes`
+    )
+  }
+
+  if (!classes.other) {
+    classes.other = []
+  }
+  if (typeof classes.other === 'string') {
+    classes.other = classes.other.split(' ')
+  }
+
+  const arr = [
+    ...new Set(['fa-solid', classes.primary, ...classes.other]),
+  ].join(' ')
+
+  el.className = arr
+  el._classes = classes
 }
 
 // -------------------------------

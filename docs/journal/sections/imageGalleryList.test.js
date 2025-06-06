@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { newState } from '../_assets/js/newState'
+import { newState } from '../../_assets/js/newState'
 import { createImageGalleryList } from './imageGalleryList'
 // import { setStateAfterPartials } from '../journal/stateAfterPartials.js'
 
