@@ -17,7 +17,7 @@ const css = `
   border-radius: var(--border-radius);
   width: fit-content;
   transition: all 0.2s ease-in-out;
-  padding: 4px 20px;
+  padding: 4px 10px;
   box-sizing: content-box;
 }
 .collapsible-group.collapsed {

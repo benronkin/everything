@@ -1,5 +1,6 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { createButton } from './button.js'
+import { createInputGroup } from './inputGroup.js'
 import { createIcon } from './icon.js'
 import { createInput } from './input.js'
 import { createSpan } from './span.js'
@@ -22,25 +23,6 @@ const css = `
 .form-horizontal button:disabled {
   cursor: not-allowed;
   pointer-events: none;
-}
-.form-horizontal-input-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  width: 100%;
-}
-.form-horizontal .input-group {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}  
-.form-horizontal .input-group i {
-  padding-left: 0;  
-}
-.form-horizontal .form-horizontal input {
-  margin: 0;
-  width: 100%;
 }
 .form-horizontal .message {
   padding: 10px;
@@ -89,11 +71,9 @@ export function createFormHorizontal({
     inputEvents,
   })
 
-  addEventHandlers({ el, events, inputEvents })
-
-  el.id = id
+  id && (el.id = id)
   el.className = 'form-horizontal'
-  el.value = value
+  value && (el.value = value)
 
   return el
 }
@@ -111,61 +91,34 @@ function build({
   inputType,
   inputName,
   placeholder,
-  inputAutoComplete,
+  autocomplete,
   buttonIconClass,
   formIconClass,
   submitText,
   value,
   disabled,
 }) {
-  let buttonEl
-
-  const inputWrapper = document.createElement('div')
-  inputWrapper.classList.add('form-horizontal-input-wrapper')
-
-  el.appendChild(inputWrapper)
-
-  const divEl = document.createElement('div')
-  divEl.className = 'input-group'
-  if (formIconClass) {
-    const formIcon = createIcon({ classes: { primary: formIconClass } })
-    divEl.appendChild(formIcon)
-  }
-  inputWrapper.appendChild(divEl)
-
-  const inputEl = createInput({
-    value,
-    type: inputType,
-    name: inputName,
-    placeholder,
-    inputAutoComplete,
-  })
-  divEl.appendChild(inputEl)
+  el.appendChild(
+    createInputGroup({
+      iconClass: formIconClass,
+      placeholder,
+      type: inputType,
+      name: inputName,
+      autocomplete,
+      value,
+    })
+  )
 
   if (submitText) {
-    buttonEl = createButton({
-      iconClass: buttonIconClass,
-      value: submitText,
-      type: 'submit',
-      disabled,
-    })
-    inputWrapper.appendChild(buttonEl)
+    el.appendChild(
+      createButton({
+        iconClass: buttonIconClass,
+        value: submitText,
+        type: 'submit',
+        disabled,
+      })
+    )
   }
 
-  const spanEl = createSpan({})
-  spanEl.className = 'message'
-  el.appendChild(spanEl)
-}
-
-/**
- * Add the various event handlers for the element
- */
-function addEventHandlers({ el, events, inputEvents }) {
-  for (const [k, v] of Object.entries(events)) {
-    el.addEventListener(k, v)
-  }
-
-  for (const [k, v] of Object.entries(inputEvents)) {
-    el.querySelector('input').addEventListener(k, v)
-  }
+  el.appendChild(createSpan({ className: 'form-message' }))
 }

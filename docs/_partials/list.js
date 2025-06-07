@@ -17,7 +17,7 @@ const css = `
 /**
  *
  */
-export function createList({ id, emptyState, enableDrag = false }) {
+export function createList({ id, emptyState, className, enableDrag = false }) {
   injectStyle(css)
 
   const el = createDiv()
@@ -42,7 +42,8 @@ export function createList({ id, emptyState, enableDrag = false }) {
     el.id = id
     el.dataset.id = id
   }
-  el.className = 'list'
+  className && (el.className = className)
+  el.classList.add('list')
 
   if (el.getChildren().length) {
     el.querySelector('.empty-state').classList.remove('hidden')

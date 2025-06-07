@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     handleTokenQueryParam()
 
     build()
+
+    react()
+
+    newState.set('main-documents', await fetchMainDocuments())
   } catch (error) {
     console.trace(error)
     // window.location.href = `../index.html?error=${error.message}`
@@ -54,11 +58,14 @@ async function build() {
   wrapperEl.appendChild(createFooter())
 
   columnsWrapperEl.appendChild(leftPanel())
-  // columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
-
-  newState.set('main-documents', await fetchMainDocuments())
 }
+
+/**
+ *
+ */
+function react() {}
 
 /**
  * Get the searched journals

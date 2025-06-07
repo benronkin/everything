@@ -9,9 +9,10 @@ const css = `
 #toolbar {
   display: flex;
   justify-content: flex-start;
-  width: 100%;
   margin: 20px 0;
-
+  gap: 20px;
+  align-items: center;
+  width: 100%;
 }
 #toolbar .container div {
   display: flex;
@@ -19,13 +20,21 @@ const css = `
   align-items: center;
   gap: 10px;
   height: 38px;
-  border: 1px solid var(--gray1);
+  border: 1px dotted var(--gray1);
   border-radius: 10px;
-  padding: 4px 20px;
+  padding: 4px 10px;
   box-sizing: content-box;
   font-size: 1.1rem;
   transition: all 200ms ease;
 }
+#toolbar i {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}  
 `
 
 // -------------------------------

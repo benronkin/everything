@@ -3,13 +3,11 @@ import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
 import { createIcon } from '../../_partials/icon.js'
-import { createInput } from '../../_partials/input.js'
-import { createParagraph } from '../../_partials/paragraph.js'
-import { createTextarea } from '../../_partials/textarea.js'
 import { appendEntryDetails } from './entry.form.js'
 import { createPhotoForm } from './photo.form.js'
 import { dangerZone } from './dangerZone.js'
 import { photoList } from './photoList.js'
+import { log } from '../../_assets/js/ui.js'
 
 // -------------------------------
 // Globals
@@ -32,7 +30,7 @@ const css = `
 #main-panel textarea.field {
   padding: 0;
   margin: 0;
-  border-bottom: 1px solid var(--gray3);
+  border-bottom: 1px dotted var(--gray1);
 }
 #main-panel textarea.field {
   line-height: 13px;
@@ -49,7 +47,7 @@ const css = `
 export function mainPanel() {
   injectStyle(css)
 
-  const el = createDiv()
+  const el = createDiv({ className: 'mt-20 hidden' })
 
   build(el)
   react(el)
@@ -96,22 +94,35 @@ function build(el) {
 
   upw.appendChild(createPhotoForm())
 
+  // el.appendChild(createHeader({ type: 'h5', html: 'ID' }))
+
+  // el.appendChild(
+  //   createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
+  // )
+
   el.appendChild(dangerZone())
 }
 
 /**
- * Subscribe to and set state.
+ * Subscribe to state.
  */
 function react(el) {
+  newState.on('main-documents', 'mainPanel', () => {
+    el.classList.add('hidden')
+    log('mainPanel is hiding itself on main-documents')
+  })
+
   // if there is an active doc then show the panel
   // and populate the fields
   newState.on('active-doc', 'mainPanel', (doc) => {
     if (!doc) {
       el.classList.add('hidden')
+      log('mainPanel is hiding itself on nullifying of active-doc')
       return
     }
 
     el.classList.remove('hidden')
+    log('mainPanel is showing itself on active-doc')
 
     el.querySelector('[data-id="journal-location"]').value = doc.location
     el.querySelector('[data-id="journal-visit-date"]').value =
@@ -120,22 +131,5 @@ function react(el) {
     el.querySelector('[data-id="journal-city"]').value = doc.city
     el.querySelector('[data-id="journal-state"]').value = doc.state
     el.querySelector('[data-id="journal-country"]').value = doc.country
-    el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
-  })
-
-  // When new docs come in, hide the panel.
-  // If there is an active-doc and it does not appear
-  // in main-documents then delete active-doc
-  newState.on('main-documents', 'mainPanel', (docs) => {
-    // el.classList.add('hidden')
-    document.querySelector('#left-panel').classList.add('hidden')
-
-    const currentId = newState.get('active-doc')?.id
-    if (!currentId) return
-
-    const docExists = docs.findIndex((el) => el.id === currentId)
-    if (docExists) return
-
-    newState.set('active-doc', null)
   })
 }

@@ -4,6 +4,10 @@
   --nav-height: 75px;
   --sidebar-width: 220px;
 }
+/* brighten input date picker icon */
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
 * {
   margin: 0;
   padding: 0;
@@ -192,7 +196,7 @@ ul {
   display: flex;
 }
 .container {
-  width: 85%;
+  width: 90%;
   margin: 0 auto;
 }
 .danger-box {
@@ -228,26 +232,15 @@ ul {
 .column-start {
   align-items: flex-start !important;
 }
-.grid-1-2 {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  gap: 20px;
-}
-.grid-1-a {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 20px;
-}
-.grid-2-1 {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-}
+
 .m-0 {
   margin: 0;
 }
 .mb-20 {
   margin-bottom: 20px;
+}
+.mb-40 {
+  margin-bottom: 40px;
 }
 .ml-20 {
   margin-left: 20px;

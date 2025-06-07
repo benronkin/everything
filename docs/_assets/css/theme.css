@@ -267,7 +267,7 @@ i.btn:hover {
 }
 i.primary {
   background-color: var(--purple2);
-  padding: 7px;
+  padding: 5px;
   transition: all 0.2s ease-in-out;
 }
 i.primary:hover {
@@ -299,6 +299,14 @@ input:-webkit-autofill {
 }
 main {
   background: var(--body-bg);
+}
+.input-group i,
+.ta-group i {
+  color: var(--gray3);
+}
+.input-group:has(input:focus) i,
+.ta-group:has(textarea:focus) i {
+  color: var(--gray6);
 }
 .md-item {
   border: 1px dotted var(--gray1);

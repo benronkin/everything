@@ -22,11 +22,12 @@ const css = `
 /**
  *
  */
-export function createMainDocumentsList({ id, emptyState }) {
+export function createMainDocumentsList({ id, className, emptyState }) {
   injectStyle(css)
 
   const el = createList({
     id,
+    className,
     emptyState,
   })
 

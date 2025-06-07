@@ -15,7 +15,7 @@ import { newState } from '../_assets/js/newState.js'
 const css = `
 .md-item {
   align-items: center;
-  border-radius: 0;
+  border-radius: var(--border-radius);
   cursor: pointer;
   display: flex;
   font-weight: 500;

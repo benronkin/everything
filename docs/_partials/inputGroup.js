@@ -10,11 +10,12 @@ import { createInput } from './input.js'
 const css = `
 .input-group {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 20px;
+  align-items: center;
+  width: 100%;
 }  
 .input-group i {
-  padding-left: 0;  
   cursor: default;
 }
 .input-group input {
@@ -31,31 +32,45 @@ const css = `
  */
 export function createInputGroup({
   id,
-  className,
+  classes,
   type = 'text',
   name,
   placeholder,
   autocomplete,
-  iconClass,
   value,
+  className = null,
 }) {
   injectStyle(css)
+
+  if (className || classes & (typeof classes !== 'object')) {
+    throw new Error(
+      `createInputGroup Oops: pass-in optional classes object: {group: '', input: '', icon: ''} `
+    )
+  }
 
   const el = createDiv()
 
   build({
     el,
     id,
-    className,
     type,
     name,
     placeholder,
     autocomplete,
-    iconClass,
     value,
   })
 
-  el.className = 'input-group'
+  classes?.group && (el.className = classes.group)
+  el.classList.add('input-group')
+
+  classes?.input && (el.querySelector('input').className = classes.input)
+
+  if (classes?.icon) {
+    const arr = classes.icon.split(' ')
+    for (const c of arr) {
+      el.querySelector('i').classList.add(c)
+    }
+  }
 
   return el
 }
@@ -68,23 +83,12 @@ export function createInputGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({
-  el,
-  id,
-  className,
-  type,
-  name,
-  placeholder,
-  autocomplete,
-  iconClass,
-  value,
-}) {
-  el.appendChild(createIcon({ classes: { primary: iconClass } }))
+function build({ el, id, type, name, placeholder, autocomplete, value }) {
+  el.appendChild(createIcon())
 
   el.appendChild(
     createInput({
       id,
-      className,
       type,
       name,
       placeholder,

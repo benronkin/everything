@@ -35,9 +35,8 @@ export function createPhotoForm() {
       }),
       createInputGroup({
         id: 'photo-caption-input',
-        className: 'bb-white',
+        classes: { group: 'bb-white', icon: 'fa-tag' },
         name: 'caption',
-        iconClass: 'fa-tag',
         placeholder: 'Describe this photo...',
       }),
       createInput({

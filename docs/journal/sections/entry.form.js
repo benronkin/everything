@@ -15,45 +15,34 @@ import { createHeader } from '../../_partials/header.js'
  * Constuctor of a custom element
  */
 export function appendEntryDetails(el) {
-  createHeader({ type: 'h5', className: 'hidden', html: 'Location' }),
-    el.appendChild(
-      createHeader({ type: 'h5', className: 'hidden', html: 'Visited on' })
-    )
-  el.appendChild(
-    createHeader({ type: 'h5', className: 'hidden', html: 'Notes' })
-  )
+  // el.appendChild(
+  //   createHeader({ type: 'h5', className: 'hidden', html: 'Location' })
+  // )
+
+  // el.appendChild(
+  //   createHeader({ type: 'h5', className: 'hidden', html: 'Visited on' })
+  // )
+  // el.appendChild(
+  //   createHeader({ type: 'h5', className: 'hidden', html: 'Notes' })
+  // )
 
   el.appendChild(
     createInputGroup({
       id: 'journal-location',
       name: 'location',
       placeholder: 'Attraction',
-      className: 'field',
-      iconClass: 'fa-building',
+      autocomplete: 'off',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-utensils' },
     })
   )
 
   el.appendChild(
-    createDiv({
-      className: 'grid-1-2',
-      html: [
-        createInputGroup({
-          name: 'visit-date',
-          id: 'journal-visit-date',
-          className: 'field',
-          type: 'date',
-          iconClass: 'fa-calendar',
-          value: new Date().toISOString().split('T')[0],
-        }),
-        el.appendChild(
-          createInputGroup({
-            name: 'city',
-            id: 'journal-city',
-            className: 'field',
-            iconClass: 'fa-city',
-          })
-        ),
-      ],
+    createInputGroup({
+      name: 'visit-date',
+      id: 'journal-visit-date',
+      type: 'date',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-calendar' },
+      value: new Date().toISOString().split('T')[0],
     })
   )
 
@@ -61,43 +50,35 @@ export function appendEntryDetails(el) {
     createTextareaGroup({
       name: 'notes',
       id: 'journal-notes',
-      className: 'field',
-      iconClass: 'fa-pencil',
+      classes: { group: 'mb-40', textarea: 'field', icon: 'fa-pencil' },
       placeholder: 'Notes...',
     })
   )
 
   el.appendChild(
-    createHeader({ type: 'h5', className: 'hidden', html: 'City' })
+    createInputGroup({
+      name: 'city',
+      id: 'journal-city',
+      placeholder: 'City',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-city' },
+    })
   )
 
   el.appendChild(
-    createHeader({ type: 'h5', className: 'hidden', html: 'State' })
-  )
-
-  el.appendChild(
-    createInput({
+    createInputGroup({
       name: 'state',
       id: 'journal-state',
-      className: 'field',
+      placeholder: 'State',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-map' },
     })
   )
 
   el.appendChild(
-    createHeader({ type: 'h5', className: 'hidden', html: 'Country' })
-  )
-
-  el.appendChild(
-    createInput({
+    createInputGroup({
       name: 'country',
       id: 'journal-country',
-      className: 'field',
+      placeholder: 'Country',
+      classes: { input: 'field', icon: 'fa-flag' },
     })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', className: 'hidden', html: 'Id' }))
-
-  el.appendChild(
-    createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
   )
 }

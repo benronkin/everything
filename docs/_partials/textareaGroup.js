@@ -9,10 +9,10 @@ import { createTextarea } from './textarea.js'
 
 const css = `
 .ta-group {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
   align-items: center;
-  margin-top: 20px;
   width: 100%;
 }
 .ta-group {
@@ -21,7 +21,6 @@ const css = `
   align-items: center;
 }  
 .ta-group i {
-  padding-left: 0;  
   cursor: default;
 }
 .ta-group textarea {
@@ -39,27 +38,42 @@ const css = `
  */
 export function createTextareaGroup({
   id,
-  className,
+  classes,
   name,
   placeholder,
-  iconClass,
   value,
+  className = null,
 }) {
   injectStyle(css)
+
+  if (className || classes & (typeof classes !== 'object')) {
+    throw new Error(
+      `createTextareaGroup Oops: pass-in optional classes object: {group: '', textarea: '', icon: ''} `
+    )
+  }
 
   const el = createDiv()
 
   build({
     el,
     id,
-    className,
     name,
     placeholder,
-    iconClass,
     value,
   })
 
-  el.className = 'ta-group'
+  classes?.group && (el.className = classes.group)
+  el.classList.add('ta-group')
+
+  classes?.textarea &&
+    (el.querySelector('textarea').className = classes.textarea)
+
+  if (classes?.icon) {
+    const arr = classes.icon.split(' ')
+    for (const c of arr) {
+      el.querySelector('i').classList.add(c)
+    }
+  }
 
   return el
 }
@@ -72,13 +86,12 @@ export function createTextareaGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, id, className, name, placeholder, iconClass, value }) {
-  el.appendChild(createIcon({ classes: { primary: iconClass } }))
+function build({ el, id, name, placeholder, value }) {
+  el.appendChild(createIcon())
 
   el.appendChild(
     createTextarea({
       id,
-      className,
       name,
       placeholder,
       value,

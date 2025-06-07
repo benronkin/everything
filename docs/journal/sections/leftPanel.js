@@ -1,17 +1,16 @@
 import { injectStyle } from '../../_assets/js/ui.js'
 import { newState } from '../../_assets/js/newState.js'
+import { log } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
-import { search } from './search.js'
+import { createFormHorizontal } from '../../_partials/formHorizontal.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
-#left-panel {
-  width: var(--sidebar-width);
-}
+
 `
 
 // -------------------------------
@@ -44,15 +43,46 @@ export function leftPanel() {
  * Add sub elements to the element
  */
 function build(el) {
-  el.prepend(search())
+  el.appendChild(
+    createFormHorizontal({
+      formIconClass: 'fa-magnifying-glass',
+      placeholder: 'Search entries...',
+      inputName: 'search-entry',
+    })
+  )
   el.appendChild(mainDocumentsList())
 }
 
 /**
- * Subscribe to and set state.
+ * Subscribe to state.
  */
 function react(el) {
-  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  newState.on('main-documents', 'leftPanel', (docs) => {
+    el.classList.remove('hidden')
+    log('leftPanel is showing itself on main-documents')
+
+    // If there is an active-doc and it does not appear
+    // in main-documents then delete active-doc
+    const currentId = newState.get('active-doc')?.id
+    if (!currentId) return
+
+    const docExists = docs.findIndex((el) => el.id === currentId)
+    if (!docExists) {
+      newState.set('active-doc', null)
+      log('leftPanel is nullyfing active-doc on main-documents')
+      return
+    }
+  })
+
+  newState.on('active-doc', 'leftPanel', (doc) => {
+    if (doc) {
+      el.classList.add('hidden')
+      log('leftPanel is hiding itself on an active-doc')
+    } else {
+      el.classList.remove('hidden')
+      log('leftPanel is showing itself on a null active-doc')
+    }
+  })
 }
 
 /**

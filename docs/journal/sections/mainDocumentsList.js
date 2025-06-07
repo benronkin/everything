@@ -14,6 +14,7 @@ import { createMainDocumentItem } from '../../_partials/mainDocumentItem.js'
 export function mainDocumentsList() {
   const el = createMainDocumentsList({
     id: 'left-panel-list',
+    className: 'mt-20',
   })
 
   react(el)

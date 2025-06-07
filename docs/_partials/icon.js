@@ -80,7 +80,12 @@ function listen(el) {
  * and set as className
  * @param {Object} classes - must include classes.primary, may inclde classes.secondary (string), and/o classes.other (array)
  */
-function handleClasses({ el, classes = {} }) {
+function handleClasses({ el, classes }) {
+  if (!classes) {
+    el.className = 'fa-solid'
+    return
+  }
+
   if (!classes.primary) {
     throw new Error(
       `Oops, button accepts a "classes" object with "primary" (required), "secondary", and "other" attributes`

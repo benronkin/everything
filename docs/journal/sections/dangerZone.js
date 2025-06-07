@@ -26,6 +26,7 @@ export function dangerZone() {
 
   react(el)
 
+  el.classList.add('mt-20')
   el.querySelector('#danger-zone-header').insertHtml('Delete entry')
 
   return el
