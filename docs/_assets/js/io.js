@@ -39,6 +39,11 @@ export async function getWebApp(path) {
   let res
   try {
     res = await fetch(req)
+
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
     const { status, message, data, unauthorized } = await res.json()
 
     if (unauthorized) {
@@ -46,22 +51,24 @@ export async function getWebApp(path) {
     }
 
     if (status !== 200) {
-      console.log(`getWebApp ${status} error for path: "${path}":`, message)
+      console.log(
+        `getWebApp ${status} sent by server for path: "${path}":`,
+        message
+      )
       return { error: message }
     }
     return { ...data, message }
   } catch (error) {
-    if (path.includes('localhost')) {
+    if (path.includes('http://')) {
       console.warn('Is cloudflare running?')
       return { warn: 'Is CloudFlare running locally?' }
     }
 
-    console.log('getWebapp error:', error)
+    console.log('For path:', path)
+    console.log('getWebapp', error)
 
     return {
-      error: `getWebApp error: ${error}\nRes: ${
-        res ? await res.text() : 'res is empty'
-      }`,
+      error,
     }
   }
 }

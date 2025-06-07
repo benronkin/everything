@@ -1,7 +1,7 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { createDiv } from './div.js'
-import { createIcon } from './icon.js'
-import { createSpan } from './span.js'
+import { createDiv } from '../_partials/div.js'
+import { createIcon } from '../_partials/icon.js'
+import { createSpan } from '../_partials/span.js'
 import { createModalDelete } from './modalDelete.js'
 
 // -------------------------------

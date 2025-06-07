@@ -221,7 +221,7 @@ function addElementParts({ el, name, events }) {
   const divEl = document.createElement('div')
   divEl.className = 'caret-wrapper'
   el.appendChild(divEl)
-  const iconEl = createIcon({ className: 'fa-caret-down' })
+  const iconEl = createIcon({ classes: { primary: 'fa-caret-down' } })
   divEl.appendChild(iconEl)
 
   for (const [k, v] of Object.entries(events)) {

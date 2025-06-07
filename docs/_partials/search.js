@@ -29,67 +29,6 @@ export function createSearch({
 
   const el = document.createElement('div')
 
-  Object.defineProperties(el, {
-    classes: {
-      get() {
-        return el.className
-      },
-      set(newValue = '') {
-        el.className = `${newValue}`.trim()
-      },
-    },
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = 'test-search'
-      },
-    },
-    message: {
-      get() {
-        return el.querySelector('.message').value
-      },
-      set(newValue) {
-        el.querySelector('.message').value = newValue
-      },
-    },
-    searchCb: {
-      get() {
-        return el._searchCb
-      },
-      set(newValue) {
-        el._searchCb = newValue
-      },
-    },
-    searchEntity: {
-      get() {
-        return el._searchEntity
-      },
-      set(newValue) {
-        el._searchEntity = newValue
-      },
-    },
-    searchResultsCb: {
-      get() {
-        return el._searchResultsCb
-      },
-      set(newValue) {
-        el._searchResultsCb = newValue
-      },
-    },
-    value: {
-      get() {
-        return el.querySelector('input').value
-      },
-      set(newValue) {
-        el.querySelector('input').value = newValue
-      },
-    },
-  })
-
   el.setSearchMessage = setSearchMessage.bind(el)
 
   value && (el.value = value)

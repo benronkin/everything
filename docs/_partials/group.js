@@ -1,6 +1,7 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { insertHtml } from '../_assets/js/format.js'
 import { newState } from '../_assets/js/newState.js'
+import { createDiv } from './div.js'
 
 // -------------------------------
 // Globals
@@ -9,7 +10,7 @@ import { newState } from '../_assets/js/newState.js'
 const css = `
 .group {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: var(--border-radius);  
@@ -27,21 +28,13 @@ const css = `
 export function createGroup({ id, className, html } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('')
+  const el = createDiv({ id, className, html })
 
   el.insertHtml = insertHtml.bind(el)
 
   build(el)
   react(el)
   listen(el)
-
-  if (id) {
-    el.id = id
-    el.dataset.id = id
-  }
-  className && (el.className = className)
-  el.classList.add('group')
-  html && el.insertHtml(html)
 
   return el
 }
@@ -59,12 +52,12 @@ function build(el) {}
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
 /**
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {})
 }

@@ -1,4 +1,4 @@
-import { createToolbar } from '../../_instances/toolbar.js'
+import { createToolbar } from '../../_composites/toolbar.js'
 import { createIcon } from '../../_partials/icon.js'
 
 // -------------------------------
@@ -10,7 +10,9 @@ import { createIcon } from '../../_partials/icon.js'
  */
 export function toolbar() {
   const el = createToolbar({
-    children: [createIcon({ classes: { primary: 'fa-plus' } })],
+    children: [
+      createIcon({ classes: { primary: 'fa-plus', other: ['primary'] } }),
+    ],
   })
   return el
 }

@@ -7,7 +7,7 @@ import { newState } from '../_assets/js/newState.js'
 
 const css = `
 i {
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
@@ -29,7 +29,7 @@ i.shake {
 // -------------------------------
 
 export function createIcon({
-  id = `i=${crypto.randomUUID()}`,
+  id = `i-${crypto.randomUUID()}`,
   classes,
   role,
 } = {}) {

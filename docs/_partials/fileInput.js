@@ -38,7 +38,7 @@ const css = `
  *
  * Constructor for custom file input element
  */
-export function createFileInput({ iconClass, label, accept = '' }) {
+export function createFileInput({ iconClass, className, label, accept = '' }) {
   injectStyle(css)
 
   const el = createDiv({ className: 'file-upload' })
@@ -46,6 +46,8 @@ export function createFileInput({ iconClass, label, accept = '' }) {
   el.clear = clear.bind(el)
 
   build({ el, iconClass, label, accept })
+
+  className && (el.className = className)
 
   return el
 }
@@ -71,6 +73,7 @@ function build({ el, iconClass, label, accept }) {
     id: 'file-name',
     iconClass,
     html: label,
+    className: 'primary',
   })
   labelEl.setAttribute('for', 'hidden-file-input')
   el.appendChild(labelEl)

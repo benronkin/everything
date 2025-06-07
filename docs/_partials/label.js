@@ -1,6 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { insertHtml } from '../_assets/js/format.js'
-import { createIcon } from './icon.js'
 
 // -------------------------------
 // Globals

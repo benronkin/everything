@@ -1,16 +1,28 @@
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
+import { createCollapsibleGroup } from '../../_partials/collapsibleGroup.js'
+import { createIcon } from '../../_partials/icon.js'
+import { createSpan } from '../../_partials/span.js'
+import { createImage } from '../../_partials/image.js'
+import { createInput } from '../../_partials/input.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
+.photo-item.container {
+  padding: 0;
+  width: 100%;
+}
 .journal-photo {
   max-width: 100%;
   height: auto;
   display: block;
   margin-top: 10px;
+}
+.journal-photo-caption {
+  margin-top: 20px;
 }
 `
 
@@ -42,17 +54,20 @@ export function createPhotoItem({ id, imgSrc, caption }) {
  *
  */
 function build(el) {
-  const flexEl = createDiv({ className: 'flex' })
-  el.appendItem(flexEl)
+  const cgEl = createCollapsibleGroup({
+    collapsed: true,
+    html: [createIcon({ classes: { primary: 'fa-trash' } })],
+  })
+  el.appendChild(cgEl)
+
+  el.appendChild(createSpan({ className: 'photo-message' }))
+
+  el.appendChild(createImage({ className: 'journal-photo' }))
+
+  el.appendChild(
+    createInput({
+      className: 'journal-photo-caption',
+      placeholder: 'Add caption...',
+    })
+  )
 }
-const html = `
-
-  <div class="group collapsed">
-  <i class="group-expander fa-solid fa-chevron-left collapsed"></i>
-  <i class="fa-solid fa-trash hidden"></i>
-  </div>
-  <span class="photo-message"></span>
-
-<img />
-<input type="text" />
-`

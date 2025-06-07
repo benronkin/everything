@@ -55,12 +55,12 @@ function build(el) {}
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
 /**
  *
  */
 function listen({ el, id }) {
-  el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {})
 }

@@ -4,7 +4,7 @@
   the call so that it can be mocked in vitest mocking of the
  */
 // api/photos.js
-import { getWebApp } from '../_assets/js/io.js'
+import { getWebApp } from './io.js'
 
 export async function getR2MetaData(url) {
   const res = await getWebApp(url)

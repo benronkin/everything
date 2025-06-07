@@ -35,7 +35,6 @@ nav .brand {
   }
 nav .brand h3 {
   margin: 0;
-  padding-left: 5px;
   white-space: nowrap;
   font-weight: 600;
   letter-spacing: 0.5px;

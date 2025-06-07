@@ -6,8 +6,10 @@ import { createIcon } from '../../_partials/icon.js'
 import { createInput } from '../../_partials/input.js'
 import { createParagraph } from '../../_partials/paragraph.js'
 import { createTextarea } from '../../_partials/textarea.js'
+import { appendEntryDetails } from './entry.form.js'
 import { createPhotoForm } from './photo.form.js'
 import { dangerZone } from './dangerZone.js'
+import { photoList } from './photoList.js'
 
 // -------------------------------
 // Globals
@@ -15,11 +17,8 @@ import { dangerZone } from './dangerZone.js'
 
 const css = `
 #main-panel {
-  padding: 0 20px;
   align-items: center;
-  width: calc(100% - var(--sidebar-width));
-  padding-left: 20px;
-  /* border-left: 1px solid var(--purple2); */
+  width: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -31,12 +30,12 @@ const css = `
 }
 #main-panel input.field,
 #main-panel textarea.field {
-  width: 100%;
-  margin: 10px 0;
+  padding: 0;
+  margin: 0;
   border-bottom: 1px solid var(--gray3);
 }
 #main-panel textarea.field {
-  min-height: 52px;
+  line-height: 13px;
 }
 `
 
@@ -69,66 +68,7 @@ export function mainPanel() {
  * Add sub elements to the element
  */
 function build(el) {
-  el.appendChild(createHeader({ type: 'h5', html: 'Location' }))
-
-  el.appendChild(
-    createInput({
-      name: 'location',
-      id: 'journal-location',
-      className: 'field',
-    })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', html: 'Visited on' }))
-
-  el.appendChild(
-    createInput({
-      name: 'visit-date',
-      id: 'journal-visit-date',
-      className: 'field',
-      type: 'date',
-    })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', html: 'Notes' }))
-
-  el.appendChild(
-    createTextarea({
-      name: 'notes',
-      id: 'journal-notes',
-      className: 'field',
-    })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', html: 'City' }))
-
-  el.appendChild(
-    createInput({
-      name: 'city',
-      id: 'journal-city',
-      className: 'field',
-    })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', html: 'State' }))
-
-  el.appendChild(
-    createInput({
-      name: 'state',
-      id: 'journal-state',
-      className: 'field',
-    })
-  )
-
-  el.appendChild(createHeader({ type: 'h5', html: 'Country' }))
-
-  el.appendChild(
-    createInput({
-      name: 'country',
-      id: 'journal-country',
-      className: 'field',
-    })
-  )
+  appendEntryDetails(el)
 
   const phw = createDiv({
     id: 'photos-header-wrapper',
@@ -152,13 +92,7 @@ function build(el) {
 
   el.appendChild(upw)
 
-  el.appendChild(createDiv({ id: 'image-gallery' }))
-
-  el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
-
-  el.appendChild(
-    createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
-  )
+  el.appendChild(photoList())
 
   upw.appendChild(createPhotoForm())
 
@@ -193,7 +127,8 @@ function react(el) {
   // If there is an active-doc and it does not appear
   // in main-documents then delete active-doc
   newState.on('main-documents', 'mainPanel', (docs) => {
-    el.classList.add('hidden')
+    // el.classList.add('hidden')
+    document.querySelector('#left-panel').classList.add('hidden')
 
     const currentId = newState.get('active-doc')?.id
     if (!currentId) return

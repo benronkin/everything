@@ -7,7 +7,7 @@ main-documents and builds its children by itself.
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createList } from '../../_partials/list.js'
 import { newState } from '../../_assets/js/newState.js'
-import { createImageGalleryItem } from './photoItem.js'
+import { createPhotoItem } from './photoItem.js'
 import { getR2MetaData } from '../../_assets/js/r2MetaData.js'
 
 // -------------------------------
@@ -47,10 +47,10 @@ function react(el) {
   newState.on('active-doc', 'photoList', async ({ id }) => {
     el.deleteChildren()
 
-    const url = `/journal/photos/read?entry=${id}`
+    const url = `${newState.const('APP_URL')}/journal/photos/read?entry=${id}`
     const photos = await getR2MetaData(url)
     const children = photos.map((photo) =>
-      createImageGalleryItem({
+      createPhotoItem({
         id: photo.id,
         imgSrc: photo.url,
         caption: photo.caption,

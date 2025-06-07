@@ -1,12 +1,12 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { getWebApp } from '../_assets/js/io.js'
 import { newState } from '../_assets/js/newState.js'
-import { createButton } from './button.js'
-import { createDiv } from './div.js'
-import { createHeader } from './header.js'
-import { createIcon } from './icon.js'
-import { createInput } from './input.js'
-import { createSpan } from './span.js'
+import { createButton } from '../_partials/button.js'
+import { createDiv } from '../_partials/div.js'
+import { createHeader } from '../_partials/header.js'
+import { createIcon } from '../_partials/icon.js'
+import { createInput } from '../_partials/input.js'
+import { createSpan } from '../_partials/span.js'
 
 // -------------------------------
 // Globals

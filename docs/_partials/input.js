@@ -8,7 +8,6 @@ const css = `
 input {
   cursor: pointer;
   text-decoration: none;
-  padding: 7px 3px;
 }
 `
 

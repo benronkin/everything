@@ -34,16 +34,18 @@
     </div>
     <script type="module">
       import { getWebApp } from '../_assets/js/io.js'
-      import { state } from '../_assets/js/state.js'
+      import { newState } from '../_assets/js/newState.js'
       import { createFileInput } from '../_partials/fileInput.js'
       import { createFormHorizontal } from '../_partials/formHorizontal.js'
       import { createFormField } from '../_partials/formField.js'
+      import { createIcon } from '../_partials/icon.js'
       import { createTextarea } from '../_partials/textarea.js'
       import { createList } from '../_partials/list.js'
       import { createListItem } from '../_partials/listItem.js'
       import { createMenuItem } from '../_partials/menuItem.js'
       import { createSelect } from '../_partials/select.js'
-      import { createModalDelete } from '../sections/modalDelete.js'
+      import { createModalDelete } from '../_composites/modalDelete.js'
+      import { createCollapsibleGroup } from '../_partials/collapsibleGroup.js'
 
       const parent = document.querySelector('#parent')
 
@@ -100,14 +102,21 @@
       modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
       // modalDelete.show()
 
-      getWebApp(`${state.getWebAppUrl()}/recipes/categories/read`).then(
+      getWebApp(`${newState.const('APP_URL')}/recipes/categories/read`).then(
         ({ categories }) => {
           const selectEl = createSelect({
             options: categories,
             name: 'category',
           })
-          parent.appendChild(selectEl)
+          // parent.appendChild(selectEl)
         }
+      )
+
+      parent.appendChild(
+        createCollapsibleGroup({
+          collapsed: true,
+          html: [createIcon({ classes: { primary: 'fa-trash' } })],
+        })
       )
     </script>
   </body>

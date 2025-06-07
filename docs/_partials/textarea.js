@@ -9,8 +9,6 @@ textarea {
   border: none;
   cursor: pointer;
   text-decoration: none;
-  padding: 7px 3px;
-  min-height: 51px;
 }
 `
 
@@ -21,7 +19,13 @@ textarea {
 /**
  *
  */
-export function createTextarea({ id, name, value, className } = {}) {
+export function createTextarea({
+  id,
+  name,
+  value,
+  className,
+  placeholder,
+} = {}) {
   injectStyle(css)
 
   const el = document.createElement('textarea')
@@ -35,6 +39,7 @@ export function createTextarea({ id, name, value, className } = {}) {
   className && (el.className = className)
   value && (el.value = value)
   name && (el.name = name)
+  placeholder && (el.placeholder = placeholder)
 
   return el
 }

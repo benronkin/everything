@@ -36,8 +36,8 @@ form input {
   width: 100%;
 }
 form .message {
-  padding: 10px;
-  font-size: 0.75rem;
+  margin-left: 20px;
+  font-size: 0.9rem;
 }
 `
 

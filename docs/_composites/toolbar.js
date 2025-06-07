@@ -18,9 +18,11 @@ const css = `
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+  height: 38px;
   border: 1px solid var(--gray1);
   border-radius: 10px;
-  padding: 6px 20px;
+  padding: 4px 20px;
+  box-sizing: content-box;
   font-size: 1.1rem;
   transition: all 200ms ease;
 }

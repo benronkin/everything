@@ -1,5 +1,4 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { insertHtml } from '../_assets/js/format.js'
 import { newState } from '../_assets/js/newState.js'
 
 // -------------------------------
@@ -16,12 +15,10 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function create({ id, className, html } = {}) {
+export function createImage({ id, className, src } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('')
-
-  el.insertHtml = insertHtml.bind(el)
+  const el = document.createElement('img')
 
   build(el)
   react(el)
@@ -32,7 +29,7 @@ export function create({ id, className, html } = {}) {
     el.dataset.id = id
   }
   className && (el.className = className)
-  html && el.insertHtml(html)
+  src && (el.src = src)
 
   return el
 }
@@ -50,12 +47,12 @@ function build(el) {}
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
 /**
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {})
 }

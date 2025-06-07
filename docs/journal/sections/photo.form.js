@@ -1,9 +1,11 @@
-import { injectStyle } from '../../_assets/js/ui.js'
 import { newState } from '../../_assets/js/newState.js'
+import { injectStyle } from '../../_assets/js/ui.js'
+import { createDiv } from '../../_partials/div.js'
 import { createForm } from '../../_partials/form.js'
 import { createFileInput } from '../../_partials/fileInput.js'
 import { createButton } from '../../_partials/button.js'
 import { createInput } from '../../_partials/input.js'
+import { createInputGroup } from '../../_partials/inputGroup.js'
 import { createSpan } from '../../_partials/span.js'
 
 // -------------------------------
@@ -27,30 +29,34 @@ export function createPhotoForm() {
     children: [
       createFileInput({
         id: 'photo-file-input',
-        label: 'Select image',
+        label: 'Select photo',
         accept: 'image/*',
         iconClass: 'fa-camera',
       }),
-      createInput({
+      createInputGroup({
         id: 'photo-caption-input',
         className: 'bb-white',
         name: 'caption',
-        type: 'text',
+        iconClass: 'fa-tag',
         placeholder: 'Describe this photo...',
-        maxLength: '200',
       }),
       createInput({
         id: 'photo-entry-id',
         type: 'hidden',
         name: 'entry',
       }),
-      createButton({
-        className: 'fa-cloud-upload',
-        html: 'Upload',
-        type: 'submit',
-        disabled: true,
+      createDiv({
+        className: 'flex mt-20',
+        html: [
+          createButton({
+            className: 'fa-cloud-upload',
+            html: 'Upload',
+            type: 'submit',
+            disabled: true,
+          }),
+          createSpan({ className: 'form-message' }),
+        ],
       }),
-      createSpan({ className: 'message' }),
     ],
   })
 
@@ -60,16 +66,6 @@ export function createPhotoForm() {
 
   el.id = 'add-photo-form'
   el.className = 'hidden'
-
-  // events: {
-  //       // set the form's button's disabled
-  //       // based on file input contents
-  //       change: () => {
-  //         const el = getEl('add-photo-form')
-  //         const fileInput = el.querySelector('input[type="file"]')
-  //         el.disabled = !(fileInput?.files?.length > 0)
-  //       },
-  //     },
 
   return el
 }
@@ -81,18 +77,33 @@ export function createPhotoForm() {
 /**
  * Add sub elements to the element
  */
-function build(el) {}
+function build(el) {
+  el.addEventListener('change', () => {
+    const fileInput = el.querySelector('input[type="file"]')
+    if (fileInput?.files?.length) {
+      delete el.querySelector('button').disabled
+    } else {
+      el.querySelector('button').disabled = true
+    }
+  })
+}
 
 /**
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  newState.on('icon-click:add-photo-toggle', 'mainPanel', () => {
+    el.classList.toggle('hidden')
+
+    el.querySelector('input[type="file"]').value = ''
+    el.querySelector('#photo-caption-input').value = ''
+    el.querySelector('.form-message').insertHtml('')
+  })
 }
 
 /**
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {})
 }

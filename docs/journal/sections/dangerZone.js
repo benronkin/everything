@@ -1,6 +1,6 @@
 import { newState } from '../../_assets/js/newState.js'
 import { injectStyle } from '../../_assets/js/ui.js'
-import { createDangerZone } from '../../_partials/dangerZone.js'
+import { createDangerZone } from '../../_composites/dangerZone.js'
 import { createEntryTitle } from '../journal.utils.js'
 
 // -------------------------------

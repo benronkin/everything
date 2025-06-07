@@ -1,15 +1,12 @@
 import { injectStyle } from '../_assets/js/ui.js'
+import { insertHtml } from '../_assets/js/format.js'
 import { newState } from '../_assets/js/newState.js'
-import { createGroup } from './group.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
-.collapsible-group {
-  border: 1px solid var(--gray2);
-}
 `
 
 // -------------------------------
@@ -19,16 +16,23 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function createCollapisbleGroup({ id, className, html } = {}) {
+export function create({ id, className, html } = {}) {
   injectStyle(css)
 
-  const el = createGroup({ id, className, html })
+  const el = document.createElement('')
+
+  el.insertHtml = insertHtml.bind(el)
 
   build(el)
   react(el)
   listen(el)
 
-  el.classList.add('collapisble-group')
+  if (id) {
+    el.id = id
+    el.dataset.id = id
+  }
+  className && (el.className = className)
+  html && el.insertHtml(html)
 
   return el
 }
@@ -46,12 +50,12 @@ function build(el) {}
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
 /**
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {})
 }

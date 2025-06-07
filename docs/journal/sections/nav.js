@@ -1,4 +1,4 @@
-import { createNav } from '../../_instances/nav.js'
+import { createNav } from '../../_composites/nav.js'
 
 // -------------------------------
 // Exports

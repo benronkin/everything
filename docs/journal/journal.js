@@ -5,7 +5,7 @@ import { rightDrawer } from './sections/rightDrawer.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../_partials/div.js'
-import { createFooter } from '../_instances/footer.js'
+import { createFooter } from '../_composites/footer.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { setMessage } from '../_assets/js/ui.js'
 import { fetchMainDocuments } from './journal.api.js'
@@ -54,7 +54,7 @@ async function build() {
   wrapperEl.appendChild(createFooter())
 
   columnsWrapperEl.appendChild(leftPanel())
-  columnsWrapperEl.appendChild(mainPanel())
+  // columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
 
   newState.set('main-documents', await fetchMainDocuments())

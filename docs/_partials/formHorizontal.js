@@ -91,14 +91,9 @@ export function createFormHorizontal({
 
   addEventHandlers({ el, events, inputEvents })
 
-  try {
-    el.value = value
-  } catch (e) {
-    // fail silently for vitest
-  }
   el.id = id
-  el.dataset.id = id
   el.className = 'form-horizontal'
+  el.value = value
 
   return el
 }
