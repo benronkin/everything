@@ -24,9 +24,6 @@ export function setEvents() {
     field.addEventListener('change', handleFieldChange)
   })
 
-  /* When a new journal entry is created */
-  getEl('add-journal').addEventListener('click', handleJournalCreate)
-
   /* When a journal entry is confirmed delete */
   document.addEventListener('modal-delete-confirmed', handleDeleteConfirmed)
 
@@ -47,34 +44,6 @@ function handleAddPhotoToggle() {
   const addPhotoForm = getEl('add-photo-form')
   addPhotoForm.toggleClass('hidden')
   addPhotoForm.clear()
-}
-
-/**
- * Handle journal create
- */
-async function handleJournalCreate() {
-  getEl('add-journal').disabled = true
-  const { id } = await getWebApp(`${state.getWebAppUrl()}/journal/create`)
-  const { defaults } = await getWebApp(
-    `${state.getWebAppUrl()}/journal/defaults/read`
-  )
-
-  const dateString = new Date().toISOString()
-
-  const newEntry = {
-    id,
-    location: 'New entry',
-    created_at: dateString,
-    visit_date: dateString,
-    city: defaults.city,
-    state: defaults.state,
-    country: defaults.country,
-    notes: '',
-  }
-  state.push('journal', newEntry)
-  state.set('active-doc', newEntry)
-
-  getEl('add-journal').disabled = false
 }
 
 /**

@@ -22,7 +22,8 @@ const css = `
   height: 38px;
   border: 1px dotted var(--gray1);
   border-radius: 10px;
-  padding: 4px 10px;
+    padding: 4px 10px;
+
   box-sizing: content-box;
   font-size: 1.1rem;
   transition: all 200ms ease;

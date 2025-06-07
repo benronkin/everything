@@ -1,8 +1,8 @@
-import { injectStyle } from '../_assets/js/ui.js'
+import { injectStyle, log } from '../_assets/js/ui.js'
+import { newState } from '../_assets/js/newState.js'
+import { createForm } from './form.js'
 import { createButton } from './button.js'
 import { createInputGroup } from './inputGroup.js'
-import { createIcon } from './icon.js'
-import { createInput } from './input.js'
 import { createSpan } from './span.js'
 
 // -------------------------------
@@ -39,41 +39,42 @@ const css = `
  */
 export function createFormHorizontal({
   id,
-  inputType = 'text',
-  inputName,
+  type = 'text',
+  name,
   placeholder,
-  inputAutoComplete,
+  autocomplete,
   buttonIconClass,
   formIconClass,
   submitText,
   value,
   disabled = false,
-  events = {},
-  inputEvents = {},
 }) {
   injectStyle(css)
 
-  const el = document.createElement('form')
+  const el = createForm({
+    id,
+    type,
+    name,
+    placeholder,
+    autocomplete,
+    value,
+  })
 
   build({
     el,
-    id,
-    inputType,
-    inputName,
+    name,
+    type,
     placeholder,
-    inputAutoComplete,
+    autocomplete,
     buttonIconClass,
     formIconClass,
     submitText,
-    value,
     disabled,
-    events,
-    inputEvents,
   })
 
-  id && (el.id = id)
+  listen(el)
+
   el.className = 'form-horizontal'
-  value && (el.value = value)
 
   return el
 }
@@ -88,8 +89,8 @@ export function createFormHorizontal({
  */
 function build({
   el,
-  inputType,
-  inputName,
+  type,
+  name,
   placeholder,
   autocomplete,
   buttonIconClass,
@@ -100,10 +101,10 @@ function build({
 }) {
   el.appendChild(
     createInputGroup({
-      iconClass: formIconClass,
+      classes: { icon: formIconClass },
       placeholder,
-      type: inputType,
-      name: inputName,
+      type,
+      name,
       autocomplete,
       value,
     })
@@ -121,4 +122,26 @@ function build({
   }
 
   el.appendChild(createSpan({ className: 'form-message' }))
+}
+
+/**
+ * Set up event listeners
+ */
+function listen(el) {
+  // this handler is needed in cases where the form lacks
+  // a submit type button, yet the form might still submit
+  // without firing its submit event
+  el.querySelector('input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const inputEl = e.target
+      const stateValue = { id: el.id, [inputEl.name]: inputEl.value }
+      newState.set(`form-submit:${el.id}`, stateValue)
+      log(
+        `formHorizontal sets form submit with value: ${JSON.stringify(
+          stateValue
+        )}`
+      )
+    }
+  })
 }

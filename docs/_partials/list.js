@@ -1,6 +1,6 @@
-import { enableDragging, enableClicking } from '../_assets/js/drag.js'
-import { newState } from '../_assets/js/newState.js'
 import { injectStyle } from '../_assets/js/ui.js'
+import { newState } from '../_assets/js/newState.js'
+import { enableDragging, enableClicking } from '../_assets/js/drag.js'
 import { createDiv } from '../_partials/div.js'
 
 // -------------------------------
@@ -189,8 +189,8 @@ function has(text) {
  *
  */
 function reset() {
-  this.querySelectorAll('[data-list-item]').forEach(
-    (child) => (child.selected = false)
+  this.querySelectorAll('[data-list-item]').forEach((child) =>
+    child.classList.remove('active')
   )
 }
 

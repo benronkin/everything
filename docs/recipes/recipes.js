@@ -17,7 +17,7 @@ import { createIcon } from '../_partials/icon.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
 import { createModalDelete } from '../sections/modalDelete.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createSearch } from '../_partials/search.js'
+// import { createSearch } from '../_partials/search.js'
 import { createSelect } from '../_partials/select.js'
 import { createSwitch } from '../_partials/switch.js'
 import { createList } from '../_partials/list.js'
@@ -84,14 +84,14 @@ async function handleDOMContentLoaded() {
   })
   getEl('main-group-wrapper').appendChild(mainIconGroup)
 
-  getEl('left-panel').prepend(
-    createSearch({
-      iconClass: 'fa-magnifying-glass',
-      placeholder: 'Search recipes',
-      searchCb: searchRecipes,
-      searchResultsCb: handleSearchResult,
-    })
-  )
+  // getEl('left-panel').prepend(
+  //   createSearch({
+  //     iconClass: 'fa-magnifying-glass',
+  //     placeholder: 'Search recipes',
+  //     searchCb: searchRecipes,
+  //     searchResultsCb: handleSearchResult,
+  //   })
+  // )
 
   getEl('left-panel').appendChild(
     createList({

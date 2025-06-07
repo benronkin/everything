@@ -1,6 +1,6 @@
 import { injectStyle } from '../../_assets/js/ui.js'
-import { newState } from '../../_assets/js/newState.js'
 import { log } from '../../_assets/js/ui.js'
+import { newState } from '../../_assets/js/newState.js'
 import { createDiv } from '../../_partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
 import { createFormHorizontal } from '../../_partials/formHorizontal.js'
@@ -10,7 +10,9 @@ import { createFormHorizontal } from '../../_partials/formHorizontal.js'
 // -------------------------------
 
 const css = `
-
+#left-panel {
+  width: 100%;
+}
 `
 
 // -------------------------------
@@ -45,11 +47,13 @@ export function leftPanel() {
 function build(el) {
   el.appendChild(
     createFormHorizontal({
+      id: 'left-panel-search',
       formIconClass: 'fa-magnifying-glass',
       placeholder: 'Search entries...',
-      inputName: 'search-entry',
+      name: 'search-entry',
     })
   )
+
   el.appendChild(mainDocumentsList())
 }
 
@@ -81,6 +85,8 @@ function react(el) {
     } else {
       el.classList.remove('hidden')
       log('leftPanel is showing itself on a null active-doc')
+      el.querySelector('#left-panel-list').reset()
+      log('leftPanel is removing active class from all mainDocumentItems')
     }
   })
 }

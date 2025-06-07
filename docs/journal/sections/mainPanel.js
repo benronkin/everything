@@ -33,7 +33,7 @@ const css = `
   border-bottom: 1px dotted var(--gray1);
 }
 #main-panel textarea.field {
-  line-height: 13px;
+  line-height: 16px;
 }
 `
 

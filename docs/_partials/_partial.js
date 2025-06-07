@@ -54,8 +54,10 @@ function react(el) {
 }
 
 /**
- *
+ * Set event handlers which can set state.
  */
 function listen(el) {
-  // el.addEventListener('click', () => {})
+  // el.addEventListener('click', () => {
+  //   newState.set('stateVar', 'value')
+  // })
 }

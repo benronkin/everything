@@ -76,9 +76,7 @@ function listen({ el }) {
     if (el.draggable) {
       return
     }
-
-    el.classList.toggle('active')
-
+    // list manages active class
     newState.set('item-click', el.dataset.id)
   })
 }

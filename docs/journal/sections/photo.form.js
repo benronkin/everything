@@ -26,6 +26,7 @@ export function createPhotoForm() {
   injectStyle(css)
 
   const el = createForm({
+    id: 'add-photo-form',
     children: [
       createFileInput({
         id: 'photo-file-input',
@@ -63,7 +64,6 @@ export function createPhotoForm() {
   react(el)
   listen(el)
 
-  el.id = 'add-photo-form'
   el.className = 'hidden'
 
   return el

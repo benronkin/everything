@@ -2,9 +2,14 @@
   This module creates a custom form. 
   It expects one or more children (fully formed input or fileInput)
   as opposed to creating an input like formHorizontal does.
+
+  DO NOT listen to form submissions here since the form lacks
+  a submit button so hitting enter might submit the form without
+  firing its submit event.
 */
 
 import { injectStyle } from '../_assets/js/ui.js'
+import { newState } from '../_assets/js/newState.js'
 
 // -------------------------------
 // Globals
@@ -61,9 +66,7 @@ export function createForm({ id, className, children = [] }) {
     el.dataset.id = id
   }
 
-  if (className) {
-    el.className = className
-  }
+  className && (el.className = className)
 
   build({ el, children })
 

@@ -44,10 +44,17 @@ export function photoList() {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('active-doc', 'photoList', async ({ id }) => {
+  newState.on('active-doc', 'photoList', async (doc) => {
+    if (!doc) {
+      // active-state is null
+      return
+    }
+
     el.deleteChildren()
 
-    const url = `${newState.const('APP_URL')}/journal/photos/read?entry=${id}`
+    const url = `${newState.const('APP_URL')}/journal/photos/read?entry=${
+      doc.id
+    }`
     const photos = await getR2MetaData(url)
     const children = photos.map((photo) =>
       createPhotoItem({

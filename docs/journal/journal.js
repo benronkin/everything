@@ -8,7 +8,7 @@ import { createDiv } from '../_partials/div.js'
 import { createFooter } from '../_composites/footer.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { setMessage } from '../_assets/js/ui.js'
-import { fetchMainDocuments } from './journal.api.js'
+import { fetchRecentEntries, searchEntries } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    newState.set('main-documents', await fetchMainDocuments())
+    const { data } = await fetchRecentEntries()
+    newState.set('main-documents', data)
   } catch (error) {
     console.trace(error)
     // window.location.href = `../index.html?error=${error.message}`
@@ -65,27 +66,22 @@ async function build() {
 /**
  *
  */
-function react() {}
+function react() {
+  newState.on('form-submit:left-panel-search', 'journal', async (doc) => {
+    let resp
 
-/**
- * Get the searched journals
- */
-async function searchJournal(q) {
-  const data = await getWebApp(
-    `${newState.getAppUrl()}/journal/search?q=${q.trim().toLowerCase()}`
-  )
+    if (doc['search-entry'].trim().length) {
+      resp = await searchEntries(doc['search-entry'])
+    } else {
+      // get most recent entries instead
+      resp = await fetchRecentEntries()
+    }
 
-  const { journal, message } = data
-  if (message) {
-    console.log(`searchJournal error: ${message}`)
-    return message
-  }
-  return journal
-}
-
-/**
- * Handle results coming from the search partial
- */
-async function handleSearchResult(results) {
-  newState.set('journa', results)
+    const { data, message } = resp
+    if (message) {
+      console.error(`Journal server error: ${message}`)
+      return
+    }
+    newState.set('main-documents', data)
+  })
 }

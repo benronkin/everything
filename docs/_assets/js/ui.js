@@ -9,54 +9,8 @@ import { createToast, removeToasts } from '../../_partials/toast.js'
 let sharedStyleEl = null
 
 // ------------------------
-// Exported functions
+// Exports
 // ------------------------
-
-/**
- * Get an element using its data-id attribute
- */
-export function getEl(id) {
-  const el = document.querySelector(`[data-id="${id}"]`)
-  if (!el) {
-    console.trace(`Oops, unable to locate element with data-id="${id}"`)
-
-    return null
-  }
-
-  if (!el._enhanced) {
-    el.toggleClass = function (className) {
-      el.classList.toggle(className)
-      return el // for chainng
-    }
-
-    Object.defineProperties(el, {
-      hidden: {
-        get() {
-          return el.classList.contains('hidden')
-        },
-        set(v) {
-          el.classList.toggle('hidden', v)
-        },
-      },
-    })
-    el._enhanced = true // prevent redefining every time
-  }
-
-  if (!('value' in el)) {
-    // Fallback for dealing with elements that
-    // lack native or my custom value method
-    Object.defineProperty(el, 'value', {
-      get() {
-        return el.innerHTML
-      },
-      set(newValue) {
-        el.innerHTML = newValue
-      },
-    })
-  }
-
-  return el
-}
 
 /**
  * Detect if mobile device
