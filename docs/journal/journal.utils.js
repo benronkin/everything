@@ -1,8 +1,10 @@
+import { formatDateParts } from '../_assets/js/format.js'
+
 /**
  * Format an entry title
  */
 export function createEntryTitle({ location, visit_date }) {
-  const [, month, day] = visit_date.split('T')[0].split('-')
+  const { month, day } = formatDateParts(visit_date)
   const formatted = `(${month}/${day})`
 
   const el = document.createElement('span')

@@ -19,6 +19,10 @@ export const newState = {
     return this._data[key]
   },
 
+  /**
+   * Get the subscribers of a state variable
+   * @param {string} stateVar The state variable
+   */
   getSubscribers(stateVar) {
     if (!this._listeners[stateVar]) {
       return null

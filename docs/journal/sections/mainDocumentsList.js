@@ -39,11 +39,11 @@ function react(el) {
     el.deleteChildren().addChildren(children)
 
     // select previously active child
-    const priorDoc = newState.get('active-doc')
-    if (priorDoc) {
-      const child = el.getChildById(priorDoc.id)
-      child && (child.selected = true)
-    }
+    // const priorDoc = newState.get('active-doc')
+    // if (priorDoc) {
+    //   const child = el.getChildById(priorDoc.id)
+    //   child && (child.selected = true)
+    // }
   })
 
   setMessage()

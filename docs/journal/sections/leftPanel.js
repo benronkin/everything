@@ -61,32 +61,30 @@ function build(el) {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('main-documents', 'leftPanel', (docs) => {
+  newState.on('app-mode', 'leftPanel', (appMode) => {
+    if (appMode !== 'left-panel') {
+      log(`letPanel is hiding itself on app-mode: ${appMode}`)
+      el.classList.add('hidden')
+      return
+    }
+
     el.classList.remove('hidden')
-    log('leftPanel is showing itself on main-documents')
+    log(`letPanel is showing itself on app-mode: ${appMode}`)
 
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
     const currentId = newState.get('active-doc')?.id
-    if (!currentId) return
+    if (!currentId) {
+      el.querySelector('#left-panel-list').reset()
+      return
+    }
 
+    const docs = newState.get('main-documents')
     const docExists = docs.findIndex((el) => el.id === currentId)
     if (!docExists) {
       newState.set('active-doc', null)
       log('leftPanel is nullyfing active-doc on main-documents')
       return
-    }
-  })
-
-  newState.on('active-doc', 'leftPanel', (doc) => {
-    if (doc) {
-      el.classList.add('hidden')
-      log('leftPanel is hiding itself on an active-doc')
-    } else {
-      el.classList.remove('hidden')
-      log('leftPanel is showing itself on a null active-doc')
-      el.querySelector('#left-panel-list').reset()
-      log('leftPanel is removing active class from all mainDocumentItems')
     }
   })
 }

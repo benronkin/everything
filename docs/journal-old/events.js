@@ -16,79 +16,11 @@ import { getWebApp, postWebAppForm, postWebAppJson } from '../_assets/js/io.js'
  * Set multiple the event handlers of the recipes page
  */
 export function setEvents() {
-  /* When the add photo toggle is clicked */
-  getEl('add-photo-toggle').addEventListener('click', handleAddPhotoToggle)
-
-  /* When journal field loses focus */
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
-  })
-
   /* When a journal entry is confirmed delete */
   document.addEventListener('modal-delete-confirmed', handleDeleteConfirmed)
 
   /* When the add photo form is submitted */
   getEl('add-photo-form').addEventListener('submit', handleAddPhotoSubmit)
-}
-
-// ----------------------
-// Event handlers
-// ----------------------
-
-/**
- * Handle the add photo toggle
- */
-function handleAddPhotoToggle() {
-  getEl('add-photo-toggle').toggleClass('fa-close').toggleClass('fa-camera')
-
-  const addPhotoForm = getEl('add-photo-form')
-  addPhotoForm.toggleClass('hidden')
-  addPhotoForm.clear()
-}
-
-/**
- * Handle journal entry field change
- */
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
-
-  if (['location', 'visit_date'].includes(section)) {
-    getEl('left-panel-list').getSelected().value = createEntryTitle(
-      getEl('journal-location').value,
-      getEl('journal-visit-date').value
-    )
-  }
-
-  const id = getEl('journal-id').value
-
-  const doc = { id, collection: 'journal', key: section, value }
-  state.setById(doc)
-
-  try {
-    const { message, error } = await postWebAppJson(
-      `${state.getWebAppUrl()}/journal/update`,
-      {
-        id,
-        value,
-        section,
-      }
-    )
-    if (error) {
-      throw new Error(error)
-    }
-    console.log(message)
-
-    if (['city', 'state', 'country'].includes(section)) {
-      await postWebAppJson(`${state.getWebAppUrl()}/journal/defaults/update`, {
-        id,
-        [section]: value,
-      })
-    }
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 /**

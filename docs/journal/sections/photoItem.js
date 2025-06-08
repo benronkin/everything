@@ -42,6 +42,7 @@ export function createPhotoItem({ id, imgSrc, caption }) {
 
   imgSrc && (el.querySelector('img').src = imgSrc)
   caption && (el.querySelector('input').value = caption)
+  el.dataset.listItem = true
 
   return el
 }

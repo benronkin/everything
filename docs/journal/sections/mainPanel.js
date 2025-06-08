@@ -3,8 +3,9 @@ import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
 import { createIcon } from '../../_partials/icon.js'
-import { appendEntryDetails } from './entry.form.js'
+import { createEntryGroup } from './entry.group.js'
 import { createPhotoForm } from './photo.form.js'
+import { createSpan } from '../../_partials/span.js'
 import { dangerZone } from './dangerZone.js'
 import { photoList } from './photoList.js'
 import { log } from '../../_assets/js/ui.js'
@@ -66,7 +67,7 @@ export function mainPanel() {
  * Add sub elements to the element
  */
 function build(el) {
-  appendEntryDetails(el)
+  el.appendChild(createEntryGroup())
 
   const phw = createDiv({
     id: 'photos-header-wrapper',
@@ -101,26 +102,24 @@ function build(el) {
   // )
 
   el.appendChild(dangerZone())
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
+
+  el.appendChild(createSpan({ id: 'journal-id' }))
 }
 
 /**
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('main-documents', 'mainPanel', () => {
-    el.classList.add('hidden')
-    log('mainPanel is hiding itself on main-documents')
-  })
-
-  // if there is an active doc then show the panel
-  // and populate the fields
-  newState.on('active-doc', 'mainPanel', (doc) => {
-    if (!doc) {
+  newState.on('app-mode', 'mainPanel', (appMode) => {
+    if (appMode !== 'main-panel') {
       el.classList.add('hidden')
-      log('mainPanel is hiding itself on nullifying of active-doc')
+      log(`mainPanel is hiding itself on app-mode: ${appMode}`)
       return
     }
 
+    const doc = newState.get('active-doc')
     el.classList.remove('hidden')
     log('mainPanel is showing itself on active-doc')
 
@@ -131,5 +130,6 @@ function react(el) {
     el.querySelector('[data-id="journal-city"]').value = doc.city
     el.querySelector('[data-id="journal-state"]').value = doc.state
     el.querySelector('[data-id="journal-country"]').value = doc.country
+    el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
   })
 }

@@ -78,4 +78,5 @@ export function handleMainDocumentClick(e) {
   const mainDocuments = newState.get('main-documents')
   const activeDoc = mainDocuments.find((doc) => doc.id === el.id)
   newState.set('active-doc', activeDoc)
+  newState.set('app-mode', 'main-panel')
 }

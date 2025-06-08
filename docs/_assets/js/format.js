@@ -29,3 +29,20 @@ export function insertHtml(content) {
     })
   }
 }
+
+/**
+ * Convert a UTC date in ISO format to date/time
+ * parts in local time
+ */
+export function formatDateParts(isoDateString) {
+  const dateObj = new Date(isoDateString)
+
+  return {
+    year: dateObj.getFullYear(),
+    month: dateObj.getMonth() + 1,
+    day: dateObj.getDate(),
+    hour: dateObj.getHours(),
+    minute: dateObj.getMinutes(),
+    second: dateObj.getSeconds(),
+  }
+}

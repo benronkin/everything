@@ -1,6 +1,5 @@
-import { injectStyle } from '../_assets/js/ui.js'
-import { getWebApp } from '../_assets/js/io.js'
 import { newState } from '../_assets/js/newState.js'
+import { injectStyle } from '../_assets/js/ui.js'
 import { createButton } from '../_partials/button.js'
 import { createDiv } from '../_partials/div.js'
 import { createHeader } from '../_partials/header.js'
@@ -16,6 +15,7 @@ const css = `
   dialog {
     padding: 20px 30px;
     max-width: 400px;
+    width: 90%;
     margin: auto;
   }
   #modal-delete .input-group {
@@ -65,6 +65,10 @@ export function createModalDelete({ id, password = true }) {
   build({ el, password })
   react(el)
   listen(el)
+
+  el.message = message.bind(el)
+  el.getPassword = getPassword.bind(el)
+  el.setPassword = setPassword.bind(el)
 
   if (id) {
     el.id = id
@@ -132,6 +136,7 @@ function build({ el, password }) {
 
   spanEl = createSpan({
     id: 'modal-delete-message',
+    className: 'smaller',
   })
   divEl.appendChild(spanEl)
 }
@@ -139,34 +144,10 @@ function build({ el, password }) {
 /**
  *
  */
-function react(el) {
+export function react(el) {
   newState.on('button-click:modal-cancel-btn', 'modalDelete', () => {
     el.querySelector('#modal-delete-input').value = ''
     el.close()
-  })
-
-  newState.on('button-click:modal-delete-btn', 'modalDelete', async () => {
-    const messageEl = el.querySelector('#modal-delete-message')
-    messageEl.insertHtml()
-
-    const id = newState.get('active-doc').id
-    const password = el.querySelector('#modal-delete-input').value
-    const { error } = await getWebApp(
-      `${newState.const(
-        'APP_URL'
-      )}/journal/delete?id=${id}&password=${password}`
-    )
-
-    if (error) {
-      messageEl.insertHtml(error)
-      return
-    }
-
-    el.close()
-    newState.set(
-      'main-documents',
-      newState.get('main-documents').filter((doc) => doc.id !== id)
-    )
   })
 }
 
@@ -186,4 +167,29 @@ function listen(el) {
       el.close()
     }
   })
+}
+
+// -------------------------------
+// Object methods
+// -------------------------------
+
+/**
+ *
+ */
+function message(text = '') {
+  this.querySelector('#modal-delete-message').insertHtml(text)
+}
+
+/**
+ *
+ */
+function getPassword() {
+  return this.querySelector('#modal-delete-input').value
+}
+
+/**
+ *
+ */
+function setPassword(value) {
+  return (this.querySelector('#modal-delete-input').value = value)
 }

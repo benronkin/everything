@@ -7,8 +7,14 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../_partials/div.js'
 import { createFooter } from '../_composites/footer.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
-import { setMessage } from '../_assets/js/ui.js'
-import { fetchRecentEntries, searchEntries } from './journal.api.js'
+import { log, setMessage } from '../_assets/js/ui.js'
+import {
+  createEntry,
+  deleteEntry,
+  fetchDefaults,
+  fetchRecentEntries,
+  searchEntries,
+} from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -27,6 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const { data } = await fetchRecentEntries()
     newState.set('main-documents', data)
+    newState.set('app-mode', 'left-panel')
+
+    window.newState = newState // avail to browser console
   } catch (error) {
     console.trace(error)
     // window.location.href = `../index.html?error=${error.message}`
@@ -67,21 +76,94 @@ async function build() {
  *
  */
 function react() {
-  newState.on('form-submit:left-panel-search', 'journal', async (doc) => {
-    let resp
+  newState.on('form-submit:left-panel-search', 'journal', reactSearch)
+  newState.on('icon-click:add-entry', 'journal', reactAdd)
+  newState.on('button-click:modal-delete-btn', 'journal', reactDelete)
+}
 
-    if (doc['search-entry'].trim().length) {
-      resp = await searchEntries(doc['search-entry'])
-    } else {
-      // get most recent entries instead
-      resp = await fetchRecentEntries()
-    }
+/**
+ * Add a journal entry
+ */
 
-    const { data, message } = resp
-    if (message) {
-      console.error(`Journal server error: ${message}`)
-      return
-    }
-    newState.set('main-documents', data)
-  })
+async function reactAdd({ id: btnId }) {
+  const addBtn = document.getElementById(btnId)
+  addBtn.disabled = true
+
+  const { id, error } = await createEntry()
+  if (error) {
+    console.error(`Journal server error: ${error}`)
+    return
+  }
+
+  const { defaults, error: error2 } = await fetchDefaults()
+  if (error2) {
+    console.error(`Journal server error: ${error2}`)
+    return
+  }
+
+  const dateString = new Date().toISOString()
+
+  const doc = {
+    id,
+    location: 'New entry',
+    created_at: dateString,
+    visit_date: dateString,
+    city: defaults.city,
+    state: defaults.state,
+    country: defaults.country,
+    notes: '',
+  }
+
+  newState.set('main-documents', [doc, ...newState.get('main-documents')])
+  newState.set('active-doc', doc)
+  newState.set('app-mode', 'main-panel')
+
+  delete addBtn.disabled
+}
+
+/**
+ *
+ */
+async function reactDelete() {
+  const modalEl = document.querySelector('#modal-delete')
+  modalEl.message('')
+
+  const id = newState.get('active-doc').id
+  const password = modalEl.getPassword()
+  const { error } = await deleteEntry(id, password)
+
+  if (error) {
+    modalEl.message(error)
+    return
+  }
+
+  modalEl.setPassword('')
+  modalEl.close()
+
+  const filteredDocs = newState
+    .get('main-documents')
+    .filter((doc) => doc.id !== id)
+  newState.set('main-documents', filteredDocs)
+  newState.set('app-mode', 'left-panel')
+}
+
+/**
+ *
+ */
+async function reactSearch(doc) {
+  let resp
+
+  if (doc['search-entry'].trim().length) {
+    resp = await searchEntries(doc['search-entry'])
+  } else {
+    // get most recent entries instead
+    resp = await fetchRecentEntries()
+  }
+
+  const { data, message } = resp
+  if (message) {
+    console.error(`Journal server error: ${message}`)
+    return
+  }
+  newState.set('main-documents', data)
 }
