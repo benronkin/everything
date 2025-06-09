@@ -1,13 +1,13 @@
 import { newState } from '../_assets/js/newState.js'
 import { getWebApp, postWebAppJson, postWebAppForm } from '../_assets/js/io.js'
 
+const url = newState.const('APP_URL')
+
 /**
  *
  */
 export async function createEntry() {
-  const { id, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/create`
-  )
+  const { id, error } = await getWebApp(`${url}/journal/create`)
   return { id, error }
 }
 
@@ -16,7 +16,7 @@ export async function createEntry() {
  */
 export async function deleteEntry(id, password) {
   const { journal, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/delete?id=${id}&password=${password}`
+    `${url}/journal/delete?id=${id}&password=${password}`
   )
   return { data: journal, error }
 }
@@ -25,9 +25,7 @@ export async function deleteEntry(id, password) {
  *
  */
 export async function fetchDefaults() {
-  const { defaults, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/defaults/read`
-  )
+  const { defaults, error } = await getWebApp(`${url}/journal/defaults/read`)
   return { defaults, error }
 }
 
@@ -36,7 +34,7 @@ export async function fetchDefaults() {
  */
 export async function fetchEntryPhotosMetadata(id) {
   const { photos, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/photos/read?entry=${id}`
+    `${url}/journal/photos/read?entry=${id}`
   )
   return { photos, error }
 }
@@ -45,9 +43,7 @@ export async function fetchEntryPhotosMetadata(id) {
  *
  */
 export async function fetchRecentEntries() {
-  const { journal, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/read`
-  )
+  const { journal, error } = await getWebApp(`${url}/journal/read`)
   return { data: journal, error }
 }
 
@@ -56,7 +52,7 @@ export async function fetchRecentEntries() {
  */
 export async function searchEntries(q) {
   const { journal, error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/search?q=${q.trim().toLowerCase()}`
+    `${url}/journal/search?q=${q.trim().toLowerCase()}`
   )
   return { data: journal, error }
 }
@@ -65,14 +61,11 @@ export async function searchEntries(q) {
  *
  */
 export async function updateEntry({ id, section, value }) {
-  const { message, error } = postWebAppJson(
-    `${newState.const('APP_URL')}/journal/update`,
-    {
-      id,
-      value,
-      section,
-    }
-  )
+  const { message, error } = postWebAppJson(`${url}/journal/update`, {
+    id,
+    value,
+    section,
+  })
   return { message, error }
 }
 
@@ -80,7 +73,7 @@ export async function updateEntry({ id, section, value }) {
  *
  */
 export async function updateJournalDefaults({ id, section, value }) {
-  await postWebAppJson(`${newState.const('APP_URL')}/journal/defaults/update`, {
+  await postWebAppJson(`${url}/journal/defaults/update`, {
     id,
     [section]: value,
   })
@@ -91,7 +84,7 @@ export async function updateJournalDefaults({ id, section, value }) {
  */
 export async function updatePhotoCaption({ id, value }) {
   const { error, message } = await postWebAppJson(
-    `${newState.const('APP_URL')}/journal/photos/update`,
+    `${url}/journal/photos/update`,
     {
       id,
       value: value,
@@ -106,7 +99,7 @@ export async function updatePhotoCaption({ id, value }) {
  */
 export async function addEntryPhoto(formData) {
   const { message } = await postWebAppForm(
-    `${newState.const('APP_URL')}/journal/photos/create`,
+    `${url}/journal/photos/create`,
     formData
   )
   return { message }
@@ -116,8 +109,6 @@ export async function addEntryPhoto(formData) {
  *
  */
 export async function deleteEntryPhoto(id) {
-  const { error } = await getWebApp(
-    `${newState.const('APP_URL')}/journal/photos/delete?id=${id}`
-  )
+  const { error } = await getWebApp(`${url}/journal/photos/delete?id=${id}`)
   return { error }
 }

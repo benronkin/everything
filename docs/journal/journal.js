@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     setMessage({ message: 'Loading...' })
 
+    handleTokenQueryParam()
+
     const token = localStorage.getItem('authToken')
     if (!token) {
       throw new Error('Token not found locally')
     }
-
-    handleTokenQueryParam()
 
     build()
 

@@ -1,4 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
+// import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -45,7 +46,11 @@ export function createInput({
   accept && (el.accept = accept)
   name && (el.name = name)
   placeholder && (el.placeholder = placeholder)
-  autocomplete && (el.autocomplete = autocomplete)
+  if (!autocomplete) {
+    autocomplete = 'off'
+  }
+
+  el.autocomplete = autocomplete
 
   return el
 }

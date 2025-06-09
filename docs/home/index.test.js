@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getNextPage, getSiteMap } from './index.js'
+import { getNextPage, getSiteMap } from './home.js'
 
 const siteMap = getSiteMap()
 

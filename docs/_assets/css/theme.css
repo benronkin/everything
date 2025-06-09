@@ -250,6 +250,12 @@ footer {
   background: var(--gray2);
   color: var(--gray5);
 }
+form button:disabled,
+form button:disabled:hover {
+  background-color: var(--gray3);
+  border: none;
+  box-shadow: none;
+}
 h4 {
   font-weight: 400;
   text-transform: uppercase;
@@ -300,6 +306,9 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
+.c-red3 {
+  color: var(--red3);
+}
 .danger,
 .toast.danger {
   background-color: var(--red2);
@@ -320,4 +329,7 @@ main {
 .md-item.active {
   border: 1px solid var(--purple3);
   color: var(--purple3);
+}
+.ta-center {
+  text-align: center;
 }

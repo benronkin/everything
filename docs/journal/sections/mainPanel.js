@@ -19,7 +19,6 @@ import { log } from '../../_assets/js/logger.js'
 
 const css = `
 #main-panel {
-  align-items: center;
   width: 100%;
   flex-grow: 1;
   display: flex;

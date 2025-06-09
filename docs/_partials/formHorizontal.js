@@ -115,8 +115,9 @@ function build({
     el.appendChild(
       createButton({
         iconClass: buttonIconClass,
+        className: 'primary',
         value: submitText,
-        type: 'submit',
+        html: 'submit',
         disabled,
       })
     )

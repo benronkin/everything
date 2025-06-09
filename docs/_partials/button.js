@@ -27,21 +27,13 @@ export function createButton({ id, className, disabled, html, type } = {}) {
 
   el.insertHtml = insertHtml.bind(el)
 
-  if (id) {
-    el.id = id
-    el.dataset.id = id
-  }
-
   listen(el)
 
-  type && (el.type = type)
+  id && (el.id = id)
   className && (el.className = className)
   html && el.insertHtml(html)
-
-  if (disabled) {
-    el.dataset.disabled = 'true'
-    el.disabled = true
-  }
+  disabled && (el.disabled = true)
+  type && (el.type = type)
 
   return el
 }

@@ -2,6 +2,9 @@
 // Exported functions
 // ------------------------
 
+import { setMessage } from './ui.js'
+// import { log } from './logger.js'
+
 /**
  * If the user clicked on the email link then the token will be in the query param.
  * Save the token to local storage and remove it from the URL.
@@ -9,6 +12,7 @@
 export function handleTokenQueryParam() {
   const urlParams = new URLSearchParams(window.location.search)
   const tokenParam = urlParams.get('token')
+
   if (!tokenParam) {
     return
   }
@@ -47,7 +51,8 @@ export async function getWebApp(path) {
     const { status, message, data, unauthorized } = await res.json()
 
     if (unauthorized) {
-      window.location.href = `../index.html?message=${message}`
+      setMessage({ message, type: 'danger' })
+      return
     }
 
     if (status !== 200) {

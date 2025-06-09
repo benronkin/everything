@@ -6,9 +6,16 @@ import { injectStyle } from '../_assets/js/ui.js'
 
 const css = `
 footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
   padding: 20px;
   text-align: center;
   font-size: 0.85rem;
+  height: 50px;
 }
 #version-container {
   margin-left: 20px;
