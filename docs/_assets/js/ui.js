@@ -106,13 +106,13 @@ export function setMessage({
     case 'danger':
       removeToasts()
       value = _createWarnMessage(message)
-      className = 'u-danger'
+      className = 'danger'
       position = 'TOP_RIGHT'
       autoClose = null
       break
     case 'warn':
       value = _createWarnMessage(message)
-      className = 'u-warn'
+      className = 'warn'
       position = 'TOP_RIGHT'
       break
   }

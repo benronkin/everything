@@ -26,7 +26,7 @@ const css = `
   right: auto; 
 }
 .toast[data-position="top-right"] { 
-  top: 0.6rem; 
+  top: 100px; 
   right: 1rem; 
   bottom: auto; 
   left: auto; 

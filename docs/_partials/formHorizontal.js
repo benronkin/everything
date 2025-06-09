@@ -1,9 +1,10 @@
-import { injectStyle, log } from '../_assets/js/ui.js'
+import { injectStyle } from '../_assets/js/ui.js'
 import { newState } from '../_assets/js/newState.js'
 import { createForm } from './form.js'
 import { createButton } from './button.js'
 import { createInputGroup } from './inputGroup.js'
 import { createSpan } from './span.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals

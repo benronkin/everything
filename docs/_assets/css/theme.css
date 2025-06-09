@@ -300,6 +300,10 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
+.danger,
+.toast.danger {
+  background-color: var(--red2);
+}
 .input-group i,
 .ta-group i {
   color: var(--gray3);
