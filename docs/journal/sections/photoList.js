@@ -31,42 +31,36 @@ export function photoList() {
     id: 'photo-list',
   })
 
-  react(el)
+  el.showPhotos = showPhotos.bind(el)
 
   return el
 }
 
 // ----------------------
-// Helpers
+// Object methods
 // ----------------------
 
 /**
- * Subscribe to state.
+ *
  */
-function react(el) {
-  newState.on('app-mode', 'photoList', async (appMode) => {
-    if (appMode !== 'main-panel') {
-      return
-    }
+async function showPhotos() {
+  const doc = newState.get('active-doc')
+  this.deleteChildren()
 
-    const doc = newState.get('active-doc')
-    el.deleteChildren()
+  const { photos = [], error } = await fetchEntryPhotosMetadata(doc.id)
 
-    const { photos = [], error } = await fetchEntryPhotosMetadata(doc.id)
+  if (error) {
+    console.error(error)
+    return
+  }
 
-    if (error) {
-      console.error(error)
-      return
-    }
+  const children = photos.map((photo) =>
+    createPhotoItem({
+      id: photo.id,
+      imgSrc: photo.url,
+      caption: photo.caption,
+    })
+  )
 
-    const children = photos.map((photo) =>
-      createPhotoItem({
-        id: photo.id,
-        imgSrc: photo.url,
-        caption: photo.caption,
-      })
-    )
-
-    el.addChildren(children)
-  })
+  this.addChildren(children)
 }

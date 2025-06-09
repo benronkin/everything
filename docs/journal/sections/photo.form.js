@@ -30,27 +30,23 @@ export function createPhotoForm() {
     children: [
       createFileInput({
         id: 'photo-file-input',
-        label: 'Select photo',
+        label: 'SELECT PHOTO',
         accept: 'image/*',
         iconClass: 'fa-camera',
       }),
       createInputGroup({
         id: 'photo-caption-input',
-        classes: { group: 'bb-white', icon: 'fa-tag' },
+        classes: { group: 'bb-white', icon: 'fa-pencil' },
         name: 'caption',
         placeholder: 'Describe this photo...',
-      }),
-      createInput({
-        id: 'photo-entry-id',
-        type: 'hidden',
-        name: 'entry',
       }),
       createDiv({
         className: 'flex mt-20',
         html: [
           createButton({
-            className: 'fa-cloud-upload',
-            html: 'Upload',
+            id: 'upload-photo-button',
+            className: 'primary',
+            html: '<i class="fa-solid fa-upload"></i> Upload',
             type: 'submit',
             disabled: true,
           }),
@@ -104,5 +100,16 @@ function react(el) {
  *
  */
 function listen(el) {
-  // el.addEventListener('click', () => {})
+  el.querySelector('#hidden-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      el.querySelector('.file-name').insertHtml(file.name)
+      el.querySelector('button').removeAttribute('disabled')
+      delete el.querySelector('button').dataset.disabled
+    } else {
+      el.querySelector('.file-name').insertHtml('')
+      el.querySelector('button').disabled = true
+      el.querySelector('button').dataset.disabled = true
+    }
+  })
 }

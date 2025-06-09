@@ -77,15 +77,15 @@ async function build() {
  */
 function react() {
   newState.on('form-submit:left-panel-search', 'journal', reactSearch)
-  newState.on('icon-click:add-entry', 'journal', reactAdd)
-  newState.on('button-click:modal-delete-btn', 'journal', reactDelete)
+  newState.on('icon-click:add-entry', 'journal', reactEntryAdd)
+  newState.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 }
 
 /**
  * Add a journal entry
  */
 
-async function reactAdd({ id: btnId }) {
+async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
 
@@ -124,7 +124,7 @@ async function reactAdd({ id: btnId }) {
 /**
  *
  */
-async function reactDelete() {
+async function reactEntryDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
 

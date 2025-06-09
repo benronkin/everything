@@ -54,10 +54,11 @@ export function createButton({ id, className, disabled, html, type } = {}) {
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {
+  el.addEventListener('click', (e) => {
     const stateKey = `button-click:${el.id}`
     newState.set(stateKey, {
       id: el.id,
+      e,
     })
   })
 }

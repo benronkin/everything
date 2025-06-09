@@ -1,14 +1,13 @@
 import { log } from '../../_assets/js/ui.js'
-import { postWebAppJson } from '../../_assets/js/io.js'
 import { createDiv } from '../../_partials/div.js'
 import { createInputGroup } from '../../_partials/inputGroup.js'
 import { createTextareaGroup } from '../../_partials/textareaGroup.js'
+import { updateEntry, updateJournalDefaults } from '../journal.api.js'
 /*
   This module handles journal events so that the journal.js stays leaner.
   This module loads aftr all partials were created.
 */
 
-/* global imageCompression */
 import { newState } from '../../_assets/js/newState.js'
 
 // -------------------------------
@@ -121,24 +120,15 @@ async function handleFieldChange(e) {
   newState.set('main-documents', docs)
   newState.set('active-doc', doc)
 
-  const url = newState.const('APP_URL')
-
   try {
-    const { message, error } = await postWebAppJson(`${url}/journal/update`, {
-      id,
-      value,
-      section,
-    })
+    const { message, error } = await updateEntry({ id, section, value })
     if (error) {
       throw new Error(error)
     }
     log(message)
 
     if (['city', 'state', 'country'].includes(section)) {
-      await postWebAppJson(`${url}/journal/defaults/update`, {
-        id,
-        [section]: value,
-      })
+      await updateJournalDefaults({ id, section, value })
     }
   } catch (err) {
     log(err)

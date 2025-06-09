@@ -1,3 +1,5 @@
+/* global imageCompression */
+
 import { newState } from '../../_assets/js/newState.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
@@ -8,6 +10,7 @@ import { createPhotoForm } from './photo.form.js'
 import { createSpan } from '../../_partials/span.js'
 import { dangerZone } from './dangerZone.js'
 import { photoList } from './photoList.js'
+import { addEntryPhoto } from '../journal.api.js'
 import { log } from '../../_assets/js/ui.js'
 
 // -------------------------------
@@ -90,16 +93,9 @@ function build(el) {
   })
 
   el.appendChild(upw)
-
-  el.appendChild(photoList())
-
   upw.appendChild(createPhotoForm())
 
-  // el.appendChild(createHeader({ type: 'h5', html: 'ID' }))
-
-  // el.appendChild(
-  //   createParagraph({ id: 'journal-id', className: 'smaller mb-20' })
-  // )
+  el.appendChild(photoList())
 
   el.appendChild(dangerZone())
 
@@ -118,18 +114,78 @@ function react(el) {
       log(`mainPanel is hiding itself on app-mode: ${appMode}`)
       return
     }
-
-    const doc = newState.get('active-doc')
-    el.classList.remove('hidden')
-    log('mainPanel is showing itself on active-doc')
-
-    el.querySelector('[data-id="journal-location"]').value = doc.location
-    el.querySelector('[data-id="journal-visit-date"]').value =
-      doc.visit_date.split('T')[0]
-    el.querySelector('[data-id="journal-notes"]').value = doc.notes
-    el.querySelector('[data-id="journal-city"]').value = doc.city
-    el.querySelector('[data-id="journal-state"]').value = doc.state
-    el.querySelector('[data-id="journal-country"]').value = doc.country
-    el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
+    reactAppMode(el)
   })
+
+  newState.on('button-click:upload-photo-button', 'mainPanel', ({ e }) => {
+    e.preventDefault()
+    reactAddPhoto()
+  })
+}
+
+/**
+ *
+ */
+function reactAppMode(el) {
+  const doc = newState.get('active-doc')
+  el.classList.remove('hidden')
+  log('mainPanel is showing itself on active-doc')
+
+  document.querySelector('#photo-list').showPhotos()
+
+  el.querySelector('[data-id="journal-location"]').value = doc.location
+  el.querySelector('[data-id="journal-visit-date"]').value =
+    doc.visit_date.split('T')[0]
+  el.querySelector('[data-id="journal-notes"]').value = doc.notes
+  el.querySelector('[data-id="journal-city"]').value = doc.city
+  el.querySelector('[data-id="journal-state"]').value = doc.state
+  el.querySelector('[data-id="journal-country"]').value = doc.country
+  el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
+}
+
+/**
+ *
+ */
+async function reactAddPhoto() {
+  const addPhotoForm = document.querySelector('#add-photo-form')
+  const formMessage = addPhotoForm.querySelector('.form-message')
+
+  const formData = new FormData(addPhotoForm)
+
+  const file = formData.get('file')
+  if (!file || file.size === 0) {
+    const message = 'Please select an image'
+    console.log(message)
+    formMessage.insertHtml(message)
+    return
+  }
+
+  addPhotoForm.querySelector('button').disabled = true
+  formMessage.insertHtml('Uploading...')
+
+  const compressionOptions = {
+    maxWidthOrHeight: 600,
+    useWebWorker: true,
+    fileType: 'image/jpeg',
+    exifOrientation: null,
+  }
+
+  try {
+    const file = formData.get('file')
+    const compressed = await imageCompression(file, compressionOptions)
+    formData.set('file', compressed)
+
+    formData.set('entry', newState.get('active-doc').id)
+
+    const { message } = await addEntryPhoto(formData)
+
+    if (message) {
+      formMessage.insertHtml(message)
+    }
+    // refresh photos to show added photo
+    document.querySelector('#photo-list').showPhotos()
+  } catch (error) {
+    console.error(error)
+    formMessage.insertHtml(error.message)
+  }
 }

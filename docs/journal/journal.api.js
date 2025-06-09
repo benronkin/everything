@@ -1,5 +1,5 @@
 import { newState } from '../_assets/js/newState.js'
-import { getWebApp } from '../_assets/js/io.js'
+import { getWebApp, postWebAppJson, postWebAppForm } from '../_assets/js/io.js'
 
 /**
  *
@@ -59,4 +59,65 @@ export async function searchEntries(q) {
     `${newState.const('APP_URL')}/journal/search?q=${q.trim().toLowerCase()}`
   )
   return { data: journal, error }
+}
+
+/**
+ *
+ */
+export async function updateEntry({ id, section, value }) {
+  const { message, error } = postWebAppJson(
+    `${newState.const('APP_URL')}/journal/update`,
+    {
+      id,
+      value,
+      section,
+    }
+  )
+  return { message, error }
+}
+
+/**
+ *
+ */
+export async function updateJournalDefaults({ id, section, value }) {
+  await postWebAppJson(`${newState.const('APP_URL')}/journal/defaults/update`, {
+    id,
+    [section]: value,
+  })
+}
+
+/**
+ *
+ */
+export async function updatePhotoCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(
+    `${newState.const('APP_URL')}/journal/photos/update`,
+    {
+      id,
+      value: value,
+      section: 'caption',
+    }
+  )
+  return { error, message }
+}
+
+/**
+ *
+ */
+export async function addEntryPhoto(formData) {
+  const { message } = await postWebAppForm(
+    `${newState.const('APP_URL')}/journal/photos/create`,
+    formData
+  )
+  return { message }
+}
+
+/**
+ *
+ */
+export async function deleteEntryPhoto(id) {
+  const { error } = await getWebApp(
+    `${newState.const('APP_URL')}/journal/photos/delete?id=${id}`
+  )
+  return { error }
 }
