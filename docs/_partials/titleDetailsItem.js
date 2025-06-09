@@ -1,5 +1,9 @@
-import { injectStyle, resizeTextarea } from '../_assets/js/ui.js'
+import { newState } from '../_assets/js/newState.js'
+import { injectStyle } from '../_assets/js/ui.js'
+import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
+import { createTextarea } from './textarea.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -8,83 +12,44 @@ import { createIcon } from './icon.js'
 const css = `
 .td-item {
   display: flex;
-  position: relative;
   flex-direction: column;
   justify-content: flex-start;
-  margin-bottom: 12px;
-  padding: 5px 18px;
+  margin-bottom: 20px;
   cursor: pointer;
+  padding: 0;
+  border: 1px solid var(--gray0);
+  border-radius: var(--border-radius);
 }
-.td-item[data-draggable="true"] {
+.td-item.draggable-target {
   cursor: move;
 }
-.td-item [data-target="expander"] {
-  position: absolute;
-  top: -27px;
-  right: 0;
-}
-.td-item input {
-  color: inherit;
-  cursor: pointer;
-  margin: 0;
-  padding: 5px;
-  width: 90%;
+.td-item .header {
+  display: grid;
+  grid-template-columns: 1fr auto;
 }
 .td-item textarea {
-  cursor: pointer;
-  color: inherit;
-  min-height: 35px;
-  padding: 7px 3px;
-  margin: 0;
+  min-height: 1.2em;
+  line-height: 1.2em;
+  overflow-y: hidden; /* prevent scrollbars */
+  resize: none;
+  padding: 10px 10px 0 10px;
+  margin: 1px;
 }
-.td-item .header {
-color: inherit;
-  display: flex;
-}
-.td-item .details {
-  height: fit-content;
-  margin-top: 50px;
+.td-item [data-target="details"] {
+  margin-top: 20px;
+  width: 100%;
 }
 .td-item .icons {
+  padding: 15px 10px;  
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
-  margin-left: auto;
 }
-.td-item i {
-  color: inherit;
-}
-.td-item i[data-target] {
-  color: var(--purple0)
-}
-.td-item[data-draggable="true"] i.fa-bars {
-  display: inline-block !important;
-}
-.td-item[data-draggable="true"] i:not(.fa-bars) {
-  display: none;
-}
-.td-item.u-active-primary {
-  color: var(--purple3);
-  border-color: var(--purple3);
-}
-`
-
-const html = `
-  <i class="fa-solid fa-chevron-left" data-target="expander"></i>
-  <div class="header">
-    <input type="text" name="title" />
-    <div class="icons">
-      <i class="fa-solid fa-bars hidden"></i>
-    </div>
-  </div>
-  <div class="details hidden">
-    <textarea name="details"></textarea>
-  </div>
 `
 
 // -------------------------------
-// Exported functions
+// Exports
 // -------------------------------
 
 /**
@@ -92,167 +57,103 @@ const html = `
  */
 export function createTitleDetailsItem({
   draggable = false,
-  selected = false,
-  expanded = false,
   title,
   details,
-  icons = [],
-  classes = {
-    base: 'u-td-base',
-    active: 'u-td-active-primary-bordered',
-    hover: 'u-td-hover-primary-bordered',
-  },
-  events = {},
   id,
+  className = '',
 } = {}) {
   injectStyle(css)
 
-  const div = document.createElement('div')
+  const el = createDiv({ id, className: `td-item ${className}`.trim() })
 
-  div.dataset.id = id || crypto.randomUUID()
-  div.innerHTML = html
-  div._classes = classes
+  build(el)
+  react(el)
+  listen(el)
 
-  for (const iconConfig of icons) {
-    const child = createIcon(iconConfig)
+  el.setDraggable = setDraggable.bind(el)
 
-    div.querySelector('.icons').appendChild(child)
-  }
+  let ta = el.querySelector('[data-target="title"]')
+  ta.value = (title || '').toString().trim()
+  log('ta', ta.rows)
 
-  div.dispatch = dispatch.bind(div)
-  div.getClass = getClass.bind(div)
-  div.className = `td-item draggable-target ${div.getClass('base')}`
+  el.querySelector('[name="details"]').value = (details || '').toString().trim()
 
-  const detailsTA = div.querySelector('[name="details"]')
-  detailsTA.value = (details || '').toString().trim()
-  resizeTextarea(detailsTA)
-  detailsTA.addEventListener('change', handleDetailsInputChange)
+  el.setDraggable(draggable)
 
-  Object.defineProperties(div, {
-    data: {
-      get() {
-        return {
-          targetId: div.dataset.id,
-          selected: div.selected,
-          title: div.querySelector('[name="title"]').value.trim(),
-          details: div.querySelector('[name="details"]').value.trim(),
-        }
-      },
-    },
-    draggable: {
-      get() {
-        return div.dataset.draggable === 'true'
-      },
-      set(v) {
-        div.dataset.draggable = v
-        if (v) {
-          div.selected = false
-          div.setAttribute('draggable', 'true')
-        } else {
-          div.setAttribute('draggable', 'false')
-        }
-      },
-    },
-    expanded: {
-      get() {
-        return div.dataset.expanded === 'true'
-      },
-      set(v) {
-        if (div.draggable) {
-          return
-        }
-        div.dataset.expanded = v
-        // no DOM in vitest hence ?.
-        div.querySelector('.details')?.classList.toggle('hidden', !v)
-        div.querySelector('.fa-trash')?.classList.toggle('hidden', !v)
-        div
-          .querySelector('[data-target="expander"]')
-          .classList.toggle('fa-chevron-down', v)
-        div
-          .querySelector('[data-target="expander"]')
-          .classList.toggle('fa-chevron-left', !v)
-      },
-    },
-    hovered: {
-      set(v) {
-        if (div.selected || div.draggable) {
-          return
-        }
-        div.classList.toggle(div.getClass('hover'), v)
-        div.classList.toggle(div.getClass('base'), !v)
-      },
-    },
-    selected: {
-      get() {
-        return div.dataset.selected === 'true'
-      },
-      set(v) {
-        if (div.draggable) {
-          return
-        }
-        div.dataset.selected = v
-        if (v) {
-          div.classList.add(div.getClass('active'))
-        } else {
-          div.classList.remove(div.getClass('active'))
-        }
-      },
-    },
-    title: {
-      get() {
-        return div.querySelector('[name="title"]').value
-      },
-      set(v) {
-        div.querySelector('[name="title"]').value = v
-      },
-    },
+  return el
+}
+
+// -------------------------------
+// Helpers
+// -------------------------------
+
+/**
+ *
+ */
+function build(el) {
+  const hEl = createDiv({ className: 'header' })
+  el.appendChild(hEl)
+
+  const inputEl = createTextarea({
+    name: 'title',
+    placeholder: 'Task...',
+    className: 'field',
   })
-  div.expanded = expanded
-  div.selected = selected
-  div.draggable = draggable
-  div.title = (title || '').toString().trim()
+  inputEl.dataset.target = 'title'
+  hEl.appendChild(inputEl)
 
-  div.addEventListener('mouseenter', () => (div.hovered = true))
-  div.addEventListener('mouseleave', () => (div.hovered = false))
-  for (const [eventName, cb] of Object.entries(events)) {
-    if (eventName === 'click') {
-      div.addEventListener('click', (e) => handleClick(e, div, cb))
-    } else {
-      div.addEventListener(eventName, cb)
-    }
-  }
-  div
-    .querySelector('[name="title"]')
-    .addEventListener('change', handleTitleInputChange)
+  const iconsEl = createDiv({ className: 'icons' })
+  hEl.appendChild(iconsEl)
 
-  return div
+  iconsEl.appendChild(
+    createIcon({
+      classes: {
+        primary: 'fa-chevron-left',
+        secondary: 'fa-chevron-down',
+        other: ['expander'],
+      },
+    })
+  )
+  iconsEl.appendChild(
+    createIcon({ classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] } })
+  )
+
+  const taEl = createTextarea({
+    name: 'details',
+    className: 'hidden field',
+    placeholder: 'Add details...',
+  })
+  taEl.dataset.target = 'details'
+  el.appendChild(taEl)
+}
+
+/**
+ *
+ */
+function react(el) {
+  newState.on('icon-click:sort-icon', 'titleDetailsItem', () => {
+    const isSorting = document
+      .getElementById('sort-icon')
+      .classList.contains('primary')
+    el.setDraggable(isSorting)
+  })
+}
+
+/**
+ *
+ */
+function listen(el) {
+  el.querySelector('.expander').addEventListener('click', (e) => {
+    el.querySelector('[data-target="details"]').classList.toggle(
+      'hidden',
+      e.target.classList.contains('fa-chevron-left')
+    )
+  })
 }
 
 // -------------------------------
 // Event handlers
 // -------------------------------
-
-/**
- * Handle click on the item
- */
-function handleClick(e, div, cb) {
-  if (div.draggable) {
-    return
-  }
-
-  if (e.target.closest('input') || e.target.closest('textarea')) {
-    div.selected = true
-    div.expanded = true
-  } else {
-    div.selected = !div.selected
-    div.expanded = !div.expanded
-  }
-
-  // notify list of the click
-  div.dispatch('list-item-clicked', { selectedItem: div.closest('.td-item') })
-
-  cb(div)
-}
 
 /**
  * When user edits the title
@@ -284,22 +185,10 @@ function handleDetailsInputChange(e) {
 // -------------------------------
 
 /**
- * Dispatch a custom event
- */
-function dispatch(eventName, detail = {}) {
-  detail.target = this
-  detail.dispatcherId = this.dataset.id
-  const event = new CustomEvent(eventName, {
-    bubbles: true,
-    detail,
-  })
-
-  this.dispatchEvent(event)
-}
-
-/**
  *
  */
-function getClass(className) {
-  return this._classes[className]
+function setDraggable(isDraggable) {
+  this.classList.toggle('draggable-target', isDraggable)
+  this.querySelector('.sorter').classList.toggle('hidden', !isDraggable)
+  this.querySelector('.expander').classList.toggle('hidden', isDraggable)
 }

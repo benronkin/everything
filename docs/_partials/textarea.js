@@ -1,4 +1,5 @@
 import { injectStyle, isMobile } from '../_assets/js/ui.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -9,6 +10,7 @@ textarea {
   border: none;
   cursor: pointer;
   text-decoration: none;
+  border-radius: var(--border-radius);
 }
 `
 
@@ -52,27 +54,14 @@ export function createTextarea({
  *
  */
 function listen(el) {
+  el.addEventListener('keyup', () => resize(el))
   el.addEventListener('change', () => resize(el))
 }
 
 /**
- * Resize the textarea
+ *
  */
-export function resize(el) {
-  // First, set the textarea to the default height
-  el.style.height = 'auto'
-  el.style.height = '0'
-
-  // Get the scroll height of the TA content
-  let minHeight = el.scrollHeight
-
-  // If the scroll height is more than the default height, expand TA
-  if (minHeight > el.clientHeight) {
-    el.style.height = Math.max(minHeight + 5, 51) + 'px'
-  }
-
-  if (isMobile()) {
-    const height = parseFloat(el.style.height) || 0
-    el.style.height = Math.max(height / 2.4, 51) + 'px'
-  }
+function resize(el) {
+  el.style.height = '1px'
+  el.style.height = 25 + el.scrollHeight + 'px'
 }

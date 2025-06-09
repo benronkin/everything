@@ -142,7 +142,7 @@ function addPageElements() {
  *
  */
 function populateSinglePanel({ id, title, note = '' } = {}) {
-  document.title = `${title} | Ben Ronkin`
+  document.title = `${title} | Everything App Ronkin`
   getEl('single-panel').value = ''
 
   getEl('single-panel').appendChild(

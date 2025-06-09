@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     newState.set('main-documents', data)
     newState.set('app-mode', 'left-panel')
     newState.set('default-page', 'journal')
-
     window.newState = newState // avail to browser console
   } catch (error) {
     console.trace(error)
@@ -51,26 +50,24 @@ document.addEventListener('DOMContentLoaded', async () => {
  *
  */
 async function build() {
-  document.head.title = 'Journal | Ben'
+  document.head.title = 'Journal | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 
   const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
     className: 'columns-wrapper',
   })
-
-  body.prepend(wrapperEl)
-
-  wrapperEl.appendChild(nav())
-  wrapperEl.appendChild(toolbar())
   wrapperEl.appendChild(columnsWrapperEl)
-  wrapperEl.appendChild(createFooter())
-
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
+
+  wrapperEl.appendChild(createFooter())
 }
 
 /**

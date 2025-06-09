@@ -14,7 +14,7 @@ const css = `
   align-items: center;
   width: 100%;
 }
-#toolbar .container div {
+#toolbar .container .icons {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -75,7 +75,7 @@ function build({ el, children, classes }) {
     divEl.appendChild(child)
   }
 
-  classes.other || (classes.other = ['w-fc'])
+  classes.other || (classes.other = ['icons'])
   for (const c of classes.other) {
     divEl.classList.add(c)
   }

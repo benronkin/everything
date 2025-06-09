@@ -1,72 +1,74 @@
-import { state } from '../_assets/js/state.js'
-import {
-  handleTokenQueryParam,
-  getWebApp,
-  postWebAppJson,
-} from '../_assets/js/io.js'
-import { createNav } from '../sections/nav.js'
-import { createFooter } from '../sections/footer.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createFormHorizontal } from '../_partials/formHorizontal.js'
-import { createList } from '../_partials/list.js'
+import { newState } from '../_assets/js/newState.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { nav } from './sections/nav.js'
+import { toolbar } from './sections/toolbar.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../_partials/div.js'
+import { createFooter } from '../_composites/footer.js'
 import { createTitleDetailsItem } from '../_partials/titleDetailsItem.js'
-import { createFormField } from '../_partials/formField.js'
-import { createSwitch } from '../_partials/switch.js'
-import { getEl, setMessage } from '../_assets/js/ui.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { createTask, deleteTask, fetchTasks, searchTasks } from './tasks.api.js'
+import { log } from '../_assets/js/logger.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-const formWrapper = document.querySelector('#form-wrapper')
-const tasksWrapper = document.querySelector('#tasks-wrapper')
-let tasksListEl
-let sortSwitch
-let tasksInput
-let token
-let retryTimeout = 10
+    handleTokenQueryParam()
 
-// ---------------------------------------
-// Event listeners
-// ---------------------------------------
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    build()
 
-/* when clearSelection is dispatched */
-document.addEventListener('clear-selection', clearSelection)
+    react()
 
-// -------------------------------
-// Event handlers
-// -------------------------------
+    const resp = await fetchTasks()
+    const { tasks } = resp
+    newState.set('main-documents', tasks)
+    newState.set('app-mode', 'main-panel')
+    newState.set('default-page', 'tasks')
+    window.newState = newState // avail to browser console
+  } catch (error) {
+    console.trace(error)
+    window.location.href = `../home/index.html?error=${error.message}`
+  }
+})
+
+// ------------------------
+// Helpers
+// ------------------------
 
 /**
- * Handle DOMContentLoaded
+ *
  */
-async function handleDOMContentLoaded() {
-  state.setDefaultPage('tasks')
+function build() {
+  document.head.title = 'Tasks | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
 
-  handleTokenQueryParam()
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
 
-  setMessage({ message: 'Loading...' })
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
 
-  token = localStorage.getItem('authToken')
-  if (!token) {
-    window.location.href = '../index.html'
-    return
-  }
-
-  addPageElements()
-
-  const { tasks } = await getWebApp(
-    `${state.getWebAppUrl()}/tasks/read?token=${token}`
-  )
-
-  setMessage()
-  initTasks(tasks)
-  getEl('tasks-form').focused = true
+  wrapperEl.appendChild(createFooter())
 }
+
+/**
+ *
+ */
+function react() {}
 
 /**
  * Handle sort switch click
@@ -198,87 +200,6 @@ function handleTaskTrashClick(e) {
   const el = e.target.closest('.td-item')
   const id = el.dataset.id
   tasksListEl.deleteChild(id)
-}
-
-// ------------------------
-// Helpers
-// ------------------------
-
-/**
- * Set up tasks
- */
-async function initTasks(tasks) {
-  state.set('tasks', tasks)
-
-  const children = tasks.map((task) => createTaskItem(task))
-  tasksListEl.silent = true
-  tasksListEl.addChildren(children)
-  tasksListEl.silent = false
-}
-
-/**
- * Set nav, footer and other page elements
- */
-function addPageElements() {
-  // create nav and footer
-  const wrapperEl = document.querySelector('.wrapper')
-  const navEl = createNav({
-    title: '<i class="fa-solid fa-list-check"></i> tasks',
-    active: 'tasks',
-  })
-  wrapperEl.prepend(navEl)
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
-
-  const rightDrawerEl = createRightDrawer({ active: 'tasks' })
-  document.querySelector('main').prepend(rightDrawerEl)
-
-  formWrapper.prepend(
-    createMainIconGroup({
-      collapsable: false,
-      className: 'w-100',
-      children: [
-        createFormField({
-          element: createSwitch({
-            id: 'sort-switch',
-            events: { click: handleSortSwitchClick },
-          }),
-          label: 'Sort',
-          labelPosition: 'left',
-        }),
-        createFormHorizontal({
-          id: 'tasks-form',
-          inputType: 'text',
-          inputName: 'task',
-          inputPlaceholder: 'Add task',
-          inputAutoComplete: 'off',
-          iconClass: 'fa-thumbtack',
-          submitText: 'ADD',
-          disabled: true,
-          events: {
-            submit: (e) => {
-              handleTaskFormSubmit(e, 'prepend')
-            },
-          },
-          inputEvents: {
-            focus: handleTaskFormFocus,
-            keyup: handleTaskInputKeyUp,
-          },
-        }),
-      ],
-    })
-  )
-
-  // tasks-list
-  tasksListEl = createList({
-    id: 'tasks-list',
-    itemClass: 'td-item',
-    className: 'outer-wrapper',
-    emptyState:
-      '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
-    onChange: handleTasksListChange,
-  })
-  tasksWrapper.appendChild(tasksListEl)
 }
 
 /**

@@ -59,6 +59,7 @@ export function createFormHorizontal({
     placeholder,
     autocomplete,
     value,
+    submitText,
   })
 
   build({
@@ -116,8 +117,7 @@ function build({
       createButton({
         iconClass: buttonIconClass,
         className: 'primary',
-        value: submitText,
-        html: 'submit',
+        html: submitText,
         disabled,
       })
     )

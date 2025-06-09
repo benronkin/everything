@@ -5,7 +5,7 @@ import { fetchTasks } from '../tasks/tasks.api.js'
 import { createDiv } from '../_partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { createFooter } from '../_composites/footer.js'
+import { footer } from './sections/footer.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -94,7 +94,7 @@ export function getNextPage(tasks, defaultPage) {
  *
  */
 export function build() {
-  document.head.title = 'The Evereything App | Ben'
+  document.head.title = 'The Evereything App | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 
@@ -110,5 +110,5 @@ export function build() {
 
   columnsWrapperEl.appendChild(mainPanel())
 
-  wrapperEl.appendChild(createFooter())
+  wrapperEl.appendChild(footer())
 }

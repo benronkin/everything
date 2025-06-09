@@ -26,18 +26,9 @@ export function createDiv({ className, id, html } = {}) {
   build(el)
   react(el)
 
-  if (id) {
-    el.id = id
-    el.dataset.id = id
-  }
-
-  if (className) {
-    el.className = className
-  }
-
-  if (html) {
-    el.insertHtml(html)
-  }
+  id && (el.id = id)
+  className && (el.className = className)
+  html && el.insertHtml(html)
 
   return el
 }
