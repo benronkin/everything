@@ -9,6 +9,7 @@ import { createList } from '../../_partials/list.js'
 import { newState } from '../../_assets/js/newState.js'
 import { createPhotoItem } from './photoItem.js'
 import { fetchEntryPhotosMetadata } from '../journal.api.js'
+import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
 // Globals

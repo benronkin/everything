@@ -53,44 +53,6 @@ export function isoToReadable(isoString) {
 }
 
 /**
- * Log in debug
- */
-export function log(...args) {
-  if (localStorage.getItem('debug') !== 'true') return
-
-  const typeColor = {
-    string: '\x1b[95m', // bright magenta (pink)
-    object: '\x1b[34m', // blue
-    boolean: '\x1b[36m', // cyan
-    number: '\x1b[96m', // bright cyan (light blue)
-    function: '\x1b[31m', // red
-    undefined: '\x1b[33m', // yellow
-  }
-
-  const reset = '\x1b[0m'
-
-  const formatted = args
-    .map((arg) => {
-      const type = typeof arg
-      const color = typeColor[type] || '\x1b[31m' // red for unknown
-      let value
-      if (type === 'object' && arg !== null) {
-        try {
-          value = JSON.stringify(arg)
-        } catch {
-          value = '[object]'
-        }
-      } else {
-        value = String(arg)
-      }
-      return `${color}${value}${reset}`
-    })
-    .join(', ')
-
-  console.log(`\x1b[35m* DEBUG:\x1b[0m ${formatted}`)
-}
-
-/**
  * Resize the textarea
  */
 export function resizeTextarea(textarea) {

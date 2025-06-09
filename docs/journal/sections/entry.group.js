@@ -1,4 +1,4 @@
-import { log } from '../../_assets/js/ui.js'
+import { log } from '../../_assets/js/logger.js'
 import { createDiv } from '../../_partials/div.js'
 import { createInputGroup } from '../../_partials/inputGroup.js'
 import { createTextareaGroup } from '../../_partials/textareaGroup.js'

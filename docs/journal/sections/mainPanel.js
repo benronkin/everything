@@ -11,7 +11,7 @@ import { createSpan } from '../../_partials/span.js'
 import { dangerZone } from './dangerZone.js'
 import { photoList } from './photoList.js'
 import { addEntryPhoto } from '../journal.api.js'
-import { log } from '../../_assets/js/ui.js'
+import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
 // Globals

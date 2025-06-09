@@ -1,9 +1,13 @@
 import { createNav } from './_composites/nav.js'
 import { createFormHorizontal } from './_partials/formHorizontal.js'
 import { createFooter } from './_composites/footer.js'
-import { handleTokenQueryParam, getWebApp, postWebAppJson } from './js/io.js'
-import { setMessage } from './js/ui.js'
-import { state } from './js/state.js'
+import {
+  handleTokenQueryParam,
+  getWebApp,
+  postWebAppJson,
+} from './_assets/js/io.js'
+import { setMessage } from './_assets/js/ui.js'
+import { state } from './_assets/js/state.js'
 
 // ----------------------
 // Globals

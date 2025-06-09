@@ -1,5 +1,4 @@
 import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
-import { log } from '../_assets/js/ui.js'
 import { state } from '../_assets/js/state.js'
 import { createFormField } from '../_partials/formField.js'
 import { createFormHorizontal } from '../_partials/formHorizontal.js'
@@ -7,6 +6,7 @@ import { createIcon } from '../_partials/icon.js'
 import { createList } from '../_partials/list.js'
 import { createListItem } from '../_partials/listItem.js'
 import { createSwitch } from '../_partials/switch.js'
+// import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals

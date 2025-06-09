@@ -24,7 +24,7 @@ const items = [
     id: 'rd-item-shopping',
   },
   {
-    html: '<i class="fa-solid fa-note-sticky"></i> notes',
+    html: '<i class="fa-solid fa-note-sticky"></i> Notes',
     url: '../notes/index.html',
     id: 'rd-item-notes',
   },

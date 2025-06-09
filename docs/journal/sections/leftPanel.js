@@ -1,5 +1,5 @@
 import { injectStyle } from '../../_assets/js/ui.js'
-import { log } from '../../_assets/js/ui.js'
+import { log } from '../../_assets/js/logger.js'
 import { newState } from '../../_assets/js/newState.js'
 import { createDiv } from '../../_partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'

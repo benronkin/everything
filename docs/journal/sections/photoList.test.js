@@ -1,40 +1,26 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { newState } from '../../_assets/js/newState'
-import { createImageGalleryList } from './imageGalleryList'
-// import { setStateAfterPartials } from '../journal/stateAfterPartials.js'
+import { photoList } from './photoList.js'
+// import { log } from '../../_assets/js/logger.js'
 
-describe('Image gallery for the active-doc', () => {
-  let igListEl
+beforeAll(() => {
+  localStorage.setItem('debug', 'true')
+})
 
-  it('creates an image gallery list', () => {
-    igListEl = createImageGalleryList({ id: 'test-123' })
+describe('Photo gallery for the active-doc', () => {
+  it('creates two photoItems for active-doc', async () => {
+    const photoListEl = photoList({ id: 'test-123' })
+    document.body.appendChild(photoListEl)
 
-    expect(igListEl.itemClass.includes('ig-item')).toBe(true)
-    expect(newState.getSubscribers('active-doc')).includes('imageGalleryList')
-  })
-
-  it('creates two imageGalleryItems for active-doc', () => {
-    // the list
-    // const journalEntries = [
-    //   {
-    //     id: 'abc123',
-    //     location: 'Seattle Opera',
-    //     visit_date: '2025-05-12T',
-    //   },
-    //   {
-    //     id: 'def456',
-    //     location: "Don't yell at me",
-    //     visit_date: '2025-06-23T',
-    //   },
-    // ]
-    // setStateAfterPartials(journalEntries)
-
-    vi.mock('../_assets/js/r2MetaData.js', () => ({
-      getR2MetaData: vi.fn(() =>
-        Promise.resolve([
-          { id: 'p1', url: 'url1', caption: 'Caption 1' },
-          { id: 'p2', url: 'url2', caption: 'Caption 2' },
-        ])
+    vi.mock('../journal.api.js', () => ({
+      fetchEntryPhotosMetadata: vi.fn(() =>
+        Promise.resolve({
+          photos: [
+            { id: 'p1', url: 'url1', caption: 'Caption 1' },
+            { id: 'p2', url: 'url2', caption: 'Caption 2' },
+          ],
+          error: null,
+        })
       ),
     }))
 
@@ -43,5 +29,9 @@ describe('Image gallery for the active-doc', () => {
       location: "Don't yell at me",
       visit_date: '2025-06-23T',
     })
+
+    await photoListEl.showPhotos()
+
+    expect(photoListEl.getNthChild(0).querySelector('img').src).toBe('url1')
   })
 })
