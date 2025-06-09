@@ -7,7 +7,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../_partials/div.js'
 import { createFooter } from '../_composites/footer.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
-import { log, setMessage } from '../_assets/js/ui.js'
+import { setMessage } from '../_assets/js/ui.js'
 import {
   createEntry,
   deleteEntry,
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data } = await fetchRecentEntries()
     newState.set('main-documents', data)
     newState.set('app-mode', 'left-panel')
+    newState.set('default-page', 'journal')
 
     window.newState = newState // avail to browser console
   } catch (error) {
