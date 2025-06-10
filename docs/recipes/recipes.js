@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     newState.set('default-page', 'recipes')
     window.newState = newState // avail to browser console
   } catch (error) {
+    setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
-    // window.location.href = `../index.html?error=${error.message}`
   }
 })
 
