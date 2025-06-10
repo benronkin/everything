@@ -1,24 +1,22 @@
 import { newState } from '../_assets/js/newState.js'
-import { getWebApp, postWebAppJson, postWebAppForm } from '../_assets/js/io.js'
+import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
 
 const url = `${newState.const('APP_URL')}/tasks`
 
 /**
  *
  */
-export async function createTask() {
-  const { id, error } = await getWebApp(`${url}/create`)
+export async function createTask(title) {
+  const { id, error } = await postWebAppJson(`${url}/create`, { title })
   return { id, error }
 }
 
 /**
  *
  */
-export async function deleteTask(id, password) {
-  const { journal, error } = await getWebApp(
-    `${url}/delete?id=${id}&password=${password}`
-  )
-  return { data: journal, error }
+export async function deleteTask(id) {
+  const { error } = await getWebApp(`${url}/delete?id=${id}`)
+  return { error }
 }
 
 /**
@@ -44,10 +42,9 @@ export async function searchTasks(q) {
  *
  */
 export async function updateTask({ id, section, value }) {
-  const { message, error } = postWebAppJson(`${url}/update`, {
+  const { message, error } = postWebAppJson(`${url}/update-task`, {
     id,
-    value,
-    section,
+    [section]: value,
   })
   return { message, error }
 }

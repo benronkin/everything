@@ -23,7 +23,7 @@ const css = `
 .td-item.draggable-target {
   cursor: move;
 }
-.td-item .header {
+.td-item .grid {
   display: grid;
   grid-template-columns: 1fr auto;
 }
@@ -74,7 +74,6 @@ export function createTitleDetailsItem({
 
   let ta = el.querySelector('[data-target="title"]')
   ta.value = (title || '').toString().trim()
-  log('ta', ta.rows)
 
   el.querySelector('[name="details"]').value = (details || '').toString().trim()
 
@@ -91,19 +90,19 @@ export function createTitleDetailsItem({
  *
  */
 function build(el) {
-  const hEl = createDiv({ className: 'header' })
-  el.appendChild(hEl)
+  let gridEl = createDiv({ className: 'grid' })
+  el.appendChild(gridEl)
 
-  const inputEl = createTextarea({
+  const titleEl = createTextarea({
     name: 'title',
     placeholder: 'Task...',
     className: 'field',
   })
-  inputEl.dataset.target = 'title'
-  hEl.appendChild(inputEl)
+  titleEl.dataset.target = 'title'
+  gridEl.appendChild(titleEl)
 
-  const iconsEl = createDiv({ className: 'icons' })
-  hEl.appendChild(iconsEl)
+  let iconsEl = createDiv({ className: 'icons' })
+  gridEl.appendChild(iconsEl)
 
   iconsEl.appendChild(
     createIcon({
@@ -118,13 +117,29 @@ function build(el) {
     createIcon({ classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] } })
   )
 
+  gridEl = createDiv({ className: 'grid' })
+  el.appendChild(gridEl)
+
   const taEl = createTextarea({
     name: 'details',
     className: 'hidden field',
     placeholder: 'Add details...',
   })
   taEl.dataset.target = 'details'
-  el.appendChild(taEl)
+  gridEl.appendChild(taEl)
+  iconsEl = createDiv({ className: 'icons' })
+  gridEl.appendChild(iconsEl)
+
+  const trashEl = createIcon({
+    classes: {
+      primary: 'fa-trash',
+      other: ['hidden'],
+    },
+  })
+  iconsEl.appendChild(trashEl)
+  trashEl.addEventListener('click', () => {
+    newState.set('task-deleted:tasks-list', { id: el.id })
+  })
 }
 
 /**
@@ -148,35 +163,10 @@ function listen(el) {
       'hidden',
       e.target.classList.contains('fa-chevron-left')
     )
-  })
-}
-
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-/**
- * When user edits the title
- */
-function handleTitleInputChange(e) {
-  const div = e.target.closest('.td-item')
-  console.log('div.data', div.data)
-  div.dispatch('list-changed', {
-    action: 'update-task',
-    targetId: div.data.targetId,
-    title: div.data.title,
-  })
-}
-
-/**
- *
- */
-function handleDetailsInputChange(e) {
-  const div = e.target.closest('.td-item')
-  div.dispatch('list-changed', {
-    action: 'update-task',
-    targetId: div.data.targetId,
-    details: div.data.details,
+    el.querySelector('.fa-trash').classList.toggle(
+      'hidden',
+      e.target.classList.contains('fa-chevron-left')
+    )
   })
 }
 

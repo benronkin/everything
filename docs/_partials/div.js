@@ -26,7 +26,10 @@ export function createDiv({ className, id, html } = {}) {
   build(el)
   react(el)
 
-  id && (el.id = id)
+  if (id) {
+    el.id = id
+    el.dataset.id = id // needed for uuids that start with a digit
+  }
   className && (el.className = className)
   html && el.insertHtml(html)
 

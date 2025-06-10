@@ -32,11 +32,21 @@ export function titleDetailsList() {
 function react(el) {
   newState.on('main-documents', 'mainDocumentsList', (docs) => {
     const children = docs.map((doc) => {
-      return createTitleDetailsItem({
+      const item = createTitleDetailsItem({
         id: doc.id,
         title: doc.title,
         details: doc.details,
       })
+      item.querySelectorAll('.field').forEach((field) =>
+        field.addEventListener('change', () =>
+          newState.set('field-change:tasks-list', {
+            id: doc.id,
+            section: field.name,
+            value: field.value,
+          })
+        )
+      )
+      return item
     })
     el.deleteChildren().addChildren(children)
   })

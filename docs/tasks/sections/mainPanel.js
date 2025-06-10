@@ -21,15 +21,6 @@ const css = `
 #main-panel.hidden {
   display: none;
 }
-#main-panel input.field,
-#main-panel textarea.field {
-  padding: 0;
-  margin: 0;
-  border-bottom: 1px dotted var(--gray1);
-}
-#main-panel textarea.field {
-  line-height: 16px;
-}
 `
 
 // -------------------------------
@@ -46,9 +37,9 @@ export function mainPanel() {
 
   build(el)
   react(el)
+  listen(el)
 
   el.id = 'main-panel'
-  el.dataset.id = 'main-panel'
 
   return el
 }
@@ -77,6 +68,11 @@ function build(el) {
 }
 
 /**
- * Subscribe to state.
+ *
  */
 function react() {}
+
+/**
+ *
+ */
+function listen() {}

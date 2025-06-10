@@ -129,21 +129,4 @@ function build({
 /**
  * Set up event listeners
  */
-function listen(el) {
-  // this handler is needed in cases where the form lacks
-  // a submit type button, yet the form might still submit
-  // without firing its submit event
-  el.querySelector('input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      const inputEl = e.target
-      const stateValue = { id: el.id, [inputEl.name]: inputEl.value }
-      newState.set(`form-submit:${el.id}`, stateValue)
-      log(
-        `formHorizontal sets form submit with value: ${JSON.stringify(
-          stateValue
-        )}`
-      )
-    }
-  })
-}
+function listen(el) {}

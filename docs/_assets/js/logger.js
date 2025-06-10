@@ -24,7 +24,7 @@ export function log(...args) {
   if (localStorage.getItem('debug') !== 'true') return
 
   const formatted = args.map((arg) => scan(arg, new Set())).join(', ')
-  console.log(`\x1b[35m* DEBUG:\x1b[0m ${formatted}`)
+  console.trace(`\x1b[35m* DEBUG:\x1b[0m ${formatted}`)
 }
 
 // ------------------------

@@ -10,6 +10,7 @@
 
 import { injectStyle } from '../_assets/js/ui.js'
 import { newState } from '../_assets/js/newState.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -69,6 +70,7 @@ export function createForm({ id, className, children = [] }) {
   className && (el.className = className)
 
   build({ el, children })
+  listen(el)
 
   return el
 }
@@ -83,6 +85,33 @@ export function createForm({ id, className, children = [] }) {
 function build({ el, children }) {
   for (const child of children) {
     el.appendChild(child)
+  }
+}
+
+/**
+ *
+ */
+function listen(el) {
+  if (el.querySelector('button')) {
+    el.addEventListener('submit', () => handleFormSubmit(el.id))
+  } else {
+    // this handler is needed in cases where the form lacks
+    // a submit type button, yet the form might still submit
+    // without firing its submit event
+    el.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        handleFormSubmit(el.id)
+      }
+    })
+  }
+
+  /**
+   *
+   */
+  function handleFormSubmit(id) {
+    newState.set(`form-submit:${id}`, { id })
+    log('form sets form-submit with value')
   }
 }
 

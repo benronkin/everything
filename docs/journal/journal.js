@@ -14,6 +14,8 @@ import {
   fetchDefaults,
   fetchRecentEntries,
   searchEntries,
+  updateEntry,
+  updateJournalDefaults,
 } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,8 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     build()
-
     react()
+    listen()
 
     const { data } = await fetchRecentEntries()
     newState.set('main-documents', data)
@@ -77,6 +79,13 @@ function react() {
   newState.on('form-submit:left-panel-search', 'journal', reactSearch)
   newState.on('icon-click:add-entry', 'journal', reactEntryAdd)
   newState.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
+}
+
+function listen() {
+  /* When journal field loses focus */
+  document.querySelectorAll('.field').forEach((field) => {
+    field.addEventListener('change', handleFieldChange)
+  })
 }
 
 /**
@@ -164,4 +173,40 @@ async function reactSearch(doc) {
     return
   }
   newState.set('main-documents', data)
+}
+
+/**
+ * Handle journal entry field change
+ */
+
+async function handleFieldChange(e) {
+  const elem = e.target
+  const section = elem.name
+  let value = elem.value
+
+  const doc = newState.get('active-doc')
+  const id = doc.id
+
+  doc[section] = value
+
+  const docs = newState.get('main-documents')
+  const idx = docs.findIndex((d) => d.id === id)
+  docs[idx] = doc
+
+  newState.set('main-documents', docs)
+  newState.set('active-doc', doc)
+
+  try {
+    const { message, error } = await updateEntry({ id, section, value })
+    if (error) {
+      throw new Error(error)
+    }
+    log(message)
+
+    if (['city', 'state', 'country'].includes(section)) {
+      await updateJournalDefaults({ id, section, value })
+    }
+  } catch (err) {
+    log(err)
+  }
 }

@@ -49,7 +49,7 @@ export function createListItem({ html, id } = {}) {
   injectStyle(css)
   const el = createDiv()
 
-  el.id = id || crypto.randomUUID()
+  el.id = id || `i-${crypto.randomUUID()}`
   el.dataset.id = el.id
   el.className = 'list-item'
 

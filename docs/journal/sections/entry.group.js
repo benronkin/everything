@@ -1,14 +1,12 @@
-import { log } from '../../_assets/js/logger.js'
+/*
+This module handles journal events so that the journal.js stays leaner.
+This module loads aftr all partials were created.
+*/
 import { createDiv } from '../../_partials/div.js'
 import { createInputGroup } from '../../_partials/inputGroup.js'
 import { createTextareaGroup } from '../../_partials/textareaGroup.js'
-import { updateEntry, updateJournalDefaults } from '../journal.api.js'
-/*
-  This module handles journal events so that the journal.js stays leaner.
-  This module loads aftr all partials were created.
-*/
-
-import { newState } from '../../_assets/js/newState.js'
+// import { log } from '../../_assets/js/logger.js'
+// import { newState } from '../../_assets/js/newState.js'
 
 // -------------------------------
 // Exports
@@ -93,44 +91,7 @@ function build(el) {
   return el
 }
 
-function listen(el) {
-  /* When journal field loses focus */
-  el.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
-  })
-}
 /**
- * Handle journal entry field change
+ *
  */
-
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
-
-  const doc = newState.get('active-doc')
-  const id = doc.id
-
-  doc[section] = value
-
-  const docs = newState.get('main-documents')
-  const idx = docs.findIndex((d) => d.id === id)
-  docs[idx] = doc
-
-  newState.set('main-documents', docs)
-  newState.set('active-doc', doc)
-
-  try {
-    const { message, error } = await updateEntry({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
-    log(message)
-
-    if (['city', 'state', 'country'].includes(section)) {
-      await updateJournalDefaults({ id, section, value })
-    }
-  } catch (err) {
-    log(err)
-  }
-}
+function listen() {}
