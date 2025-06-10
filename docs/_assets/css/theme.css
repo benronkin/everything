@@ -311,18 +311,27 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
+.bg-blue0 {
+  background-color: var(--blue0) !important;
+}
 .c-red3 {
-  color: var(--red3);
+  color: var(--red3) !important;
 }
 .danger,
 .toast.danger {
-  background-color: var(--red2);
+  background-color: var(--red2) !important;
+}
+.fs-1-5 {
+  font-size: 1.5rem !important;
 }
 .input-group i,
+.select-group i,
+.span-group i,
 .ta-group i {
   color: var(--gray3);
 }
 .input-group:has(input:focus) i,
+.select-group:has(input:focus) i,
 .ta-group:has(textarea:focus) i {
   color: var(--gray6);
 }
@@ -334,6 +343,15 @@ main {
 .md-item.active {
   border: 1px solid var(--purple3);
   color: var(--purple3);
+}
+.p-0 {
+  padding: 0 !important;
+}
+.p-10 {
+  padding: 10px !important;
+}
+.span-group span {
+  color: var(--gray4);
 }
 .ta-center {
   text-align: center;

@@ -1,11 +1,9 @@
-/* global imageCompression */
-
 import { newState } from '../../_assets/js/newState.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
 import { createIcon } from '../../_partials/icon.js'
-import { createEntryGroup } from './entry.group.js'
+import { createRecipeGroup } from './recipe.group.js'
 import { createSpan } from '../../_partials/span.js'
 import { dangerZone } from './dangerZone.js'
 import { log } from '../../_assets/js/logger.js'
@@ -66,33 +64,11 @@ export function mainPanel() {
  * Add sub elements to the element
  */
 function build(el) {
-  el.appendChild(createEntryGroup())
-
-  const phw = createDiv({
-    id: 'photos-header-wrapper',
-    className: 'flex mt-20',
-  })
-
-  el.appendChild(phw)
-
-  phw.appendChild(createHeader({ type: 'h4', html: 'Photos' }))
-
-  phw.appendChild(
-    createIcon({
-      id: 'add-photo-toggle',
-      classes: { primary: 'fa-camera', other: 'primary btn' },
-    })
-  )
-
-  const upw = createDiv({
-    id: 'upload-photo-wrapper',
-  })
-
-  el.appendChild(upw)
+  el.appendChild(createRecipeGroup())
 
   el.appendChild(dangerZone())
 
-  el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
+  el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
 
   el.appendChild(createSpan({ id: 'recipe-id' }))
 }
@@ -109,11 +85,6 @@ function react(el) {
     }
     reactAppMode(el)
   })
-
-  newState.on('button-click:upload-photo-button', 'mainPanel', ({ e }) => {
-    e.preventDefault()
-    reactAddPhoto()
-  })
 }
 
 /**
@@ -124,61 +95,15 @@ function reactAppMode(el) {
   el.classList.remove('hidden')
   log('mainPanel is showing itself on active-doc')
 
-  document.querySelector('#photo-list').showPhotos()
-
-  el.querySelector('[data-id="journal-location"]').value = doc.location
-  el.querySelector('[data-id="journal-visit-date"]').value =
-    doc.visit_date.split('T')[0]
-  el.querySelector('[data-id="journal-notes"]').value = doc.notes
-  el.querySelector('[data-id="journal-city"]').value = doc.city
-  el.querySelector('[data-id="journal-state"]').value = doc.state
-  el.querySelector('[data-id="journal-country"]').value = doc.country
-  el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
-}
-
-/**
- *
- */
-async function reactAddPhoto() {
-  const addPhotoForm = document.querySelector('#add-photo-form')
-  const formMessage = addPhotoForm.querySelector('.form-message')
-
-  const formData = new FormData(addPhotoForm)
-
-  const file = formData.get('file')
-  if (!file || file.size === 0) {
-    const message = 'Please select an image'
-    console.log(message)
-    formMessage.insertHtml(message)
-    return
-  }
-
-  addPhotoForm.querySelector('button').disabled = true
-  formMessage.insertHtml('Uploading...')
-
-  const compressionOptions = {
-    maxWidthOrHeight: 600,
-    useWebWorker: true,
-    fileType: 'image/jpeg',
-    exifOrientation: null,
-  }
-
-  try {
-    const file = formData.get('file')
-    const compressed = await imageCompression(file, compressionOptions)
-    formData.set('file', compressed)
-
-    formData.set('entry', newState.get('active-doc').id)
-
-    const { message } = await addEntryPhoto(formData)
-
-    if (message) {
-      formMessage.insertHtml(message)
-    }
-    // refresh photos to show added photo
-    document.querySelector('#photo-list').showPhotos()
-  } catch (error) {
-    console.error(error)
-    formMessage.insertHtml(error.message)
-  }
+  el.querySelector('[data-id="recipe-title"]').value = doc.title
+  el.querySelector('[data-id="recipe-notes"]').value = doc.notes
+  el.querySelector('[data-id="recipe-notes"]').resize()
+  el.querySelector('[data-id="recipe-related"]').value = doc.related
+  el.querySelector('[data-id="recipe-ingredients"]').value = doc.ingredients
+  el.querySelector('[data-id="recipe-ingredients"]').resize()
+  el.querySelector('[data-id="recipe-method"]').value = doc.method
+  el.querySelector('[data-id="recipe-method"]').resize()
+  el.querySelector('[data-id="recipe-category"]').value = doc.category
+  el.querySelector('[data-id="recipe-tags"]').value = doc.tags
+  el.querySelector('[data-id="recipe-id"]').insertHtml(doc.id)
 }

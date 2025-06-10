@@ -11,6 +11,10 @@ textarea {
   cursor: pointer;
   text-decoration: none;
   border-radius: var(--border-radius);
+  min-height: 1.2em;
+  line-height: 1.2em;
+  overflow-y: hidden; /* prevent scrollbars */
+  resize: none;
 }
 `
 
@@ -31,6 +35,8 @@ export function createTextarea({
   injectStyle(css)
 
   const el = document.createElement('textarea')
+
+  el.resize = resize.bind(el)
 
   listen(el)
 
@@ -54,14 +60,18 @@ export function createTextarea({
  *
  */
 function listen(el) {
-  el.addEventListener('keyup', () => resize(el))
-  el.addEventListener('change', () => resize(el))
+  el.addEventListener('keyup', () => el.resize())
+  el.addEventListener('change', () => el.resize())
 }
+
+// -------------------------------
+// Object methods
+// -------------------------------
 
 /**
  *
  */
-function resize(el) {
-  el.style.height = '1px'
-  el.style.height = 25 + el.scrollHeight + 'px'
+function resize() {
+  this.style.height = '1px'
+  this.style.height = 25 + this.scrollHeight + 'px'
 }

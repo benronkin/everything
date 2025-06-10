@@ -1,6 +1,7 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -59,98 +60,24 @@ const css = `
 /**
  * Constructor for the custom switch element
  */
-export function createSwitch({
-  id,
-  iconOff,
-  iconOn,
-  events = { click: () => {} },
-  className = '',
-}) {
+export function createSwitch({ id, iconOff, iconOn, className }) {
   injectStyle(css)
 
   const el = document.createElement('div')
 
-  Object.defineProperties(el, {
-    classes: {
-      get() {
-        return el.className
-      },
-      set(newValue = '') {
-        el.className = `switch ${iconOff && 'iconed'} ${newValue}`.trim()
-      },
-    },
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = newValue
-      },
-    },
-    disabled: {
-      get() {
-        return this.classList.includes('disabled')
-      },
-      set(v) {
-        this.classList.toggle('disabled', v)
-      },
-    },
-    value: {
-      get() {
-        return el.classList.contains('on')
-      },
-      set(newValue) {
-        el.classList.toggle('on', newValue)
-      },
-    },
-    toggle: {
-      value: function () {
-        el.classList.toggle('on', !el.value)
-      },
-    },
-  })
-
-  for (const [eventName, cb] of Object.entries(events)) {
-    if (eventName === 'click') {
-      el.addEventListener('click', () => {
-        handleClick(el, cb)
-      })
-    } else {
-      el.addEventListener(eventName, cb)
-    }
+  id && (el.id = id)
+  el.className = 'switch'
+  if (className) {
+    className.split(' ').forEach((c) => el.classList.add(c))
   }
 
-  addElementParts({ el, iconOff })
+  iconOff && (el._iconOff = iconOff)
+  iconOn && (el._iconOn = iconOn)
 
-  el.dataId = id
-  el.classes = className
-  el._iconOff = iconOff
-  el._iconOn = iconOn
+  build({ el, iconOff })
+  listen(el)
 
   return el
-}
-
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-/**
- * Respond to switch clicks
- * @param {Function} cb - The consumer's callback to run
- */
-function handleClick(el, cb) {
-  el.toggle()
-
-  if (el._iconOff) {
-    el.querySelector('i').classList.toggle(el._iconOff)
-    el.querySelector('i').classList.toggle(el._iconOn)
-  }
-
-  if (cb) {
-    cb()
-  }
 }
 
 // -------------------------------
@@ -160,7 +87,7 @@ function handleClick(el, cb) {
 /**
  * Create the HTML element
  */
-function addElementParts({ el, iconOff }) {
+function build({ el, iconOff }) {
   const divEl = createDiv({ className: 'thumb' })
   el.appendChild(divEl)
 
@@ -170,4 +97,17 @@ function addElementParts({ el, iconOff }) {
   if (iconOff) {
     iconEl.className = iconOff
   }
+}
+
+/**
+ * Respond to switch clicks
+ */
+function listen(el) {
+  el.addEventListener('click', () => {
+    if (el._iconOff) {
+      el.querySelector('i').classList.toggle(el._iconOff)
+      el.querySelector('i').classList.toggle(el._iconOn)
+    }
+    el.classList.toggle('on')
+  })
 }

@@ -11,10 +11,11 @@ import { setMessage } from '../_assets/js/ui.js'
 import {
   createRecipe,
   deleteRecipe,
-  fetchRecentRecipes,
+  fetchCategoriesAndRecipes,
   searchRecipes,
   updateRecipe,
 } from './recipes.api.js'
+import { log } from '../_assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -31,8 +32,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const { data } = await fetchRecentRecipes()
-    newState.set('main-documents', data)
+    const resp = await fetchCategoriesAndRecipes()
+    let { categories, recipes } = resp
+
+    categories = categories.map((c) => ({
+      value: c.id,
+      label: c.label,
+    }))
+    categories.unshift({ value: '', label: 'Category' })
+
+    newState.set('main-documents', recipes)
+    newState.set('recipe-categories', categories)
     newState.set('app-mode', 'left-panel')
     newState.set('default-page', 'recipes')
     window.newState = newState // avail to browser console
@@ -77,19 +87,26 @@ function react() {
   newState.on('form-submit:left-panel-search', 'recipes', reactSearch)
   newState.on('icon-click:add-Recipe', 'recipes', reactRecipeAdd)
   newState.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+  newState.on('recipe-categories', 'recipeGroup', (options) =>
+    document.getElementById('recipe-category').setOptions(options)
+  )
 }
 
 function listen() {
-  /* When recipe field loses focus */
+  // When recipe field loses focus
   document.querySelectorAll('.field').forEach((field) => {
     field.addEventListener('change', handleFieldChange)
+  })
+
+  // When recipe category switch is toggled
+  document.getElementById('related-switch').addEventListener('click', () => {
+    document.getElementById('recipe-related').classList.toggle('hidden')
   })
 }
 
 /**
  * Add a recipe Recipe
  */
-
 async function reactRecipeAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
@@ -97,12 +114,6 @@ async function reactRecipeAdd({ id: btnId }) {
   const { id, error } = await createRecipe()
   if (error) {
     console.error(`Recipes server error: ${error}`)
-    return
-  }
-
-  const { defaults, error: error2 } = await fetchDefaults()
-  if (error2) {
-    console.error(`Recipes server error: ${error2}`)
     return
   }
 
@@ -195,11 +206,11 @@ async function handleFieldChange(e) {
   newState.set('active-doc', doc)
 
   try {
-    const { message, error } = await updateRecipe({ id, section, value })
+    const { error } = await updateRecipe({ id, section, value })
     if (error) {
       throw new Error(error)
     }
-    log(message)
+    // log(message)
   } catch (err) {
     log(err)
   }

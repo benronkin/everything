@@ -1,26 +1,25 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
-import { createTextarea } from './textarea.js'
+import { createSelect } from './select.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
-.ta-group {
+.select-group {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 20px;
-  align-items: start;
+  align-items: center;
   width: 100%;
 }  
-.ta-group i {
+.select-group i {
   cursor: default;
 }
-.ta-group textarea {
+.select-group select {
   margin: 0;
-  width: 100%;
 }
 `
 
@@ -31,19 +30,19 @@ const css = `
 /**
  * Constructor for a custom horizontal form
  */
-export function createTextareaGroup({
+export function createSelectGroup({
   id,
   classes,
   name,
-  placeholder,
   value,
+  options,
   className = null,
 }) {
   injectStyle(css)
 
   if (className || classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createTextareaGroup Oops: pass-in optional classes object: {group: '', textarea: '', icon: ''} `
+      `createSelectGroup Oops: pass-in optional classes object: { icon: ''} `
     )
   }
 
@@ -53,15 +52,14 @@ export function createTextareaGroup({
     el,
     id,
     name,
-    placeholder,
     value,
+    options,
   })
 
   classes?.group && (el.className = classes.group)
-  el.classList.add('ta-group')
+  el.classList.add('input-group')
 
-  classes?.textarea &&
-    (el.querySelector('textarea').className = classes.textarea)
+  classes?.input && (el.querySelector('input').className = classes.input)
 
   if (classes?.icon) {
     const arr = classes.icon.split(' ')
@@ -81,15 +79,15 @@ export function createTextareaGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, id, name, placeholder, value }) {
+function build({ el, id, name, value, options }) {
   el.appendChild(createIcon())
 
   el.appendChild(
-    createTextarea({
+    createSelect({
       id,
       name,
-      placeholder,
       value,
+      options,
     })
   )
 }

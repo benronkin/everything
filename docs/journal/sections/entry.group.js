@@ -3,8 +3,9 @@ This module handles journal events so that the journal.js stays leaner.
 This module loads aftr all partials were created.
 */
 import { createDiv } from '../../_partials/div.js'
+import { createSpanGroup } from '../../_partials/spanGroup.js'
 import { createInputGroup } from '../../_partials/inputGroup.js'
-import { createTextareaGroup } from '../../_partials/textareaGroup.js'
+import { createTextarea } from '../../_partials/textarea.js'
 // import { log } from '../../_assets/js/logger.js'
 // import { newState } from '../../_assets/js/newState.js'
 
@@ -53,15 +54,6 @@ function build(el) {
   )
 
   el.appendChild(
-    createTextareaGroup({
-      name: 'notes',
-      id: 'journal-notes',
-      classes: { group: 'mb-40', textarea: 'field', icon: 'fa-pencil' },
-      placeholder: 'Notes...',
-    })
-  )
-
-  el.appendChild(
     createInputGroup({
       name: 'city',
       id: 'journal-city',
@@ -85,6 +77,22 @@ function build(el) {
       id: 'journal-country',
       placeholder: 'Country',
       classes: { input: 'field', icon: 'fa-flag' },
+    })
+  )
+
+  el.appendChild(
+    createSpanGroup({
+      classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
+      html: 'Note:',
+    })
+  )
+
+  el.appendChild(
+    createTextarea({
+      name: 'notes',
+      id: 'journal-notes',
+      className: 'field w-100',
+      placeholder: 'Add details...',
     })
   )
 

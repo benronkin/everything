@@ -60,6 +60,7 @@ export function createIcon({
  */
 function listen(el) {
   el.addEventListener('click', () => {
+    if (!el._classes) return
     if (el._classes.secondary) {
       el._onPrimaryClass = !el._onPrimaryClass
       el.classList.toggle(el._classes.primary)

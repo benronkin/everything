@@ -33,10 +33,7 @@ h3 {
 h4 {
   margin: 20px 0 10px;
 }
-h5,
-.h5 {
-  margin-top: 20px;
-}
+
 i {
   cursor: pointer;
 }
@@ -237,22 +234,28 @@ ul {
   margin: 0;
 }
 .mb-20 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
+}
+.mb-30 {
+  margin-bottom: 30px !important;
 }
 .mb-40 {
-  margin-bottom: 40px;
+  margin-bottom: 40px !important;
 }
 .ml-20 {
-  margin-left: 20px;
+  margin-left: 20px !important;
 }
 .mr-20 {
-  margin-right: 20px;
+  margin-right: 20px !important;
 }
 .mt-20 {
-  margin-top: 20px;
+  margin-top: 20px !important;
+}
+.mt-30 {
+  margin-top: 30px !important;
 }
 .mt-40 {
-  margin-top: 40px;
+  margin-top: 40px !important;
 }
 .smaller {
   font-size: 0.85rem;

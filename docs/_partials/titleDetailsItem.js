@@ -28,10 +28,6 @@ const css = `
   grid-template-columns: 1fr auto;
 }
 .td-item textarea {
-  min-height: 1.2em;
-  line-height: 1.2em;
-  overflow-y: hidden; /* prevent scrollbars */
-  resize: none;
   padding: 10px 10px 0 10px;
   margin: 1px;
 }
@@ -90,7 +86,7 @@ export function createTitleDetailsItem({
  *
  */
 function build(el) {
-  let gridEl = createDiv({ className: 'grid' })
+  let gridEl = createDiv({ className: 'grid title-wrapper' })
   el.appendChild(gridEl)
 
   const titleEl = createTextarea({
@@ -114,15 +110,15 @@ function build(el) {
     })
   )
   iconsEl.appendChild(
-    createIcon({ classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] } })
+    createIcon({ classes: { primary: 'fa-sort', other: ['sorter'] } })
   )
 
-  gridEl = createDiv({ className: 'grid' })
+  gridEl = createDiv({ className: 'grid details-wrapper hidden' })
   el.appendChild(gridEl)
 
   const taEl = createTextarea({
     name: 'details',
-    className: 'hidden field',
+    className: 'field',
     placeholder: 'Add details...',
   })
   taEl.dataset.target = 'details'
@@ -133,7 +129,6 @@ function build(el) {
   const trashEl = createIcon({
     classes: {
       primary: 'fa-trash',
-      other: ['hidden'],
     },
   })
   iconsEl.appendChild(trashEl)
@@ -159,14 +154,14 @@ function react(el) {
  */
 function listen(el) {
   el.querySelector('.expander').addEventListener('click', (e) => {
-    el.querySelector('[data-target="details"]').classList.toggle(
+    el.querySelector('.details-wrapper').classList.toggle(
       'hidden',
       e.target.classList.contains('fa-chevron-left')
     )
-    el.querySelector('.fa-trash').classList.toggle(
-      'hidden',
-      e.target.classList.contains('fa-chevron-left')
-    )
+    // el.querySelector('.fa-trash').classList.toggle(
+    //   'hidden',
+    //   e.target.classList.contains('fa-chevron-left')
+    // )
   })
 }
 

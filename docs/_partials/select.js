@@ -59,7 +59,6 @@ export function createSelect({
   className = '',
   name = '',
   options = [],
-  events = { change: () => {} },
 }) {
   injectStyle(css)
 
@@ -86,7 +85,7 @@ export function createSelect({
     },
   })
 
-  addElementParts({ el, name, events })
+  addElementParts({ el, name })
 
   el.getOptionByLabel = getOptionByLabel.bind(el)
   el.getOptionByValue = getOptionByValue.bind(el)
@@ -213,7 +212,7 @@ function unselect() {
 /**
  *
  */
-function addElementParts({ el, name, events }) {
+function addElementParts({ el, name }) {
   const selectEl = document.createElement('select')
   selectEl.className = 'custom-select'
   selectEl.name = name
@@ -223,8 +222,4 @@ function addElementParts({ el, name, events }) {
   el.appendChild(divEl)
   const iconEl = createIcon({ classes: { primary: 'fa-caret-down' } })
   divEl.appendChild(iconEl)
-
-  for (const [k, v] of Object.entries(events)) {
-    selectEl.addEventListener(k, v)
-  }
 }

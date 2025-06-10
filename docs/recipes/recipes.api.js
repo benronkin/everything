@@ -1,5 +1,6 @@
 import { newState } from '../_assets/js/newState.js'
-import { getWebApp, postWebAppJson, postWebAppForm } from '../_assets/js/io.js'
+import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
+import { log } from '../_assets/js/logger.js'
 
 const url = `${newState.const('APP_URL')}/recipes`
 
@@ -24,25 +25,31 @@ export async function deleteRecipe(id, password) {
 /**
  *
  */
-export async function fetchDefaults() {
-  const { defaults, error } = await getWebApp(`${url}/defaults/read`)
-  return { defaults, error }
+export async function fetchCategories() {
+  const { categories } = await getWebApp(`${url}/categories/read`)
+  return { categories }
 }
 
 /**
  *
  */
-export async function fetchRecipePhotosMetadata(id) {
-  const { photos, error } = await getWebApp(`${url}/photos/read?Recipe=${id}`)
-  return { photos, error }
+export async function fetchCategoriesAndRecipes() {
+  const [{ categories }, { recipes }] = await Promise.all([
+    getWebApp(`${url}/categories/read`),
+    getWebApp(`${url}/latest`),
+  ])
+
+  return { categories, recipes }
 }
 
 /**
  *
  */
 export async function fetchRecentRecipes() {
-  const { journal, error } = await getWebApp(`${url}/read`)
-  return { data: journal, error }
+  const resp = await getWebApp(`${url}/latest`)
+  // log(resp)
+  const { recipes, error } = resp
+  return { recipes, error }
 }
 
 /**
@@ -65,42 +72,4 @@ export async function updateRecipe({ id, section, value }) {
     section,
   })
   return { message, error }
-}
-
-/**
- *
- */
-export async function updateJournalDefaults({ id, section, value }) {
-  await postWebAppJson(`${url}/defaults/update`, {
-    id,
-    [section]: value,
-  })
-}
-
-/**
- *
- */
-export async function updatePhotoCaption({ id, value }) {
-  const { error, message } = await postWebAppJson(`${url}/photos/update`, {
-    id,
-    value: value,
-    section: 'caption',
-  })
-  return { error, message }
-}
-
-/**
- *
- */
-export async function addRecipePhoto(formData) {
-  const { message } = await postWebAppForm(`${url}/photos/create`, formData)
-  return { message }
-}
-
-/**
- *
- */
-export async function deleteRecipePhoto(id) {
-  const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
-  return { error }
 }

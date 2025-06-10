@@ -3,7 +3,7 @@
 // ------------------------
 
 import { setMessage } from './ui.js'
-// import { log } from './logger.js'
+import { log } from './logger.js'
 
 /**
  * If the user clicked on the email link then the token will be in the query param.
@@ -48,7 +48,9 @@ export async function getWebApp(path) {
       throw new Error(res.statusText)
     }
 
-    const { status, message, data, unauthorized } = await res.json()
+    const resp = await res.json()
+    // log(resp)
+    const { status, message, data, unauthorized } = resp
 
     if (unauthorized) {
       setMessage({ message, type: 'danger' })
