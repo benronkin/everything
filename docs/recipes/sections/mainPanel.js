@@ -2,7 +2,6 @@ import { newState } from '../../_assets/js/newState.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
-import { createIcon } from '../../_partials/icon.js'
 import { createRecipeGroup } from './recipe.group.js'
 import { createSpan } from '../../_partials/span.js'
 import { dangerZone } from './dangerZone.js'
@@ -20,6 +19,7 @@ const css = `
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
+
 }
 #main-panel.hidden {
   display: none;
