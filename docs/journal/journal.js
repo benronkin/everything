@@ -17,6 +17,7 @@ import {
   updateEntry,
   updateJournalDefaults,
 } from './journal.api.js'
+import { log } from '../_assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -157,11 +158,13 @@ async function reactEntryDelete() {
 /**
  *
  */
-async function reactSearch(doc) {
+async function reactSearch() {
   let resp
 
-  if (doc['search-entry'].trim().length) {
-    resp = await searchEntries(doc['search-entry'])
+  const query = document.querySelector('[name="search-entry"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchEntries(query)
   } else {
     // get most recent entries instead
     resp = await fetchRecentEntries()

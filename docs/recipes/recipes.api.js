@@ -16,10 +16,10 @@ export async function createRecipe() {
  *
  */
 export async function deleteRecipe(id, password) {
-  const { journal, error } = await getWebApp(
+  const { recipe, error } = await getWebApp(
     `${url}/delete?id=${id}&password=${password}`
   )
-  return { data: journal, error }
+  return { data: recipe, error }
 }
 
 /**
@@ -56,10 +56,10 @@ export async function fetchRecentRecipes() {
  * @param {String} q - The search query
  */
 export async function searchRecipes(q) {
-  const { journal, error } = await getWebApp(
+  const { recipes, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`
   )
-  return { data: journal, error }
+  return { data: recipes, error }
 }
 
 /**

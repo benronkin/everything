@@ -5,6 +5,7 @@ import { createSelectGroup } from '../../_partials/selectGroup.js'
 import { createSpanGroup } from '../../_partials/spanGroup.js'
 import { createSwitch } from '../../_partials/switch.js'
 import { createTextarea } from '../../_partials/textarea.js'
+import { createList } from '../../_partials/list.js'
 import { newState } from '../../_assets/js/newState.js'
 import { log } from '../../_assets/js/logger.js'
 
@@ -37,7 +38,7 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'fs-1-5 field', icon: 'fa-utensils' },
+      classes: { group: '', input: 'fs-125 field', icon: 'fa-utensils' },
     })
   )
 
@@ -128,7 +129,7 @@ async function build(el) {
       className: 'field hidden w-100 bg-blue0 p-10',
     })
   )
-  el.appendChild(createDiv({ id: 'recipe-related-output' }))
+  el.appendChild(createList({ id: 'related-list' }))
 
   return el
 }

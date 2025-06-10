@@ -21,6 +21,10 @@ export function toolbar() {
         id: 'add-recipe',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
+      createIcon({
+        id: 'shop-ingredients',
+        classes: { primary: 'fa-shopping-cart', other: ['primary'] },
+      }),
     ],
   })
 

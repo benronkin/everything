@@ -6,12 +6,14 @@ import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../_partials/div.js'
 import { createFooter } from '../_composites/footer.js'
+import { createMainDocumentItem } from '../_partials/mainDocumentItem.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { setMessage } from '../_assets/js/ui.js'
 import {
   createRecipe,
   deleteRecipe,
   fetchCategoriesAndRecipes,
+  fetchRecentRecipes,
   searchRecipes,
   updateRecipe,
 } from './recipes.api.js'
@@ -84,12 +86,16 @@ async function build() {
  *
  */
 function react() {
-  newState.on('form-submit:left-panel-search', 'recipes', reactSearch)
-  newState.on('icon-click:add-Recipe', 'recipes', reactRecipeAdd)
+  newState.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
+  newState.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
   newState.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+  newState.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
   newState.on('recipe-categories', 'recipeGroup', (options) =>
     document.getElementById('recipe-category').setOptions(options)
   )
+  newState.on('app-mode', 'recipes', (appMode) => {
+    if (appMode === 'main-panel') populateRelatedRecipes()
+  })
 }
 
 function listen() {
@@ -107,8 +113,8 @@ function listen() {
 /**
  * Add a recipe Recipe
  */
-async function reactRecipeAdd({ id: btnId }) {
-  const addBtn = document.getElementById(btnId)
+async function reactRecipeAdd() {
+  const addBtn = document.getElementById('add-recipe')
   addBtn.disabled = true
 
   const { id, error } = await createRecipe()
@@ -121,13 +127,8 @@ async function reactRecipeAdd({ id: btnId }) {
 
   const doc = {
     id,
-    location: 'New Recipe',
+    title: 'New Recipe',
     created_at: dateString,
-    visit_date: dateString,
-    city: defaults.city,
-    state: defaults.state,
-    country: defaults.country,
-    notes: '',
   }
 
   newState.set('main-documents', [doc, ...newState.get('main-documents')])
@@ -166,14 +167,16 @@ async function reactRecipeDelete() {
 /**
  *
  */
-async function reactSearch(doc) {
+async function reactRecipeSearch() {
   let resp
 
-  if (doc['search-Recipe'].trim().length) {
-    resp = await searchRecipes(doc['search-Recipe'])
+  const query = document.querySelector('[name="search-recipe"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchRecipes(query)
   } else {
-    // get most recent recipes instead
-    resp = await fetchRecenRecipes()
+    // get most recent entries instead
+    resp = await fetchRecentRecipes()
   }
 
   const { data, message } = resp
@@ -211,7 +214,53 @@ async function handleFieldChange(e) {
       throw new Error(error)
     }
     // log(message)
-  } catch (err) {
-    log(err)
+  } catch (error) {
+    setMessage({ message: error, type: 'danger' })
   }
+
+  if (section === 'related') {
+    populateRelatedRecipes()
+  }
+}
+
+/**
+ * Populate related recipes
+ */
+function populateRelatedRecipes() {
+  const relatedListEl = document.getElementById('related-list')
+  relatedListEl.deleteChildren()
+
+  const ids = document.getElementById('recipe-related').value
+  if (!ids) return
+
+  const splitRegEx = /,|\n|\s/
+  const idsArr = ids
+    .split(splitRegEx)
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0)
+
+  if (!idsArr.length) return
+
+  for (const id of idsArr) {
+    if (!id.trim().length || id === 'undefined') {
+      continue
+    }
+
+    const title = newState
+      .get('main-documents')
+      .find((doc) => doc.id === id).title
+    relatedListEl.addChild(
+      createMainDocumentItem({
+        id,
+        html: title,
+      })
+    )
+  }
+}
+
+/**
+ *
+ */
+function shopIngredients() {
+  setMessage({ message: 'To be implemented...' })
 }

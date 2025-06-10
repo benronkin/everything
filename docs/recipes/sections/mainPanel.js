@@ -95,15 +95,16 @@ function reactAppMode(el) {
   el.classList.remove('hidden')
   log('mainPanel is showing itself on active-doc')
 
-  el.querySelector('[data-id="recipe-title"]').value = doc.title
-  el.querySelector('[data-id="recipe-notes"]').value = doc.notes
+  el.querySelector('[data-id="recipe-title"]').value = doc.title || ''
+  el.querySelector('[data-id="recipe-notes"]').value = doc.notes || ''
   el.querySelector('[data-id="recipe-notes"]').resize()
-  el.querySelector('[data-id="recipe-related"]').value = doc.related
-  el.querySelector('[data-id="recipe-ingredients"]').value = doc.ingredients
+  el.querySelector('[data-id="recipe-related"]').value = doc.related || ''
+  el.querySelector('[data-id="recipe-ingredients"]').value =
+    doc.ingredients || ''
   el.querySelector('[data-id="recipe-ingredients"]').resize()
-  el.querySelector('[data-id="recipe-method"]').value = doc.method
+  el.querySelector('[data-id="recipe-method"]').value = doc.method || ''
   el.querySelector('[data-id="recipe-method"]').resize()
-  el.querySelector('[data-id="recipe-category"]').value = doc.category
-  el.querySelector('[data-id="recipe-tags"]').value = doc.tags
+  el.querySelector('[data-id="recipe-category"]').value = doc.category || ''
+  el.querySelector('[data-id="recipe-tags"]').value = doc.tags || ''
   el.querySelector('[data-id="recipe-id"]').insertHtml(doc.id)
 }

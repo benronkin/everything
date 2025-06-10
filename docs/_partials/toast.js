@@ -11,8 +11,6 @@ const css = `
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  background: var(--gray3);
-  color: var(--gray6);
   padding: 0.75rem 1.25rem;
   border-radius: var(--border-radius);
   font-size: 0.875rem;
@@ -53,8 +51,8 @@ const css = `
 }
 .toast .fa-close {
   position: fixed;
-  top: -5px;
-  right: 0;
+  top: 2px;
+  right: 2px;
   bottom: auto;
   left: auto;
 }
