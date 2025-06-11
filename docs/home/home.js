@@ -5,25 +5,13 @@ import { fetchTasks } from '../tasks/tasks.api.js'
 import { createDiv } from '../_partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { footer } from './sections/footer.js'
+import { createFooter } from '../_composites/footer.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    build()
     setMessage({ message: 'Loading...' })
 
-    handleTokenQueryParam()
-
-    const token = localStorage.getItem('authToken')
-    if (!token) {
-      console.log('handleDOMContentLoaded: no token')
-      setMessage({
-        type: 'danger',
-        message: 'Authentication failed',
-        position: 'BOTTOM_RIGHT',
-      })
-      return
-    }
+    build()
 
     const urlParams = new URLSearchParams(window.location.search)
 
@@ -36,7 +24,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (message) {
-      setMessage({ message })
+      setMessage({ message, type: 'danger' })
+      return
+    }
+
+    handleTokenQueryParam()
+
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      console.log('handleDOMContentLoaded: no token')
+      setMessage({
+        type: 'danger',
+        message: 'Authentication failed',
+        position: 'BOTTOM_RIGHT',
+      })
       return
     }
 
@@ -103,6 +104,8 @@ export function build() {
 
   wrapperEl.appendChild(nav())
 
+  wrapperEl.appendChild(createDiv({ id: 'for-grid-dont-delete' }))
+
   const columnsWrapperEl = createDiv({
     className: 'columns-wrapper',
   })
@@ -110,5 +113,5 @@ export function build() {
 
   columnsWrapperEl.appendChild(mainPanel())
 
-  wrapperEl.appendChild(footer())
+  wrapperEl.appendChild(createFooter())
 }

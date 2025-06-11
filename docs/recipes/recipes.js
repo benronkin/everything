@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     setMessage({ message: 'Loading...' })
 
+    build()
+
     handleTokenQueryParam()
 
     const token = localStorage.getItem('authToken')
@@ -30,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    build()
     react()
     listen()
 
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
+    window.location.href = `../home/index.html?message=${error.message}`
   }
 })
 
