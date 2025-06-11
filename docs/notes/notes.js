@@ -34,8 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     state.set('main-documents', notes)
-    state.set('active-doc', state.get('main-documents')[0]) // <<<<<< DELETE
-    state.set('app-mode', 'main-panel')
+    state.set('app-mode', 'left-panel')
     state.set('default-page', 'notes')
     window.state = state // avail to browser console
     setMessage({ message: '' })
