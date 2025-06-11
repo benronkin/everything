@@ -7,6 +7,10 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
+.ql-container {
+  height: auto !important;
+  overflow-y: visible !important;
+}
 .ql-toolbar.ql-snow {
   border: none;
   background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
