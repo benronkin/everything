@@ -66,12 +66,12 @@ export function createTitleDetailsItem({
   react(el)
   listen(el)
 
-  el.setDraggable = setDraggable.bind(el)
-
   let ta = el.querySelector('[data-target="title"]')
   ta.value = (title || '').toString().trim()
 
   el.querySelector('[name="details"]').value = (details || '').toString().trim()
+
+  el.setDraggable = setDraggable.bind(el)
 
   el.setDraggable(draggable)
 

@@ -1,6 +1,8 @@
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createFormHorizontal } from '../../_partials/formHorizontal.js'
+import { shoppingList } from './shoppingList.js'
+import { suggestionsList } from './suggestionsList.js'
 // import { newState } from '../../_assets/js/newState.js'
 // import { log } from '../../_assets/js/logger.js'
 
@@ -20,6 +22,9 @@ const css = `
 }
 #main-panel.hidden {
   display: none;
+}
+#main-panel form {
+  gap: 0 !important;
 }
 `
 
@@ -56,13 +61,16 @@ function build(el) {
     createFormHorizontal({
       id: 'shopping-form',
       type: 'text',
-      name: 'ingredient',
+      name: 'new-item',
       placeholder: 'Add item',
       autocomplete: 'off',
       formIconClass: 'fa-shopping-cart',
       disabled: true,
     })
   )
+  el.appendChild(suggestionsList())
+
+  el.appendChild(shoppingList())
 }
 
 /**

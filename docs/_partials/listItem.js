@@ -45,13 +45,19 @@ const css = `
 /**
  * Constructor for a custom listItem element
  */
-export function createListItem({ html, id } = {}) {
+export function createListItem({ html, className, id } = {}) {
   injectStyle(css)
   const el = createDiv()
 
   el.id = id || `i-${crypto.randomUUID()}`
   el.dataset.id = el.id
+
   el.className = 'list-item'
+  if (className) {
+    for (const c of className.split(' ')) {
+      el.classList.add(c)
+    }
+  }
 
   el.dataset.listItem = true
 

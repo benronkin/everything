@@ -68,9 +68,9 @@ function build({ el, emptyState, enableDrag } = {}) {
 
   if (emptyState) {
     el._emptyState = emptyState
-    const emptyStateDiv = createDiv({ className: 'empty-state hidden' })
+    const emptyStateDiv = createDiv({ className: 'empty-state' })
     el.appendChild(emptyStateDiv)
-    emptyStateDiv.setHtml(emptyState)
+    emptyStateDiv.insertHtml(emptyState)
   }
 }
 
@@ -79,13 +79,18 @@ function build({ el, emptyState, enableDrag } = {}) {
  * generates on add events and others.
  */
 function listen(el) {
-  newState.on('item-click', 'list', (id) => {
-    el.getChildren().forEach((child) => {
-      // select the clicked child
-      // and unselect the rest
-      child.classList.toggle('active', child.dataset.id == id)
-    })
-  })
+  // select/unselect should be implemented inside the custom list
+  // newState.on('item-click', 'list', (id) => {
+  //   el.getChildren().forEach((child) => {
+  //     if (child.id === id) {
+  //       child.classList.toggle('active')
+  //     } else {
+  //       // select the clicked child
+  //       // and unselect the rest
+  //       child.classList.remove('active')
+  //     }
+  //   })
+  // })
 }
 
 // -------------------------------

@@ -104,6 +104,13 @@ function listen(el) {
         handleFormSubmit(el.id)
       }
     })
+
+    el.addEventListener('keyup', (e) => {
+      newState.set(`form-keyup:${el.id}`, {
+        key: e.key,
+        value: el.querySelector('input').value,
+      })
+    })
   }
 
   /**

@@ -1,5 +1,6 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { insertHtml } from '../_assets/js/format.js'
+import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
 // Globals

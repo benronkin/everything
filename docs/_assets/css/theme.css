@@ -338,6 +338,20 @@ main {
 .ta-group:has(textarea:focus) i {
   color: var(--gray6);
 }
+.list-item {
+  border: 1px solid var(--gray0);
+}
+.list-item.active,
+.list-item.active:hover {
+  border: 1px solid var(--purple2);
+  background-color: var(--purple2);
+  transition: background-color 200ms ease;
+}
+.list-item:hover {
+  border: 1px solid var(--purple2);
+  background-color: transparent;
+  transition: background-color 200ms ease;
+}
 .md-item {
   border: 1px dotted var(--gray1);
   transition: all 0.2s ease-in-out;
@@ -346,6 +360,19 @@ main {
 .md-item.active {
   border: 1px solid var(--purple3);
   color: var(--purple3);
+}
+.outer-wrapper {
+  background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
+}
+.outer-wrapper-teal {
+  background-color: var(--gray1);
+  border-left: 3px solid var(--teal3);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.08);
 }
 .p-0 {
   padding: 0 !important;
