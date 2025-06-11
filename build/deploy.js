@@ -39,7 +39,7 @@ build()
  *
  */
 function setProdUrl() {
-  const filePath = './docs/_assets/js/state.js'
+  const filePath = './docs/assets/js/state.js'
   let content = fs.readFileSync(filePath, 'utf8')
   content = content.replace(/WEB_APP_URL:\s*devUrl/, 'WEB_APP_URL: prodUrl')
   fs.writeFileSync(filePath, content, 'utf8')
@@ -77,7 +77,7 @@ function updateIndexPage() {
  *
  */
 function updateFooterPartial() {
-  const filePath = './docs/_sections/footer.js'
+  const filePath = './docs/assets/composites/footer.js'
   let content = fs.readFileSync(filePath, 'utf8')
   const match = content.match(/<span id="version-number">(.*?)<\/span>/)
   const currentVersion = match ? match[1] : null
