@@ -41,7 +41,7 @@ build()
 function setProdUrl() {
   const filePath = './docs/assets/js/state.js'
   let content = fs.readFileSync(filePath, 'utf8')
-  content = content.replace(/WEB_APP_URL:\s*devUrl/, 'WEB_APP_URL: prodUrl')
+  content = content.replace(/APP_URL:\s*devUrl/, 'APP_URL: prodUrl')
   fs.writeFileSync(filePath, content, 'utf8')
   console.log('🔥 Updated WEB_APP_URL to prodUrl in js/state.js')
 }
