@@ -11,7 +11,14 @@ const css = `
   height: auto !important;
   overflow-y: visible !important;
   font-size: 1rem;
+
 }
+.ql-container, 
+.ql-toolbar,
+.ql-editor {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+} 
 .ql-toolbar.ql-snow {
   border: none;
   background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
