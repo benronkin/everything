@@ -39,7 +39,7 @@ build()
  *
  */
 function setProdUrl() {
-  const filePath = './docs/js/state.js'
+  const filePath = './docs/_assets/js/state.js'
   let content = fs.readFileSync(filePath, 'utf8')
   content = content.replace(/WEB_APP_URL:\s*devUrl/, 'WEB_APP_URL: prodUrl')
   fs.writeFileSync(filePath, content, 'utf8')
@@ -77,7 +77,7 @@ function updateIndexPage() {
  *
  */
 function updateFooterPartial() {
-  const filePath = './docs/sections/footer.js'
+  const filePath = './docs/_sections/footer.js'
   let content = fs.readFileSync(filePath, 'utf8')
   const match = content.match(/<span id="version-number">(.*?)<\/span>/)
   const currentVersion = match ? match[1] : null
@@ -133,7 +133,7 @@ function commitChanges() {
       stdio: 'inherit',
       shell: true,
     })
-    execSync('git push origin main', { stdio: 'inherit', shell: true })
+    execSync('git push', { stdio: 'inherit', shell: true })
 
     console.log('✅ Changes committed successfully.')
   } catch (error) {

@@ -1,173 +1,217 @@
-import { state } from '../js/state.js'
-import { getEl, setMessage } from '../js/ui.js'
-import { setEvents } from './events.js'
-import { createNav } from '../sections/nav.js'
-import { createFooter } from '../sections/footer.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createModalDelete } from '../sections/modalDelete.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createFileInput } from '../partials/fileInput.js'
-import { createDangerZone } from '../sections/dangerZone.js'
-import { createForm } from '../partials/form.js'
-import { createIcon } from '../partials/icon.js'
-import { createInput } from '../partials/input.js'
-import { createList } from '../partials/list.js'
-import { createSearch } from '../partials/search.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
+import { state } from '../_assets/js/state.js'
+import { nav } from './sections/nav.js'
+import { toolbar } from './sections/toolbar.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { leftPanel } from './sections/leftPanel.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../_partials/div.js'
+import { createFooter } from '../_composites/footer.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { setMessage } from '../_assets/js/ui.js'
+import {
+  createEntry,
+  deleteEntry,
+  fetchDefaults,
+  fetchRecentEntries,
+  searchEntries,
+  updateEntry,
+  updateJournalDefaults,
+} from './journal.api.js'
+import { log } from '../_assets/js/logger.js'
 
-// ----------------------
-// Event handlers
-// ----------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    build()
 
-// ------------------------
-// Event handler functions
-// ------------------------
+    handleTokenQueryParam()
 
-/**
- * Handle DOMContentLoaded
- */
-async function handleDOMContentLoaded() {
-  setMessage({ message: 'Loading...' })
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
 
-  handleTokenQueryParam()
+    react()
+    listen()
 
-  const token = localStorage.getItem('authToken')
-  if (!token) {
-    window.location.href = '../index.html'
-    return
+    const { data } = await fetchRecentEntries()
+    state.set('main-documents', data)
+    state.set('app-mode', 'left-panel')
+    state.set('default-page', 'journal')
+    window.state = state // avail to browser console
+  } catch (error) {
+    setMessage({ message: error.message, type: 'danger' })
+    window.location.href = `../home/index.html?message=${error.message}`
+    console.trace(error)
   }
-
-  const { journal } = await getWebApp(`${state.getWebAppUrl()}/journal/read`)
-
-  // create and add page elements
-  const wrapperEl = document.querySelector('.wrapper')
-
-  const navEl = createNav({ title: '<i class="fa-solid fa-book"></i> Journal' })
-  wrapperEl.prepend(navEl)
-
-  const rightDrawerEl = createRightDrawer({ active: 'journal' })
-  document.querySelector('main').prepend(rightDrawerEl)
-
-  const mainIconGroup = createMainIconGroup({
-    shouldAllowCollapse: {
-      message: 'Select a jounral entry first',
-      cb: () => !!state.get('active-journal'),
-    },
-    children: [createIcon({ id: 'add-journal', className: 'fa-plus' })],
-  })
-  getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
-
-  getEl('left-panel').prepend(
-    createSearch({
-      iconClass: 'fa-magnifying-glass',
-      placeholder: 'Search journals',
-      searchCb: searchJournal,
-      searchResultsCb: handleSearchResult,
-    })
-  )
-
-  getEl('left-panel').appendChild(
-    createList({
-      id: 'left-panel-list',
-      itemClass: 'menu-item',
-    })
-  )
-
-  getEl('photos-header-wrapper').appendChild(
-    createIcon({
-      id: 'add-photo-toggle',
-      className: 'fa-camera primary',
-    })
-  )
-  getEl('upload-photo-wrapper').appendChild(
-    createForm({
-      id: 'add-photo-form',
-      className: 'hidden',
-      submitText: 'Upload',
-      disabled: true,
-      children: [
-        createFileInput({
-          id: 'photo-file-input',
-          label: 'Select image',
-          accept: 'image/*',
-          iconClass: 'fa-camera',
-        }),
-        createInput({
-          id: 'photo-caption-input',
-          className: 'bb-white',
-          name: 'caption',
-          type: 'text',
-          placeholder: 'Describe this photo...',
-          maxLength: '200',
-        }),
-        createInput({
-          id: 'photo-entry-id',
-          type: 'hidden',
-          name: 'entry',
-        }),
-      ],
-      events: {
-        // set the form's button's disabled
-        // based on file input contents
-        change: () => {
-          const el = getEl('add-photo-form')
-          const fileInput = el.querySelector('input[type="file"]')
-          el.disabled = !(fileInput?.files?.length > 0)
-        },
-      },
-    })
-  )
-
-  getEl('main-panel').appendChild(createDangerZone({ header: 'Delete entry' }))
-
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
-
-  document.querySelector('body').appendChild(
-    createModalDelete({
-      header: 'Delete entry',
-      id: 'modal-delete',
-      password: true,
-    })
-  )
-
-  // imported from the events.js module
-  setEvents()
-
-  // must run after journal-state-changed EH is added
-  // so as to trigger journal list population
-  state.set('journal', journal)
-  state.setDefaultPage('journal')
-
-  setMessage()
-}
+})
 
 // ------------------------
 // Helper functions
 // ------------------------
 
 /**
- * Get the searched journals
+ *
  */
-async function searchJournal(q) {
-  const data = await getWebApp(
-    `${state.getWebAppUrl()}/journal/search?q=${q.trim().toLowerCase()}`
-  )
+async function build() {
+  document.head.title = 'Journal | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
 
-  const { journal, message } = data
-  if (message) {
-    console.log(`searchJournal error: ${message}`)
-    return message
-  }
-  return journal
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
+
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(leftPanel())
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
+
+  wrapperEl.appendChild(createFooter())
 }
 
 /**
- * Handle results coming from the search partial
+ *
  */
-async function handleSearchResult(results) {
-  state.set('journa', results)
+function react() {
+  state.on('form-submit:left-panel-search', 'journal', reactSearch)
+  state.on('icon-click:add-entry', 'journal', reactEntryAdd)
+  state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
+}
+
+function listen() {
+  /* When journal field loses focus */
+  document.querySelectorAll('.field').forEach((field) => {
+    field.addEventListener('change', handleFieldChange)
+  })
+}
+
+/**
+ * Add a journal entry
+ */
+
+async function reactEntryAdd({ id: btnId }) {
+  const addBtn = document.getElementById(btnId)
+  addBtn.disabled = true
+
+  const { id, error } = await createEntry()
+  if (error) {
+    console.error(`Journal server error: ${error}`)
+    return
+  }
+
+  const { defaults, error: error2 } = await fetchDefaults()
+  if (error2) {
+    console.error(`Journal server error: ${error2}`)
+    return
+  }
+
+  const dateString = new Date().toISOString()
+
+  const doc = {
+    id,
+    location: 'New entry',
+    created_at: dateString,
+    visit_date: dateString,
+    city: defaults.city,
+    state: defaults.state,
+    country: defaults.country,
+    notes: '',
+  }
+
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', doc)
+  state.set('app-mode', 'main-panel')
+
+  delete addBtn.disabled
+}
+
+/**
+ *
+ */
+async function reactEntryDelete() {
+  const modalEl = document.querySelector('#modal-delete')
+  modalEl.message('')
+
+  const id = state.get('active-doc').id
+  const password = modalEl.getPassword()
+  const { error } = await deleteEntry(id, password)
+
+  if (error) {
+    modalEl.message(error)
+    return
+  }
+
+  modalEl.setPassword('')
+  modalEl.close()
+
+  const filteredDocs = state
+    .get('main-documents')
+    .filter((doc) => doc.id !== id)
+  state.set('main-documents', filteredDocs)
+  state.set('app-mode', 'left-panel')
+}
+
+/**
+ *
+ */
+async function reactSearch() {
+  let resp
+
+  const query = document.querySelector('[name="search-entry"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchEntries(query)
+  } else {
+    // get most recent entries instead
+    resp = await fetchRecentEntries()
+  }
+
+  const { data, message } = resp
+  if (message) {
+    console.error(`Journal server error: ${message}`)
+    return
+  }
+  state.set('main-documents', data)
+}
+
+/**
+ * Handle journal entry field change
+ */
+
+async function handleFieldChange(e) {
+  const elem = e.target
+  const section = elem.name
+  let value = elem.value
+
+  const doc = state.get('active-doc')
+  const id = doc.id
+
+  doc[section] = value
+
+  const docs = state.get('main-documents')
+  const idx = docs.findIndex((d) => d.id === id)
+  docs[idx] = doc
+
+  state.set('main-documents', docs)
+  state.set('active-doc', doc)
+
+  try {
+    const { message, error } = await updateEntry({ id, section, value })
+    if (error) {
+      throw new Error(error)
+    }
+    log(message)
+
+    if (['city', 'state', 'country'].includes(section)) {
+      await updateJournalDefaults({ id, section, value })
+    }
+  } catch (err) {
+    log(err)
+  }
 }

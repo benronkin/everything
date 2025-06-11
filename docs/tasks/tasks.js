@@ -1,67 +1,129 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp, postWebAppJson } from '../js/io.js'
-import { createNav } from '../sections/nav.js'
-import { createFooter } from '../sections/footer.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createList } from '../partials/list.js'
-import { createTitleDetailsItem } from '../partials/titleDetailsItem.js'
-import { createFormField } from '../partials/formField.js'
-import { createSwitch } from '../partials/switch.js'
-import { getEl, setMessage } from '../js/ui.js'
+import { state } from '../_assets/js/state.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { nav } from './sections/nav.js'
+import { toolbar } from './sections/toolbar.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../_partials/div.js'
+import { createFooter } from '../_composites/footer.js'
+import { createTitleDetailsItem } from '../_partials/titleDetailsItem.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { createTask, deleteTask, fetchTasks, updateTask } from './tasks.api.js'
+import { log } from '../_assets/js/logger.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-const formWrapper = document.querySelector('#form-wrapper')
-const tasksWrapper = document.querySelector('#tasks-wrapper')
-let tasksListEl
-let sortSwitch
-let tasksInput
-let token
-let retryTimeout = 10
+    build()
 
-// ---------------------------------------
-// Event listeners
-// ---------------------------------------
+    handleTokenQueryParam()
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
 
-/* when clearSelection is dispatched */
-document.addEventListener('clear-selection', clearSelection)
+    react()
 
-// -------------------------------
-// Event handlers
-// -------------------------------
+    const resp = await fetchTasks()
+    const { tasks } = resp
+    state.set('main-documents', tasks)
+    state.set('app-mode', 'main-panel')
+    state.set('default-page', 'tasks')
+    window.state = state // avail to browser console
+  } catch (error) {
+    console.trace(error)
+    window.location.href = `../home/index.html?message=${error.message}`
+    setMessage({ message: error.message, type: 'danger' })
+  }
+})
+
+// ------------------------
+// Helpers
+// ------------------------
 
 /**
- * Handle DOMContentLoaded
+ *
  */
-async function handleDOMContentLoaded() {
-  state.setDefaultPage('tasks')
+function build() {
+  document.head.title = 'Tasks | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
 
-  handleTokenQueryParam()
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
 
-  setMessage({ message: 'Loading...' })
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
 
-  token = localStorage.getItem('authToken')
-  if (!token) {
-    window.location.href = '../index.html'
+  wrapperEl.appendChild(createFooter())
+}
+
+/**
+ * Subscribe to state.
+ */
+function react() {
+  state.on('form-submit:tasks-form', 'tasks', handleTaskCreate)
+  state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
+  state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
+}
+
+/**
+ * Handle task textarea loses focus
+ */
+async function handleTaskUpdate({ id, section, value }) {
+  try {
+    const { error } = await updateTask({ id, section, value })
+    if (error) {
+      throw new Error(error)
+    }
+  } catch (err) {
+    log(err)
+  }
+}
+
+/**
+ *
+ */
+async function handleTaskCreate() {
+  const title = document
+    .getElementById('tasks-form')
+    .querySelector('[name="task"]')
+    .value?.trim()
+
+  if (!title.length) {
     return
   }
 
-  addPageElements()
+  const { id, error } = await createTask(title)
 
-  const { tasks } = await getWebApp(
-    `${state.getWebAppUrl()}/tasks/read?token=${token}`
-  )
+  if (error) {
+    setMessage({ message: error, type: 'warn' })
+    return
+  }
 
-  setMessage()
-  initTasks(tasks)
-  getEl('tasks-form').focused = true
+  document
+    .getElementById('tasks-list')
+    .addChild(createTitleDetailsItem({ id, title }))
+}
+
+/**
+ * Handle the tasks trash click
+ */
+async function handleTaskDelete({ id }) {
+  const { error } = await deleteTask(id)
+  if (error) {
+    setMessage({ message: error, type: 'warn' })
+    return
+  }
+  document.getElementById('tasks-list').deleteChild(id)
 }
 
 /**
@@ -73,238 +135,4 @@ function handleSortSwitchClick() {
   } else {
     tasksListEl.enableClicking()
   }
-}
-
-/**
- * Handle key up
- */
-function handleTaskInputKeyUp(e) {
-  const tasksFormEl = e.target.closest('.form-horizontal')
-  const value = tasksFormEl.value.trim()
-  if (value.length) {
-    tasksFormEl.disabled = false
-  } else {
-    tasksFormEl.disabled = true
-  }
-}
-
-/**
- * When the user focuses on the task form
- */
-function handleTaskFormFocus() {
-  tasksListEl.reset()
-}
-
-/**
- * Handle click/unclick of tasks item
- */
-function handleTasksSelectionChange(el) {
-  if (el.selected) {
-    getEl('tasks-form').value = ''
-  }
-}
-
-/**
- * handles drag and CRUD
- */
-async function handleTasksListChange(e) {
-  const payload = {}
-  let endpoint
-
-  if (!e.detail?.action) {
-    console.warn('No task action specified')
-    return { status: 401, message: `No task action specified"` }
-  }
-
-  // create, delete, and drag require
-  // resorting on the server
-  const _setTasks = () => {
-    const tasks = tasksListEl.getData()
-    payload.tasks = tasks.map((t) => t.targetId)
-  }
-
-  switch (e.detail.action) {
-    case 'create':
-      endpoint = 'create'
-      payload.id = e.detail.targetId
-      payload.title = e.detail.title
-      _setTasks()
-      break
-    case 'delete':
-      endpoint = 'delete'
-      payload.id = e.detail.targetId
-      _setTasks()
-      break
-    case 'drag':
-      endpoint = 'update'
-      _setTasks()
-      break
-    case 'update-task':
-      endpoint = 'update-task'
-      payload.id = e.detail.targetId
-      if (e.detail.title) {
-        payload.title = e.detail.title
-      }
-      if (e.detail.details) {
-        payload.details = e.detail.details
-      }
-      break
-    default:
-      return {
-        status: 401,
-        message: `Unknown task action: "${e.detail.action}"`,
-      }
-  }
-
-  const { status, message } = await postWebAppJson(
-    `${state.getWebAppUrl()}/tasks/${endpoint}`,
-    payload
-  )
-
-  console.log('status', status)
-  console.log('message', message)
-}
-
-/**
- *
- */
-function handleTaskFormSubmit(e, pos) {
-  e.preventDefault()
-
-  const title = getEl('tasks-form').value.trim()
-
-  if (!title.length) {
-    return
-  }
-
-  const payload = {
-    title,
-  }
-
-  const listItem = createTaskItem(payload, pos)
-  tasksListEl.addChild(listItem)
-  getEl('tasks-form').reset()
-  listItem.dispatch('click')
-}
-
-/**
- * Handle the tasks trash click
- */
-function handleTaskTrashClick(e) {
-  const el = e.target.closest('.td-item')
-  const id = el.dataset.id
-  tasksListEl.deleteChild(id)
-}
-
-// ------------------------
-// Helpers
-// ------------------------
-
-/**
- * Set up tasks
- */
-async function initTasks(tasks) {
-  state.set('tasks', tasks)
-
-  const children = tasks.map((task) => createTaskItem(task))
-  tasksListEl.silent = true
-  tasksListEl.addChildren(children)
-  tasksListEl.silent = false
-}
-
-/**
- * Set nav, footer and other page elements
- */
-function addPageElements() {
-  // create nav and footer
-  const wrapperEl = document.querySelector('.wrapper')
-  const navEl = createNav({
-    title: '<i class="fa-solid fa-list-check"></i> tasks',
-    active: 'tasks',
-  })
-  wrapperEl.prepend(navEl)
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
-
-  const rightDrawerEl = createRightDrawer({ active: 'tasks' })
-  document.querySelector('main').prepend(rightDrawerEl)
-
-  formWrapper.prepend(
-    createMainIconGroup({
-      collapsable: false,
-      className: 'w-100',
-      children: [
-        createFormField({
-          element: createSwitch({
-            id: 'sort-switch',
-            events: { click: handleSortSwitchClick },
-          }),
-          label: 'Sort',
-          labelPosition: 'left',
-        }),
-        createFormHorizontal({
-          id: 'tasks-form',
-          inputType: 'text',
-          inputName: 'task',
-          inputPlaceholder: 'Add task',
-          inputAutoComplete: 'off',
-          iconClass: 'fa-thumbtack',
-          submitText: 'ADD',
-          disabled: true,
-          events: {
-            submit: (e) => {
-              handleTaskFormSubmit(e, 'prepend')
-            },
-          },
-          inputEvents: {
-            focus: handleTaskFormFocus,
-            keyup: handleTaskInputKeyUp,
-          },
-        }),
-      ],
-    })
-  )
-
-  // tasks-list
-  tasksListEl = createList({
-    id: 'tasks-list',
-    itemClass: 'td-item',
-    className: 'outer-wrapper',
-    emptyState:
-      '<i class="fa-solid fa-umbrella-beach"></i>&nbsp;<span>Nothing to do</span>',
-    onChange: handleTasksListChange,
-  })
-  tasksWrapper.appendChild(tasksListEl)
-}
-
-/**
- * Add tasks item to list
- */
-function createTaskItem({ id, title, details, selected, expanded }) {
-  const taskEl = createTitleDetailsItem({
-    id,
-    title,
-    details,
-    draggable: false,
-    expanded,
-    selected,
-    events: { click: handleTasksSelectionChange },
-    icons: [
-      {
-        className: 'fa-trash hidden',
-        id,
-        events: { click: handleTaskTrashClick },
-      },
-    ],
-  })
-  return taskEl
-}
-
-/**
- *
- */
-function clearSelection() {
-  tasksInput.value = ''
-  tasksInput.dataset.index = ''
-  tasksListEl.reset()
 }

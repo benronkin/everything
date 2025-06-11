@@ -1,196 +1,127 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
-import { getEl, isoToReadable, setMessage } from '../js/ui.js'
-import { createFooter } from '../sections/footer.js'
-import { createNav } from '../sections/nav.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createAnchor } from '../partials/anchor.js'
-import { createIcon } from '../partials/icon.js'
-import { createTable } from '../partials/table.js'
-import { createSelect } from '../partials/select.js'
-import { createSpan } from '../partials/span.js'
+import { state } from '../_assets/js/state.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { nav } from './sections/nav.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { toolbar } from './sections/toolbar.js'
+import { leftPanel } from './sections/leftPanel.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../_partials/div.js'
+import { createFooter } from '../_composites/footer.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { createNote, deleteNote, fetchNotes } from './notes.api.js'
+import { log } from '../_assets/js/logger.js'
 
-// ---------------------------------------
-// Event listeners
-// ---------------------------------------
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    build()
 
-// -------------------------------
-// Event handlers
-// -------------------------------
+    handleTokenQueryParam()
 
-/**
- * Handle DOMContentLoaded
- */
-async function handleDOMContentLoaded() {
-  setMessage({ message: 'Loading...' })
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
 
-  handleTokenQueryParam()
+    react()
 
-  addPageElements()
+    const resp = await fetchNotes()
+    const { notes, error } = resp
 
-  populateSinglePanel()
+    if (error) {
+      setMessage({ message: error, type: 'danger' })
+    }
 
-  await fetchNotes()
-
-  state.setDefaultPage('notes')
-}
-
-/**
- *
- */
-function handleSortSelectChange(e) {
-  const sort = e.target.value
-  localStorage.setItem('note-sort-field', sort)
-  fetchNotes()
-}
-
-/**
- *
- */
-async function handleAddNoteClick() {
-  setMessage({ message: 'Creating...' })
-  const { id, error } = await getWebApp(`${state.getWebAppUrl()}/notes/create`)
-
-  if (error) {
-    setMessage({ message: error, type: 'danger' })
-    return
+    state.set('main-documents', notes)
+    state.set('active-doc', state.get('main-documents')[0]) // <<<<<< DELETE
+    state.set('app-mode', 'main-panel')
+    state.set('default-page', 'notes')
+    window.state = state // avail to browser console
+    setMessage({ message: '' })
+  } catch (error) {
+    console.trace(error)
+    setMessage({ message: error.message, type: 'danger' })
+    // window.location.href = `../home/index.html?message=${error.message}`
   }
+})
 
-  window.location.href = `note.html?id=${id}`
-}
-
-/**
- *
- */
-function handleTableHeaderClick() {
-  fetchNotes()
-}
-
-// -------------------------------
+// ------------------------
 // Helpers
-// -------------------------------
+// ------------------------
 
 /**
- * Set nav, footer and other page elements
+ *
  */
-function addPageElements() {
-  // create nav and footer
-  const wrapperEl = document.querySelector('.wrapper')
-  const navEl = createNav({
-    title: '<i class="fa-solid fa-note-sticky"></i> notes',
-    active: 'notes',
+function build() {
+  document.head.title = 'Notes | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
+
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
+
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
   })
-  wrapperEl.prepend(navEl)
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(leftPanel())
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
 
-  const rightDrawerEl = createRightDrawer({ active: 'notes' })
-  document.querySelector('main').prepend(rightDrawerEl)
+  wrapperEl.appendChild(createFooter())
+}
+
+/**
+ * Subscribe to state.
+ */
+function react() {
+  state.on('icon-click:add-note', 'notes', reactAddNote)
+  state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
+}
+
+/**
+ * Add a journal entry
+ */
+
+async function reactAddNote({ id: btnId }) {
+  const addBtn = document.getElementById(btnId)
+  addBtn.disabled = true
+
+  const { id, title } = await createNote()
+
+  const doc = {
+    id,
+    title,
+    note: '',
+  }
+
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', doc)
+  state.set('app-mode', 'main-panel')
+
+  delete addBtn.disabled
 }
 
 /**
  *
  */
-function populateSinglePanel() {
-  const sort = localStorage.getItem('note-sort-field') || 'title'
+async function reactNoteDelete() {
+  const modalEl = document.querySelector('#modal-delete')
+  modalEl.message('')
 
-  getEl('single-panel').value = ''
+  const id = state.get('active-doc').id
+  const { message } = await deleteNote(id)
 
-  getEl('single-panel').appendChild(
-    createMainIconGroup({
-      collapsable: false,
-      children: [
-        createSelect({
-          id: 'sort-select',
-          options: [
-            { label: 'Title', value: 'title' },
-            { label: 'Recent', value: 'accessed_at' },
-            { label: 'Updated', value: 'updated_at' },
-            { label: 'Created', value: 'created_at' },
-          ],
-          value: sort,
-          events: { change: handleSortSelectChange },
-        }),
-        createIcon({
-          id: 'add-btn',
-          className: 'fa-plus',
-          events: { click: handleAddNoteClick },
-        }),
-      ],
-    })
-  )
+  setMessage({ message })
 
-  getEl('single-panel').appendChild(
-    createTable({
-      id: 'notes-table',
-      events: {
-        'header-click': handleTableHeaderClick,
-      },
-    })
-  )
-}
+  modalEl.close()
 
-/**
- *
- */
-async function fetchNotes() {
-  const sortField = localStorage.getItem('note-sort-field') || 'title'
-  const sortDirection = localStorage.getItem('note-sort-direction') || 'ASC'
-
-  const endpoint = `${state.getWebAppUrl()}/notes/read?sort=${sortField}&direction=${sortDirection}`
-  const { notes, error } = await getWebApp(endpoint)
-
-  if (error) {
-    setMessage({ message: error, type: 'danger' })
-    return
-  }
-
-  let headers
-
-  switch (sortField) {
-    case 'title':
-    case 'accessed_at':
-      headers = [
-        { label: 'title', name: 'title' },
-        { label: 'accessed', name: 'accessed_at' },
-      ]
-      break
-    case 'created_at':
-      headers = [
-        { label: 'title', name: 'title' },
-        { label: 'created', name: 'created_at' },
-      ]
-      break
-    case 'updated_at':
-      headers = [
-        { label: 'title', name: 'title' },
-        { label: 'updated', name: 'updated_at' },
-      ]
-      break
-  }
-
-  if (!notes.length) {
-    setMessage({ message: 'No notes found' })
-    return
-  } else {
-    setMessage()
-  }
-
-  getEl('notes-table').clear().headers = headers
-
-  getEl('notes-table').rows = notes.map((note) => ({
-    id: note.id,
-    fields: [
-      createAnchor({ html: note.title, url: `./note.html?id=${note.id}` }),
-      createSpan({
-        html: isoToReadable(note[sortField]),
-      }),
-    ],
-  }))
-
-  getEl('notes-table').sort = { name: sortField, direction: sortDirection }
+  const filteredDocs = state
+    .get('main-documents')
+    .filter((doc) => doc.id !== id)
+  state.set('main-documents', filteredDocs)
+  state.set('app-mode', 'left-panel')
 }

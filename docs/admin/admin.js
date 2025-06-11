@@ -1,12 +1,12 @@
 import { createNav } from '../sections/nav.js'
 import { createFooter } from '../sections/footer.js'
-import { createFormHorizontal } from '../partials/formHorizontal.js'
-import { createLeftPanelLink } from '../partials/leftPanelLink.js'
+import { createFormHorizontal } from '../_partials/formHorizontal.js'
+import { createLeftPanelLink } from '../_partials/leftPanelLink.js'
 import { createMainIconGroup } from '../sections/mainIconGroup.js'
 import { createRightDrawer } from '../sections/rightDrawer.js'
-import { setMessage } from '../js/ui.js'
-import { state } from '../js/state.js'
-import { postWebAppJson } from '../js/io.js'
+import { setMessage } from '../_assets/js/ui.js'
+import { state } from '../_assets/js/state.js'
+import { postWebAppJson } from '../_assets/js/io.js'
 import { listRecipeCategories } from './recipeCategories.js'
 import { listRecipes } from './recipes.js'
 
@@ -48,7 +48,7 @@ async function handleDOMContentLoaded() {
   document.querySelector('main').prepend(rightDrawerEl)
 
   mainIconGroup = createMainIconGroup()
-  document.querySelector('#main-icon-group-wrapper').appendChild(mainIconGroup)
+  document.querySelector('#main-group-wrapper').appendChild(mainIconGroup)
 
   // set the login form
   const loginFormEl = createFormHorizontal({

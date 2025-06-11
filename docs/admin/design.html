@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link rel="stylesheet" href="../_assets/css/all.css" />
+    <link rel="stylesheet" href="../_assets/css/styles.css" />
+    <link rel="stylesheet" href="../_assets/css/theme.css" />
+    <link rel="shortcut icon" href="../_assets/img/favicon.ico" />
+    <title>Developer | Everything App Ronkin</title>
+  </head>
+  <body class="dark-mode">
+    <div class="wrapper">
+      <main>
+        <div
+          class="container"
+          id="parent"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 50px;
+          "
+        ></div>
+      </main>
+    </div>
+    <script type="module">
+      import { getWebApp } from '../_assets/js/io.js'
+      import { state } from '../_assets/js/state.js'
+      import { createFileInput } from '../_partials/fileInput.js'
+      import { createFormHorizontal } from '../_partials/formHorizontal.js'
+      import { createFormField } from '../_partials/formField.js'
+      import { createIcon } from '../_partials/icon.js'
+      import { createTextarea } from '../_partials/textarea.js'
+      import { createList } from '../_partials/list.js'
+      import { createListItem } from '../_partials/listItem.js'
+      import { createMenuItem } from '../_partials/menuItem.js'
+      import { createSelect } from '../_partials/select.js'
+      import { createModalDelete } from '../_composites/modalDelete.js'
+      import { createCollapsibleGroup } from '../_partials/collapsibleGroup.js'
+      import { setMessage } from '../_assets/js/ui.js'
+
+      const parent = document.querySelector('#parent')
+
+      parent.appendChild(
+        createFileInput({
+          iconClass: 'fa-camera',
+          label: 'Upload image',
+          accept: 'images/*',
+        })
+      )
+
+      parent.appendChild(
+        createFormHorizontal({
+          id: 'my-form',
+          inputType: 'text',
+          inputPlaceholder: 'Type something',
+          iconClass: 'fa-envelope',
+          submitText: 'Hola',
+        })
+      )
+
+      parent.appendChild(
+        createFormField({
+          element: createTextarea({
+            id: 'test-textarea',
+          }),
+          label: 'Details',
+          labelPosition: 'top',
+          fieldClasses: ['u-align-start'],
+        })
+      )
+
+      parent.appendChild(
+        createList({
+          children: [createListItem({ value: 'This is a list item' })],
+        })
+      )
+
+      parent.appendChild(
+        createList({
+          children: [
+            createMenuItem({
+              value: 'This is a menu item',
+            }),
+          ],
+        })
+      )
+
+      const modalDelete = createModalDelete({
+        password: true,
+        header: 'Delete recipe',
+      })
+      parent.appendChild(modalDelete)
+      modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
+      // modalDelete.show()
+
+      getWebApp(`${state.const('APP_URL')}/recipes/categories/read`).then(
+        ({ categories }) => {
+          const selectEl = createSelect({
+            options: categories,
+            name: 'category',
+          })
+          // parent.appendChild(selectEl)
+        }
+      )
+
+      parent.appendChild(
+        createCollapsibleGroup({
+          collapsed: true,
+          html: [createIcon({ classes: { primary: 'fa-trash' } })],
+        })
+      )
+
+      setMessage({ message: 'this is a quiet toast', type: 'quiet' })
+    </script>
+  </body>
+</html>

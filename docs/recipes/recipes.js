@@ -1,185 +1,266 @@
-/*
-  Event handlers are loaded from events.js for convenience. 
-*/
+import { state } from '../_assets/js/state.js'
+import { nav } from './sections/nav.js'
+import { toolbar } from './sections/toolbar.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { leftPanel } from './sections/leftPanel.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../_partials/div.js'
+import { createFooter } from '../_composites/footer.js'
+import { createMainDocumentItem } from '../_partials/mainDocumentItem.js'
+import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { setMessage } from '../_assets/js/ui.js'
+import {
+  createRecipe,
+  deleteRecipe,
+  fetchCategoriesAndRecipes,
+  fetchRecentRecipes,
+  searchRecipes,
+  updateRecipe,
+} from './recipes.api.js'
+import { log } from '../_assets/js/logger.js'
 
-import { state } from '../js/state.js'
-import { getEl, setMessage, resizeTextarea, isMobile } from '../js/ui.js'
-import { setEvents } from './events.js'
-import { createNav } from '../sections/nav.js'
-import { createFooter } from '../sections/footer.js'
-import { createFormField } from '../partials/formField.js'
-import { createIcon } from '../partials/icon.js'
-import { createMainIconGroup } from '../sections/mainIconGroup.js'
-import { createModalDelete } from '../sections/modalDelete.js'
-import { createRightDrawer } from '../sections/rightDrawer.js'
-import { createSearch } from '../partials/search.js'
-import { createSelect } from '../partials/select.js'
-import { createSwitch } from '../partials/switch.js'
-import { createList } from '../partials/list.js'
-import { handleTokenQueryParam, getWebApp } from '../js/io.js'
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    setMessage({ message: 'Loading...' })
 
-// ----------------------
-// Event handlers
-// ----------------------
+    build()
 
-/* When page is loaded */
-document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    handleTokenQueryParam()
+
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
+
+    react()
+    listen()
+
+    const resp = await fetchCategoriesAndRecipes()
+    let { categories, recipes } = resp
+
+    categories = categories.map((c) => ({
+      value: c.id,
+      label: c.label,
+    }))
+    categories.unshift({ value: '', label: 'Category' })
+
+    state.set('main-documents', recipes)
+    state.set('recipe-categories', categories)
+    state.set('app-mode', 'left-panel')
+    state.set('default-page', 'recipes')
+    window.state = state // avail to browser console
+  } catch (error) {
+    setMessage({ message: error.message, type: 'danger' })
+    console.trace(error)
+    window.location.href = `../home/index.html?message=${error.message}`
+  }
+})
 
 // ------------------------
-// Event handler functions
+// Helper functions
 // ------------------------
 
 /**
- * Handle DOMContentLoaded
+ *
  */
-async function handleDOMContentLoaded() {
-  setMessage({ message: 'Loading...' })
+async function build() {
+  document.head.title = 'Recipes | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
 
-  handleTokenQueryParam()
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
 
-  const token = localStorage.getItem('authToken')
-  if (!token) {
-    window.location.href = '../index.html'
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(leftPanel())
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
+
+  wrapperEl.appendChild(createFooter())
+}
+
+/**
+ *
+ */
+function react() {
+  state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
+  state.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
+  state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+  state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
+  state.on('recipe-categories', 'recipeGroup', (options) =>
+    document.getElementById('recipe-category').setOptions(options)
+  )
+  state.on('app-mode', 'recipes', (appMode) => {
+    if (appMode === 'main-panel') populateRelatedRecipes()
+  })
+}
+
+function listen() {
+  // When recipe field loses focus
+  document.querySelectorAll('.field').forEach((field) => {
+    field.addEventListener('change', handleFieldChange)
+  })
+
+  // When recipe category switch is toggled
+  document.getElementById('related-switch').addEventListener('click', () => {
+    document.getElementById('recipe-related').classList.toggle('hidden')
+  })
+}
+
+/**
+ * Add a recipe Recipe
+ */
+async function reactRecipeAdd() {
+  const addBtn = document.getElementById('add-recipe')
+  addBtn.disabled = true
+
+  const { id, error } = await createRecipe()
+  if (error) {
+    console.error(`Recipes server error: ${error}`)
     return
   }
 
-  const [recipesResp, categoriesResp] = await Promise.all([
-    getWebApp(`${state.getWebAppUrl()}/recipes/latest`),
-    getWebApp(`${state.getWebAppUrl()}/recipes/categories/read`),
-  ])
+  const dateString = new Date().toISOString()
 
-  const { recipes } = recipesResp
-  let { categories } = categoriesResp
-  categories = categories.map((c) => ({
-    value: c.id,
-    label: c.label,
-  }))
-  categories.unshift({ value: '', label: '' })
-
-  // create and add page elements
-  const wrapperEl = document.querySelector('.wrapper')
-
-  const navEl = createNav({
-    title: '<i class="fa-solid fa-cake-candles"></i> Recipes',
-  })
-  wrapperEl.prepend(navEl)
-
-  const rightDrawerEl = createRightDrawer({ active: 'recipes' })
-  document.querySelector('main').prepend(rightDrawerEl)
-
-  const mainIconGroup = createMainIconGroup({
-    shouldAllowCollapse: {
-      message: 'Select a recipe first',
-      cb: () => !!state.get('active-recipe'),
-    },
-    children: [
-      createIcon({ id: 'add-recipe', className: 'fa-plus' }),
-      createIcon({ id: 'shop-ingredients', className: 'fa-cart-plus' }),
-    ],
-  })
-  getEl('main-icon-group-wrapper').appendChild(mainIconGroup)
-
-  getEl('left-panel').prepend(
-    createSearch({
-      iconClass: 'fa-magnifying-glass',
-      placeholder: 'Search recipes',
-      searchCb: searchRecipes,
-      searchResultsCb: handleSearchResult,
-    })
-  )
-
-  getEl('left-panel').appendChild(
-    createList({
-      id: 'left-panel-list',
-      itemClass: 'menu-item',
-    })
-  )
-
-  getEl('related-recipes-header').appendChild(
-    createSwitch({
-      id: 'related-recipes-switch',
-      classList: ['u-ml-20'],
-      events: {
-        click: function () {
-          getEl('recipe-related').classList.toggle('hidden')
-          resizeTextarea(getEl('recipe-related'))
-        },
-      },
-    })
-  )
-
-  getEl('related-links-wrapper').appendChild(
-    createList({
-      id: 'related-recipes-list',
-      itemClass: 'menu-item',
-    })
-  )
-
-  const categoryFormField = createFormField({
-    element: createSelect({
-      id: 'recipe-category',
-      name: 'category',
-      className: 'field',
-      options: categories,
-    }),
-    label: 'category',
-    labelPosition: 'top',
-    fieldClasses: ['u-column-start'],
-    labelClasses: ['u-h5'],
-    labelFor: 'recipe-category',
-  })
-  getEl('category-target').appendChild(categoryFormField)
-
-  const footerEl = createFooter()
-  wrapperEl.appendChild(footerEl)
-
-  document.querySelector('body').appendChild(
-    createModalDelete({
-      header: 'Delete recipe',
-      body: `Delete the ${getEl('recipe-title').value} recipe?`,
-      id: 'modal-delete',
-      password: true,
-    })
-  )
-
-  if (isMobile()) {
-    getEl('main-panel').classList.add('hidden')
+  const doc = {
+    id,
+    title: 'New Recipe',
+    created_at: dateString,
   }
 
-  // imported from the events.js module
-  setEvents()
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', doc)
+  state.set('app-mode', 'main-panel')
 
-  // must run after recipes-state-changed EH is added
-  // so as to trigger recipe list population
-  state.setRecipes(recipes)
-  state.setDefaultPage('recipes')
-
-  setMessage()
+  delete addBtn.disabled
 }
 
-// ------------------------
-// Helpers
-// ------------------------
+/**
+ *
+ */
+async function reactRecipeDelete() {
+  const modalEl = document.querySelector('#modal-delete')
+  modalEl.message('')
+
+  const id = state.get('active-doc').id
+  const password = modalEl.getPassword()
+  const { error } = await deleteRecipe(id, password)
+
+  if (error) {
+    modalEl.message(error)
+    return
+  }
+
+  modalEl.setPassword('')
+  modalEl.close()
+
+  const filteredDocs = state
+    .get('main-documents')
+    .filter((doc) => doc.id !== id)
+  state.set('main-documents', filteredDocs)
+  state.set('app-mode', 'left-panel')
+}
 
 /**
- * Get the searched recipes
+ *
  */
-async function searchRecipes(q) {
-  const data = await getWebApp(
-    `${state.getWebAppUrl()}/recipes/search?q=${q.trim().toLowerCase()}`
-  )
+async function reactRecipeSearch() {
+  let resp
 
-  const { recipes, message } = data
+  const query = document.querySelector('[name="search-recipe"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchRecipes(query)
+  } else {
+    // get most recent entries instead
+    resp = await fetchRecentRecipes()
+  }
+
+  const { data, message } = resp
   if (message) {
-    console.log(`searchRecipes error: ${message}`)
-    return message
+    console.error(`Recipe server error: ${message}`)
+    return
   }
-  return recipes
+  state.set('main-documents', data)
 }
 
 /**
- * Handle results coming from the search partial
+ * Handle Recipe field change
  */
-async function handleSearchResult(results) {
-  state.setRecipes(results)
+
+async function handleFieldChange(e) {
+  const elem = e.target
+  const section = elem.name
+  let value = elem.value
+
+  const doc = state.get('active-doc')
+  const id = doc.id
+
+  doc[section] = value
+
+  const docs = state.get('main-documents')
+  const idx = docs.findIndex((d) => d.id === id)
+  docs[idx] = doc
+
+  state.set('main-documents', docs)
+  state.set('active-doc', doc)
+
+  try {
+    const { error } = await updateRecipe({ id, section, value })
+    if (error) {
+      throw new Error(error)
+    }
+    // log(message)
+  } catch (error) {
+    setMessage({ message: error, type: 'danger' })
+  }
+
+  if (section === 'related') {
+    populateRelatedRecipes()
+  }
+}
+
+/**
+ * Populate related recipes
+ */
+function populateRelatedRecipes() {
+  const relatedListEl = document.getElementById('related-list')
+  relatedListEl.deleteChildren()
+
+  const ids = document.getElementById('recipe-related').value
+  if (!ids) return
+
+  const splitRegEx = /,|\n|\s/
+  const idsArr = ids
+    .split(splitRegEx)
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0)
+
+  if (!idsArr.length) return
+
+  for (const id of idsArr) {
+    if (!id.trim().length || id === 'undefined') {
+      continue
+    }
+
+    const title = state.get('main-documents').find((doc) => doc.id === id).title
+    relatedListEl.addChild(
+      createMainDocumentItem({
+        id,
+        html: title,
+      })
+    )
+  }
+}
+
+/**
+ *
+ */
+function shopIngredients() {
+  setMessage({ message: 'To be implemented...' })
 }

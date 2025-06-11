@@ -2,4 +2,6 @@ cypress.env.json
 build/
 package.json
 node_modules/
+build/
+.vscode
 .DS_Store

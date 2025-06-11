@@ -15,7 +15,7 @@ import { checkStyles } from './checkStyles.js'
  */
 async function build() {
   console.clear()
-  const resp = await checkStyles()
+  // const resp = await checkStyles()
   // if (resp) {
   //   console.log(resp)
   //   process.exit(1)
@@ -39,7 +39,7 @@ build()
  *
  */
 function setProdUrl() {
-  const filePath = './docs/js/state.js'
+  const filePath = './docs/_assets/js/state.js'
   let content = fs.readFileSync(filePath, 'utf8')
   content = content.replace(/WEB_APP_URL:\s*prodUrl/, 'WEB_APP_URL: devUrl')
   fs.writeFileSync(filePath, content, 'utf8')
