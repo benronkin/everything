@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -31,23 +31,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const resp = await fetchCartAndSuggestions()
     const { shoppingList, shoppingSuggestions } = resp
-    newState.set(
+    state.set(
       'shopping-list',
       shoppingList
         .split(',')
         .map((x) => x.trim())
         .filter(Boolean)
     )
-    newState.set(
+    state.set(
       'suggestions-list',
       shoppingSuggestions
         .split(',')
         .map((x) => x.trim())
         .filter(Boolean)
     )
-    newState.set('app-mode', 'main-panel')
-    newState.set('default-page', 'shopping')
-    window.newState = newState // avail to browser console
+    state.set('app-mode', 'main-panel')
+    state.set('default-page', 'shopping')
+    window.state = state // avail to browser console
     setMessage({ message: '' })
   } catch (error) {
     console.trace(error)
@@ -88,7 +88,7 @@ function build() {
  */
 function react() {
   /* show suggestions list when icon is clicked */
-  newState.on('icon-click:suggest-icon', 'shopping', () => {
+  state.on('icon-click:suggest-icon', 'shopping', () => {
     resetSuggestionsList()
     document
       .getElementById('suggestions-list')
@@ -99,7 +99,7 @@ function react() {
   })
 
   /* show auto-complete when user types */
-  newState.on('form-keyup:shopping-form', 'shopping', ({ value }) => {
+  state.on('form-keyup:shopping-form', 'shopping', ({ value }) => {
     if (document.getElementById('suggest-icon').classList.contains('primary'))
       return
 
@@ -117,44 +117,44 @@ function react() {
   })
 
   /* augment shopping list when user submits */
-  newState.on('form-submit:shopping-form', 'shopping', () => {
+  state.on('form-submit:shopping-form', 'shopping', () => {
     resetSuggestionsList()
     const item = document.querySelector('[name="new-item').value.trim()
     if (!item.length) return
-    const sItems = newState.get('shopping-list')
+    const sItems = state.get('shopping-list')
     sItems.unshift(item)
-    newState.set('shopping-list', sItems)
+    state.set('shopping-list', sItems)
 
     // await not needed
     upodateShoppingList(sItems.join(','))
   })
 
   /* augment shopping list when user adds suggestions */
-  newState.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
-    const sItems = newState.get('shopping-list')
+  state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
+    const sItems = state.get('shopping-list')
     sItems.unshift(item)
-    newState.set('shopping-list', sItems)
+    state.set('shopping-list', sItems)
     // force re-render of suggestions
-    newState.set('suggestions-list', [...newState.get('suggestions-list')])
+    state.set('suggestions-list', [...state.get('suggestions-list')])
 
     // await not needed
     upodateShoppingList(sItems.join(','))
   })
 
   /* update suggestions list on delete */
-  newState.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
-    let sItems = newState.get('suggestions-list')
+  state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
+    let sItems = state.get('suggestions-list')
     sItems = sItems.filter((sItem) => sItem !== item)
-    newState.set('suggestions-list', sItems)
+    state.set('suggestions-list', sItems)
 
     // await not needed
     upodateSuggestionsList(sItems.join(','))
   })
 
-  newState.on('item-click:delete-item', 'shopping', ({ item }) => {
-    let sItems = newState.get('shopping-list')
+  state.on('item-click:delete-item', 'shopping', ({ item }) => {
+    let sItems = state.get('shopping-list')
     sItems = sItems.filter((sItem) => sItem !== item)
-    newState.set('shopping-list', sItems)
+    state.set('shopping-list', sItems)
 
     // await not needed
     upodateShoppingList(sItems.join(','))

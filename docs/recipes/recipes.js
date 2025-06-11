@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }))
     categories.unshift({ value: '', label: 'Category' })
 
-    newState.set('main-documents', recipes)
-    newState.set('recipe-categories', categories)
-    newState.set('app-mode', 'left-panel')
-    newState.set('default-page', 'recipes')
-    window.newState = newState // avail to browser console
+    state.set('main-documents', recipes)
+    state.set('recipe-categories', categories)
+    state.set('app-mode', 'left-panel')
+    state.set('default-page', 'recipes')
+    window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
@@ -88,14 +88,14 @@ async function build() {
  *
  */
 function react() {
-  newState.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
-  newState.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
-  newState.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
-  newState.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
-  newState.on('recipe-categories', 'recipeGroup', (options) =>
+  state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
+  state.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
+  state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+  state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
+  state.on('recipe-categories', 'recipeGroup', (options) =>
     document.getElementById('recipe-category').setOptions(options)
   )
-  newState.on('app-mode', 'recipes', (appMode) => {
+  state.on('app-mode', 'recipes', (appMode) => {
     if (appMode === 'main-panel') populateRelatedRecipes()
   })
 }
@@ -133,9 +133,9 @@ async function reactRecipeAdd() {
     created_at: dateString,
   }
 
-  newState.set('main-documents', [doc, ...newState.get('main-documents')])
-  newState.set('active-doc', doc)
-  newState.set('app-mode', 'main-panel')
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', doc)
+  state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
 }
@@ -147,7 +147,7 @@ async function reactRecipeDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
 
-  const id = newState.get('active-doc').id
+  const id = state.get('active-doc').id
   const password = modalEl.getPassword()
   const { error } = await deleteRecipe(id, password)
 
@@ -159,11 +159,11 @@ async function reactRecipeDelete() {
   modalEl.setPassword('')
   modalEl.close()
 
-  const filteredDocs = newState
+  const filteredDocs = state
     .get('main-documents')
     .filter((doc) => doc.id !== id)
-  newState.set('main-documents', filteredDocs)
-  newState.set('app-mode', 'left-panel')
+  state.set('main-documents', filteredDocs)
+  state.set('app-mode', 'left-panel')
 }
 
 /**
@@ -186,7 +186,7 @@ async function reactRecipeSearch() {
     console.error(`Recipe server error: ${message}`)
     return
   }
-  newState.set('main-documents', data)
+  state.set('main-documents', data)
 }
 
 /**
@@ -198,17 +198,17 @@ async function handleFieldChange(e) {
   const section = elem.name
   let value = elem.value
 
-  const doc = newState.get('active-doc')
+  const doc = state.get('active-doc')
   const id = doc.id
 
   doc[section] = value
 
-  const docs = newState.get('main-documents')
+  const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
   docs[idx] = doc
 
-  newState.set('main-documents', docs)
-  newState.set('active-doc', doc)
+  state.set('main-documents', docs)
+  state.set('active-doc', doc)
 
   try {
     const { error } = await updateRecipe({ id, section, value })
@@ -248,9 +248,7 @@ function populateRelatedRecipes() {
       continue
     }
 
-    const title = newState
-      .get('main-documents')
-      .find((doc) => doc.id === id).title
+    const title = state.get('main-documents').find((doc) => doc.id === id).title
     relatedListEl.addChild(
       createMainDocumentItem({
         id,

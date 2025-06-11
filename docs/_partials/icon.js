@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 // import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
@@ -68,7 +68,7 @@ function listen(el) {
     }
 
     const stateKey = `icon-click:${el.id}`
-    newState.set(stateKey, {
+    state.set(stateKey, {
       id: el.id,
       className: el.classList.contains(el._classes.primary)
         ? el._classes.primary

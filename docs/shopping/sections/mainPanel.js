@@ -3,7 +3,7 @@ import { createDiv } from '../../_partials/div.js'
 import { createFormHorizontal } from '../../_partials/formHorizontal.js'
 import { shoppingList } from './shoppingList.js'
 import { suggestionsList } from './suggestionsList.js'
-// import { newState } from '../../_assets/js/newState.js'
+// import { state } from '../../_assets/js/state.js'
 // import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------

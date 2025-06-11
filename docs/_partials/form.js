@@ -9,7 +9,7 @@
 */
 
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { log } from '../_assets/js/logger.js'
 
 // -------------------------------
@@ -106,7 +106,7 @@ function listen(el) {
     })
 
     el.addEventListener('keyup', (e) => {
-      newState.set(`form-keyup:${el.id}`, {
+      state.set(`form-keyup:${el.id}`, {
         key: e.key,
         value: el.querySelector('input').value,
       })
@@ -117,7 +117,7 @@ function listen(el) {
    *
    */
   function handleFormSubmit(id) {
-    newState.set(`form-submit:${id}`, { id })
+    state.set(`form-submit:${id}`, { id })
     log('form sets form-submit with value')
   }
 }

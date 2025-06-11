@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { injectStyle } from '../_assets/js/ui.js'
 import { createList } from '../_partials/list.js'
 import { createMenuItem } from '../_partials/menuItem.js'
@@ -136,7 +136,7 @@ function build({ el, active }) {
  * Subscribe to and set state.
  */
 function react(el) {
-  newState.on('icon-click:toggle-right-drawer', 'rightDrawer', () => {
+  state.on('icon-click:toggle-right-drawer', 'rightDrawer', () => {
     el.classList.toggle('open')
   })
 }

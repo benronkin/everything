@@ -6,7 +6,7 @@ main-documents and builds its children by itself.
 
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createList } from '../../_partials/list.js'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { createPhotoItem } from './photoItem.js'
 import { fetchEntryPhotosMetadata } from '../journal.api.js'
 import { log } from '../../_assets/js/logger.js'
@@ -45,7 +45,7 @@ export function photoList() {
  *
  */
 async function showPhotos() {
-  const doc = newState.get('active-doc')
+  const doc = state.get('active-doc')
   this.deleteChildren()
 
   const { photos = [], error } = await fetchEntryPhotosMetadata(doc.id)

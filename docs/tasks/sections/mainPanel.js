@@ -2,7 +2,7 @@ import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { titleDetailsList } from './titleDetailsList.js'
 import { createFormHorizontal } from '../../_partials/formHorizontal.js'
-// import { newState } from '../../_assets/js/newState.js'
+// import { state } from '../../_assets/js/state.js'
 // import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------

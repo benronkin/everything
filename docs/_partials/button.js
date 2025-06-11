@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { insertHtml } from '../_assets/js/format.js'
 
 // -------------------------------
@@ -48,7 +48,7 @@ export function createButton({ id, className, disabled, html, type } = {}) {
 function listen(el) {
   el.addEventListener('click', (e) => {
     const stateKey = `button-click:${el.id}`
-    newState.set(stateKey, {
+    state.set(stateKey, {
       id: el.id,
       e,
     })

@@ -1,6 +1,6 @@
 import { injectStyle } from '../_assets/js/ui.js'
 import { insertHtml } from '../_assets/js/format.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 
 // -------------------------------
 // Globals
@@ -55,7 +55,7 @@ function build(el) {}
  * Subscribe to state.
  */
 function react(el) {
-  // newState.on('stateVar', 'subscriberName', (stateValue) => {})
+  // state.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
 /**

@@ -1,7 +1,7 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { getWebApp, postWebAppJson, postWebAppForm } from '../_assets/js/io.js'
 
-const url = `${newState.const('APP_URL')}/journal`
+const url = `${state.const('APP_URL')}/journal`
 
 /**
  *

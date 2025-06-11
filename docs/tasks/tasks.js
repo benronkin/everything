@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const resp = await fetchTasks()
     const { tasks } = resp
-    newState.set('main-documents', tasks)
-    newState.set('app-mode', 'main-panel')
-    newState.set('default-page', 'tasks')
-    window.newState = newState // avail to browser console
+    state.set('main-documents', tasks)
+    state.set('app-mode', 'main-panel')
+    state.set('default-page', 'tasks')
+    window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)
     window.location.href = `../home/index.html?message=${error.message}`
@@ -70,9 +70,9 @@ function build() {
  * Subscribe to state.
  */
 function react() {
-  newState.on('form-submit:tasks-form', 'tasks', handleTaskCreate)
-  newState.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
-  newState.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
+  state.on('form-submit:tasks-form', 'tasks', handleTaskCreate)
+  state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
+  state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 }
 
 /**

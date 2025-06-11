@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { createToolbar } from '../../_composites/toolbar.js'
 import { createIcon } from '../../_partials/icon.js'
 // import { log } from '../../_assets/js/logger.js'
@@ -42,7 +42,7 @@ export function toolbar() {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('app-mode', 'Recipes toolbar', (appMode) => {
+  state.on('app-mode', 'Recipes toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
     backEl.classList.toggle('hidden', appMode !== 'main-panel')
   })
@@ -53,7 +53,7 @@ function react(el) {
  */
 function listen(el) {
   el.querySelector('#back').addEventListener('click', () => {
-    newState.set('active-doc', null)
-    newState.set('app-mode', 'left-panel')
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
   })
 }

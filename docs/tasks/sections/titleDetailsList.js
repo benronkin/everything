@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { setMessage } from '../../_assets/js/ui.js'
 import { createList } from '../../_partials/list.js'
 import { createTitleDetailsItem } from '../../_partials/titleDetailsItem.js'
@@ -30,7 +30,7 @@ export function titleDetailsList() {
  * Subscribe to state
  */
 function react(el) {
-  newState.on('main-documents', 'mainDocumentsList', (docs) => {
+  state.on('main-documents', 'mainDocumentsList', (docs) => {
     const children = docs.map((doc) => {
       const item = createTitleDetailsItem({
         id: doc.id,
@@ -39,7 +39,7 @@ function react(el) {
       })
       item.querySelectorAll('.field').forEach((field) =>
         field.addEventListener('change', () =>
-          newState.set('field-change:tasks-list', {
+          state.set('field-change:tasks-list', {
             id: doc.id,
             section: field.name,
             value: field.value,

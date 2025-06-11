@@ -23,6 +23,10 @@ body {
 button {
   border-radius: var(--border-radius);
 }
+button:focus-visible {
+  outline: none;
+}
+
 h2 {
   margin-bottom: 20px;
 }
@@ -247,6 +251,9 @@ ul {
 }
 .mr-20 {
   margin-right: 20px !important;
+}
+.mt-10 {
+  margin-top: 10px !important;
 }
 .mt-20 {
   margin-top: 20px !important;

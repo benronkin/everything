@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { injectStyle } from '../_assets/js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
@@ -133,7 +133,7 @@ function build(el) {
   })
   iconsEl.appendChild(trashEl)
   trashEl.addEventListener('click', () => {
-    newState.set('task-deleted:tasks-list', { id: el.id })
+    state.set('task-deleted:tasks-list', { id: el.id })
   })
 }
 
@@ -141,7 +141,7 @@ function build(el) {
  *
  */
 function react(el) {
-  newState.on('icon-click:sort-icon', 'titleDetailsItem', () => {
+  state.on('icon-click:sort-icon', 'titleDetailsItem', () => {
     const isSorting = document
       .getElementById('sort-icon')
       .classList.contains('primary')

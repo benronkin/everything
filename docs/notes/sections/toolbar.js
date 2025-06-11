@@ -1,6 +1,6 @@
-import { state } from '../../_assets/js/state.js'
 import { createToolbar } from '../../_composites/toolbar.js'
 import { createIcon } from '../../_partials/icon.js'
+import { state } from '../../_assets/js/state.js'
 // import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
@@ -18,7 +18,7 @@ export function toolbar() {
         classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
       }),
       createIcon({
-        id: 'add-entry',
+        id: 'add-note',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
     ],
@@ -38,12 +38,15 @@ export function toolbar() {
  * Subscribe to state.
  */
 function react(el) {
-  state.on('app-mode', 'Journal toolbar', (appMode) => {
+  state.on('app-mode', 'Notes toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
     backEl.classList.toggle('hidden', appMode !== 'main-panel')
   })
 }
 
+/**
+ * Set event handlers which can set state.
+ */
 /**
  * Set event handlers which can set state.
  */

@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { injectStyle } from '../_assets/js/ui.js'
 import { createButton } from '../_partials/button.js'
 import { createDiv } from '../_partials/div.js'
@@ -63,8 +63,8 @@ export function createModalDelete({ id, password = true }) {
   const el = document.createElement('dialog')
 
   build({ el, password })
-  react(el)
-  listen(el)
+  react({ el, password })
+  listen({ el, password })
 
   el.message = message.bind(el)
   el.getPassword = getPassword.bind(el)
@@ -144,9 +144,9 @@ function build({ el, password }) {
 /**
  *
  */
-export function react(el) {
-  newState.on('button-click:modal-cancel-btn', 'modalDelete', () => {
-    el.querySelector('#modal-delete-input').value = ''
+export function react({ el, password }) {
+  state.on('button-click:modal-cancel-btn', 'modalDelete', () => {
+    password && (el.querySelector('#modal-delete-input').value = '')
     el.close()
   })
 }
@@ -154,7 +154,7 @@ export function react(el) {
 /**
  *
  */
-function listen(el) {
+function listen({ el, password }) {
   el.addEventListener('click', (e) => {
     const dialogDimensions = el.getBoundingClientRect()
     if (
@@ -163,7 +163,7 @@ function listen(el) {
       e.clientY < dialogDimensions.top ||
       e.clientY > dialogDimensions.bottom
     ) {
-      el.querySelector('#modal-delete-input').value = ''
+      password && (el.querySelector('#modal-delete-input').value = '')
       el.close()
     }
   })

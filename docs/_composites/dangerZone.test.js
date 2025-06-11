@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { dangerZone } from '../journal/sections/dangerZone.js'
 
 let el
@@ -8,7 +8,7 @@ beforeAll(() => {
   el = dangerZone()
   document.querySelector('body').appendChild(el)
 
-  newState.set('active-doc', {
+  state.set('active-doc', {
     id: 'abc123',
     location: 'Kirkland Brewery',
     visit_date: '2024-04-18T22:00:00.000Z',
@@ -40,7 +40,7 @@ describe('Create a dangerZone section', () => {
     const showModalIcon = el.querySelector('#show-delete-modal-icon')
     showModalIcon.click()
 
-    expect(newState.get('icon-click:show-delete-modal-icon')).toBeTruthy()
+    expect(state.get('icon-click:show-delete-modal-icon')).toBeTruthy()
     expect(modal.querySelector('#modal-delete-body').textContent).toBe(
       'Kirkland Brewery (4/18)'
     )

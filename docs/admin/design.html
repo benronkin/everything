@@ -34,7 +34,7 @@
     </div>
     <script type="module">
       import { getWebApp } from '../_assets/js/io.js'
-      import { newState } from '../_assets/js/newState.js'
+      import { state } from '../_assets/js/state.js'
       import { createFileInput } from '../_partials/fileInput.js'
       import { createFormHorizontal } from '../_partials/formHorizontal.js'
       import { createFormField } from '../_partials/formField.js'
@@ -46,6 +46,7 @@
       import { createSelect } from '../_partials/select.js'
       import { createModalDelete } from '../_composites/modalDelete.js'
       import { createCollapsibleGroup } from '../_partials/collapsibleGroup.js'
+      import { setMessage } from '../_assets/js/ui.js'
 
       const parent = document.querySelector('#parent')
 
@@ -102,7 +103,7 @@
       modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
       // modalDelete.show()
 
-      getWebApp(`${newState.const('APP_URL')}/recipes/categories/read`).then(
+      getWebApp(`${state.const('APP_URL')}/recipes/categories/read`).then(
         ({ categories }) => {
           const selectEl = createSelect({
             options: categories,
@@ -118,6 +119,8 @@
           html: [createIcon({ classes: { primary: 'fa-trash' } })],
         })
       )
+
+      setMessage({ message: 'this is a quiet toast', type: 'quiet' })
     </script>
   </body>
 </html>

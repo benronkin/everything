@@ -18,7 +18,7 @@ const css = `
 /**
  * Constuctor of a custom element
  */
-export function createDangerZone({ id, modalId } = {}) {
+export function createDangerZone({ id, modalId, password } = {}) {
   injectStyle(css)
 
   const el = createDiv({
@@ -26,7 +26,7 @@ export function createDangerZone({ id, modalId } = {}) {
     className: 'danger-zone flex danger-box u-mt-40 u-mb-20',
   })
 
-  build({ el, modalId })
+  build({ el, modalId, password })
 
   return el
 }
@@ -38,9 +38,10 @@ export function createDangerZone({ id, modalId } = {}) {
 /**
  * Add sub elements to the element.
  */
-function build({ el, modalId }) {
+function build({ el, modalId, password }) {
   const modalEl = createModalDelete({
     id: modalId,
+    password,
   })
   el.appendChild(modalEl)
 

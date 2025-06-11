@@ -1,5 +1,4 @@
 import { state } from '../../_assets/js/state.js'
-import { createEntryTitle } from '../journal.utils.js'
 import { setMessage } from '../../_assets/js/ui.js'
 import { createMainDocumentsList } from '../../_partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../_partials/mainDocumentItem.js'
@@ -14,7 +13,7 @@ import { createMainDocumentItem } from '../../_partials/mainDocumentItem.js'
 export function mainDocumentsList() {
   const el = createMainDocumentsList({
     id: 'left-panel-list',
-    className: 'mt-20',
+    className: 'mt-10',
   })
 
   react(el)
@@ -33,7 +32,7 @@ function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
     // populate children
     const children = docs.map((doc) => {
-      const html = createEntryTitle(doc)
+      const html = doc.title
       return createMainDocumentItem({ id: doc.id, html })
     })
     el.deleteChildren().addChildren(children)

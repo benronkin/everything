@@ -1,5 +1,5 @@
 import { beforeAll, describe, it, expect } from 'vitest'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
 // import { log } from '../../_assets/js/logger.js'
 
@@ -8,22 +8,22 @@ let mdItemEl
 
 beforeAll(() => {
   localStorage.setItem('debug', 'true')
-  // log('main-documents', newState.getSubscribers('main-documents'))
+  // log('main-documents', state.getSubscribers('main-documents'))
 })
 
 describe('Creating a list of mainDocumentItems', () => {
   it('expects that list.js subscribed to a main-documents state', () => {
-    delete newState._listeners['main-documents']
+    delete state._listeners['main-documents']
     mdListEl = mainDocumentsList({
       id: 'main-documents-list',
     })
-    expect(newState.getSubscribers('main-documents')).toContain(
+    expect(state.getSubscribers('main-documents')).toContain(
       'mainDocumentsList'
     )
   })
 
   it('expects list to have two mainDocumentItems', () => {
-    newState.set('main-documents', [
+    state.set('main-documents', [
       {
         id: 'abc123',
         location: 'Seattle Opera',
@@ -43,6 +43,6 @@ describe('Creating a list of mainDocumentItems', () => {
   it('expects item id def456 to be in the active-docs', () => {
     mdItemEl.click()
 
-    expect(newState.get('active-doc').id).toEqual('def456')
+    expect(state.get('active-doc').id).toEqual('def456')
   })
 })

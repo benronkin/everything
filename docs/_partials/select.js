@@ -12,8 +12,9 @@ const css = `
   align-items: center;
   background-color: var(--purple2); 
   box-shadow: var(--shadow-small);
-  border-radius: 12px;
+  border-radius: var(--border-radius);
   padding: 5px 10px;
+  height: 20px;
 }
 
 .custom-select {

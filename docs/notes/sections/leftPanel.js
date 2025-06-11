@@ -2,8 +2,8 @@ import { injectStyle } from '../../_assets/js/ui.js'
 import { log } from '../../_assets/js/logger.js'
 import { state } from '../../_assets/js/state.js'
 import { createDiv } from '../../_partials/div.js'
-import { mainDocumentsList } from './mainDocumentsList.js'
 import { search } from '../../_composites/search.js'
+import { mainDocumentsList } from './mainDocumentsList.js'
 
 // -------------------------------
 // Globals
@@ -13,6 +13,7 @@ const css = `
 #left-panel {
   width: 100%;
 }
+
 `
 
 // -------------------------------
@@ -48,8 +49,8 @@ function build(el) {
   el.appendChild(
     search({
       id: 'left-panel-search',
-      placeholder: 'Search entries...',
-      name: 'search-entry',
+      placeholder: 'Search notes...',
+      name: 'search-note',
     })
   )
 
@@ -69,22 +70,12 @@ function react(el) {
 
     el.classList.remove('hidden')
     log(`letPanel is showing itself on app-mode: ${appMode}`)
+  })
 
-    // If there is an active-doc and it does not appear
-    // in main-documents then delete active-doc
-    const currentId = state.get('active-doc')?.id
-    if (!currentId) {
-      el.querySelector('#left-panel-list').reset()
-      return
-    }
-
-    const docs = state.get('main-documents')
-    const docExists = docs.findIndex((el) => el.id === currentId)
-    if (!docExists) {
-      state.set('active-doc', null)
-      log('leftPanel is nullyfing active-doc on main-documents')
-      return
-    }
+  state.on('main-documents', 'leftPanel', (docs) => {
+    const message =
+      docs?.length === 1 ? 'One note found' : `${docs.length} notes found`
+    el.querySelector('.form-message').insertHtml(message)
   })
 }
 

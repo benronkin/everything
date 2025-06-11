@@ -4,7 +4,7 @@ import { createListItem } from '../../_partials/listItem.js'
 import { createIcon } from '../../_partials/icon.js'
 import { createSpan } from '../../_partials/span.js'
 import { createDiv } from '../../_partials/div.js'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
@@ -63,14 +63,14 @@ function listen(el) {
   el.addEventListener('click', (e) => {
     if (e.target.closest('i')) return // ignore event bubbling
 
-    newState.set('item-click:shop-suggestion', {
+    state.set('item-click:shop-suggestion', {
       id: el.id,
       item: el.querySelector('span').textContent,
     })
   })
 
   el.querySelector('.fa-trash').addEventListener('click', () =>
-    newState.set('item-click:delete-suggestion', {
+    state.set('item-click:delete-suggestion', {
       id: el.id,
       item: el.querySelector('span').textContent,
     })

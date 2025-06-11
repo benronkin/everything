@@ -4,7 +4,7 @@ import { createListItem } from '../../_partials/listItem.js'
 import { createIcon } from '../../_partials/icon.js'
 import { createSpan } from '../../_partials/span.js'
 import { createDiv } from '../../_partials/div.js'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
@@ -62,7 +62,7 @@ export function shoppingItem({ item }) {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('icon-click:sort-icon', 'shoppingItem', () => {
+  state.on('icon-click:sort-icon', 'shoppingItem', () => {
     const isSorting = document
       .getElementById('sort-icon')
       .classList.contains('primary')
@@ -75,7 +75,7 @@ function react(el) {
  */
 function listen(el) {
   el.querySelector('.fa-trash').addEventListener('click', () =>
-    newState.set('item-click:delete-item', {
+    state.set('item-click:delete-item', {
       id: el.id,
       item: el.querySelector('span').textContent,
     })

@@ -1,6 +1,6 @@
 /* global imageCompression */
 
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createHeader } from '../../_partials/header.js'
@@ -107,7 +107,7 @@ function build(el) {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('app-mode', 'mainPanel', (appMode) => {
+  state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
       log(`mainPanel is hiding itself on app-mode: ${appMode}`)
@@ -116,7 +116,7 @@ function react(el) {
     reactAppMode(el)
   })
 
-  newState.on('button-click:upload-photo-button', 'mainPanel', ({ e }) => {
+  state.on('button-click:upload-photo-button', 'mainPanel', ({ e }) => {
     e.preventDefault()
     reactAddPhoto()
   })
@@ -126,7 +126,7 @@ function react(el) {
  *
  */
 function reactAppMode(el) {
-  const doc = newState.get('active-doc')
+  const doc = state.get('active-doc')
   el.classList.remove('hidden')
   log('mainPanel is showing itself on active-doc')
 
@@ -174,7 +174,7 @@ async function reactAddPhoto() {
     const compressed = await imageCompression(file, compressionOptions)
     formData.set('file', compressed)
 
-    formData.set('entry', newState.get('active-doc').id)
+    formData.set('entry', state.get('active-doc').id)
 
     const { message } = await addEntryPhoto(formData)
 

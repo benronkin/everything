@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { createMainDocumentItem } from './mainDocumentItem'
 
 describe('Creating a mainDocumentItem', () => {
@@ -24,9 +24,9 @@ describe('Creating a mainDocumentItem', () => {
         visit_date: '2025-06-23T',
       },
     ]
-    newState.set('main-documents', docs)
+    state.set('main-documents', docs)
 
     el.click()
-    expect(newState.get('active-doc')).toBeTruthy()
+    expect(state.get('active-doc')).toBeTruthy()
   })
 })

@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     listen()
 
     const { data } = await fetchRecentEntries()
-    newState.set('main-documents', data)
-    newState.set('app-mode', 'left-panel')
-    newState.set('default-page', 'journal')
-    window.newState = newState // avail to browser console
+    state.set('main-documents', data)
+    state.set('app-mode', 'left-panel')
+    state.set('default-page', 'journal')
+    window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     window.location.href = `../home/index.html?message=${error.message}`
@@ -79,9 +79,9 @@ async function build() {
  *
  */
 function react() {
-  newState.on('form-submit:left-panel-search', 'journal', reactSearch)
-  newState.on('icon-click:add-entry', 'journal', reactEntryAdd)
-  newState.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
+  state.on('form-submit:left-panel-search', 'journal', reactSearch)
+  state.on('icon-click:add-entry', 'journal', reactEntryAdd)
+  state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 }
 
 function listen() {
@@ -124,9 +124,9 @@ async function reactEntryAdd({ id: btnId }) {
     notes: '',
   }
 
-  newState.set('main-documents', [doc, ...newState.get('main-documents')])
-  newState.set('active-doc', doc)
-  newState.set('app-mode', 'main-panel')
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', doc)
+  state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
 }
@@ -138,7 +138,7 @@ async function reactEntryDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
 
-  const id = newState.get('active-doc').id
+  const id = state.get('active-doc').id
   const password = modalEl.getPassword()
   const { error } = await deleteEntry(id, password)
 
@@ -150,11 +150,11 @@ async function reactEntryDelete() {
   modalEl.setPassword('')
   modalEl.close()
 
-  const filteredDocs = newState
+  const filteredDocs = state
     .get('main-documents')
     .filter((doc) => doc.id !== id)
-  newState.set('main-documents', filteredDocs)
-  newState.set('app-mode', 'left-panel')
+  state.set('main-documents', filteredDocs)
+  state.set('app-mode', 'left-panel')
 }
 
 /**
@@ -177,7 +177,7 @@ async function reactSearch() {
     console.error(`Journal server error: ${message}`)
     return
   }
-  newState.set('main-documents', data)
+  state.set('main-documents', data)
 }
 
 /**
@@ -189,17 +189,17 @@ async function handleFieldChange(e) {
   const section = elem.name
   let value = elem.value
 
-  const doc = newState.get('active-doc')
+  const doc = state.get('active-doc')
   const id = doc.id
 
   doc[section] = value
 
-  const docs = newState.get('main-documents')
+  const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
   docs[idx] = doc
 
-  newState.set('main-documents', docs)
-  newState.set('active-doc', doc)
+  state.set('main-documents', docs)
+  state.set('active-doc', doc)
 
   try {
     const { message, error } = await updateEntry({ id, section, value })

@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { setMessage } from '../../_assets/js/ui.js'
 import { createList } from '../../_partials/list.js'
 import { suggestionItem } from './suggestionItem.js'
@@ -30,12 +30,12 @@ export function suggestionsList() {
  * Subscribe to state
  */
 function react(el) {
-  newState.on('suggestions-list', 'suggestionsList', (suggestionArr) => {
+  state.on('suggestions-list', 'suggestionsList', (suggestionArr) => {
     el.deleteChildren()
     if (!suggestionArr.length) {
       return
     }
-    const shoppingItems = newState.get('shopping-list')
+    const shoppingItems = state.get('shopping-list')
     suggestionArr = suggestionArr.filter(
       (arrItem) => !shoppingItems.includes(arrItem)
     )

@@ -1,6 +1,6 @@
 import { createToolbar } from '../../_composites/toolbar.js'
 import { createIcon } from '../../_partials/icon.js'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 // import { log } from '../../_assets/js/logger.js'
 
 // -------------------------------
@@ -34,7 +34,7 @@ export function toolbar() {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('icon-click:sort-icon', 'toolbar', ({ id }) => {
+  state.on('icon-click:sort-icon', 'toolbar', ({ id }) => {
     const sortEl = document.getElementById(id)
     sortEl.classList.toggle('primary')
     sortEl.classList.toggle('bordered')

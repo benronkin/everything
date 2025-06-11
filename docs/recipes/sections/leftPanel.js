@@ -1,9 +1,9 @@
 import { injectStyle } from '../../_assets/js/ui.js'
 import { log } from '../../_assets/js/logger.js'
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { createDiv } from '../../_partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
-import { createFormHorizontal } from '../../_partials/formHorizontal.js'
+import { search } from '../../_composites/search.js'
 
 // -------------------------------
 // Globals
@@ -46,9 +46,8 @@ export function leftPanel() {
  */
 function build(el) {
   el.appendChild(
-    createFormHorizontal({
+    search({
       id: 'left-panel-search',
-      formIconClass: 'fa-magnifying-glass',
       placeholder: 'Search recipes...',
       name: 'search-recipe',
     })
@@ -61,7 +60,7 @@ function build(el) {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('app-mode', 'leftPanel', (appMode) => {
+  state.on('app-mode', 'leftPanel', (appMode) => {
     if (appMode !== 'left-panel') {
       log(`letPanel is hiding itself on app-mode: ${appMode}`)
       el.classList.add('hidden')
@@ -73,16 +72,16 @@ function react(el) {
 
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
-    const currentId = newState.get('active-doc')?.id
+    const currentId = state.get('active-doc')?.id
     if (!currentId) {
       el.querySelector('#left-panel-list').reset()
       return
     }
 
-    const docs = newState.get('main-documents')
+    const docs = state.get('main-documents')
     const docExists = docs.findIndex((el) => el.id === currentId)
     if (!docExists) {
-      newState.set('active-doc', null)
+      state.set('active-doc', null)
       log('leftPanel is nullyfing active-doc on main-documents')
       return
     }

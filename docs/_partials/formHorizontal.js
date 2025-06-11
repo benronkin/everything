@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { createForm } from './form.js'
 import { createButton } from './button.js'
 import { createInputGroup } from './inputGroup.js'
@@ -25,9 +25,12 @@ const css = `
   cursor: not-allowed;
   pointer-events: none;
 }
-.form-horizontal .message {
-  padding: 10px;
-  font-size: 0.75rem;
+.form-horizontal .form-message {
+  margin-left: 12px;
+  color: var(--gray3);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 `
 
@@ -45,7 +48,7 @@ export function createFormHorizontal({
   placeholder,
   autocomplete,
   buttonIconClass,
-  formIconClass,
+  classes,
   submitText,
   value,
   disabled = false,
@@ -54,6 +57,7 @@ export function createFormHorizontal({
 
   const el = createForm({
     id,
+    classes,
     type,
     name,
     placeholder,
@@ -64,12 +68,12 @@ export function createFormHorizontal({
 
   build({
     el,
+    classes,
     name,
     type,
     placeholder,
     autocomplete,
     buttonIconClass,
-    formIconClass,
     submitText,
     disabled,
   })
@@ -77,6 +81,11 @@ export function createFormHorizontal({
   listen(el)
 
   el.className = 'form-horizontal'
+  if (classes?.form) {
+    for (const c of classes.form.split(' ')) {
+      el.classList.add(c)
+    }
+  }
 
   return el
 }
@@ -89,21 +98,10 @@ export function createFormHorizontal({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({
-  el,
-  type,
-  name,
-  placeholder,
-  autocomplete,
-  buttonIconClass,
-  formIconClass,
-  submitText,
-  value,
-  disabled,
-}) {
+function build({ el, type, name, placeholder, autocomplete, classes, value }) {
   el.appendChild(
     createInputGroup({
-      classes: { icon: formIconClass },
+      classes: { icon: classes?.icon, group: classes?.group },
       placeholder,
       type,
       name,
@@ -111,17 +109,6 @@ function build({
       value,
     })
   )
-
-  if (submitText) {
-    el.appendChild(
-      createButton({
-        iconClass: buttonIconClass,
-        className: 'primary',
-        html: submitText,
-        disabled,
-      })
-    )
-  }
 
   el.appendChild(createSpan({ className: 'form-message' }))
 }

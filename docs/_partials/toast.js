@@ -41,6 +41,13 @@ const css = `
   top: auto; 
   left: 1rem; 
 }
+.toast.quiet {
+  background: transparent;
+}
+.toast.quiet .progress-bar,
+.toast.quiet .fa-close {
+  display: none;
+}
 .toast .progress-bar {
   height: 4px;
   background: var(--gray6);

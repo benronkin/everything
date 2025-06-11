@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { injectStyle } from '../../_assets/js/ui.js'
 import { createDiv } from '../../_partials/div.js'
 import { createForm } from '../../_partials/form.js'
@@ -87,7 +87,7 @@ function build(el) {
  * Subscribe to state.
  */
 function react(el) {
-  newState.on('icon-click:add-photo-toggle', 'mainPanel', () => {
+  state.on('icon-click:add-photo-toggle', 'mainPanel', () => {
     el.classList.toggle('hidden')
 
     el.querySelector('input[type="file"]').value = ''

@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { createList } from '../../_partials/list.js'
 import { shoppingItem } from './shoppingItem.js'
 // import { setMessage } from '../../_assets/js/ui.js'
@@ -31,7 +31,7 @@ export function shoppingList() {
  * Subscribe to state
  */
 function react(el) {
-  newState.on('shopping-list', 'shoppingList', (items) => {
+  state.on('shopping-list', 'shoppingList', (items) => {
     el.deleteChildren()
     if (!items.length) {
       return
@@ -40,7 +40,7 @@ function react(el) {
     el.addChildren(children)
   })
 
-  newState.on('item-click', 'list', (id) => {
+  state.on('item-click', 'list', (id) => {
     el.getChildren().forEach((child) => {
       if (child.id === id) {
         child.classList.toggle('active')

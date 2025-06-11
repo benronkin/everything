@@ -1,6 +1,6 @@
 import { handleTokenQueryParam } from '../_assets/js/io.js'
 import { setMessage } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { fetchTasks } from '../tasks/tasks.api.js'
 import { createDiv } from '../_partials/div.js'
 import { nav } from './sections/nav.js'
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const { tasks } = await fetchTasks(token)
-    const defaultPage = newState.get('default-page')
+    const defaultPage = state.get('default-page')
     const nextPage = await getNextPage(tasks, defaultPage)
     window.location.href = nextPage
   } catch (error) {

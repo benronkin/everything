@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { createGroup } from './group.js'
 import { createIcon } from './icon.js'
 
@@ -91,7 +91,7 @@ function build({ el, html }) {
  */
 function react(el) {
   const stateKey = `icon-click:${el.querySelector('.toggler').id}`
-  newState.on(stateKey, 'collapsibleGroup', () => {
+  state.on(stateKey, 'collapsibleGroup', () => {
     el.classList.toggle('collapsed')
   })
 }

@@ -109,6 +109,11 @@ export function setMessage({
       className = 'danger'
       autoClose = null
       break
+    case 'quiet':
+      removeToasts()
+      value = message
+      className = 'quiet'
+      break
     case 'warn':
       value = _createWarnMessage(message)
       className = 'warn'

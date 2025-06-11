@@ -1,4 +1,4 @@
-import { newState } from '../../_assets/js/newState.js'
+import { state } from '../../_assets/js/state.js'
 import { setMessage } from '../../_assets/js/ui.js'
 import { createMainDocumentsList } from '../../_partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../_partials/mainDocumentItem.js'
@@ -29,7 +29,7 @@ export function mainDocumentsList() {
  * Subscribe to state
  */
 function react(el) {
-  newState.on('main-documents', 'mainDocumentsList', (docs) => {
+  state.on('main-documents', 'mainDocumentsList', (docs) => {
     // populate children
     const children = docs.map((doc) => {
       const html = doc.title
@@ -38,7 +38,7 @@ function react(el) {
     el.deleteChildren().addChildren(children)
 
     // select previously active child
-    // const priorDoc = newState.get('active-doc')
+    // const priorDoc = state.get('active-doc')
     // if (priorDoc) {
     //   const child = el.getChildById(priorDoc.id)
     //   child && (child.selected = true)

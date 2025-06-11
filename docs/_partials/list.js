@@ -1,5 +1,5 @@
 import { injectStyle } from '../_assets/js/ui.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { enableDragging, enableClicking } from '../_assets/js/drag.js'
 import { createDiv } from '../_partials/div.js'
 import { log } from '../_assets/js/logger.js'
@@ -80,7 +80,7 @@ function build({ el, emptyState, enableDrag } = {}) {
  */
 function listen(el) {
   // select/unselect should be implemented inside the custom list
-  // newState.on('item-click', 'list', (id) => {
+  // state.on('item-click', 'list', (id) => {
   //   el.getChildren().forEach((child) => {
   //     if (child.id === id) {
   //       child.classList.toggle('active')

@@ -1,4 +1,4 @@
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 import { injectStyle } from '../_assets/js/ui.js'
 import { createDiv } from './div.js'
 
@@ -83,6 +83,6 @@ function listen({ el }) {
       return
     }
     // list manages active class
-    newState.set('item-click', el.dataset.id)
+    state.set('item-click', el.dataset.id)
   })
 }

@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { newState } from '../../_assets/js/newState'
+import { state } from '../../_assets/js/state'
 import { photoList } from './photoList.js'
 // import { log } from '../../_assets/js/logger.js'
 
@@ -24,7 +24,7 @@ describe('Photo gallery for the active-doc', () => {
       ),
     }))
 
-    newState.set('active-doc', {
+    state.set('active-doc', {
       id: 'def456',
       location: "Don't yell at me",
       visit_date: '2025-06-23T',

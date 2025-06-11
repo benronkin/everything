@@ -6,7 +6,7 @@
 
 import { injectStyle } from '../_assets/js/ui.js'
 import { createListItem } from './listItem.js'
-import { newState } from '../_assets/js/newState.js'
+import { state } from '../_assets/js/state.js'
 
 // -------------------------------
 // Globals
@@ -75,8 +75,8 @@ export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
 export function handleMainDocumentClick(e) {
   const el = e.target.closest('.md-item')
 
-  const mainDocuments = newState.get('main-documents')
+  const mainDocuments = state.get('main-documents')
   const activeDoc = mainDocuments.find((doc) => doc.id === el.id)
-  newState.set('active-doc', activeDoc)
-  newState.set('app-mode', 'main-panel')
+  state.set('active-doc', activeDoc)
+  state.set('app-mode', 'main-panel')
 }
