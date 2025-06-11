@@ -43,7 +43,7 @@ const css = `
 export function mainPanel() {
   injectStyle(css)
 
-  const el = createDiv({ className: 'mt-20' })
+  const el = createDiv({ className: 'mt-20 hidden' })
 
   build(el)
   react(el)
