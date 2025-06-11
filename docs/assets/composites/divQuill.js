@@ -10,6 +10,7 @@ const css = `
 .ql-container {
   height: auto !important;
   overflow-y: visible !important;
+  font-size: 1rem;
 }
 .ql-toolbar.ql-snow {
   border: none;

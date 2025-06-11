@@ -12,6 +12,7 @@
   margin: 0;
   padding: 0;
   box-sizing: inherit;
+  font-size: 1.2rem;
 }
 html {
   height: 100%;
@@ -31,7 +32,7 @@ input,
 textarea,
 select {
   font-family: inherit;
-  font-size: 1.2;
+  font-size: 1.2rem;
   line-height: inherit;
 }
 
@@ -289,10 +290,16 @@ ul {
 /* mobile */
 
 @media (min-width: 768px) {
-  #left-panel {
-    border-image-slice: 1;
-    border-right: 2px solid transparent;
-    border-image: var(--border-image-vertical);
+  * {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font-size: inherit;
+    line-height: inherit;
   }
   .container,
   .columns-wrapper {

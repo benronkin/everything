@@ -35,9 +35,6 @@ const css = `
   margin: 0;
   border-bottom: 1px dotted var(--gray1);
 }
-#main-panel textarea.field {
-  line-height: 16px;
-}
 `
 
 // -------------------------------
