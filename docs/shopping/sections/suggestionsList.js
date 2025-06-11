@@ -1,8 +1,8 @@
-import { state } from '../../_assets/js/state.js'
-import { setMessage } from '../../_assets/js/ui.js'
-import { createList } from '../../_partials/list.js'
+import { state } from '../../js/state.js'
+import { setMessage } from '../../js/ui.js'
+import { createList } from '../../assets/partials/list.js'
 import { suggestionItem } from './suggestionItem.js'
-import { log } from '../../_assets/js/logger.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Exports

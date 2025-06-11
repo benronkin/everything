@@ -1,13 +1,13 @@
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDiv } from '../../_partials/div.js'
-import { createHeader } from '../../_partials/header.js'
-import { createForm } from '../../_partials/form.js'
-import { createInputGroup } from '../../_partials/inputGroup.js'
-import { createButton } from '../../_partials/button.js'
-import { createSpan } from '../../_partials/span.js'
-import { setMessage } from '../../_assets/js/ui.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { createHeader } from '../../assets/partials/header.js'
+import { createForm } from '../../assets/partials/form.js'
+import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createButton } from '../../assets/partials/button.js'
+import { createSpan } from '../../assets/partials/span.js'
+import { setMessage } from '../../js/ui.js'
 import { login } from '../home.api.js'
-import { log } from '../../_assets/js/logger.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Globals

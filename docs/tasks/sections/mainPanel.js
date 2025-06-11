@@ -1,9 +1,9 @@
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDiv } from '../../_partials/div.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDiv } from '../../assets/partials/div.js'
 import { titleDetailsList } from './titleDetailsList.js'
-import { createFormHorizontal } from '../../_partials/formHorizontal.js'
-// import { state } from '../../_assets/js/state.js'
-// import { log } from '../../_assets/js/logger.js'
+import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
+// import { state } from '../../js/state.js'
+// import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Globals

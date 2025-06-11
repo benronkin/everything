@@ -1,7 +1,7 @@
-import { state } from '../../_assets/js/state.js'
-import { setMessage } from '../../_assets/js/ui.js'
-import { createMainDocumentsList } from '../../_partials/mainDocumentsList.js'
-import { createMainDocumentItem } from '../../_partials/mainDocumentItem.js'
+import { state } from '../../assets/js/state.js'
+import { setMessage } from '../../assets/js/ui.js'
+import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
+import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 
 // -------------------------------
 // Exports

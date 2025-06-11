@@ -1,15 +1,15 @@
-import { state } from '../_assets/js/state.js'
-import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { state } from '../js/state.js'
+import { handleTokenQueryParam } from '../js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { createDiv } from '../_partials/div.js'
-import { createFooter } from '../_composites/footer.js'
-import { createTitleDetailsItem } from '../_partials/titleDetailsItem.js'
-import { setMessage } from '../_assets/js/ui.js'
+import { createDiv } from '../assets/partials/div.js'
+import { createFooter } from '../assets/composites/footer.js'
+import { createTitleDetailsItem } from '../assets/partials/titleDetailsItem.js'
+import { setMessage } from '../js/ui.js'
 import { createTask, deleteTask, fetchTasks, updateTask } from './tasks.api.js'
-import { log } from '../_assets/js/logger.js'
+import { log } from '../js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

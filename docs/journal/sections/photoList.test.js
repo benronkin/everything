@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { state } from '../../_assets/js/state'
+import { state } from '../../js/state'
 import { photoList } from './photoList.js'
-// import { log } from '../../_assets/js/logger.js'
+// import { log } from '../../js/logger.js'
 
 beforeAll(() => {
   localStorage.setItem('debug', 'true')

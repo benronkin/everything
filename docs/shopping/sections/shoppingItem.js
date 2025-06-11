@@ -1,11 +1,11 @@
-import { injectStyle } from '../../_assets/js/ui.js'
-import { insertHtml } from '../../_assets/js/format.js'
-import { createListItem } from '../../_partials/listItem.js'
-import { createIcon } from '../../_partials/icon.js'
-import { createSpan } from '../../_partials/span.js'
-import { createDiv } from '../../_partials/div.js'
-import { state } from '../../_assets/js/state.js'
-import { log } from '../../_assets/js/logger.js'
+import { injectStyle } from '../../js/ui.js'
+import { insertHtml } from '../../js/format.js'
+import { createListItem } from '../../assets/partials/listItem.js'
+import { createIcon } from '../../assets/partials/icon.js'
+import { createSpan } from '../../assets/partials/span.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { state } from '../../js/state.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Globals

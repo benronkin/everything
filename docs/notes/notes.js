@@ -1,15 +1,15 @@
-import { state } from '../_assets/js/state.js'
-import { handleTokenQueryParam } from '../_assets/js/io.js'
+import { state } from '../assets/js/state.js'
+import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { createDiv } from '../_partials/div.js'
-import { createFooter } from '../_composites/footer.js'
-import { setMessage } from '../_assets/js/ui.js'
+import { createDiv } from '../assets/partials/div.js'
+import { createFooter } from '../assets/composites/footer.js'
+import { setMessage } from '../assets/js/ui.js'
 import { createNote, deleteNote, fetchNotes } from './notes.api.js'
-import { log } from '../_assets/js/logger.js'
+import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

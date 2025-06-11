@@ -1,13 +1,13 @@
-import { createDiv } from '../../_partials/div.js'
-import { createInputGroup } from '../../_partials/inputGroup.js'
-import { createHeader } from '../../_partials/header.js'
-import { createSelectGroup } from '../../_partials/selectGroup.js'
-import { createSpanGroup } from '../../_partials/spanGroup.js'
-import { createSwitch } from '../../_partials/switch.js'
-import { createTextarea } from '../../_partials/textarea.js'
-import { createList } from '../../_partials/list.js'
-import { state } from '../../_assets/js/state.js'
-import { log } from '../../_assets/js/logger.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createHeader } from '../../assets/partials/header.js'
+import { createSelectGroup } from '../../assets/partials/selectGroup.js'
+import { createSpanGroup } from '../../assets/partials/spanGroup.js'
+import { createSwitch } from '../../assets/partials/switch.js'
+import { createTextarea } from '../../assets/partials/textarea.js'
+import { createList } from '../../assets/partials/list.js'
+import { state } from '../../js/state.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Exports

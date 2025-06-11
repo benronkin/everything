@@ -1,11 +1,11 @@
-import { state } from '../../_assets/js/state.js'
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDiv } from '../../_partials/div.js'
-import { createHeader } from '../../_partials/header.js'
+import { state } from '../../js/state.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { createHeader } from '../../assets/partials/header.js'
 import { createRecipeGroup } from './recipe.group.js'
-import { createSpan } from '../../_partials/span.js'
+import { createSpan } from '../../assets/partials/span.js'
 import { dangerZone } from './dangerZone.js'
-import { log } from '../../_assets/js/logger.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Globals

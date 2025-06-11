@@ -1,10 +1,10 @@
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDiv } from '../../_partials/div.js'
-import { createCollapsibleGroup } from '../../_partials/collapsibleGroup.js'
-import { createIcon } from '../../_partials/icon.js'
-import { createSpan } from '../../_partials/span.js'
-import { createImage } from '../../_partials/image.js'
-import { createInput } from '../../_partials/input.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { createCollapsibleGroup } from '../../assets/partials/collapsibleGroup.js'
+import { createIcon } from '../../assets/partials/icon.js'
+import { createSpan } from '../../assets/partials/span.js'
+import { createImage } from '../../assets/partials/image.js'
+import { createInput } from '../../assets/partials/input.js'
 import { deleteEntryPhoto, updatePhotoCaption } from '../journal.api.js'
 
 // -------------------------------

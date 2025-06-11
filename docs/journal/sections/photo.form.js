@@ -1,12 +1,12 @@
-import { state } from '../../_assets/js/state.js'
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDiv } from '../../_partials/div.js'
-import { createForm } from '../../_partials/form.js'
-import { createFileInput } from '../../_partials/fileInput.js'
-import { createButton } from '../../_partials/button.js'
-import { createInput } from '../../_partials/input.js'
-import { createInputGroup } from '../../_partials/inputGroup.js'
-import { createSpan } from '../../_partials/span.js'
+import { state } from '../../js/state.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDiv } from '../../assets/partials/div.js'
+import { createForm } from '../../assets/partials/form.js'
+import { createFileInput } from '../../assets/partials/fileInput.js'
+import { createButton } from '../../assets/partials/button.js'
+import { createInput } from '../../assets/partials/input.js'
+import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createSpan } from '../../assets/partials/span.js'
 
 // -------------------------------
 // Globals

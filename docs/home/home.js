@@ -1,11 +1,11 @@
-import { handleTokenQueryParam } from '../_assets/js/io.js'
-import { setMessage } from '../_assets/js/ui.js'
-import { state } from '../_assets/js/state.js'
+import { handleTokenQueryParam } from '../js/io.js'
+import { setMessage } from '../js/ui.js'
+import { state } from '../js/state.js'
 import { fetchTasks } from '../tasks/tasks.api.js'
-import { createDiv } from '../_partials/div.js'
+import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { createFooter } from '../_composites/footer.js'
+import { createFooter } from '../assets/composites/footer.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

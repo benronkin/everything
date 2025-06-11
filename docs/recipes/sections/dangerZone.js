@@ -1,6 +1,6 @@
-import { state } from '../../_assets/js/state.js'
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createDangerZone } from '../../_composites/dangerZone.js'
+import { state } from '../../js/state.js'
+import { injectStyle } from '../../js/ui.js'
+import { createDangerZone } from '../../assets/composites/dangerZone.js'
 
 // -------------------------------
 // Globals

@@ -1,8 +1,8 @@
-import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
-import { state } from '../_assets/js/state.js'
-import { createTable } from '../_partials/table.js'
-import { createSelect } from '../_partials/select.js'
-import { createSpan } from '../_partials/span.js'
+import { getWebApp, postWebAppJson } from '../js/io.js'
+import { state } from '../js/state.js'
+import { createTable } from '../assets/partials/table.js'
+import { createSelect } from '../assets/partials/select.js'
+import { createSpan } from '../assets/partials/span.js'
 
 // -------------------------------
 // Globals

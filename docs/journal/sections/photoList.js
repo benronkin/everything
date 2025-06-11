@@ -4,12 +4,12 @@
 main-documents and builds its children by itself.
  */
 
-import { injectStyle } from '../../_assets/js/ui.js'
-import { createList } from '../../_partials/list.js'
-import { state } from '../../_assets/js/state.js'
+import { injectStyle } from '../../js/ui.js'
+import { createList } from '../../assets/partials/list.js'
+import { state } from '../../js/state.js'
 import { createPhotoItem } from './photoItem.js'
 import { fetchEntryPhotosMetadata } from '../journal.api.js'
-import { log } from '../../_assets/js/logger.js'
+import { log } from '../../js/logger.js'
 
 // -------------------------------
 // Globals

@@ -1,5 +1,5 @@
-import { createFooter } from '../../_composites/footer.js'
-import { injectStyle } from '../../_assets/js/ui.js'
+import { createFooter } from '../../assets/composites/footer.js'
+import { injectStyle } from '../../js/ui.js'
 
 // -------------------------------
 // Globals

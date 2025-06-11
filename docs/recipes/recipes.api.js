@@ -1,6 +1,6 @@
-import { state } from '../_assets/js/state.js'
-import { getWebApp, postWebAppJson } from '../_assets/js/io.js'
-import { log } from '../_assets/js/logger.js'
+import { state } from '../js/state.js'
+import { getWebApp, postWebAppJson } from '../js/io.js'
+import { log } from '../js/logger.js'
 
 const url = `${state.const('APP_URL')}/recipes`
 

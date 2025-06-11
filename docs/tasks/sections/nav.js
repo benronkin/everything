@@ -1,4 +1,4 @@
-import { createNav } from '../../_composites/nav.js'
+import { createNav } from '../../assets/composites/nav.js'
 
 // -------------------------------
 // Exports

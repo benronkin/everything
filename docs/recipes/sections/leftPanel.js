@@ -1,9 +1,9 @@
-import { injectStyle } from '../../_assets/js/ui.js'
-import { log } from '../../_assets/js/logger.js'
-import { state } from '../../_assets/js/state.js'
-import { createDiv } from '../../_partials/div.js'
+import { injectStyle } from '../../js/ui.js'
+import { log } from '../../js/logger.js'
+import { state } from '../../js/state.js'
+import { createDiv } from '../../assets/partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
-import { search } from '../../_composites/search.js'
+import { search } from '../../assets/composites/search.js'
 
 // -------------------------------
 // Globals
