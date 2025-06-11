@@ -1,4 +1,4 @@
-import { formatDateParts } from '../js/format.js'
+import { formatDateParts } from '../assets/js/format.js'
 
 /**
  * Format an entry title

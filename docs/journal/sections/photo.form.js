@@ -1,5 +1,5 @@
-import { state } from '../../js/state.js'
-import { injectStyle } from '../../js/ui.js'
+import { state } from '../../assets/js/state.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createForm } from '../../assets/partials/form.js'
 import { createFileInput } from '../../assets/partials/fileInput.js'

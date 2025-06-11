@@ -1,18 +1,18 @@
-import { state } from '../js/state.js'
-import { handleTokenQueryParam } from '../js/io.js'
+import { state } from '../assets/js/state.js'
+import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
-import { setMessage } from '../js/ui.js'
+import { setMessage } from '../assets/js/ui.js'
 import {
   fetchCartAndSuggestions,
   upodateShoppingList,
   upodateSuggestionsList,
 } from './shopping.api.js'
-import { log } from '../js/logger.js'
+import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

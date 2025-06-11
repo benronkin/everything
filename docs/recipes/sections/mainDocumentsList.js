@@ -1,5 +1,5 @@
-import { state } from '../../js/state.js'
-import { setMessage } from '../../js/ui.js'
+import { state } from '../../assets/js/state.js'
+import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 

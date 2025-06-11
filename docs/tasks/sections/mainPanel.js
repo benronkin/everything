@@ -1,9 +1,9 @@
-import { injectStyle } from '../../js/ui.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { titleDetailsList } from './titleDetailsList.js'
 import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
-// import { state } from '../../js/state.js'
-// import { log } from '../../js/logger.js'
+// import { state } from '../../assets/js/state.js'
+// import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Globals

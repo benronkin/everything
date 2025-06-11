@@ -1,8 +1,8 @@
-import { state } from '../../js/state.js'
+import { state } from '../../assets/js/state.js'
 import { createList } from '../../assets/partials/list.js'
 import { shoppingItem } from './shoppingItem.js'
-// import { setMessage } from '../../js/ui.js'
-import { log } from '../../js/logger.js'
+// import { setMessage } from '../../assets/js/ui.js'
+import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Exports

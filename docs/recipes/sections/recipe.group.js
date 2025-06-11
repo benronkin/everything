@@ -6,8 +6,8 @@ import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createSwitch } from '../../assets/partials/switch.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { createList } from '../../assets/partials/list.js'
-import { state } from '../../js/state.js'
-import { log } from '../../js/logger.js'
+import { state } from '../../assets/js/state.js'
+import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Exports

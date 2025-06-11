@@ -1,5 +1,5 @@
-import { state } from '../../js/state.js'
-import { injectStyle } from '../../js/ui.js'
+import { state } from '../../assets/js/state.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDangerZone } from '../../assets/composites/dangerZone.js'
 import { createEntryTitle } from '../journal.utils.js'
 

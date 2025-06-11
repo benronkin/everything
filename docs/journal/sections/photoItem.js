@@ -1,4 +1,4 @@
-import { injectStyle } from '../../js/ui.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createCollapsibleGroup } from '../../assets/partials/collapsibleGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'

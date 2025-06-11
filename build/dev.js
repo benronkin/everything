@@ -22,7 +22,6 @@ async function build() {
   // }
   setProdUrl()
   updateAdminPage()
-  updateIndexPage()
   execSync(
     'npx live-server --host=127.0.0.1 --port=5500 --no-browser --open=docs/index.html',
     { stdio: 'inherit', shell: true }
@@ -39,7 +38,7 @@ build()
  *
  */
 function setProdUrl() {
-  const filePath = './docs/_assets/js/state.js'
+  const filePath = './docs/assets/js/state.js'
   let content = fs.readFileSync(filePath, 'utf8')
   content = content.replace(/WEB_APP_URL:\s*prodUrl/, 'WEB_APP_URL: devUrl')
   fs.writeFileSync(filePath, content, 'utf8')
@@ -58,19 +57,6 @@ function updateAdminPage() {
     'placeholder="key" value="45VGrWWp983321pplRbmferrtE3450922DpqWemmv"'
   )
   console.log('🔥 Updated admin key placeholder in admin.html')
-
-  fs.writeFileSync(indexPath, content, 'utf8')
-}
-
-/**
- *
- */
-function updateIndexPage() {
-  const indexPath = './docs/index.html'
-  let content = fs.readFileSync(indexPath, 'utf8')
-
-  content = content.replace('value=""', 'value="ronkinben@gmail.com"')
-  console.log('🔥 Updated email placeholder in index')
 
   fs.writeFileSync(indexPath, content, 'utf8')
 }

@@ -1,7 +1,7 @@
-import { state } from '../js/state.js'
-import { postWebAppJson } from '../js/io.js'
+import { state } from '../assets/js/state.js'
+import { postWebAppJson } from '../assets/js/io.js'
 // import {  getWebApp, postWebAppForm } from '../js/io.js'
-import { log } from '../js/logger.js'
+import { log } from '../assets/js/logger.js'
 
 const url = state.const('APP_URL')
 

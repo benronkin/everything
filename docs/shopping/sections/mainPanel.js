@@ -1,10 +1,10 @@
-import { injectStyle } from '../../js/ui.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
 import { shoppingList } from './shoppingList.js'
 import { suggestionsList } from './suggestionsList.js'
-// import { state } from '../../js/state.js'
-// import { log } from '../../js/logger.js'
+// import { state } from '../../assets/js/state.js'
+// import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Globals

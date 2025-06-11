@@ -1,7 +1,7 @@
-import { state } from '../../js/state.js'
+import { state } from '../../assets/js/state.js'
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
-// import { log } from '../../js/logger.js'
+// import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Exports

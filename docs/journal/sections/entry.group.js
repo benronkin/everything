@@ -6,8 +6,8 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
-// import { log } from '../../js/logger.js'
-// import { state } from '../../js/state.js'
+// import { log } from '../../assets/js/logger.js'
+// import { state } from '../../assets/js/state.js'
 
 // -------------------------------
 // Exports

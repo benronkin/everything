@@ -1,4 +1,4 @@
-import { state } from '../js/state.js'
+import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -7,8 +7,8 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createMainDocumentItem } from '../assets/partials/mainDocumentItem.js'
-import { handleTokenQueryParam } from '../js/io.js'
-import { setMessage } from '../js/ui.js'
+import { handleTokenQueryParam } from '../assets/js/io.js'
+import { setMessage } from '../assets/js/ui.js'
 import {
   createRecipe,
   deleteRecipe,
@@ -17,7 +17,7 @@ import {
   searchRecipes,
   updateRecipe,
 } from './recipes.api.js'
-import { log } from '../js/logger.js'
+import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

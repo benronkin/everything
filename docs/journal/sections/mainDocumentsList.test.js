@@ -1,7 +1,7 @@
 import { beforeAll, describe, it, expect } from 'vitest'
-import { state } from '../../js/state.js'
+import { state } from '../../assets/js/state.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
-// import { log } from '../../js/logger.js'
+// import { log } from '../../assets/js/logger.js'
 
 let mdListEl
 let mdItemEl

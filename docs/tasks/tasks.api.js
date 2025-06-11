@@ -1,5 +1,5 @@
-import { state } from '../js/state.js'
-import { getWebApp, postWebAppJson } from '../js/io.js'
+import { state } from '../assets/js/state.js'
+import { getWebApp, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/tasks`
 
