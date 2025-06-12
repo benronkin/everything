@@ -70,7 +70,7 @@ function build() {
  * Subscribe to state.
  */
 function react() {
-  state.on('form-submit:tasks-form', 'tasks', handleTaskCreate)
+  state.on('form-submit:tasks-form', 'tasks', handleAddTask)
   state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 }
@@ -92,16 +92,13 @@ async function handleTaskUpdate({ id, section, value }) {
 /**
  *
  */
-async function handleTaskCreate() {
+async function handleAddTask() {
   const inputEl = document
     .getElementById('tasks-form')
     .querySelector('[name="task"]')
 
   const title = inputEl.value?.trim()
-
-  if (!title.length) {
-    return
-  }
+  if (!title.length) return
 
   const newChild = createTitleDetailsItem({ id: new Date().getTime(), title })
   document.getElementById('tasks-list').addChild(newChild)

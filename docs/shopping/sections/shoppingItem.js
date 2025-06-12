@@ -37,6 +37,9 @@ export function shoppingItem({ item }) {
                 classes: { primary: 'fa-sort', other: ['hidden'] },
               }),
               createIcon({
+                classes: { primary: 'fa-lightbulb', other: ['hidden'] },
+              }),
+              createIcon({
                 classes: { primary: 'fa-trash', other: ['hidden'] },
               }),
             ],
@@ -58,40 +61,51 @@ export function shoppingItem({ item }) {
 // Helpers
 // -------------------------------
 
-/**
- * Subscribe to state.
- */
 function react(el) {
-  state.on('icon-click:sort-icon', 'shoppingItem', () => {
-    const isSorting = document
-      .getElementById('sort-icon')
-      .classList.contains('primary')
-    el.setDraggable(isSorting)
-  })
+  state.on('icon-click:sort-icon', 'shoppingItem', () =>
+    handleToolbarSortClick(el)
+  )
 }
 
-/**
- * Set event handlers which can set state.
- */
 function listen(el) {
   el.querySelector('.fa-trash').addEventListener('click', () =>
-    state.set('item-click:delete-item', {
-      id: el.id,
-      item: el.querySelector('span').textContent,
-    })
+    handleTrashClick(el)
+  )
+
+  el.querySelector('.fa-lightbulb').addEventListener('click', () =>
+    handleAddToSuggestionsClick(el)
   )
 }
 
 // -------------------------------
-// Object methods
+// Handlers
 // -------------------------------
 
-/**
- *
- */
+function handleToolbarSortClick(el) {
+  const isSorting = document
+    .getElementById('sort-icon')
+    .classList.contains('primary')
+  el.setDraggable(isSorting)
+}
+
+function handleTrashClick(el) {
+  state.set('item-click:delete-item', {
+    id: el.id,
+    item: el.querySelector('span').textContent,
+  })
+}
+
+function handleAddToSuggestionsClick(el) {
+  state.set('item-click:delete-item', {
+    id: el.id,
+    item: el.querySelector('span').textContent,
+  })
+}
+
 function setDraggable(isDraggable) {
   this.classList.remove('active')
   this.classList.toggle('draggable-target', isDraggable)
   this.querySelector('.fa-sort').classList.toggle('hidden', !isDraggable)
   this.querySelector('.fa-trash').classList.add('hidden')
+  this.querySelector('.fa-lightbulb').classList.add('hidden')
 }

@@ -59,7 +59,7 @@ function build(el) {
       name: 'task',
       placeholder: 'Add task',
       autocomplete: 'off',
-      formIconClass: 'fa-thumbtack',
+      classes: { icon: 'fa-thumbtack' },
       disabled: true,
     })
   )

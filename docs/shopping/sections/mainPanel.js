@@ -64,7 +64,7 @@ function build(el) {
       name: 'new-item',
       placeholder: 'Add item',
       autocomplete: 'off',
-      formIconClass: 'fa-shopping-cart',
+      classes: { icon: 'fa-shopping-cart' },
       disabled: true,
     })
   )

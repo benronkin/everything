@@ -7,12 +7,12 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
+import { log } from '../assets/js/logger.js'
 import {
   fetchCartAndSuggestions,
   upodateShoppingList,
   upodateSuggestionsList,
 } from './shopping.api.js'
-import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -60,9 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Helpers
 // ------------------------
 
-/**
- *
- */
 function build() {
   document.head.title = 'Shopping | Everything App'
   const body = document.body
@@ -83,95 +80,107 @@ function build() {
   wrapperEl.appendChild(createFooter())
 }
 
-/**
- * Subscribe to state.
- */
 function react() {
-  /* show suggestions list when icon is clicked */
-  state.on('icon-click:suggest-icon', 'shopping', () => {
-    resetSuggestionsList()
-    document
-      .getElementById('suggestions-list')
-      .classList.toggle(
-        'hidden',
-        !document.getElementById('suggest-icon').classList.contains('primary')
-      )
-  })
-
-  /* show auto-complete when user types */
-  state.on('form-keyup:shopping-form', 'shopping', ({ value }) => {
-    if (document.getElementById('suggest-icon').classList.contains('primary'))
-      return
-
-    if (!value.trim().length) {
-      resetSuggestionsList()
-      return
-    }
-
-    const slEl = document.getElementById('suggestions-list')
-    slEl.classList.remove('hidden')
-    slEl.querySelectorAll('.suggestion-item').forEach((item) => {
-      const itemText = item.querySelector('span').textContent
-      item.classList.toggle('hidden', !itemText.includes(value))
-    })
-    // hide list background if no suggestion is visible
-    if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
-      resetSuggestionsList()
-    }
-  })
-
-  /* augment shopping list when user submits */
-  state.on('form-submit:shopping-form', 'shopping', () => {
-    resetSuggestionsList()
-    const item = document.querySelector('[name="new-item').value.trim()
-    if (!item.length) return
-    const sItems = state.get('shopping-list')
-    sItems.unshift(item)
-    state.set('shopping-list', sItems)
-
-    // await not needed
-    upodateShoppingList(sItems.join(','))
-  })
-
-  /* augment shopping list when user adds suggestions */
-  state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
-    const sItems = state.get('shopping-list')
-    sItems.unshift(item)
-    state.set('shopping-list', sItems)
-    // force re-render of suggestions
-    state.set('suggestions-list', [...state.get('suggestions-list')])
-
-    // await not needed
-    upodateShoppingList(sItems.join(','))
-  })
-
-  /* update suggestions list on delete */
-  state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
-    let sItems = state.get('suggestions-list')
-    sItems = sItems.filter((sItem) => sItem !== item)
-    state.set('suggestions-list', sItems)
-
-    // await not needed
-    upodateSuggestionsList(sItems.join(','))
-  })
-
-  state.on('item-click:delete-item', 'shopping', ({ item }) => {
-    let sItems = state.get('shopping-list')
-    sItems = sItems.filter((sItem) => sItem !== item)
-    state.set('shopping-list', sItems)
-
-    // await not needed
-    upodateShoppingList(sItems.join(','))
-  })
+  state.on('icon-click:suggest-icon', 'shopping', handleSuggestIconClick)
+  state.on('form-keyup:shopping-form', 'shopping', handleFormKeyup)
+  state.on('form-submit:shopping-form', 'shopping', handleAddItem)
+  state.on('item-click:shop-suggestion', 'shopping', handleShopSuggestionClick)
+  state.on('item-click:delete-item', 'shopping', handleDeleteItemClick)
+  state.on(
+    'item-click:delete-suggestion',
+    'shopping',
+    handleDeleteSuggestionClick
+  )
 }
 
-/**
- *
- */
 function resetSuggestionsList() {
   const suggestionsListEl = document.getElementById('suggestions-list')
   suggestionsListEl.classList.add('hidden')
   suggestionsListEl.querySelectorAll('.suggestion-item').forEach((el) => {
     el.classList.remove('hidden')
   })
+}
+
+// ------------------------
+// Handlers
+// ------------------------
+
+function handleSuggestIconClick() {
+  resetSuggestionsList()
+  document
+    .getElementById('suggestions-list')
+    .classList.toggle(
+      'hidden',
+      !document.getElementById('suggest-icon').classList.contains('primary')
+    )
+}
+
+function handleFormKeyup({ value }) {
+  if (document.getElementById('suggest-icon').classList.contains('primary'))
+    return
+
+  if (!value.trim().length) {
+    resetSuggestionsList()
+    return
+  }
+
+  const slEl = document.getElementById('suggestions-list')
+  slEl.classList.remove('hidden')
+  slEl.querySelectorAll('.suggestion-item').forEach((item) => {
+    const itemText = item.querySelector('span').textContent
+    item.classList.toggle('hidden', !itemText.includes(value))
+  })
+  if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
+    resetSuggestionsList()
+  }
+}
+
+async function handleAddItem() {
+  resetSuggestionsList()
+
+  const sItems = state.get('shopping-list')
+  const inputEl = document.querySelector('[name="new-item')
+
+  const item = inputEl.value.trim()
+  if (!item.length) return
+
+  if (sItems.includes(item)) {
+    setMessage({ message: `${item} alerady on the list` })
+    inputEl.value = ''
+    return
+  }
+
+  sItems.unshift(item)
+  inputEl.value = ''
+
+  const { error } = upodateShoppingList(sItems.join(','))
+  if (error) {
+    // revert operation
+    inputEl.value = item
+    sItems.shift()
+    setMessage({ message: error, type: 'warn' })
+  }
+  state.set('shopping-list', sItems)
+}
+
+function handleShopSuggestionClick({ item }) {
+  const sItems = state.get('shopping-list')
+  sItems.unshift(item)
+  state.set('shopping-list', sItems)
+  state.set('suggestions-list', [...state.get('suggestions-list')])
+  upodateShoppingList(sItems.join(','))
+}
+
+function handleDeleteSuggestionClick({ item }) {
+  let sItems = state.get('suggestions-list')
+  sItems = sItems.filter((sItem) => sItem !== item)
+  state.set('suggestions-list', sItems)
+  upodateSuggestionsList(sItems.join(','))
+}
+
+function handleDeleteItemClick({ item }) {
+  let sItems = state.get('shopping-list')
+  sItems = sItems.filter((sItem) => sItem !== item)
+  state.set('shopping-list', sItems)
+  upodateShoppingList(sItems.join(','))
 }

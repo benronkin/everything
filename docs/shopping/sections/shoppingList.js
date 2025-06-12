@@ -1,3 +1,7 @@
+/*
+  This custom list controls the the active class of its items and the classes of each item's icons
+*/
+
 import { state } from '../../assets/js/state.js'
 import { createList } from '../../assets/partials/list.js'
 import { shoppingItem } from './shoppingItem.js'
@@ -45,9 +49,11 @@ function react(el) {
       if (child.id === id) {
         child.classList.toggle('active')
         child.querySelector('.fa-trash').classList.toggle('hidden')
+        child.querySelector('.fa-lightbulb').classList.toggle('hidden')
       } else {
         child.classList.remove('active')
         child.querySelector('.fa-trash').classList.add('hidden')
+        child.querySelector('.fa-lightbulb').classList.add('hidden')
       }
     })
   })
