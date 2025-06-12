@@ -112,6 +112,8 @@ async function handleTaskCreate() {
   document
     .getElementById('tasks-list')
     .addChild(createTitleDetailsItem({ id, title }))
+
+  document.querySelector('input[name="task"]').value = ''
 }
 
 /**

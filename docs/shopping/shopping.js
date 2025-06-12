@@ -108,12 +108,16 @@ function react() {
       return
     }
 
-    const suggestionsListEl = document.getElementById('suggestions-list')
-    suggestionsListEl.classList.remove('hidden')
-    suggestionsListEl.querySelectorAll('.suggestion-item').forEach((item) => {
+    const slEl = document.getElementById('suggestions-list')
+    slEl.classList.remove('hidden')
+    slEl.querySelectorAll('.suggestion-item').forEach((item) => {
       const itemText = item.querySelector('span').textContent
       item.classList.toggle('hidden', !itemText.includes(value))
     })
+    // hide list background if no suggestion is visible
+    if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
+      resetSuggestionsList()
+    }
   })
 
   /* augment shopping list when user submits */

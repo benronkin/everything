@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { state } from '../js/state.js'
-import { dangerZone } from '../journal/sections/dangerZone.js'
+import { dangerZone } from '../../journal/sections/dangerZone.js'
 
 let el
 

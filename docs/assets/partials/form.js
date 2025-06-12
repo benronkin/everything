@@ -94,32 +94,37 @@ function build({ el, children }) {
 function listen(el) {
   if (el.querySelector('button')) {
     el.addEventListener('submit', () => handleFormSubmit(el.id))
-  } else {
-    // this handler is needed in cases where the form lacks
-    // a submit type button, yet the form might still submit
-    // without firing its submit event
-    el.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        handleFormSubmit(el.id)
-      }
-    })
-
-    el.addEventListener('keyup', (e) => {
-      state.set(`form-keyup:${el.id}`, {
-        key: e.key,
-        value: el.querySelector('input').value,
-      })
-    })
+    return
   }
 
-  /**
-   *
-   */
-  function handleFormSubmit(id) {
-    state.set(`form-submit:${id}`, { id })
-    log('form sets form-submit with value')
-  }
+  // this handler is needed in cases where the form lacks
+  // a submit type button, yet the form might still submit
+  // without firing its submit event
+  el.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleFormSubmit(el.id)
+    }
+  })
+
+  // for shopping auto-suggest
+  el.addEventListener('keyup', (e) => {
+    // without this, add-task input reloads the page
+    if (e.key === 'Enter') e.preventDefault()
+
+    state.set(`form-keyup:${el.id}`, {
+      key: e.key,
+      value: el.querySelector('input').value,
+    })
+  })
+}
+
+/**
+ *
+ */
+function handleFormSubmit(id) {
+  state.set(`form-submit:${id}`, { id })
+  log('form sets form-submit with value')
 }
 
 // -------------------------------
