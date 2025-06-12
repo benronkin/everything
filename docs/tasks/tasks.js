@@ -93,27 +93,29 @@ async function handleTaskUpdate({ id, section, value }) {
  *
  */
 async function handleTaskCreate() {
-  const title = document
+  const inputEl = document
     .getElementById('tasks-form')
     .querySelector('[name="task"]')
-    .value?.trim()
+
+  const title = inputEl.value?.trim()
 
   if (!title.length) {
     return
   }
 
+  const newChild = createTitleDetailsItem({ id: new Date().getTime(), title })
+  document.getElementById('tasks-list').addChild(newChild)
+  document.querySelector('input[name="task"]').value = ''
+
   const { id, error } = await createTask(title)
 
   if (error) {
+    // revert operation
+    inputEl.value = title
+    newChild.remove()
     setMessage({ message: error, type: 'warn' })
     return
   }
-
-  document
-    .getElementById('tasks-list')
-    .addChild(createTitleDetailsItem({ id, title }))
-
-  document.querySelector('input[name="task"]').value = ''
 }
 
 /**
