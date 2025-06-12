@@ -120,8 +120,12 @@ async function handleTaskCreate() {
  * Handle the tasks trash click
  */
 async function handleTaskDelete({ id }) {
+  const taskToDelete = document.getElementById(id)
+  taskToDelete.classList.add('hidden')
+
   const { error } = await deleteTask(id)
   if (error) {
+    taskToDelete.classList.remove('hidden')
     setMessage({ message: error, type: 'warn' })
     return
   }
