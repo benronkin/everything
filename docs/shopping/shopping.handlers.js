@@ -1,5 +1,6 @@
 import { state } from '../assets/js/state.js'
 import { upodateShoppingList } from './shopping.api.js'
+import { log } from '../assets/js/logger.js'
 
 export async function handleAddItem(item) {
   if (!item.length) return
@@ -14,7 +15,7 @@ export async function handleAddItem(item) {
 
   const resp = await upodateShoppingList(sItems.join(','))
 
-  if (resp) {
+  if (resp?.error) {
     // revert operation
     sItems.shift()
     state.set('shopping-list', sItems)
