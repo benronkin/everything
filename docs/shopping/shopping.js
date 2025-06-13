@@ -15,10 +15,11 @@ import {
 } from './shopping.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
+  build()
+  react()
+
   try {
     setMessage({ message: 'Loading...' })
-
-    build()
 
     handleTokenQueryParam()
 
@@ -26,8 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!token) {
       throw new Error('Token not found locally')
     }
-
-    react()
 
     const resp = await fetchCartAndSuggestions()
     const { shoppingList, shoppingSuggestions } = resp
@@ -52,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.trace(error)
     setMessage({ message: error.message, type: 'danger' })
+
     window.location.href = `../home/index.html?message=${error.message}`
   }
 })
@@ -81,11 +81,34 @@ function build() {
 }
 
 function react() {
-  state.on('icon-click:suggest-icon', 'shopping', handleSuggestIconClick)
+  state.on('icon-click:suggest-icon', 'shopping', handleToggleSuggestionsUI)
+
   state.on('form-keyup:shopping-form', 'shopping', handleFormKeyup)
-  state.on('form-submit:shopping-form', 'shopping', handleAddItem)
-  state.on('item-click:shop-suggestion', 'shopping', handleShopSuggestionClick)
-  state.on('item-click:delete-item', 'shopping', handleDeleteItemClick)
+
+  state.on('form-submit:shopping-form', 'shopping', () => {
+    resetSuggestionsUI()
+    const inputEl = document.querySelector('[name="new-item')
+    const item = inputEl.value.trim().toLowerCase()
+    inputEl.value = ''
+    const { message, error } = handleAddItem(item)
+    if (message) {
+      setMessage({ message })
+      return
+    }
+    if (error) {
+      setMessage({ message: error, type: 'warn' })
+      inputEl.value = item
+    }
+  })
+
+  state.on(
+    'item-click:shop-suggestion',
+    'shopping',
+    handleAddSuggestionToShoppingList
+  )
+
+  state.on('item-click:delete-item', 'shopping', handleDeleteItem)
+
   state.on(
     'item-click:delete-suggestion',
     'shopping',
@@ -109,7 +132,7 @@ function resetSuggestionsUI() {
 // Handlers
 // ------------------------
 
-function handleSuggestIconClick() {
+function handleToggleSuggestionsUI() {
   document
     .getElementById('suggestions-list')
     .classList.toggle(
@@ -138,38 +161,27 @@ function handleFormKeyup({ value }) {
   }
 }
 
-async function handleAddItem() {
-  resetSuggestionsUI()
+async function handleAddItem(item) {
+  if (!item.length) return
 
   const sItems = state.get('shopping-list')
-  const inputEl = document.querySelector('[name="new-item')
-
-  const item = inputEl.value.trim().toLowerCase()
-  if (!item.length) {
-    inputEl.value = ''
-    return
-  }
-
   if (sItems.includes(item)) {
-    setMessage({ message: `${item} alerady on the list` })
-    inputEl.value = ''
-    return
+    return { message: `${item} alerady on the list` }
   }
 
   sItems.unshift(item)
-  inputEl.value = ''
+  state.set('shopping-list', sItems)
 
-  const { error } = upodateShoppingList(sItems.join(','))
+  const { error } = await upodateShoppingList(sItems.join(','))
   if (error) {
     // revert operation
-    inputEl.value = item
     sItems.shift()
-    setMessage({ message: error, type: 'warn' })
+    state.set('shopping-list', sItems)
+    return { error }
   }
-  state.set('shopping-list', sItems)
 }
 
-function handleShopSuggestionClick({ item }) {
+function handleAddSuggestionToShoppingList({ item }) {
   const sItems = state.get('shopping-list')
   sItems.unshift(item)
   state.set('shopping-list', sItems)
@@ -184,7 +196,7 @@ function handleDeleteSuggestionClick({ item }) {
   upodateSuggestionsList(sItems.join(','))
 }
 
-function handleDeleteItemClick({ item }) {
+function handleDeleteItem({ item }) {
   let sItems = state.get('shopping-list')
   sItems = sItems.filter((sItem) => sItem !== item)
   state.set('shopping-list', sItems)

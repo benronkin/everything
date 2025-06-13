@@ -1,6 +1,7 @@
 import { injectStyle } from '../js/ui.js'
 import { insertHtml } from '../js/format.js'
 import { state } from '../js/state.js'
+import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
@@ -13,9 +14,6 @@ const css = `
 // Exports
 // -------------------------------
 
-/**
- * Constuctor of a custom element
- */
 export function create({ id, className, html } = {}) {
   injectStyle(css)
 
@@ -38,21 +36,12 @@ export function create({ id, className, html } = {}) {
 // Helpers
 // -------------------------------
 
-/**
- * Add sub elements to the element
- */
 function build(el) {}
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   // state.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
-/**
- * Set event handlers which can set state.
- */
 function listen(el) {
   // el.addEventListener('click', () => {
   //   state.set('stateVar', 'value')

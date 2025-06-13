@@ -51,30 +51,6 @@ export const newState = {
     this._listeners[key] = cbs.filter(({ callback }) => fn !== callback)
   },
 
-  // auto-update dom elements using each one's value setting property and
-  // a transformation function
-  makeReactive(stateVar, bindings) {
-    // subscribe to this stateVar and
-    // push this callback to _listeners for this stateVar
-    // the callback executes on whatever is set as value for the stateVar
-    this.on(stateVar, 'state.makeReactive', (stateVarValue) => {
-      // go thru the bindings array and use each object member
-      // to set the value of the passed-in element
-      bindings.forEach((binding) => {
-        // a binding can pass either a static val (like 'Delete entry')
-        // or a transformer function that takes a stateVar value and reduces
-        // some of its properties to a single value (like createEntryTitle)
-        // 'prop' is the custom element's preferred defined-property to set
-        // value or textContent or whatever
-        const { selector, prop = 'value', val, transform = (x) => x } = binding
-        const el = document.querySelector(selector)
-        if (el) {
-          el[prop] = val || transform(stateVarValue)
-        }
-      })
-    })
-  },
-
   // local storage
   loadFromStorage() {
     const saved = localStorage.getItem('state')

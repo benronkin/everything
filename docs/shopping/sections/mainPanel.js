@@ -1,8 +1,8 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
 import { shoppingList } from './shoppingList.js'
 import { suggestionsList } from './suggestionsList.js'
+import { addItemForm } from './addItemForm.js'
 // import { state } from '../../assets/js/state.js'
 // import { log } from '../../assets/js/logger.js'
 
@@ -57,17 +57,8 @@ export function mainPanel() {
  * Add sub elements to the element
  */
 function build(el) {
-  el.appendChild(
-    createFormHorizontal({
-      id: 'shopping-form',
-      type: 'text',
-      name: 'new-item',
-      placeholder: 'Add item',
-      autocomplete: 'off',
-      classes: { icon: 'fa-shopping-cart' },
-      disabled: true,
-    })
-  )
+  el.appendChild(addItemForm())
+
   el.appendChild(suggestionsList())
 
   el.appendChild(shoppingList())

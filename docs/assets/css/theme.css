@@ -314,6 +314,12 @@ main {
 .bg-blue0 {
   background-color: var(--blue0) !important;
 }
+.bg-gray0 {
+  background-color: var(--gray0) !important;
+}
+.c-gray3 {
+  color: var(--gray3) !important;
+}
 .c-red3 {
   color: var(--red3) !important;
 }
@@ -380,6 +386,10 @@ main {
 .p-10 {
   padding: 10px !important;
 }
+.r-0 {
+  right: 0 !important;
+}
+
 .span-group span {
   color: var(--gray4);
 }
