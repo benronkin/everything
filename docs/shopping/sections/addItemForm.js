@@ -72,9 +72,21 @@ function react(el) {
   state.on('form-keyup:shopping-form', 'addItemForm', ({ value }) =>
     handleFormKeyup({ el, value })
   )
+
+  state.on('form-submit:shopping-form', 'addItemForm', () => {
+    el.querySelector('#add-to-both-lists-button').classList.add('hidden')
+  })
 }
 
-function listen(el) {}
+function listen(el) {
+  el.querySelector('#add-to-both-lists-button').addEventListener(
+    'click',
+    (e) => {
+      e.target.classList.add('hidden')
+      log('addItemForm hides #add-to-both-lists-button')
+    }
+  )
+}
 
 function handleFormKeyup({ el, value }) {
   if (!value || !value.toString().trim().length) return

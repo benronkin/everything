@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 import { addItemForm } from './addItemForm.js'
+import { handleAddToBothLists } from '../shopping.handlers.js'
 
 let el
 beforeAll(() => {
@@ -14,7 +15,7 @@ function simulateFormValue(value) {
   state.set('form-keyup:shopping-form', { value })
 }
 
-describe('Test addItemForm functionality', () => {
+describe('addItemForm input functionality', () => {
   it('adds undefined', () => {
     simulateFormValue(undefined)
     expect(el.querySelector('#add-to-both-lists-button').classList).toContain(
@@ -70,5 +71,19 @@ describe('Test addItemForm functionality', () => {
     expect(el.querySelector('#shopping-form-icon').classList).toContain(
       'fa-cart-shopping'
     )
+  })
+})
+
+describe('addItemForm addToBothButton functionality', () => {
+  it('adds a new item and clicks addToBothButton', () => {
+    const addToBothEl = el.querySelector('#add-to-both-lists-button')
+    el.querySelector('input').value = 'berries'
+    addToBothEl.dispatchEvent(new Event('click'))
+
+    expect(addToBothEl.classList).toContain('hidden')
+
+    handleAddToBothLists('berries')
+    expect(state.get('shopping-list')).toContain('berries')
+    expect(state.get('suggestions-list')).toContain('berries')
   })
 })

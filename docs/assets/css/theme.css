@@ -345,7 +345,7 @@ main {
   color: var(--gray6);
 }
 .list-item {
-  border: 1px solid var(--gray0);
+  border: 1px solid var(--gray1);
 }
 .list-item.active,
 .list-item.active:hover {

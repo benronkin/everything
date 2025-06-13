@@ -123,8 +123,9 @@ function listen(el) {
  *
  */
 function handleFormSubmit(id) {
-  state.set(`form-submit:${id}`, { id })
-  log('form sets form-submit with value')
+  const stateKey = `form-submit:${id}`
+  state.set(stateKey, { id })
+  log(stateKey)
 }
 
 // -------------------------------

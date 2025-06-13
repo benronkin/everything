@@ -9,6 +9,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { log } from '../assets/js/logger.js'
+import { handleAddToBothLists } from './shopping.handlers.js'
 import {
   fetchCartAndSuggestions,
   upodateShoppingList,
@@ -113,6 +114,15 @@ function react() {
     'shopping',
     handleDeleteSuggestionClick
   )
+
+  state.on('button-click:add-to-both-lists-button', 'shopping', ({ e }) => {
+    e.preventDefault()
+    resetSuggestionsUI()
+    const inputEl = document.querySelector('[name="new-item')
+    const item = inputEl.value.trim().toLowerCase()
+    inputEl.value = ''
+    handleAddToBothLists(item)
+  })
 }
 
 function resetSuggestionsUI() {

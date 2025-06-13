@@ -14,9 +14,11 @@ const css = `
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  margin-bottom: 10px;
   padding: 8px 14px;
   transition: all 0.2s ease-in-out;
+  }
+  .list-item:not(:last-child) {
+    margin-bottom: 10px;
 }
 .list-item .icons {
   display: flex;

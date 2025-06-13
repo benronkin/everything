@@ -14,12 +14,21 @@ export async function handleAddItem(item) {
 
   const resp = await upodateShoppingList(sItems.join(','))
 
-  const { error } = resp
-  if (error) {
+  if (resp) {
     // revert operation
     sItems.shift()
     state.set('shopping-list', sItems)
-    return { error }
+    return { error: resp.error }
   }
   return
+}
+
+export function handleAddToBothLists(item) {
+  let arr = state.get('shopping-list')
+  arr.unshift(item)
+  state.set('shopping-list', [...arr])
+
+  arr = state.get('suggestions-list')
+  arr.unshift(item)
+  state.set('suggestions-list', [...arr])
 }
