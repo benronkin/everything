@@ -16,7 +16,7 @@ describe('Create a task', () => {
     inputEl.value = 'test-1-2-3'
 
     inputEl.dispatchEvent(
-      new KeyboardEvent('keyup', {
+      new KeyboardEvent('keypress', {
         key: 'Enter',
         code: 'Enter',
         keyCode: 13, // optional but useful for older handlers

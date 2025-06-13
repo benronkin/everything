@@ -24,12 +24,14 @@ const css = `
 export function shoppingItem({ item }) {
   injectStyle(css)
 
+  if (!item) throw new Error('Oops, you did not pass item as an object prop')
+
   const el = createListItem({
     html: [
       createDiv({
         className: 'flex w-100',
         html: [
-          createSpan({ html: item }),
+          createSpan({ className: 'title', html: item }),
           createDiv({
             className: 'icons',
             html: [
@@ -68,13 +70,14 @@ function react(el) {
 }
 
 function listen(el) {
+  el.addEventListener('click', () => handleShoppingItemClick(el))
   el.querySelector('.fa-trash').addEventListener('click', () =>
     handleTrashClick(el)
   )
-
-  el.querySelector('.fa-lightbulb').addEventListener('click', () =>
+  el.querySelector('.fa-lightbulb').addEventListener('click', (e) => {
+    e.stopPropagation()
     handleAddToSuggestionsClick(el)
-  )
+  })
 }
 
 // -------------------------------
@@ -88,6 +91,14 @@ function handleToolbarSortClick(el) {
   el.setDraggable(isSorting)
 }
 
+function handleShoppingItemClick(el) {
+  if (!el.classList.contains('active')) return
+
+  const item = el.querySelector('span').textContent
+  const isIncluded = state.get('suggestions-list').includes(item)
+  el.querySelector('.fa-lightbulb').classList.toggle('hidden', isIncluded)
+}
+
 function handleTrashClick(el) {
   state.set('item-click:delete-item', {
     id: el.id,
@@ -96,10 +107,13 @@ function handleTrashClick(el) {
 }
 
 function handleAddToSuggestionsClick(el) {
-  state.set('item-click:delete-item', {
-    id: el.id,
-    item: el.querySelector('span').textContent,
-  })
+  const item = el.querySelector('.title').innerHTML
+  const suggestions = state.get('suggestions-list')
+  if (suggestions.includes(item)) return
+  suggestions.push(item)
+  suggestions.sort()
+  state.set('suggestions-list', [...suggestions])
+  el.querySelector('.fa-lightbulb').classList.add('hidden')
 }
 
 function setDraggable(isDraggable) {

@@ -1,6 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
-// import { log } from '../js/logger.js'
+import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
@@ -59,7 +59,10 @@ export function createIcon({
  *
  */
 function listen(el) {
-  el.addEventListener('click', () => {
+  el.addEventListener('click', (e) => {
+    // prevent icon parents from responding to these events
+    // while listening for their own clicks
+    e.stopPropagation()
     if (!el._classes) return
     if (el._classes.secondary) {
       el._onPrimaryClass = !el._onPrimaryClass
@@ -113,9 +116,6 @@ function handleClasses({ el, classes }) {
 // Object methods
 // -------------------------------
 
-/**
- * Shake it, baby
- */
 function shake() {
   this.classList.add('shake')
   setTimeout(() => this.classList.remove('shake'), 300)

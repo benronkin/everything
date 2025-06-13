@@ -48,8 +48,12 @@ function react(el) {
     el.getChildren().forEach((child) => {
       if (child.id === id) {
         child.classList.toggle('active')
-        child.querySelector('.fa-trash').classList.toggle('hidden')
-        child.querySelector('.fa-lightbulb').classList.toggle('hidden')
+        child
+          .querySelector('.fa-trash')
+          .classList.toggle('hidden', !child.classList.contains('active'))
+        child
+          .querySelector('.fa-lightbulb')
+          .classList.toggle('hidden', !child.classList.contains('active'))
       } else {
         child.classList.remove('active')
         child.querySelector('.fa-trash').classList.add('hidden')

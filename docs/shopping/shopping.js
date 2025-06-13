@@ -93,7 +93,11 @@ function react() {
   )
 }
 
-function resetSuggestionsList() {
+function resetSuggestionsUI() {
+  const suggestEl = document.querySelector('#suggest-icon')
+  suggestEl.classList.remove('primary')
+  suggestEl.classList.add('bordered')
+
   const suggestionsListEl = document.getElementById('suggestions-list')
   suggestionsListEl.classList.add('hidden')
   suggestionsListEl.querySelectorAll('.suggestion-item').forEach((el) => {
@@ -106,7 +110,6 @@ function resetSuggestionsList() {
 // ------------------------
 
 function handleSuggestIconClick() {
-  resetSuggestionsList()
   document
     .getElementById('suggestions-list')
     .classList.toggle(
@@ -120,7 +123,7 @@ function handleFormKeyup({ value }) {
     return
 
   if (!value.trim().length) {
-    resetSuggestionsList()
+    resetSuggestionsUI()
     return
   }
 
@@ -131,18 +134,21 @@ function handleFormKeyup({ value }) {
     item.classList.toggle('hidden', !itemText.includes(value))
   })
   if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
-    resetSuggestionsList()
+    resetSuggestionsUI()
   }
 }
 
 async function handleAddItem() {
-  resetSuggestionsList()
+  resetSuggestionsUI()
 
   const sItems = state.get('shopping-list')
   const inputEl = document.querySelector('[name="new-item')
 
-  const item = inputEl.value.trim()
-  if (!item.length) return
+  const item = inputEl.value.trim().toLowerCase()
+  if (!item.length) {
+    inputEl.value = ''
+    return
+  }
 
   if (sItems.includes(item)) {
     setMessage({ message: `${item} alerady on the list` })
@@ -183,4 +189,6 @@ function handleDeleteItemClick({ item }) {
   sItems = sItems.filter((sItem) => sItem !== item)
   state.set('shopping-list', sItems)
   upodateShoppingList(sItems.join(','))
+  // force reactivity update
+  state.set('suggestions-list', [...state.get('suggestions-list')])
 }

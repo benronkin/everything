@@ -134,13 +134,16 @@ function deleteChild(id) {
   if (item) {
     item.remove()
   }
+  if (!this.getChildren().length && this.querySelector('.empty-state')) {
+    this.querySelector('.empty-state').classList.remove('hidden')
+  }
 }
 
 /**
  * remove all sueprListItems
  */
 function deleteChildren() {
-  this.getChildren().forEach((i) => i.remove())
+  this.getChildren().forEach((child) => this.deleteChild(child.id))
   return this // for chaining
 }
 

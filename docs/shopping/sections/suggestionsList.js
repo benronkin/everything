@@ -26,9 +26,6 @@ export function suggestionsList() {
 // Helpers
 // -------------------------------
 
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('suggestions-list', 'suggestionsList', (suggestionArr) => {
     el.deleteChildren()
