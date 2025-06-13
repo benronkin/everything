@@ -21,9 +21,8 @@ import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage({ message: 'Loading...' })
-
     build()
+    setMessage({ message: 'Loading...' })
 
     handleTokenQueryParam()
 
