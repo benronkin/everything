@@ -1,5 +1,5 @@
 import { state } from '../assets/js/state.js'
-import { upodateShoppingList } from './shopping.api.js'
+import { upodateShoppingList, upodateSuggestionsList } from './shopping.api.js'
 import { log } from '../assets/js/logger.js'
 
 export async function handleAddItem(item) {
@@ -24,12 +24,26 @@ export async function handleAddItem(item) {
   return
 }
 
-export function handleAddToBothLists(item) {
+export async function handleAddToBothLists(item) {
+  if (!item || !item.trim().length) {
+    log('a visible addToBothLists was clicked even though input was empty')
+    return
+  }
   let arr = state.get('shopping-list')
   arr.unshift(item)
   state.set('shopping-list', [...arr])
 
   arr = state.get('suggestions-list')
   arr.unshift(item)
+  arr.sort()
   state.set('suggestions-list', [...arr])
+
+  const resp = await upodateSuggestionsList(arr.join(','))
+
+  if (resp?.error) {
+    // revert operation
+    arr = arr.filter((i) => i !== item)
+    state.set('suggestions-list', [...arr])
+    return { error: resp.error }
+  }
 }

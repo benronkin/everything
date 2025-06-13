@@ -79,13 +79,11 @@ function react(el) {
 }
 
 function listen(el) {
-  el.querySelector('#add-to-both-lists-button').addEventListener(
-    'click',
-    (e) => {
-      e.target.classList.add('hidden')
-      log('addItemForm hides #add-to-both-lists-button')
-    }
-  )
+  const addToBothEl = el.querySelector('#add-to-both-lists-button')
+  addToBothEl.addEventListener('click', () => {
+    addToBothEl.classList.add('hidden')
+    log('addItemForm hides #add-to-both-lists-button')
+  })
 }
 
 function handleFormKeyup({ el, value }) {
