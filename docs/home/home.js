@@ -1,3 +1,8 @@
+/*
+ Hiding document.querySelector('#main-panel') by default to avoid flicker
+ while waiting to get tasks
+ */
+
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { setMessage } from '../assets/js/ui.js'
 import { state } from '../assets/js/state.js'
@@ -9,9 +14,8 @@ import { createFooter } from '../assets/composites/footer.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage({ message: 'Loading...' })
-
     build()
+    setMessage({ message: 'Loading...' })
 
     const urlParams = new URLSearchParams(window.location.search)
 
@@ -25,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (message) {
       setMessage({ message, type: 'danger' })
+      document.querySelector('#main-panel').classList.remove('hidden')
       return
     }
 
@@ -38,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         message: 'Authentication failed',
         position: 'BOTTOM_RIGHT',
       })
+      document.querySelector('#main-panel').classList.remove('hidden')
       return
     }
 
@@ -54,9 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Helpers
 // ------------------------
 
-/**
- *
- */
 export function getSiteMap() {
   const _dict = {
     admin: '../admin/index.html',
@@ -75,11 +78,6 @@ export function getSiteMap() {
   }
 }
 
-/**
- * Redirect to Tasks if there
- * are open tasks. Otherwise redirect to last visited
- * page.
- */
 export function getNextPage(tasks, defaultPage) {
   const siteMap = getSiteMap()
   if (tasks.length) {
@@ -91,15 +89,14 @@ export function getNextPage(tasks, defaultPage) {
   return siteMap.getPath('recipes')
 }
 
-/**
- *
- */
 export function build() {
   document.head.title = 'The Evereything App | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 
-  const wrapperEl = createDiv({ className: 'wrapper' })
+  const wrapperEl = createDiv({
+    className: 'wrapper',
+  })
   body.prepend(wrapperEl)
 
   wrapperEl.appendChild(nav())
