@@ -69,30 +69,38 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('form-keyup:shopping-form', 'addItemForm', handleFormKeyup)
+  state.on('form-keyup:shopping-form', 'addItemForm', ({ value }) =>
+    handleFormKeyup({ el, value })
+  )
 }
 
 function listen(el) {}
 
-function handleFormKeyup({ value }) {
+function handleFormKeyup({ el, value }) {
+  if (!value || !value.toString().trim().length) return
+
   const inShoppingList = state.get('shopping-list').includes(value)
   const inSuggestionsList = state.get('suggestions-list').includes(value)
 
-  document
-    .querySelector('#add-to-both-lists-button')
-    .classList.toggle('hidden', inShoppingList || inSuggestionsList)
+  el.querySelector('#add-to-both-lists-button').classList.toggle(
+    'hidden',
+    inShoppingList || inSuggestionsList
+  )
 
-  document
-    .querySelector('input[name="new-item"]')
-    .classList.toggle('c-gray3', inShoppingList)
+  el.querySelector('input').classList.toggle('c-gray3', inShoppingList)
 
-  document
-    .querySelector('#shopping-form-icon')
-    .classList.toggle('fa-cart-arrow-down', inShoppingList)
-  document
-    .querySelector('#shopping-form-icon')
-    .classList.toggle('c-gray3', inShoppingList)
-  document
-    .querySelector('#shopping-form-icon')
-    .classList.toggle('fa-cart-shopping', !inShoppingList)
+  el.querySelector('#shopping-form-icon').classList.toggle(
+    'c-gray3',
+    inShoppingList
+  )
+
+  el.querySelector('#shopping-form-icon').classList.toggle(
+    'fa-cart-arrow-down',
+    inShoppingList
+  )
+
+  el.querySelector('#shopping-form-icon').classList.toggle(
+    'fa-cart-shopping',
+    !inShoppingList
+  )
 }

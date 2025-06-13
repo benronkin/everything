@@ -1,4 +1,5 @@
 import { state } from '../assets/js/state.js'
+import { handleAddItem } from './shopping.handlers.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -90,13 +91,11 @@ function react() {
     const inputEl = document.querySelector('[name="new-item')
     const item = inputEl.value.trim().toLowerCase()
     inputEl.value = ''
-    const { message, error } = handleAddItem(item)
-    if (message) {
-      setMessage({ message })
-      return
-    }
-    if (error) {
-      setMessage({ message: error, type: 'warn' })
+    const resp = handleAddItem(item)
+    if (resp.message) {
+      setMessage({ message: resp.message })
+    } else if (resp.error) {
+      setMessage({ message: resp.error, type: 'warn' })
       inputEl.value = item
     }
   })
@@ -158,26 +157,6 @@ function handleFormKeyup({ value }) {
   })
   if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
     resetSuggestionsUI()
-  }
-}
-
-async function handleAddItem(item) {
-  if (!item.length) return
-
-  const sItems = state.get('shopping-list')
-  if (sItems.includes(item)) {
-    return { message: `${item} alerady on the list` }
-  }
-
-  sItems.unshift(item)
-  state.set('shopping-list', sItems)
-
-  const { error } = await upodateShoppingList(sItems.join(','))
-  if (error) {
-    // revert operation
-    sItems.shift()
-    state.set('shopping-list', sItems)
-    return { error }
   }
 }
 
