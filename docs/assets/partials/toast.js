@@ -1,5 +1,6 @@
 import { createIcon } from './icon.js'
 import { injectStyle } from '../js/ui.js'
+import { createDiv } from './div.js'
 
 // -------------------------------
 // Globals
@@ -15,7 +16,9 @@ const css = `
   border-radius: var(--border-radius);
   font-size: 0.875rem;
   z-index: 9999;
-  transition: opacity 0.3s ease;
+  transform: translateY(-1rem);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .toast[data-position="top-left"] { 
   top: 0.6rem; 
@@ -78,116 +81,32 @@ const positionMap = {
 // Exported functions
 // -------------------------------
 
-/**
- * Constuctor of a custom toast element
- */
 export function createToast({
   id = '',
-  className = '',
+  className,
   autoClose = 1500,
-  events = { click: null },
   showProgress = true,
   position = 'TOP_RIGHT',
-  value = '',
+  message = '',
 } = {}) {
   injectStyle(css)
 
-  const el = document.createElement('div')
+  const el = createDiv({
+    id,
+    className: `toast ${className}.trim()`,
+    html: message,
+  })
+
+  build(el, autoClose)
 
   el.removeToast = removeToast.bind(el)
   el.updateProgress = updateProgress.bind(el)
-
-  for (const [k, v] of Object.entries(events)) {
-    if (k === 'click' && autoClose) {
-      el.addEventListener('click', () => {
-        v && v()
-        el.removeToast()
-      })
-    } else {
-      el.addEventListener(k, v)
-    }
-  }
-
-  Object.defineProperties(el, {
-    autoClose: {
-      get() {
-        return el.dataset.autoClose
-      },
-      set(newValue = '') {
-        const parsed = parseInt(newValue, 10)
-        if (!parsed || isNaN(parsed)) {
-          // can pass null to keep toast open
-          return
-        }
-
-        el.dataset.autoClose = parsed
-        el._timeRemaining = parsed
-
-        clearTimeout(el._closeTimeout)
-        el._closeTimeout = setTimeout(() => el.removeToast(), parsed)
-
-        clearInterval(el._progressInterval)
-        if (el._showProgress) {
-          el._progressInterval = setInterval(() => {
-            el._timeRemaining -= 10
-            el.style.setProperty('--progress', el._timeRemaining / parsed)
-          }, 10)
-        }
-      },
-    },
-    classes: {
-      get() {
-        return el.className
-      },
-      set(newValue = '') {
-        el.className = newValue
-      },
-    },
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = newValue
-      },
-    },
-    position: {
-      get() {
-        return el.dataset.position
-      },
-      set(newValue = 'TOP_RIGHT') {
-        el.dataset.position = positionMap[newValue]
-      },
-    },
-    value: {
-      get() {
-        return el.querySelector('[data-id="toast-message"]')?.innerHTML ?? ''
-      },
-      set(newValue) {
-        const messageDiv = el.querySelector('[data-id="toast-message"]')
-        if (!messageDiv) return
-        if (typeof newValue === 'string') {
-          newValue = document.createTextNode(newValue)
-        }
-        messageDiv.innerHTML = ''
-        messageDiv.appendChild(newValue)
-      },
-    },
-  })
-
-  addElementParts(el, autoClose)
-
-  el.value = value
-  id && (el.dataId = id)
-  el.classes = `toast ${className}`
   el._showProgress = showProgress
   el.autoClose = autoClose
 
-  position && (el.position = position)
+  position && (el.dataset.position = positionMap[position])
   el.style.animation = `${
-    el.position.includes('left') ? 'slideInLeft' : 'slideInRight'
+    el.dataset.position.includes('left') ? 'slideInLeft' : 'slideInRight'
   } 300ms ease forwards`
 
   return el
@@ -201,10 +120,6 @@ export function removeToasts() {
 }
 
 // -------------------------------
-// Event handlers
-// -------------------------------
-
-// -------------------------------
 // Helpers
 // -------------------------------
 
@@ -212,7 +127,7 @@ export function removeToasts() {
  * Add sub elements to the element. No need
  * to return the element.
  */
-function addElementParts(el, autoClose) {
+function build(el, autoClose) {
   const messageDiv = document.createElement('div')
   messageDiv.dataset.id = 'toast-message'
   el.appendChild(messageDiv)
@@ -234,9 +149,13 @@ function removeToast() {
   clearTimeout(this._closeTimeout)
   clearInterval(this._progressInterval)
   this.style.animation = `${
-    this.position.includes('left') ? 'slideOutLeft' : 'slideOutRight'
+    this.dataset.position.includes('left') ? 'slideOutLeft' : 'slideOutRight'
   } 300ms ease forwards`
-  this.remove()
+
+  this.addEventListener('animationend', function handler() {
+    this.removeEventListener('animationend', handler)
+    this.remove()
+  })
 }
 
 /**

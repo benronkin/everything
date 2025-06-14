@@ -82,6 +82,7 @@ export function resizeTextarea(textarea) {
  */
 export function setMessage({
   message,
+  className,
   type = 'message',
   autoClose = 3000,
   position = 'BOTTOM_RIGHT',
@@ -91,9 +92,6 @@ export function setMessage({
     removeToasts()
     return
   }
-
-  let value = message
-  let className = null
 
   function _createWarnMessage(message) {
     const iconEl = createIcon({ className: 'fa-circle-exclamation' })
@@ -106,23 +104,22 @@ export function setMessage({
   switch (type) {
     case 'danger':
       removeToasts()
-      value = _createWarnMessage(message)
+      message = _createWarnMessage(message)
       className = 'danger'
       autoClose = null
       break
     case 'quiet':
       removeToasts()
-      value = message
       className = 'quiet'
       break
     case 'warn':
-      value = _createWarnMessage(message)
+      message = _createWarnMessage(message)
       className = 'warn'
       break
   }
 
   const toast = createToast({
-    value,
+    message,
     className,
     autoClose,
     showProgress: true,

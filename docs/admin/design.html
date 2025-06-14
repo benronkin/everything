@@ -33,8 +33,8 @@
       </main>
     </div>
     <script type="module">
-      import { getWebApp } from '../js/io.js'
-      import { state } from '../js/state.js'
+      import { getWebApp } from '../assets/js/io.js'
+      import { state } from '../assets/js/state.js'
       import { createFileInput } from '../assets/partials/fileInput.js'
       import { createFormHorizontal } from '../assets/partials/formHorizontal.js'
       import { createFormField } from '../assets/partials/formField.js'
@@ -46,7 +46,8 @@
       import { createSelect } from '../assets/partials/select.js'
       import { createModalDelete } from '../assets/composites/modalDelete.js'
       import { createCollapsibleGroup } from '../assets/partials/collapsibleGroup.js'
-      import { setMessage } from '../js/ui.js'
+      import { setMessage } from '../assets/js/ui.js'
+      import { removeToasts } from '../assets/partials/toast.js'
 
       const parent = document.querySelector('#parent')
 
@@ -120,7 +121,8 @@
         })
       )
 
-      setMessage({ message: 'this is a quiet toast', type: 'quiet' })
+      setMessage({ message: 'this is a dangerous toast', type: 'danger' })
+      setTimeout(() => removeToasts(), 2000)
     </script>
   </body>
 </html>

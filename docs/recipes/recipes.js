@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }))
     categories.unshift({ value: '', label: 'Category' })
 
+    setMessage()
     state.set('main-documents', recipes)
     state.set('recipe-categories', categories)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'recipes')
-    setMessage()
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
