@@ -2,12 +2,15 @@ import { injectStyle } from '../js/ui.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
 import { createIcon } from '../partials/icon.js'
+import { state } from '../js/state.js'
+import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
 // -------------------------------
 
 const css = `
+
 nav {
   background: var(--nav-gradient);
   display: flex;
@@ -38,11 +41,11 @@ nav .brand h3 {
   white-space: nowrap;
   font-weight: 600;
   letter-spacing: 0.5px;
-  }
+  cursor: pointer;
+}
 nav .brand h3,
 nav .brand i:hover {      
   color: var(--purple3);
-  cursor: default;
 }
 `
 
@@ -56,6 +59,7 @@ export function createNav({ title, disableRightDrawer = false }) {
   const el = document.createElement('nav')
 
   build({ el, disableRightDrawer })
+  listen(el)
 
   el.querySelector('h3').innerHTML = title
 
@@ -66,9 +70,6 @@ export function createNav({ title, disableRightDrawer = false }) {
 // Helpers
 // -------------------------------
 
-/**
- * Add sub elements to the element
- */
 function build({ el, disableRightDrawer }) {
   const containerEl = createDiv({ className: 'container' })
   el.appendChild(containerEl)
@@ -86,4 +87,12 @@ function build({ el, disableRightDrawer }) {
       })
     )
   }
+}
+
+function listen(el) {
+  el.querySelector('.brand').addEventListener('click', () => {
+    if (!document.querySelector('#left-panel')) return
+    state.set('app-mode', 'left-panel')
+    state.set('active-doc', null)
+  })
 }
