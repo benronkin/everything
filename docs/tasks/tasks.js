@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('main-documents', tasks)
     state.set('app-mode', 'main-panel')
     state.set('default-page', 'tasks')
+    setMessage()
     window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)

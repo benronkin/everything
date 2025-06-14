@@ -99,6 +99,21 @@ export function createToast({
 
   build(el, autoClose)
 
+  if (autoClose) {
+    el._closeTimeout = setTimeout(() => {
+      el.removeToast()
+    }, autoClose)
+
+    el._progressInterval = setInterval(() => {
+      const progress = parseFloat(el.style.getPropertyValue('--progress') || 1)
+      const newProgress = Math.max(0, progress - 0.01)
+      el.style.setProperty('--progress', newProgress)
+      if (newProgress === 0) {
+        clearInterval(el._progressInterval)
+      }
+    }, autoClose / 100)
+  }
+
   el.removeToast = removeToast.bind(el)
   el.updateProgress = updateProgress.bind(el)
   el._showProgress = showProgress
@@ -123,10 +138,6 @@ export function removeToasts() {
 // Helpers
 // -------------------------------
 
-/**
- * Add sub elements to the element. No need
- * to return the element.
- */
 function build(el, autoClose) {
   const messageDiv = document.createElement('div')
   messageDiv.dataset.id = 'toast-message'
@@ -134,6 +145,10 @@ function build(el, autoClose) {
 
   if (autoClose) {
     const iconEl = createIcon({ classes: { primary: 'fa-close' } })
+    iconEl.addEventListener('click', (event) => {
+      event.stopPropagation()
+      el.removeToast()
+    })
     el.prepend(iconEl)
 
     const progressDiv = document.createElement('div')
