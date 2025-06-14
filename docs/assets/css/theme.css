@@ -317,6 +317,24 @@ main {
 .bg-gray0 {
   background-color: var(--gray0) !important;
 }
+.bg-yellow5 {
+  background-color: var(--yellow5) !important;
+}
+.bookmarks-section .span-group h5,
+.bookmarks-section .span-group i {
+  color: var(--gray3);
+}
+.bookmarks-section .bookmark {
+  background: var(--gray0);
+  color: var(--gray5);
+  transition: all 0.2s ease-in-out;
+}
+.bookmarks-section .bookmark:hover {
+  color: var(--purple2);
+}
+.c-gray2 {
+  color: var(--gray2) !important;
+}
 .c-gray3 {
   color: var(--gray3) !important;
 }

@@ -1,7 +1,7 @@
-import { injectStyle } from '../js/ui.js'
-import { insertHtml } from '../js/format.js'
-import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
+import { injectStyle } from '../../assets/js/ui.js'
+import { insertHtml } from '../../assets/js/format.js'
+import { state } from '../../assets/js/state.js'
+import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Globals

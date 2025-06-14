@@ -97,7 +97,7 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createRightDrawer({ active }) {
+export function createRightDrawer({ active } = {}) {
   injectStyle(css)
 
   const el = createList({
