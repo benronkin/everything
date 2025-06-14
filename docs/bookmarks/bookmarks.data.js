@@ -7,12 +7,12 @@ export const bookmarks = [
         url: 'https://www.reddit.com',
       },
       {
-        html: 'Power & Politics',
-        url: 'https://www.cbc.ca/listen/cbc-podcasts/123-power-and-politics',
+        html: 'CBC Podcasts',
+        url: 'https://www.cbc.ca/listen/cbc-podcasts',
       },
       {
-        html: 'Podcasts',
-        url: 'https://open.spotify.com/home?facet=podcasts-chip',
+        html: 'Music',
+        url: 'https://open.spotify.com/home',
       },
       {
         className: 'c-gray2 bg-yellow5',
