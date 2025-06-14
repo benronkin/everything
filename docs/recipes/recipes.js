@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('recipe-categories', categories)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'recipes')
+    setMessage()
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })

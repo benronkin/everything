@@ -1,6 +1,7 @@
 import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createToast, removeToasts } from '../../assets/partials/toast.js'
+import { log } from './logger.js'
 
 // ----------------------
 // Globals
