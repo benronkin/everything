@@ -27,7 +27,8 @@
       .bookmark-div {
         margin: 5px;
         padding: 5px 10px;
-        background-color: var(--blue0);
+        background-color: var(--purple0);
+        color: var(--gray4);
         border-radius: 10px;
         min-width: 40px;
         text-align: center;
@@ -95,24 +96,53 @@
 
       <div id="bookmarks-container">
         <div id="bookmarks">
+          <h5 class="mb-0 c-gray3">Everything</h5>
           <div class="bookmark-row">
-            <h5><i class="fa-solid fa-web-awesome"></i> Everything</h5>
             <div class="bookmarks-holder">
-              <div
-                class="bookmark-div"
-                style="background-color: rgb(214, 27, 74)"
-              >
+              <div class="bookmark-div">
                 <a
                   href="https://benronkin.github.io/everything/tasks/index.html"
                   class="bookmark-link"
-                  ><i class="fa-solid fa-web-awesome"></i> Tasks</a
+                  ><i class="fa-solid fa-list-check"></i> Tasks</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://benronkin.github.io/everything/reicpes/index.html"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-cake-candles"></i> Recipes</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://benronkin.github.io/everything/shopping/index.html"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-cart-shopping"></i> Shopping</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://benronkin.github.io/everything/notes/index.html"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-note-sticky"></i> Notes</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://benronkin.github.io/everything/journal/index.html"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-book"></i> Journal</a
                 >
               </div>
             </div>
           </div>
 
+          <h5 class="mt-40 mb-0 c-gray3">Fun</h5>
           <div class="bookmark-row">
-            <h5>Fun</h5>
             <div class="bookmarks-holder">
               <div class="bookmark-div">
                 <a href="https://www.reddit.com" class="bookmark-link"
@@ -153,8 +183,8 @@
             </div>
           </div>
 
+          <h5 class="mt-40 mb-0 c-gray3">Utils</h5>
           <div class="bookmark-row" data-topic="fun">
-            <h5>Utils</h5>
             <div class="bookmarks-holder">
               <div class="bookmark-div">
                 <a
@@ -196,8 +226,8 @@
             </div>
           </div>
 
+          <h5 class="mt-40 mb-0 c-gray3">Services</h5>
           <div class="bookmark-row">
-            <h5>Services</h5>
             <div class="bookmarks-holder">
               <div class="bookmark-div">
                 <a href="https://thespiceway.com" class="bookmark-link" title=""
@@ -230,8 +260,8 @@
             </div>
           </div>
 
+          <h5 class="mt-40 mb-0 c-gray3">Local</h5>
           <div class="bookmark-row">
-            <h5>Local</h5>
             <div class="bookmarks-holder">
               <div class="bookmark-div">
                 <a
@@ -261,11 +291,11 @@
 
           <!-- ARCHIVE ROW -->
 
+          <h5 class="mt-40 mb-0 c-gray3" id="archive-toggle">
+            <i class="fa-solid fa-caret-right"></i>
+            Archive
+          </h5>
           <div class="bookmark-row">
-            <h5 id="archive-toggle">
-              <i class="fa-solid fa-caret-right"></i>
-              Archive
-            </h5>
             <div class="bookmarks-holder hidden">
               <div class="bookmark-div">
                 <a
