@@ -8,22 +8,26 @@ const css = `
 footer {
   display: flex;
   align-items: center;
-  padding: 20px;
-  text-align: center;
+  padding: 0;
   font-size: 0.85rem;
-  height: 50px;
+  height: 25px;
+  }
+footer .container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 auto;
 }
-#version-container {
-  margin-left: 20px;
-  font-size: 0.9rem;
+footer span {
+  font-size: 0.75rem;
+  margin: 0;
+  padding: 0;
 }
 `
 
 const html = `
 <div class="container">
-    <div id="version-container">
-      <span>Version: </span><span id="version-number">5.0.1</span>
-    </div>
+  <span>Version: </span><span id="version-number">5.0.1</span>
 </div>
 `
 
