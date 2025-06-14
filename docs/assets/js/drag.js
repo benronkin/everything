@@ -1,3 +1,5 @@
+import { state } from './state.js'
+
 // -------------------------------
 // Exported functions
 // -------------------------------
@@ -46,12 +48,7 @@ function handleDragStart(e) {
 function handleDragEnd(e) {
   const el = e.target.closest('.draggable-target')
   el.classList.remove('dragging')
-  el.dispatchEvent(
-    new CustomEvent('list-changed', {
-      bubbles: true,
-      detail: { action: 'drag' },
-    })
-  )
+  state.set('drag-end', { id: el.id })
 }
 
 // -------------------------------
@@ -80,24 +77,24 @@ function enableDragContainer(e) {
  * Make an existing DOM element draggable
  */
 function makeElementDraggable(elem) {
-  elem.selected = false
-  elem.draggable = true
   elem.addEventListener('dragstart', handleDragStart)
   elem.addEventListener('touchstart', handleDragStart)
   elem.addEventListener('dragend', handleDragEnd)
   elem.addEventListener('touchend', handleDragEnd)
+
+  elem.querySelectorAll('textarea').forEach((el) => (el.disabled = true))
 }
 
 /**
  * Break an existing DOM element draggable
  */
 function breakElementDraggable(elem) {
-  elem.draggable = false
-
   elem.removeEventListener('dragstart', handleDragStart)
   elem.removeEventListener('touchstart', handleDragStart)
   elem.removeEventListener('dragend', handleDragEnd)
   elem.removeEventListener('touchend', handleDragEnd)
+
+  elem.querySelectorAll('textarea').forEach((el) => delete el.disabled)
 }
 
 /**

@@ -61,6 +61,7 @@ export function createTitleDetailsItem({
   injectStyle(css)
 
   const el = createDiv({ id, className: `td-item ${className}`.trim() })
+  el.classList.add('draggable-target')
 
   build(el)
   react(el)
@@ -173,7 +174,8 @@ function listen(el) {
  *
  */
 function setDraggable(isDraggable) {
-  this.classList.toggle('draggable-target', isDraggable)
+  this.draggable = isDraggable
+
   this.querySelector('.sorter').classList.toggle('hidden', !isDraggable)
   this.querySelector('.expander').classList.toggle('hidden', isDraggable)
 }

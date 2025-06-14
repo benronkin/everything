@@ -8,7 +8,13 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createTitleDetailsItem } from '../assets/partials/titleDetailsItem.js'
 import { setMessage } from '../assets/js/ui.js'
-import { createTask, deleteTask, fetchTasks, updateTask } from './tasks.api.js'
+import {
+  createTask,
+  deleteTask,
+  fetchTasks,
+  update,
+  updateTask,
+} from './tasks.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -71,13 +77,14 @@ function build() {
  */
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
+
   state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
+
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
+
+  state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
 }
 
-/**
- * Handle task textarea loses focus
- */
 async function handleTaskUpdate({ id, section, value }) {
   try {
     const { error } = await updateTask({ id, section, value })
@@ -89,9 +96,6 @@ async function handleTaskUpdate({ id, section, value }) {
   }
 }
 
-/**
- *
- */
 async function handleAddTask() {
   const inputEl = document
     .getElementById('tasks-form')
@@ -115,9 +119,6 @@ async function handleAddTask() {
   }
 }
 
-/**
- * Handle the tasks trash click
- */
 async function handleTaskDelete({ id }) {
   const taskToDelete = document.getElementById(id)
   taskToDelete.classList.add('hidden')
@@ -131,13 +132,13 @@ async function handleTaskDelete({ id }) {
   document.getElementById('tasks-list').deleteChild(id)
 }
 
-/**
- * Handle sort switch click
- */
-function handleSortSwitchClick() {
-  if (sortSwitch.value) {
-    tasksListEl.enableDragging()
-  } else {
-    tasksListEl.enableClicking()
+async function handleTaskDragged() {
+  const tasksListEl = document.querySelector('#tasks-list')
+  const tdItems = [...tasksListEl.querySelectorAll('.td-item')]
+  const ids = tdItems.map((tdItem, i) => ({ id: tdItem.id, sort_order: i }))
+  const { error } = await update(ids)
+  if (error) {
+    setMessage({ message: error })
+    return
   }
 }
