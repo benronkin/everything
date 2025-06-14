@@ -123,6 +123,8 @@ function react() {
     inputEl.value = ''
     handleAddToBothLists(item)
   })
+
+  state.on('list-dragged:shopping-list', 'tasks', handleItemDragged)
 }
 
 function resetSuggestionsUI() {
@@ -192,4 +194,11 @@ function handleDeleteItem({ item }) {
   upodateShoppingList(sItems.join(','))
   // force reactivity update
   state.set('suggestions-list', [...state.get('suggestions-list')])
+}
+
+async function handleItemDragged() {
+  const shoppingListEl = document.querySelector('#shopping-list')
+  const items = [...shoppingListEl.querySelectorAll('.list-item')]
+  const values = items.map((item) => item.querySelector('span').textContent)
+  upodateShoppingList(values.join(','))
 }

@@ -53,6 +53,8 @@ export function shoppingItem({ item }) {
 
   el.setDraggable = setDraggable.bind(el)
 
+  el.setDraggable(true)
+
   react(el)
   listen(el)
 
@@ -117,6 +119,8 @@ function handleAddToSuggestionsClick(el) {
 }
 
 function setDraggable(isDraggable) {
+  this.draggable = isDraggable
+
   this.classList.remove('active')
   this.classList.toggle('draggable-target', isDraggable)
   this.querySelector('.fa-sort').classList.toggle('hidden', !isDraggable)

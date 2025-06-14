@@ -5,6 +5,8 @@
 import { state } from '../../assets/js/state.js'
 import { createList } from '../../assets/partials/list.js'
 import { shoppingItem } from './shoppingItem.js'
+import { enableDragging, enableClicking } from '../../assets/js/drag.js'
+
 // import { setMessage } from '../../assets/js/ui.js'
 import { log } from '../../assets/js/logger.js'
 
@@ -61,4 +63,26 @@ function react(el) {
       }
     })
   })
+
+  state.on('icon-click:sort-icon', 'shoppingList', () => {
+    if (isDragging()) {
+      enableDragging(el)
+    } else {
+      enableClicking(el)
+    }
+  })
+
+  state.on('drag-end', 'shoppingList', ({ id }) => {
+    state.set('list-dragged:shopping-list', {
+      id: 'shopping-list',
+      targetId: id,
+    })
+  })
+}
+
+function isDragging() {
+  const inDraggingMode = document
+    .querySelector('#sort-icon')
+    .classList.contains('primary')
+  return inDraggingMode
 }

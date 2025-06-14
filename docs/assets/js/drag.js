@@ -81,8 +81,6 @@ function makeElementDraggable(elem) {
   elem.addEventListener('touchstart', handleDragStart)
   elem.addEventListener('dragend', handleDragEnd)
   elem.addEventListener('touchend', handleDragEnd)
-
-  elem.querySelectorAll('textarea').forEach((el) => (el.disabled = true))
 }
 
 /**
@@ -93,8 +91,6 @@ function breakElementDraggable(elem) {
   elem.removeEventListener('touchstart', handleDragStart)
   elem.removeEventListener('dragend', handleDragEnd)
   elem.removeEventListener('touchend', handleDragEnd)
-
-  elem.querySelectorAll('textarea').forEach((el) => delete el.disabled)
 }
 
 /**
