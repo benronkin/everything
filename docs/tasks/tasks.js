@@ -12,10 +12,11 @@ import { createTask, deleteTask, fetchTasks, updateTask } from './tasks.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
+  build()
+  react()
+
   try {
     setMessage({ message: 'Loading...' })
-
-    build()
 
     handleTokenQueryParam()
 
@@ -23,8 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!token) {
       throw new Error('Token not found locally')
     }
-
-    react()
 
     const resp = await fetchTasks()
     const { tasks } = resp

@@ -4,17 +4,11 @@ import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/recipes`
 
-/**
- *
- */
 export async function createRecipe() {
   const { id, error } = await getWebApp(`${url}/create`)
   return { id, error }
 }
 
-/**
- *
- */
 export async function deleteRecipe(id, password) {
   const { recipe, error } = await getWebApp(
     `${url}/delete?id=${id}&password=${password}`
@@ -22,17 +16,11 @@ export async function deleteRecipe(id, password) {
   return { data: recipe, error }
 }
 
-/**
- *
- */
 export async function fetchCategories() {
   const { categories } = await getWebApp(`${url}/categories/read`)
   return { categories }
 }
 
-/**
- *
- */
 export async function fetchCategoriesAndRecipes() {
   const [{ categories }, { recipes }] = await Promise.all([
     getWebApp(`${url}/categories/read`),
@@ -42,9 +30,6 @@ export async function fetchCategoriesAndRecipes() {
   return { categories, recipes }
 }
 
-/**
- *
- */
 export async function fetchRecentRecipes() {
   const resp = await getWebApp(`${url}/latest`)
   // log(resp)
@@ -52,9 +37,6 @@ export async function fetchRecentRecipes() {
   return { recipes, error }
 }
 
-/**
- * @param {String} q - The search query
- */
 export async function searchRecipes(q) {
   const { recipes, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`
@@ -62,14 +44,16 @@ export async function searchRecipes(q) {
   return { data: recipes, error }
 }
 
-/**
- *
- */
 export async function updateRecipe({ id, section, value }) {
-  const { message, error } = postWebAppJson(`${url}/update`, {
+  const { message, error } = await postWebAppJson(`${url}/update`, {
     id,
     value,
     section,
   })
   return { message, error }
+}
+
+export async function updateRecipeAccess(id) {
+  const { message } = await getWebApp(`${url}/update-access?id=${id}`)
+  return { message }
 }

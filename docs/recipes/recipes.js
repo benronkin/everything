@@ -16,6 +16,7 @@ import {
   fetchRecentRecipes,
   searchRecipes,
   updateRecipe,
+  updateRecipeAccess,
 } from './recipes.api.js'
 import { log } from '../assets/js/logger.js'
 
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
-    window.location.href = `../home/index.html?message=${error.message}`
+    // window.location.href = `../home/index.html?message=${error.message}`
   }
 })
 
@@ -88,12 +89,26 @@ async function build() {
  */
 function react() {
   state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
+
   state.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
+
   state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+
   state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
-  state.on('recipe-categories', 'recipeGroup', (options) =>
+
+  state.on('active-doc', 'recipes', async (resp) => {
+    if (resp) {
+      updateRecipeAccess(resp.id)
+      // fore list to update itself
+      const { recipes } = await fetchRecentRecipes()
+      state.set('main-documents', recipes)
+    }
+  })
+
+  state.on('recipe-categories', 'recipes', (options) =>
     document.getElementById('recipe-category').setOptions(options)
   )
+
   state.on('app-mode', 'recipes', (appMode) => {
     if (appMode === 'main-panel') populateRelatedRecipes()
   })
