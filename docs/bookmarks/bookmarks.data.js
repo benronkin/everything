@@ -1,33 +1,5 @@
 export const bookmarks = [
   {
-    header: {
-      html: 'Everything',
-    },
-    items: [
-      {
-        html: '<i class="fa-solid fa-list-check"></i> Tasks',
-        url: 'https://benronkin.github.io/everything/tasks/index.html',
-      },
-      {
-        html: '<i class="fa-solid fa-cake-candles"></i> Recipes',
-        url: 'https://benronkin.github.io/everything/reicpes/index.html',
-      },
-      {
-        html: '<i class="fa-solid fa-cart-shopping"></i> Shopping',
-        url: 'https://benronkin.github.io/everything/shopping/index.html',
-      },
-      {
-        html: '<i class="fa-solid fa-note-sticky"></i> Notes',
-        url: 'https://benronkin.github.io/everything/notes/index.html',
-      },
-      {
-        html: '<i class="fa-solid fa-book"></i> Journal',
-        url: 'https://benronkin.github.io/everything/journal/index.html',
-      },
-    ],
-  },
-
-  {
     header: { html: 'Fun' },
     items: [
       {
@@ -98,6 +70,35 @@ export const bookmarks = [
       {
         html: 'Supercuts Bothell',
         url: 'https://www.supercuts.com/locations/nearme/haircut/WA/BOTHELL/18827-BOTHELL-WAY-NE-STE-105/81884',
+      },
+    ],
+  },
+
+  {
+    collapsed: true,
+    header: {
+      html: 'Everything',
+    },
+    items: [
+      {
+        html: '<i class="fa-solid fa-list-check"></i> Tasks',
+        url: 'https://benronkin.github.io/everything/tasks/index.html',
+      },
+      {
+        html: '<i class="fa-solid fa-cake-candles"></i> Recipes',
+        url: 'https://benronkin.github.io/everything/reicpes/index.html',
+      },
+      {
+        html: '<i class="fa-solid fa-cart-shopping"></i> Shopping',
+        url: 'https://benronkin.github.io/everything/shopping/index.html',
+      },
+      {
+        html: '<i class="fa-solid fa-note-sticky"></i> Notes',
+        url: 'https://benronkin.github.io/everything/notes/index.html',
+      },
+      {
+        html: '<i class="fa-solid fa-book"></i> Journal',
+        url: 'https://benronkin.github.io/everything/journal/index.html',
       },
     ],
   },
