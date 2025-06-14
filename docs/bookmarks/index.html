@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/css/all.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="shortcut icon" href="../assets/img/favicon.ico" />
+    <title>Bookmarks</title>
+    <style>
+      html,
+      body {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        font-size: 15px;
+        padding: 0;
+        margin: 0;
+        min-width: 900px;
+        white-space: nowrap;
+      }
+      a,
+      a:hover,
+      a:visited,
+      p,
+      td {
+        text-decoration: none;
+        color: var(--white);
+      }
+
+      button {
+        height: 1.9rem;
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 5px 10px;
+        border: none;
+        background-color: var(--white);
+        color: var(--grey);
+        /* text-transform: uppercase; */
+      }
+      button.bordered {
+        background-color: transparent;
+        border: 1px solid var(--grey5);
+        color: var(--grey5);
+      }
+      button.disabled {
+        background-color: transparent;
+        border: 1px solid #555;
+        color: #555;
+        cursor: not-allowed;
+      }
+      button.on {
+        color: black;
+        background-color: lightgreen;
+        border: 1px solid lightgreen;
+      }
+      button.primary {
+        background-color: var(--purple0);
+        color: var(--white);
+      }
+      dialog {
+        border: 1px solid var(--grey2);
+        border-radius: 12px;
+        padding: 20px;
+        background-color: var(--grey1);
+        color: var(--grey5);
+      }
+      dialog h3 {
+        margin-bottom: 20px;
+      }
+      dialog form {
+        width: 100%;
+      }
+      dialog form textarea,
+      dialog form input,
+      dialog form select {
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        color: var(--white);
+        background-color: var(--grey2);
+        border: none;
+        border-radius: 6px;
+        width: 100%;
+        padding: 5px;
+      }
+      dialog textarea {
+        border-bottom: 1px solid var(--purple0);
+        height: 50px;
+      }
+      h3 {
+        font-size: 1.25rem;
+        color: var(--blue3);
+        cursor: pointer;
+        font-weight: 300;
+        margin: 0;
+        margin-right: 25px;
+        white-space: nowrap;
+        min-width: 125px;
+      }
+      form input {
+        width: 30%;
+        padding: 5px 10px;
+        font-family: 'Poppins', sans-serif;
+        border-radius: 12px;
+        border: none;
+      }
+      section {
+        padding: 8px;
+        margin: 0;
+      }
+      td {
+        padding: 5px;
+      }
+
+      #action-buttons button {
+        width: 36px;
+      }
+      #bookmarks-section {
+        margin: -10px 50px;
+      }
+      #data-services-div {
+        justify-content: flex-start;
+        display: flex;
+        align-items: center;
+        margin: 10px 50px 0;
+        min-height: 66px;
+      }
+      #data-services-div .trash {
+        display: none;
+      }
+      #edit-bookmark-form {
+        width: 400px;
+      }
+      #todo-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 0 60px;
+      }
+      #todo-container h3 {
+        color: var(--green5);
+      }
+
+      #todos {
+        background-color: var(--blue0);
+        opacity: 0.7;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      #todos-container a {
+        color: var(--white1);
+      }
+      #todo-form {
+        width: 1220px;
+        margin: 30px 0 10px 95px;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+      }
+      #todo-form.hidden {
+        display: none;
+      }
+      #emails-div {
+        padding: 0 60px;
+      }
+      #topic {
+        background-color: white;
+        border-radius: 50%;
+      }
+      .alert-close {
+        cursor: pointer;
+        font-size: 21px;
+      }
+      .alert-div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 90%;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: var(--purple0);
+        color: white;
+        border-radius: 10px;
+      }
+      .bg-green1 {
+        background-color: var(--green1);
+      }
+      .bookmark-div {
+        margin: 5px;
+        padding: 5px 10px;
+        background-color: var(--blue0);
+        border-radius: 10px;
+        min-width: 40px;
+        text-align: center;
+        position: relative;
+      }
+      .editable:hover {
+        background-color: var(--purple0);
+        transition: 0.5s;
+        border-left: 10px double var(--white);
+        cursor: move;
+      }
+      .editable:hover .trash {
+        display: block;
+      }
+      .bookmark-div a,
+      .bookmark-div a:visited {
+        color: var(--white1);
+      }
+      .bookmark-div .trash {
+        position: absolute;
+        top: -10px;
+        right: -5px;
+        cursor: pointer;
+        color: var(--grey5);
+      }
+      .bookmark-div .trash:hover {
+        color: var(--red5);
+      }
+
+      .bookmark-row {
+        justify-content: flex-start;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+      .bookmarks-holder {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .delete-row i {
+        color: var(--grey2);
+      }
+      .delete-row {
+        cursor: pointer;
+      }
+      .draggable.dragging {
+        opacity: 0.1;
+      }
+      .header {
+        background-color: var(--purple0);
+        margin: 0;
+      }
+      .hidden {
+        display: none;
+      }
+      .form-field {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .form-field label {
+        margin-bottom: 5px;
+      }
+      .page-container {
+        max-width: 1800px;
+        margin: 40px auto 0;
+        min-height: calc(100vh - 40px);
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+      }
+      .invisible {
+        visibility: hidden;
+      }
+      .switch {
+        background-color: var(--blue5);
+        position: relative;
+        width: 2rem;
+        height: 1rem;
+        border: 1px solid var(--text);
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: background 300ms ease;
+      }
+      .switch.hidden {
+        display: none;
+      }
+      .switch.on .thumb {
+        left: 50%;
+      }
+      .text-blue5 {
+        color: var(--blue5);
+      }
+      .text-green1 {
+        color: var(--green1);
+      }
+      .text-grey1 {
+        color: var(--grey1);
+      }
+      .text-orange {
+        color: var(--orange);
+      }
+      .text-red1 {
+        color: var(--red1);
+      }
+      .text-red5 {
+        color: var(--red5);
+      }
+      .text-white {
+        color: var(--white);
+      }
+      .text-yellow {
+        color: var(--yellow);
+      }
+      .thumb {
+        color: var(--text);
+        width: 1.25rem;
+        height: 1.25rem;
+        background: white;
+        border: 1px solid var(--text);
+        border-radius: 50%;
+        position: absolute;
+        left: -5px;
+        transition: left 300ms ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .thumb i {
+        font-size: 0.75rem;
+      }
+      .todo-row:hover a {
+        color: var(--purple1) !important;
+        border-bottom: none;
+        transition: color 0.15s;
+      }
+      .todo-row:hover .delete-row i {
+        color: var(--purple1);
+        transition: color 0.45s;
+      }
+      .todo-row {
+        display: grid;
+        grid-template-columns: 1fr 45fr;
+        line-height: 1.8rem;
+      }
+      .toggle-buttons {
+        display: flex;
+        gap: 10px;
+      }
+      @media (max-width: 1800px) {
+        #todos-section {
+          border-radius: 0;
+        }
+        .page-container {
+          margin-top: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="dark-mode">
+    <div class="page-container">
+      <div id="todos-container">
+        <div id="todos">
+          <div class="todo-row">
+            <a href="" class="todo-link">🔥 Skinny-hangry like Alec Hardy</a>
+          </div>
+          <!-- <div class="todo-row">
+            <a href="" class="todo-link">Shelley WF</a>
+          </div> -->
+        </div>
+      </div>
+
+      <div id="bookmarks-container">
+        <div id="bookmarks">
+          <div class="bookmark-row">
+            <h3>Fun</h3>
+            <div class="bookmarks-holder">
+              <div
+                class="bookmark-div"
+                style="background-color: rgb(214, 27, 74)"
+              >
+                <a
+                  href="https://benronkin.github.io/everything/home/index.html"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-web-awesome"></i> Everything</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a href="https://www.reddit.com" class="bookmark-link"
+                  ><i class="fa-brands fa-reddit"></i> Reddit</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://open.spotify.com/home?facet=podcasts-chip"
+                  class="bookmark-link"
+                  >Podcasts</a
+                >
+              </div>
+              <div
+                class="bookmark-div"
+                style="background-color: rgb(134, 113, 1)"
+              >
+                <a
+                  href="https://www.cbc.ca/kids/games/all/fruit-merge"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-lemon text-yellow"></i> Merge Fruit
+                </a>
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://script.google.com/macros/s/AKfycbw55ljHMG4nHaIYAxWA7gDxlsiU_seR7Q02gRUa1PWtHAGB79o/exec"
+                  class="bookmark-link"
+                  >Lexicon</a
+                >
+              </div>
+              <div class="bookmark-div" style="background-color: rgb(0, 0, 0)">
+                <a href="https://www.netflix.com/browse" class="bookmark-link"
+                  ><i class="fa-solid fa-n text-red1"></i>etflix</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="bookmark-row" data-topic="fun">
+            <h3>Utils</h3>
+            <div class="bookmarks-holder">
+              <div class="bookmark-div">
+                <a
+                  href="vscode://file///Users/benronkin/Documents/bookmarks-front-end"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-code"></i> Code</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.spl.org/online-resources/magazines-and-newspapers"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-newspaper"></i> NYT access</a
+                >
+              </div>
+              <div class="bookmark-div">
+                <a
+                  href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+                  class="bookmark-link"
+                  >GPT release notes</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.gatesnotes.com/books/all-book-reviews"
+                  class="bookmark-link"
+                  >Bill's books</a
+                >
+              </div>
+              <div class="bookmark-div">
+                <a
+                  href="https://www.youtube.com/watch?v=ksy-j020uj8&amp;list=PLBFa2yUBFRr4ek6G4A0K0zFS_zt93kDZv&amp;index=340"
+                  class="bookmark-link"
+                  >Film Noir</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <h3>Services</h3>
+            <div class="bookmarks-holder">
+              <div class="bookmark-div">
+                <a href="https://thespiceway.com" class="bookmark-link" title=""
+                  >The Spice Way online store</a
+                >
+              </div>
+              <div class="bookmark-div">
+                <a
+                  href="https://visitseattle.org/?s&amp;frm=events&amp;event_begin=12%2F03%2F2022&amp;event_end=12%2F04%2F2022&amp;event_type%5B0%5D=festivals-special-events&amp;event_type%5B1%5D=history-heritage&amp;event_type%5B2%5D=museums&amp;event_type%5B3%5D=readings-lectures&amp;event_type%5B4%5D=theatre&amp;event_type%5B5%5D=visual-arts-galleries&amp;events_types%5B0%5D=in-person&amp;partner_parent_cat"
+                  class="bookmark-link"
+                  >Seattle Events</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.zillow.com/homedetails/8312-NE-148th-Pl-Kenmore-WA-98028/48927561_zpid/"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-house text-blue5"></i> Zillow</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://enviwa.ecology.wa.gov/home/map"
+                  class="bookmark-link"
+                  >WA Air Quality</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <h3>Local</h3>
+            <div class="bookmarks-holder">
+              <div class="bookmark-div">
+                <a
+                  href="https://donate.bloodworksnw.org/donor/auth/signin"
+                  class="bookmark-link"
+                  >Bloodworks</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.checkbook.org/puget-sound-area/how-to-safely-get-rid-of-unwanted-electronics/?&amp;tc=psd_axios&amp;axios_adlink=1&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=newsletter_axioslocal_seattle&amp;stream=top"
+                  class="bookmark-link"
+                  >Recycling Electronics</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.supercuts.com/locations/nearme/haircut/WA/BOTHELL/18827-BOTHELL-WAY-NE-STE-105/81884"
+                  class="bookmark-link"
+                  >Supercuts Bothell</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- ARCHIVE ROW -->
+
+          <div class="bookmark-row">
+            <h3 id="archive-toggle">
+              <i class="fa-solid fa-caret-right"></i>
+              Archive
+            </h3>
+            <div class="bookmarks-holder hidden">
+              <div class="bookmark-div">
+                <a
+                  href="https://www.bloombergradio.com"
+                  class="bookmark-link"
+                  title=""
+                  >Bloomberg</a
+                >
+              </div>
+              <div class="bookmark-div">
+                <a href="https://www.coinbase.com/assets" class="bookmark-link"
+                  >Coinbase</a
+                >
+              </div>
+              <div
+                class="bookmark-div"
+                style="background-color: rgb(8, 98, 15)"
+              >
+                <a
+                  href="https://finance.yahoo.com/portfolio/p_0/view/v2"
+                  class="bookmark-link"
+                  ><i class="fa-solid fa-sack-dollar text-yellow"></i>
+                  Portfolio</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://finance.yahoo.com/quote/MAGS/chart/#eyJsYXlvdXQiOnsiaW50ZXJ2YWwiOiJkYXkiLCJwZXJpb2RpY2l0eSI6MSwidGltZVVuaXQiOm51bGwsImNhbmRsZVdpZHRoIjozLjc4LCJmbGlwcGVkIjpmYWxzZSwidm9sdW1lVW5kZXJsYXkiOnRydWUsImFkaiI6dHJ1ZSwiY3Jvc3NoYWlyIjp0cnVlLCJjaGFydFR5cGUiOiJtb3VudGFpbiIsImV4dGVuZGVkIjpmYWxzZSwibWFya2V0U2Vzc2lvbnMiOnt9LCJhZ2dyZWdhdGlvblR5cGUiOiJvaGxjIiwiY2hhcnRTY2FsZSI6InBlcmNlbnQiLCJzdHVkaWVzIjp7InZvbCB1bmRyIjp7InR5cGUiOiJ2b2wgdW5kciIsImlucHV0cyI6eyJTZXJpZXMiOiJzZXJpZXMiLCJpZCI6InZvbCB1bmRyIiwiZGlzcGxheSI6InZvbCB1bmRyIn0sIm91dHB1dHMiOnsiVXAgVm9sdW1lIjoiIzBkYmQ2ZWVlIiwiRG93biBWb2x1bWUiOiIjZmY1NTQ3ZWUifSwicGFuZWwiOiJjaGFydCIsInBhcmFtZXRlcnMiOnsiY2hhcnROYW1lIjoiY2hhcnQiLCJlZGl0TW9kZSI6dHJ1ZSwicGFuZWxOYW1lIjoiY2hhcnQifSwiZGlzYWJsZWQiOmZhbHNlfSwidm9sIHVuZHItMiI6eyJ0eXBlIjoidm9sIHVuZHIiLCJpbnB1dHMiOnsiU2VyaWVzIjoic2VyaWVzIiwiaWQiOiJ2b2wgdW5kci0yIiwiZGlzcGxheSI6InZvbCB1bmRyLTIifSwib3V0cHV0cyI6eyJVcCBWb2x1bWUiOiIjMGRiZDZlZWUiLCJEb3duIFZvbHVtZSI6IiNmZjU1NDdlZSJ9LCJwYW5lbCI6ImNoYXJ0IiwicGFyYW1ldGVycyI6eyJjaGFydE5hbWUiOiJjaGFydCIsImVkaXRNb2RlIjp0cnVlLCJwYW5lbE5hbWUiOiJjaGFydCJ9LCJkaXNhYmxlZCI6ZmFsc2V9fSwicGFuZWxzIjp7ImNoYXJ0Ijp7InBlcmNlbnQiOjEsImRpc3BsYXkiOiJNQUdTIiwiY2hhcnROYW1lIjoiY2hhcnQiLCJpbmRleCI6MCwieUF4aXMiOnsibmFtZSI6ImNoYXJ0IiwicG9zaXRpb24iOm51bGx9LCJ5YXhpc0xIUyI6W10sInlheGlzUkhTIjpbImNoYXJ0Iiwidm9sIHVuZHIiLCJ2b2wgdW5kci0yIl19fSwic2V0U3BhbiI6eyJtdWx0aXBsaWVyIjoxLCJiYXNlIjoieWVhciIsInBlcmlvZGljaXR5Ijp7InBlcmlvZCI6MSwidGltZVVuaXQiOiJkYXkifSwic2hvd0V2ZW50c1F1b3RlIjp0cnVlLCJmb3JjZUxvYWQiOmZhbHNlLCJ1c2VFeGlzdGluZ0RhdGEiOnRydWV9LCJvdXRsaWVycyI6ZmFsc2UsImFuaW1hdGlvbiI6dHJ1ZSwiaGVhZHNVcCI6eyJzdGF0aWMiOnRydWUsImR5bmFtaWMiOmZhbHNlLCJmbG9hdGluZyI6ZmFsc2V9LCJsaW5lV2lkdGgiOjIsImZ1bGxTY3JlZW4iOnRydWUsInN0cmlwZWRCYWNrZ3JvdW5kIjp0cnVlLCJjb2xvciI6IiMwMDgxZjIiLCJjcm9zc2hhaXJTdGlja3kiOmZhbHNlLCJzdHVkeUxlZ2VuZCI6eyJleHBhbmRlZCI6dHJ1ZX0sInN5bWJvbHMiOlt7InN5bWJvbCI6Ik1BR1MiLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiTUFHUyIsInF1b3RlVHlwZSI6IkVURiIsImV4Y2hhbmdlVGltZVpvbmUiOiJBbWVyaWNhL05ld19Zb3JrIiwicGVyaW9kMSI6MTY3NjAxNjAwMCwicGVyaW9kMiI6MTczOTE0MjAwMH0sInBlcmlvZGljaXR5IjoxLCJpbnRlcnZhbCI6ImRheSIsInRpbWVVbml0IjpudWxsLCJzZXRTcGFuIjp7Im11bHRpcGxpZXIiOjEsImJhc2UiOiJ5ZWFyIiwicGVyaW9kaWNpdHkiOnsicGVyaW9kIjoxLCJ0aW1lVW5pdCI6ImRheSJ9LCJzaG93RXZlbnRzUXVvdGUiOnRydWUsImZvcmNlTG9hZCI6ZmFsc2UsInVzZUV4aXN0aW5nRGF0YSI6dHJ1ZX19LHsic3ltYm9sIjoiUVFRIiwic3ltYm9sT2JqZWN0Ijp7InN5bWJvbCI6IlFRUSJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJkYXkiLCJ0aW1lVW5pdCI6bnVsbCwic2V0U3BhbiI6eyJtdWx0aXBsaWVyIjoxLCJiYXNlIjoieWVhciIsInBlcmlvZGljaXR5Ijp7InBlcmlvZCI6MSwidGltZVVuaXQiOiJkYXkifSwic2hvd0V2ZW50c1F1b3RlIjp0cnVlLCJmb3JjZUxvYWQiOmZhbHNlLCJ1c2VFeGlzdGluZ0RhdGEiOnRydWV9LCJpZCI6IlFRUSIsInBhcmFtZXRlcnMiOnsiaXNDb21wYXJpc29uIjp0cnVlLCJjb2xvciI6IiNmYzhlYWMiLCJnYXBEaXNwbGF5U3R5bGUiOnRydWUsInNoYXJlWUF4aXMiOnRydWUsImNoYXJ0TmFtZSI6ImNoYXJ0Iiwic3ltYm9sT2JqZWN0Ijp7InN5bWJvbCI6IlFRUSJ9LCJwYW5lbCI6ImNoYXJ0IiwiZmlsbEdhcHMiOmZhbHNlLCJhY3Rpb24iOiJhZGQtc2VyaWVzIiwic3ltYm9sIjoiUVFRIiwibmFtZSI6IlFRUSIsIm92ZXJDaGFydCI6dHJ1ZSwidXNlQ2hhcnRMZWdlbmQiOnRydWUsImhlaWdodFBlcmNlbnRhZ2UiOjAuNywib3BhY2l0eSI6MSwiaGlnaGxpZ2h0YWJsZSI6dHJ1ZSwidHlwZSI6ImxpbmUiLCJzdHlsZSI6InN0eF9saW5lX2NoYXJ0IiwiaGlnaGxpZ2h0IjpmYWxzZX19XX0sImV2ZW50cyI6eyJkaXZzIjp0cnVlLCJzcGxpdHMiOnRydWUsInRyYWRpbmdIb3Jpem9uIjoibm9uZSIsInNpZ0RldkV2ZW50cyI6W119LCJwcmVmZXJlbmNlcyI6eyJjdXJyZW50UHJpY2VMaW5lIjp0cnVlLCJkaXNwbGF5Q3Jvc3NoYWlyc1dpdGhEcmF3aW5nVG9vbCI6ZmFsc2UsImRyYXdpbmdzIjpudWxsLCJoaWdobGlnaHRzUmFkaXVzIjoxMCwiaGlnaGxpZ2h0c1RhcFJhZGl1cyI6MzAsIm1hZ25ldCI6ZmFsc2UsImhvcml6b250YWxDcm9zc2hhaXJGaWVsZCI6bnVsbCwibGFiZWxzIjp0cnVlLCJsYW5ndWFnZSI6bnVsbCwidGltZVpvbmUiOiJBbWVyaWNhL05ld19Zb3JrIiwid2hpdGVzcGFjZSI6NTAsInpvb21JblNwZWVkIjpudWxsLCJ6b29tT3V0U3BlZWQiOm51bGwsInpvb21BdEN1cnJlbnRNb3VzZVBvc2l0aW9uIjpmYWxzZX19"
+                  class="bookmark-link"
+                  >Magnificent Seven ETF</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.youtube.com/watch?v=egBdW6vBIhM&amp;t=639s"
+                  class="bookmark-link"
+                  >Hono</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.amazon.com/dp/B0DLHNWHRF/?coliid=IVS2S4SS9KKTE&amp;colid=19WWYHWR5IJ0F&amp;ref_=list_c_wl_lv_ov_lig_dp_it&amp;th=1"
+                  class="bookmark-link"
+                  >Low cost phone</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a href="https://privacy.com/pricing" class="bookmark-link"
+                  >Private credit card</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://myaccount.google.com/permissions?pli=1"
+                  class="bookmark-link"
+                  >Google Accessed apps</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a href="https://chat.openai.com" class="bookmark-link" title=""
+                  >ChatGPT</a
+                >
+              </div>
+
+              <div class="bookmark-div">
+                <a
+                  href="https://www.wsop.com/online-poker/"
+                  class="bookmark-link"
+                  >Poker in Vegas</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
