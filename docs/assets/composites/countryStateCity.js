@@ -76,7 +76,7 @@ function build(el) {
     })
   )
 
-  el.appendChild(createDiv({ className: 'autocomplete' }))
+  el.appendChild(createDiv({ className: 'autocomplete hidden' }))
 
   const headerEl = createDiv({
     className: 'edit-header hidden',
@@ -142,10 +142,15 @@ function listen(el) {
 
       let page = 0
 
-      if (!el.querySelector('input[name="country"]').value.trim().length) {
+      const countryValue = el
+        .querySelector('input[name="country"]')
+        .value.trim()
+      const stateValue = el.querySelector('input[name="state"]').value.trim()
+
+      if (!countryValue.length) {
         // country value is needed
         page = 1
-      } else if (!el.querySelector('input[name="state"]').value.trim().length) {
+      } else if (!stateValue.length) {
         // state value is needed
         page = 2
       } else {
@@ -158,8 +163,19 @@ function listen(el) {
           city: 3,
         }
         page = pages[e.target.name || 'none']
+        state.set('country-state-city-page', page)
       }
-      state.set('country-state-city-page', page)
+
+      const tree = state.get('country-state-city-tree')
+      const dropdownOptions =
+        page === 1
+          ? Object.keys(tree)
+          : page === 2
+          ? Object.keys(tree[countryValue])
+          : tree[countryValue][stateValue]
+
+      el.querySelector('.autocomplete').insertHtml(dropdownOptions)
+      el.querySelector('.autocomplete').classList.remove('hidden')
     },
     true
   )

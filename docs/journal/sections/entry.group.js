@@ -1,22 +1,21 @@
-/*
-This module handles journal events so that the journal.js stays leaner.
-This module loads aftr all partials were created.
-*/
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
-// import { log } from '../../assets/js/logger.js'
-// import { state } from '../../assets/js/state.js'
+import { createCountryStateCity } from '../../assets/composites/countryStateCity.js'
+import { log } from '../../assets/js/logger.js'
+import { state } from '../../assets/js/state.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
+const css = `
+.input-group {
+  margin-bottom: 40px;
+}
+`
 
-/**
- * Constuctor of a custom element
- */
 export function createEntryGroup() {
+  injectStyle(css)
+
   const el = createDiv({ id: 'entry-group' })
 
   build(el)
@@ -25,13 +24,6 @@ export function createEntryGroup() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function build(el) {
   el.appendChild(
     createInputGroup({
@@ -53,32 +45,38 @@ function build(el) {
     })
   )
 
-  el.appendChild(
-    createInputGroup({
-      name: 'city',
-      id: 'journal-city',
-      placeholder: 'City',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-city' },
-    })
-  )
+  // el.appendChild(
+  //   createInputGroup({
+  //     name: 'city',
+  //     id: 'journal-city',
+  //     placeholder: 'City',
+  //     classes: { group: 'mb-40', input: 'field', icon: 'fa-city' },
+  //   })
+  // )
 
-  el.appendChild(
-    createInputGroup({
-      name: 'state',
-      id: 'journal-state',
-      placeholder: 'State',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-map' },
-    })
-  )
+  // el.appendChild(
+  //   createInputGroup({
+  //     name: 'state',
+  //     id: 'journal-state',
+  //     placeholder: 'State',
+  //     classes: { group: 'mb-40', input: 'field', icon: 'fa-map' },
+  //   })
+  // )
 
-  el.appendChild(
-    createInputGroup({
-      name: 'country',
-      id: 'journal-country',
-      placeholder: 'Country',
-      classes: { input: 'field', icon: 'fa-flag' },
-    })
-  )
+  // el.appendChild(
+  //   createInputGroup({
+  //     name: 'country',
+  //     id: 'journal-country',
+  //     placeholder: 'Country',
+  //     classes: { input: 'field', icon: 'fa-flag' },
+  //   })
+  // )
+
+  const cscEl = createCountryStateCity()
+  cscEl.querySelector('[name="city"').dataset.id = 'journal-city'
+  cscEl.querySelector('[name="state"').dataset.id = 'journal-state'
+  cscEl.querySelector('[name="country"').dataset.id = 'journal-country'
+  el.appendChild(cscEl)
 
   el.appendChild(
     createSpanGroup({

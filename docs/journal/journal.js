@@ -12,9 +12,11 @@ import {
   createEntry,
   deleteEntry,
   fetchDefaults,
+  fetchGeoIndex,
   fetchRecentEntries,
   searchEntries,
   updateEntry,
+  updateGeoIndex,
   updateJournalDefaults,
 } from './journal.api.js'
 import { log } from '../assets/js/logger.js'
@@ -35,14 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const { data } = await fetchRecentEntries()
+    const [entriesResp, geoIndexResp] = await Promise.all([
+      fetchRecentEntries(),
+      fetchGeoIndex(),
+    ])
+
+    const { data } = entriesResp
+    const { tree } = geoIndexResp
     state.set('main-documents', data)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'journal')
+    state.set('country-state-city-tree', JSON.parse(tree))
+    state.set('country-state-city-page', 0)
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
-    window.location.href = `../home/index.html?message=${error.message}`
+    // window.location.href = `../home/index.html?message=${error.message}`
     console.trace(error)
   }
 })
@@ -202,11 +212,10 @@ async function handleFieldChange(e) {
   state.set('active-doc', doc)
 
   try {
-    const { message, error } = await updateEntry({ id, section, value })
+    const { error } = await updateEntry({ id, section, value })
     if (error) {
       throw new Error(error)
     }
-    log(message)
 
     if (['city', 'state', 'country'].includes(section)) {
       await updateJournalDefaults({ id, section, value })

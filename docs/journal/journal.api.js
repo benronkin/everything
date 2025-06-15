@@ -37,6 +37,11 @@ export async function fetchEntryPhotosMetadata(id) {
   return { photos, error }
 }
 
+export async function fetchGeoIndex() {
+  const { tree, error } = await getWebApp(`${url}/geo-index/read`)
+  return { tree, error }
+}
+
 /**
  *
  */
@@ -65,6 +70,12 @@ export async function updateEntry({ id, section, value }) {
     section,
   })
   return { message, error }
+}
+
+export async function updateGeoIndex({ tree }) {
+  await postWebAppJson(`${url}/geo-index/update`, {
+    tree,
+  })
 }
 
 /**
