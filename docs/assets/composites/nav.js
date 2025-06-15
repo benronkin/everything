@@ -53,7 +53,7 @@ nav .brand i:hover {
 // Exported functions
 // -------------------------------
 
-export function createNav({ title, disableRightDrawer = false }) {
+export function createNav({ title, disableRightDrawer = false } = {}) {
   injectStyle(css)
 
   const el = document.createElement('nav')

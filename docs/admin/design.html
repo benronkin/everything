@@ -16,25 +16,31 @@
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="shortcut icon" href="../assets/img/favicon.ico" />
     <title>Developer | Everything App Ronkin</title>
+    <style>
+      #main-panel {
+        width: 100%;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+      #main-panel.hidden {
+        display: none;
+      }
+      #main-panel input.field,
+      #main-panel textarea.field {
+        padding: 0;
+        margin: 0;
+        border-bottom: 1px dotted var(--gray1);
+      }
+    </style>
   </head>
   <body class="dark-mode">
-    <div class="wrapper">
-      <main>
-        <div
-          class="container"
-          id="parent"
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 50px;
-          "
-        ></div>
-      </main>
-    </div>
     <script type="module">
       import { getWebApp } from '../assets/js/io.js'
       import { state } from '../assets/js/state.js'
+      import { createDiv } from '../assets/partials/div.js'
       import { createFileInput } from '../assets/partials/fileInput.js'
       import { createFormHorizontal } from '../assets/partials/formHorizontal.js'
       import { createFormField } from '../assets/partials/formField.js'
@@ -48,81 +54,28 @@
       import { createCollapsibleGroup } from '../assets/partials/collapsibleGroup.js'
       import { setMessage } from '../assets/js/ui.js'
       import { removeToasts } from '../assets/partials/toast.js'
+      import { createNav } from '../assets/composites/nav.js'
+      import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
 
-      const parent = document.querySelector('#parent')
-
-      parent.appendChild(
-        createFileInput({
-          iconClass: 'fa-camera',
-          label: 'Upload image',
-          accept: 'images/*',
-        })
+      const wrapperEl = createDiv({ className: 'wrapper' })
+      document.body.prepend(wrapperEl)
+      wrapperEl.appendChild(
+        createNav({ title: '<i class="fa-solid fa-lock"></i> Admin Design' })
       )
-
-      parent.appendChild(
-        createFormHorizontal({
-          id: 'my-form',
-          inputType: 'text',
-          inputPlaceholder: 'Type something',
-          iconClass: 'fa-envelope',
-          submitText: 'Hola',
-        })
-      )
-
-      parent.appendChild(
-        createFormField({
-          element: createTextarea({
-            id: 'test-textarea',
-          }),
-          label: 'Details',
-          labelPosition: 'top',
-          fieldClasses: ['u-align-start'],
-        })
-      )
-
-      parent.appendChild(
-        createList({
-          children: [createListItem({ value: 'This is a list item' })],
-        })
-      )
-
-      parent.appendChild(
-        createList({
-          children: [
-            createMenuItem({
-              value: 'This is a menu item',
-            }),
-          ],
-        })
-      )
-
-      const modalDelete = createModalDelete({
-        password: true,
-        header: 'Delete recipe',
+      const columnsWrapperEl = createDiv({
+        className: 'columns-wrapper',
       })
-      parent.appendChild(modalDelete)
-      modalDelete.body = `Are you sure you want to delete "Chocolate cookies" recipe?`
-      // modalDelete.show()
+      wrapperEl.appendChild(columnsWrapperEl)
+      const mainPanel = createDiv({
+        id: 'main-panel',
+        className: 'mt-20 w-100',
+      })
+      columnsWrapperEl.appendChild(mainPanel)
 
-      getWebApp(`${state.const('APP_URL')}/recipes/categories/read`).then(
-        ({ categories }) => {
-          const selectEl = createSelect({
-            options: categories,
-            name: 'category',
-          })
-          // parent.appendChild(selectEl)
-        }
-      )
-
-      parent.appendChild(
-        createCollapsibleGroup({
-          collapsed: true,
-          html: [createIcon({ classes: { primary: 'fa-trash' } })],
-        })
-      )
-
-      setMessage({ message: 'this is a dangerous toast' })
-      // setTimeout(() => removeToasts(), 2000)
+      const cscEl = createCountryStateCity()
+      cscEl.classList.add('mt-20')
+      mainPanel.appendChild(cscEl)
+      state.set('country-state-city-page', 0)
     </script>
   </body>
 </html>
