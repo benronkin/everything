@@ -37,7 +37,6 @@ function react(el) {
         id: doc.id,
         title: doc.title,
         details: doc.details,
-        draggable: true,
       })
       item.querySelectorAll('.field').forEach((field) =>
         field.addEventListener('change', () =>
@@ -55,7 +54,7 @@ function react(el) {
   })
 
   state.on('icon-click:sort-icon', 'titleDetailsList', () => {
-    if (isDragging()) {
+    if (document.querySelector('#sort-icon').classList.contains('primary')) {
       enableDragging(el)
     } else {
       enableClicking(el)
@@ -65,11 +64,4 @@ function react(el) {
   state.on('drag-end', 'titleDetailsList', ({ id }) => {
     state.set('list-dragged:tasks-list', { id: 'tasks-list', targetId: id })
   })
-}
-
-function isDragging() {
-  const inDraggingMode = document
-    .querySelector('#sort-icon')
-    .classList.contains('primary')
-  return inDraggingMode
 }

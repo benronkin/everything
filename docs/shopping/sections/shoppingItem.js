@@ -51,12 +51,11 @@ export function shoppingItem({ item }) {
     ],
   })
 
-  el.setDraggable = setDraggable.bind(el)
-
-  el.setDraggable(true)
-
   react(el)
   listen(el)
+
+  el.classList.add('draggable-target')
+  el.setDraggable = setDraggable.bind(el)
 
   return el
 }

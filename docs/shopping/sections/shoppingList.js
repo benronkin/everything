@@ -65,7 +65,7 @@ function react(el) {
   })
 
   state.on('icon-click:sort-icon', 'shoppingList', () => {
-    if (isDragging()) {
+    if (document.querySelector('#sort-icon').classList.contains('primary')) {
       enableDragging(el)
     } else {
       enableClicking(el)
@@ -78,11 +78,4 @@ function react(el) {
       targetId: id,
     })
   })
-}
-
-function isDragging() {
-  const inDraggingMode = document
-    .querySelector('#sort-icon')
-    .classList.contains('primary')
-  return inDraggingMode
 }

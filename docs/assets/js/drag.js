@@ -11,9 +11,10 @@ export function enableDragging(containerEl) {
   // clear prior event handlers
   enableClicking(containerEl)
   containerEl.classList.add('dragging-container')
-  containerEl
-    .querySelectorAll('.draggable-target')
-    .forEach((elem) => makeElementDraggable(elem))
+
+  const dragTargets = containerEl.querySelectorAll('.draggable-target')
+
+  dragTargets.forEach((elem) => makeElementDraggable(elem))
 
   containerEl.addEventListener('dragover', enableDragContainer)
   containerEl.addEventListener('touchmove', enableDragContainer)

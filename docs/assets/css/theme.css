@@ -369,7 +369,6 @@ main {
 .list-item.active:hover {
   color: var(--purple3);
   border: 1px solid var(--purple2);
-  background-color: var(--purple2);
   transition: background-color 200ms ease;
 }
 .list-item:hover {

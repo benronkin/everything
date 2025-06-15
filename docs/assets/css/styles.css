@@ -217,13 +217,6 @@ ul {
 .danger-box i {
   color: var(--red3);
 }
-[draggable='true'] textarea {
-  cursor: not-allowed;
-}
-[draggable='true'] i.fa-sort {
-  cursor: move;
-}
-
 .fa-trash {
   color: var(--red6);
   cursor: pointer;

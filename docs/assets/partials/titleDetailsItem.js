@@ -52,7 +52,6 @@ const css = `
  * Constructor
  */
 export function createTitleDetailsItem({
-  draggable = false,
   title,
   details,
   id,
@@ -61,7 +60,6 @@ export function createTitleDetailsItem({
   injectStyle(css)
 
   const el = createDiv({ id, className: `td-item ${className}`.trim() })
-  el.classList.add('draggable-target')
 
   build(el)
   react(el)
@@ -72,9 +70,8 @@ export function createTitleDetailsItem({
 
   el.querySelector('[name="details"]').value = (details || '').toString().trim()
 
+  el.classList.add('draggable-target')
   el.setDraggable = setDraggable.bind(el)
-
-  el.setDraggable(draggable)
 
   return el
 }
@@ -111,7 +108,7 @@ function build(el) {
     })
   )
   iconsEl.appendChild(
-    createIcon({ classes: { primary: 'fa-sort', other: ['sorter'] } })
+    createIcon({ classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] } })
   )
 
   gridEl = createDiv({ className: 'grid details-wrapper hidden' })
@@ -146,6 +143,7 @@ function react(el) {
     const isSorting = document
       .getElementById('sort-icon')
       .classList.contains('primary')
+
     el.setDraggable(isSorting)
   })
 }
@@ -175,6 +173,11 @@ function listen(el) {
  */
 function setDraggable(isDraggable) {
   this.draggable = isDraggable
+
+  if (isDraggable) {
+    this.querySelector('textarea').style.cursor = 'not-allowed'
+    this.querySelector('.sorter').style.cursor = 'move'
+  }
 
   this.querySelector('.sorter').classList.toggle('hidden', !isDraggable)
   this.querySelector('.expander').classList.toggle('hidden', isDraggable)
