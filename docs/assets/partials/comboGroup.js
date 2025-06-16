@@ -10,11 +10,12 @@ const css = `
 }
 .combo-group .combo-options {
   position: absolute;
-  left: 35px;
+  left: 30px;
   right: 0;
   background-color: var(--gray1);
   padding: 0;
   box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
+  z-index: 3;
 }
 .combo-group .combo-option {
 cursor: pointer;
@@ -90,7 +91,7 @@ function build({ el, classes, value, name, placeholder, type, options }) {
     })
   )
 
-  const dropdownEl = createDiv({ className: 'combo-options' })
+  const dropdownEl = createDiv({ className: 'combo-options hidden' })
   el.appendChild(dropdownEl)
 
   el.setOptions = setOptions.bind(el)
@@ -104,19 +105,35 @@ function react(el) {
 }
 
 function listen(el) {
-  // el.addEventListener('click', () => {
-  //   state.set('stateVar', 'value')
-  // })
+  el.querySelector('input').addEventListener('focusin', (e) => {
+    console.log('here', el.innerHTML)
+    if (el.querySelectorAll('.combo-option').length) {
+      this.querySelector('.combo-options').classList.remove('hidden')
+    }
+  })
 }
 
 function setOptions(options) {
+  const inputEl = this.querySelector('input')
   const dropdownEl = this.querySelector('.combo-options')
   dropdownEl.innerHTML = ''
-  options.forEach((html) => {
-    const item = createDiv({
-      className: 'combo-option',
-      html,
+
+  if (!options.length) return
+
+  // checks
+  for (const opt of options) {
+    if (opt.tagName !== 'DIV' || !opt.querySelector('span')?.value) {
+      throw new Error(
+        'comboGroup error: options needs to be an array of DIVs, each DIV containing a span with a value prop for the input element'
+      )
+    }
+  }
+
+  options.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      inputEl.value = opt.querySelector('span').textContent
+      dropdownEl.classList.add('hidden')
     })
-    dropdownEl.appendChild(item)
+    dropdownEl.appendChild(opt)
   })
 }

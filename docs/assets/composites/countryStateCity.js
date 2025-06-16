@@ -120,9 +120,8 @@ function react(el) {
     for (let i = 0; i < 4; i++) {
       if (i == 0) continue
       const name = pages[i]
-      const group = el
-        .querySelector(`input[name="${name}"]`)
-        ?.closest('.input-group')
+      const input = el.querySelector(`input[name="${name}"]`)
+      const group = input?.closest('.input-group')
       group.classList.toggle('hidden', i !== page && page > 0)
     }
 
@@ -165,15 +164,20 @@ function listen(el) {
         page = pages[e.target.name || 'none']
       }
       state.set('country-state-city-page', page)
+      el.querySelector('input:not(.hidden)').focus()
     },
     true
   )
 
   /* return to page 0 on Escape */
   el.addEventListener(
-    'keydown',
+    'keyup',
     (e) => {
-      if (e.key === 'Escape') state.set('country-state-city-page', 0)
+      if (e.key === 'Escape') {
+        el.querySelector('.combo-options').classList.add('hidden')
+        e.target.blur()
+        state.set('country-state-city-page', 0)
+      }
     },
     true
   )
@@ -201,14 +205,24 @@ function listen(el) {
       const countryVal = el.querySelector('input[name="country"]').value.trim()
       const stateVal = el.querySelector('input[name="state"]').value.trim()
 
-      let options = []
+      let labels = []
       if (name === 'country') {
-        options = Object.keys(tree).sort()
+        labels = Object.keys(tree).sort()
       } else if (name === 'state' && tree[countryVal]) {
-        options = Object.keys(tree[countryVal])
+        labels = Object.keys(tree[countryVal])
       } else if (name === 'city' && tree[countryVal]?.[stateVal]) {
-        options = tree[countryVal][stateVal]
+        labels = tree[countryVal][stateVal]
       }
+
+      const options = labels.map((label) => {
+        const spanEl = createSpan({ html: label })
+        spanEl.value = label
+        return createDiv({
+          className: 'combo-option',
+          html: [spanEl, createIcon({ classes: { primary: 'fa-close' } })],
+        })
+      })
+
       input.closest('.combo-group').setOptions(options)
     })
   )
@@ -216,13 +230,13 @@ function listen(el) {
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('keyup', (e) => {
       const value = e.target.value.trim()
-      const dropdownEl = e.querySelector('.combo-options')
+      const dropdownEl = el.querySelector('.combo-options')
       dropdownEl.classList.add('hidden')
       if (!value.length) return
 
-      const options = dropdownEl.querySelectorAll('.combo-option')
+      const options = [...dropdownEl.querySelectorAll('.combo-option')]
       const relevantOptions = options.filter((opt) =>
-        opt.textContent.includes(value)
+        opt.textContent.toLowerCase().includes(value.toLowerCase())
       )
       if (!relevantOptions.length) return
 
