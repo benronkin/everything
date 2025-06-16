@@ -3,10 +3,6 @@ import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
 import { createInput } from './input.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .input-group {
   display: grid;
@@ -23,13 +19,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constructor for a custom horizontal form
- */
 export function createInputGroup({
   id,
   classes,
@@ -44,7 +33,7 @@ export function createInputGroup({
 
   if (className || classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createInputGroup Oops: pass-in optional classes object: {group: '', input: '', icon: ''} `
+      `createInputGroup expects a classes object: {group: '', input: '', icon: ''} `
     )
   }
 
@@ -75,14 +64,6 @@ export function createInputGroup({
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element. No need
- * to return the element.
- */
 function build({ el, id, type, name, placeholder, autocomplete, value }) {
   el.appendChild(createIcon())
 

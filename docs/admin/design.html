@@ -56,6 +56,7 @@
       import { removeToasts } from '../assets/partials/toast.js'
       import { createNav } from '../assets/composites/nav.js'
       import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
+      import { createComboGroup } from '../assets/partials/comboGroup.js'
 
       const wrapperEl = createDiv({ className: 'wrapper' })
       document.body.prepend(wrapperEl)
@@ -72,10 +73,7 @@
       })
       columnsWrapperEl.appendChild(mainPanel)
 
-      const cscEl = createCountryStateCity()
-      cscEl.classList.add('mt-20')
-      mainPanel.appendChild(cscEl)
-      state.set('country-state-city-page', 0)
+      mainPanel.appendChild(createComboGroup())
     </script>
   </body>
 </html>

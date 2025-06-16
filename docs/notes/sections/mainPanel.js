@@ -10,6 +10,7 @@ import { log } from '../../assets/js/logger.js'
 import { fetchNote, updateNote } from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
+import { removeToasts } from '../../assets/partials/toast.js'
 
 // -------------------------------
 // Globals
@@ -107,13 +108,17 @@ function react(el) {
  *
  */
 function listen(el) {
-  el.querySelector('#note-title').addEventListener('keyup', handleUpdateNote)
+  el.querySelector('#note-title').addEventListener('keyup', () => {
+    removeToasts()
+    handleUpdateNote()
+  })
 
   const quill = state.get('quill')
 
   quill.on('text-change', (delta, oldDelta, source) => {
     // source === 'user' if the user typed or edited
     // source === 'api' if you called quill.setContents(), insertText(), etc.
+    removeToasts()
     handleUpdateNote()
   })
 }
