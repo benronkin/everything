@@ -38,7 +38,6 @@
   </head>
   <body class="dark-mode">
     <script type="module">
-      import { getWebApp } from '../assets/js/io.js'
       import { state } from '../assets/js/state.js'
       import { createDiv } from '../assets/partials/div.js'
       import { createFileInput } from '../assets/partials/fileInput.js'
@@ -57,23 +56,36 @@
       import { createNav } from '../assets/composites/nav.js'
       import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
       import { createComboGroup } from '../assets/partials/comboGroup.js'
+      import { fetchGeoIndex, updateGeoIndex } from '../journal/journal.api.js'
 
-      const wrapperEl = createDiv({ className: 'wrapper' })
-      document.body.prepend(wrapperEl)
-      wrapperEl.appendChild(
-        createNav({ title: '<i class="fa-solid fa-lock"></i> Admin Design' })
-      )
-      const columnsWrapperEl = createDiv({
-        className: 'columns-wrapper',
-      })
-      wrapperEl.appendChild(columnsWrapperEl)
-      const mainPanel = createDiv({
-        id: 'main-panel',
-        className: 'mt-20 w-100',
-      })
-      columnsWrapperEl.appendChild(mainPanel)
+      function createMainPanel() {
+        const wrapperEl = createDiv({ className: 'wrapper' })
+        document.body.prepend(wrapperEl)
+        wrapperEl.appendChild(
+          createNav({ title: '<i class="fa-solid fa-lock"></i> Admin Design' })
+        )
+        const columnsWrapperEl = createDiv({
+          className: 'columns-wrapper',
+        })
+        wrapperEl.appendChild(columnsWrapperEl)
+        const mainPanelEl = createDiv({
+          id: 'main-panel',
+          className: 'mt-20 w-100',
+        })
+        columnsWrapperEl.appendChild(mainPanelEl)
+        return mainPanelEl
+      }
 
-      mainPanel.appendChild(createComboGroup())
+      const mainPanelEl = createMainPanel()
+
+      /* Design components: */
+      mainPanelEl.appendChild(createCountryStateCity())
+      //
+      ;(async function () {
+        const { tree } = await fetchGeoIndex()
+        state.set('country-state-city-tree', JSON.parse(tree))
+        state.set('country-state-city-page', 0)
+      })()
     </script>
   </body>
 </html>
