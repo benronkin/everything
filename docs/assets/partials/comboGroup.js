@@ -129,6 +129,7 @@ function setOptions(options) {
   options.forEach((opt) => {
     opt.addEventListener('click', () => {
       inputEl.value = opt.querySelector('span').textContent
+      inputEl.dispatchEvent(new Event('change'))
       dropdownEl.classList.add('hidden')
     })
     dropdownEl.appendChild(opt)

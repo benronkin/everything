@@ -126,14 +126,13 @@ function react(el) {
     }
 
     el.querySelector('.fa-chevron-left')?.classList.toggle('hidden', page < 2)
-    el.querySelector('.fa-chevron-right')?.classList.toggle(
-      'hidden',
-      page === 0 || page === 3
-    )
-    el.querySelector('.edit-header .fa-close').classList.toggle(
-      'hidden',
-      page < 3
-    )
+
+    // right and close icon appear only if input has value
+    log(el.querySelector('input:not(.hidden)').value.trim())
+    setNextIcons({
+      el,
+      value: el.querySelector('.input-group:not(.hidden) input').value.trim(),
+    })
 
     el.querySelector('.edit-header h5').textContent = pages[page].toUpperCase()
     el.querySelector('.edit-header').classList.toggle('hidden', page === 0)
@@ -199,6 +198,7 @@ function listen(el) {
     state.set('country-state-city-page', 0)
   })
 
+  /* input focus */
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('focusin', (e) => {
       const input = e.target
@@ -230,6 +230,7 @@ function listen(el) {
     })
   )
 
+  /* input keyup */
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('keyup', (e) => {
       const value = e.target.value.trim()
@@ -248,4 +249,39 @@ function listen(el) {
       dropdownEl.classList.remove('hidden')
     })
   )
+
+  /* input change */
+  el.querySelectorAll('input').forEach((inputEl) =>
+    inputEl.addEventListener('change', () => {
+      // empty subsequent inputs
+      const name = inputEl.name
+      const stateEl = el.querySelector('input[name="state"]')
+      const cityEl = el.querySelector('input[name="city"]')
+      if (name === 'country') {
+        stateEl.value = ''
+        cityEl.value = ''
+      } else if (name === 'state') {
+        cityEl.value = ''
+      }
+
+      setNextIcons({ el, value: inputEl.value.trim() })
+    })
+  )
+}
+
+function setNextIcons({ el, value }) {
+  const page = state.get('country-state-city-page')
+  if (!value.length) {
+    el.querySelector('.fa-chevron-right')?.classList.add('hidden')
+    el.querySelector('.edit-header .fa-close').classList.add('hidden')
+  } else {
+    el.querySelector('.fa-chevron-right')?.classList.toggle(
+      'hidden',
+      page === 0 || page === 3
+    )
+    el.querySelector('.edit-header .fa-close').classList.toggle(
+      'hidden',
+      page < 3
+    )
+  }
 }
