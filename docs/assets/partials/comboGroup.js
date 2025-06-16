@@ -106,10 +106,7 @@ function react(el) {
 
 function listen(el) {
   el.querySelector('input').addEventListener('focusin', (e) => {
-    console.log('here', el.innerHTML)
-    if (el.querySelectorAll('.combo-option').length) {
-      this.querySelector('.combo-options').classList.remove('hidden')
-    }
+    el.querySelector('.combo-options').classList.remove('hidden')
   })
 }
 

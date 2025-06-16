@@ -24,7 +24,7 @@ const css = `
   margin-top: 10px;
   height: 11px;
 }
-.combo-group .fa-close {
+.combo-group .combo-option .fa-close {
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -130,7 +130,10 @@ function react(el) {
       'hidden',
       page === 0 || page === 3
     )
-    el.querySelector('.fa-close')?.classList.toggle('hidden', page !== 3)
+    el.querySelector('.edit-header .fa-close').classList.toggle(
+      'hidden',
+      page < 3
+    )
 
     el.querySelector('.edit-header h5').textContent = pages[page].toUpperCase()
     el.querySelector('.edit-header').classList.toggle('hidden', page === 0)
