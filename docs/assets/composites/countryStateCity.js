@@ -80,7 +80,7 @@ function build(el) {
       autocomplete: 'off',
       placeholder: 'City',
       classes: {
-        combo: 'combo-city',
+        combo: 'combo-city mb-40',
         input: 'field',
         icon: 'fa-city',
       },
@@ -144,17 +144,6 @@ function listen(el) {
     state.set('country-state-city-page', getPage(3))
   )
 
-  /* return to page 0 on Escape */
-  el.addEventListener(
-    'keyup',
-    (e) => {
-      if (e.key === 'Escape') {
-        state.set('country-state-city-page', 0)
-      }
-    },
-    true
-  )
-
   el.querySelector('.fa-chevron-left')?.addEventListener('click', () => {
     const page = state.get('country-state-city-page')
     state.set('country-state-city-page', getPage(page - 1))
@@ -169,8 +158,7 @@ function listen(el) {
     state.set('country-state-city-page', 0)
   })
 
-  /* input focus */
-  el.querySelectorAll('input').forEach((inputEl) =>
+  el.querySelectorAll('input').forEach((inputEl, idx) => {
     inputEl.addEventListener('focusin', (e) => {
       const input = e.target
       const name = input.name
@@ -183,9 +171,9 @@ function listen(el) {
       if (name === 'country') {
         labels = Object.keys(tree).sort()
       } else if (name === 'state' && tree[countryVal]) {
-        labels = Object.keys(tree[countryVal])
+        labels = Object.keys(tree[countryVal]).sort()
       } else if (name === 'city' && tree[countryVal]?.[stateVal]) {
-        labels = tree[countryVal][stateVal]
+        labels = tree[countryVal][stateVal].sort()
       }
 
       const options = labels.map((label) => {
@@ -199,42 +187,21 @@ function listen(el) {
 
       input.closest('.combo-group').setOptions(options)
     })
-  )
 
-  /* refresh options */
-  el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('keyup', (e) => {
-      const value = e.target.value.trim()
-      const dropdownEl = el.querySelector('.combo-options')
-      dropdownEl.classList.add('hidden')
-      if (!value.length) return
-
-      const options = [...dropdownEl.querySelectorAll('.combo-option')]
-      const relevantOptions = options.filter((opt) =>
-        opt.textContent.toLowerCase().includes(value.toLowerCase())
-      )
-      if (!relevantOptions.length) return
-
-      options.forEach((opt) => opt.classList.add('hidden'))
-      relevantOptions.forEach((opt) => opt.classList.remove('hidden'))
-      dropdownEl.classList.remove('hidden')
+      if (e.key === 'Escape') {
+        setPageUi({ el, page: 0 })
+        inputEl
+          .closest('.combo-group')
+          .querySelector('.combo-options')
+          .classList.add('hidden')
+      } else {
+        setPageUi({ el, page: idx + 1 })
+        refreshOptions({ inputEl: countryEl, el })
+      }
     })
-  )
 
-  /* set pageUi */
-  countryEl.addEventListener('keyup', () => setPageUi({ el, page: 1 }))
-  countryEl.addEventListener('change', () => setPageUi({ el, page: 1 }))
-
-  stateEl.addEventListener('keyup', () => setPageUi({ el, page: 2 }))
-  stateEl.addEventListener('change', () => setPageUi({ el, page: 2 }))
-
-  cityEl.addEventListener('keyup', () => setPageUi({ el, page: 3 }))
-  cityEl.addEventListener('change', () => setPageUi({ el, page: 3 }))
-
-  /* reset next inputs */
-  el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('change', () => {
-      // empty subsequent inputs
       const name = inputEl.name
       if (name === 'country') {
         stateEl.value = ''
@@ -242,8 +209,9 @@ function listen(el) {
       } else if (name === 'state') {
         cityEl.value = ''
       }
+      setPageUi({ el, page: idx + 1 })
     })
-  )
+  })
 }
 
 function getPage(desiredPage, el) {
@@ -300,4 +268,21 @@ function hasValue(name) {
   if (!inputEl)
     throw new Error(`hasValue cannot find an input with name "${name}"`)
   return inputEl.value.trim().length
+}
+
+function refreshOptions({ inputEl, el }) {
+  const value = inputEl.value.trim()
+  const dropdownEl = el.querySelector('.combo-options')
+  dropdownEl.classList.add('hidden')
+  if (!value.length) return
+
+  const options = [...dropdownEl.querySelectorAll('.combo-option')]
+  const relevantOptions = options.filter((opt) =>
+    opt.textContent.toLowerCase().includes(value.toLowerCase())
+  )
+  if (!relevantOptions.length) return
+
+  options.forEach((opt) => opt.classList.add('hidden'))
+  relevantOptions.forEach((opt) => opt.classList.remove('hidden'))
+  dropdownEl.classList.remove('hidden')
 }
