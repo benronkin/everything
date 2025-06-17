@@ -54,6 +54,7 @@ function build(el) {
       placeholder: 'Country',
       autocomplete: 'off',
       classes: {
+        combo: 'combo-country',
         input: 'field',
         icon: 'fa-flag',
       },
@@ -66,6 +67,7 @@ function build(el) {
       autocomplete: 'off',
       placeholder: 'State',
       classes: {
+        combo: 'combo-state',
         input: 'field',
         icon: 'fa-map',
       },
@@ -78,6 +80,7 @@ function build(el) {
       autocomplete: 'off',
       placeholder: 'City',
       classes: {
+        combo: 'combo-city',
         input: 'field',
         icon: 'fa-city',
       },
@@ -85,7 +88,7 @@ function build(el) {
   )
 
   const headerEl = createDiv({
-    className: 'edit-header hidden',
+    className: 'edit-header',
     html: [
       // div needed here for flex parent to keep header centered
       createDiv({
@@ -98,16 +101,20 @@ function build(el) {
 
       createHeader({ type: 'h5' }),
 
-      createIcon({
-        classes: {
-          primary: 'fa-chevron-right',
-        },
-      }),
+      createDiv({
+        html: [
+          createIcon({
+            classes: {
+              primary: 'fa-chevron-right',
+            },
+          }),
 
-      createIcon({
-        classes: {
-          primary: 'fa-close',
-        },
+          createIcon({
+            classes: {
+              primary: 'fa-close',
+            },
+          }),
+        ],
       }),
     ],
   })
@@ -115,60 +122,22 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('country-state-city-page', 'countryStateCity', (page) => {
-    const pages = ['', 'country', 'state', 'city']
-    for (let i = 0; i < 4; i++) {
-      if (i == 0) continue
-      const name = pages[i]
-      const input = el.querySelector(`input[name="${name}"]`)
-      const group = input?.closest('.input-group')
-      group.classList.toggle('hidden', i !== page && page > 0)
-    }
-
-    el.querySelector('.fa-chevron-left')?.classList.toggle('hidden', page < 2)
-
-    // right and close icon appear only if input has value
-    log(el.querySelector('input:not(.hidden)').value.trim())
-    setNextIcons({
-      el,
-      value: el.querySelector('.input-group:not(.hidden) input').value.trim(),
-    })
-
-    el.querySelector('.edit-header h5').textContent = pages[page].toUpperCase()
-    el.querySelector('.edit-header').classList.toggle('hidden', page === 0)
-  })
+  state.on('country-state-city-page', 'countryStateCity', (page) =>
+    setPageUi({ el, page })
+  )
 }
 
 function listen(el) {
-  /* navigate to the right page after a click */
-  el.addEventListener(
-    'click',
-    (e) => {
-      // ignore clicks while on edit pages 1-3
-      if (state.get('country-state-city-page') !== 0) return
+  el.querySelector('input[name="country"').addEventListener('click', () =>
+    state.set('country-state-city-page', 1)
+  )
 
-      let page = 0
-      if (!el.querySelector('input[name="country"]').value.trim().length) {
-        // country value is needed
-        page = 1
-      } else if (!el.querySelector('input[name="state"]').value.trim().length) {
-        // state value is needed
-        page = 2
-      } else {
-        // pick the page based on the element that was clicked on
-        // a non-input element will not have a name property
-        const pages = {
-          none: 1,
-          country: 1,
-          state: 2,
-          city: 3,
-        }
-        page = pages[e.target.name || 'none']
-      }
-      state.set('country-state-city-page', page)
-      el.querySelector('input:not(.hidden)').focus()
-    },
-    true
+  el.querySelector('input[name="state"').addEventListener('click', () =>
+    state.set('country-state-city-page', getPage(2))
+  )
+
+  el.querySelector('input[name="city"').addEventListener('click', () =>
+    state.set('country-state-city-page', getPage(3))
   )
 
   /* return to page 0 on Escape */
@@ -176,8 +145,6 @@ function listen(el) {
     'keyup',
     (e) => {
       if (e.key === 'Escape') {
-        el.querySelector('.combo-options').classList.add('hidden')
-        e.target.blur()
         state.set('country-state-city-page', 0)
       }
     },
@@ -186,12 +153,12 @@ function listen(el) {
 
   el.querySelector('.fa-chevron-left')?.addEventListener('click', () => {
     const page = state.get('country-state-city-page')
-    state.set('country-state-city-page', page - 1)
+    state.set('country-state-city-page', getPage(page - 1))
   })
 
   el.querySelector('.fa-chevron-right')?.addEventListener('click', () => {
     const page = state.get('country-state-city-page')
-    state.set('country-state-city-page', page + 1)
+    state.set('country-state-city-page', getPage(page + 1))
   })
 
   el.querySelector('.fa-close')?.addEventListener('click', () => {
@@ -230,7 +197,7 @@ function listen(el) {
     })
   )
 
-  /* input keyup */
+  /* refresh options */
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('keyup', (e) => {
       const value = e.target.value.trim()
@@ -250,7 +217,31 @@ function listen(el) {
     })
   )
 
-  /* input change */
+  /* set pageUi */
+  el.querySelector('input[name="country"]').addEventListener('keyup', () =>
+    setPageUi({ el, page: 1 })
+  )
+
+  el.querySelector('input[name="state"]').addEventListener('keyup', () =>
+    setPageUi({ el, page: 2 })
+  )
+
+  el.querySelector('input[name="city"]').addEventListener('keyup', () =>
+    setPageUi({ el, page: 3 })
+  )
+  el.querySelector('input[name="country"]').addEventListener('change', () =>
+    setPageUi({ el, page: 1 })
+  )
+
+  el.querySelector('input[name="state"]').addEventListener('change', () =>
+    setPageUi({ el, page: 2 })
+  )
+
+  el.querySelector('input[name="city"]').addEventListener('change', () =>
+    setPageUi({ el, page: 3 })
+  )
+
+  /* reset next inputs */
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('change', () => {
       // empty subsequent inputs
@@ -263,25 +254,82 @@ function listen(el) {
       } else if (name === 'state') {
         cityEl.value = ''
       }
-
-      setNextIcons({ el, value: inputEl.value.trim() })
     })
   )
 }
 
-function setNextIcons({ el, value }) {
-  const page = state.get('country-state-city-page')
-  if (!value.length) {
-    el.querySelector('.fa-chevron-right')?.classList.add('hidden')
-    el.querySelector('.edit-header .fa-close').classList.add('hidden')
-  } else {
-    el.querySelector('.fa-chevron-right')?.classList.toggle(
-      'hidden',
-      page === 0 || page === 3
-    )
-    el.querySelector('.edit-header .fa-close').classList.toggle(
-      'hidden',
-      page < 3
-    )
+function getPage(desiredPage) {
+  if ([0, 1].includes(desiredPage)) return desiredPage
+
+  const hasCountry = document
+    .querySelector('input[name="country"]')
+    .textContent.trim().length
+  const hasState = document
+    .querySelector('input[name="state"]')
+    .textContent.trim().length
+
+  switch (desiredPage) {
+    case 2:
+      if (hasValue('country')) {
+        return 2
+      } else {
+        return 1
+      }
+    case 3:
+      if (hasValue('country') && hasValue('state')) {
+        return 3
+      } else if (hasValue('country')) {
+        return 2
+      } else {
+        return 1
+      }
   }
+}
+
+function setPageUi({ el, page }) {
+  const comboEls = el.querySelectorAll('.combo-group')
+  comboEls.forEach((i) => i.classList.add('invisible'))
+
+  const iEls = el.querySelectorAll('.edit-header i')
+  iEls.forEach((i) => i.classList.add('invisible'))
+
+  const headerEl = el.querySelector('.edit-header')
+  headerEl.classList.remove('invisible')
+
+  const locationEl = el.querySelector('.edit-header h5')
+  const prevEl = el.querySelector('.fa-chevron-left')
+  const nextEl = el.querySelector('.fa-chevron-right')
+  const endEl = el.querySelector('.fa-close')
+
+  switch (page) {
+    case 0:
+      comboEls.forEach((i) => i.classList.remove('invisible'))
+      headerEl.classList.add('invisible')
+      break
+    case 1:
+      log(headerEl.className)
+      el.querySelector('.combo-country').classList.remove('invisible')
+      if (hasValue('country')) nextEl.classList.remove('invisible')
+      locationEl.textContent = 'COUNTRY'
+      break
+    case 2:
+      el.querySelector('.combo-state').classList.remove('invisible')
+      prevEl.classList.remove('invisible')
+      if (hasValue('state')) nextEl.classList.remove('invisible')
+      locationEl.textContent = 'STATE'
+      break
+    case 3:
+      el.querySelector('.combo-city').classList.remove('invisible')
+      prevEl.classList.remove('invisible')
+      if (hasValue('city')) endEl.classList.remove('invisible')
+      locationEl.textContent = 'CITY'
+      break
+  }
+}
+
+function hasValue(name) {
+  const inputEl = document.querySelector(`input[name="${name}"]`)
+  if (!inputEl)
+    throw new Error(`hasValue cannot find an input with name "${name}"`)
+  return inputEl.value.trim().length
 }

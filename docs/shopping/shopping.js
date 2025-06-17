@@ -171,6 +171,7 @@ function handleAddSuggestionToShoppingList({ item }) {
   state.set('suggestions-list', [...state.get('suggestions-list')])
   upodateShoppingList(sItems.join(','))
   handleToggleSuggestionsUI()
+  document.querySelector('[name="new-item').value = ''
 }
 
 function handleDeleteSuggestionClick({ item }) {

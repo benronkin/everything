@@ -177,6 +177,9 @@ ul {
   align-items: stretch;
   justify-content: flex-start;
 }
+.align-start {
+  align-items: flex-start !important;
+}
 .bb-white {
   border-bottom-color: white;
 }
@@ -199,6 +202,9 @@ ul {
   color: var(--gray6);
   backdrop-filter: blur(6px);
   border-radius: 12px;
+}
+.column-start {
+  align-items: flex-start !important;
 }
 .columns-wrapper {
   width: 90%;
@@ -235,13 +241,11 @@ ul {
 .hidden {
   display: none !important;
 }
-.align-start {
-  align-items: flex-start !important;
+.invisible {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
-.column-start {
-  align-items: flex-start !important;
-}
-
 .m-0 {
   margin: 0 !important;
 }

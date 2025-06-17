@@ -42,14 +42,13 @@ export function createComboGroup({
   name,
   placeholder,
   type,
-  className,
   options,
 } = {}) {
   injectStyle(css)
 
   if (!classes?.icon) {
     throw new Error(
-      `createComboGroup expects className for the div wrapper, and a classes object: {group: '', input: '', icon: ''} `
+      `createComboGroup expects a classes object: {combo: '', group: '', input: '', icon: ''} `
     )
   }
   if (!name) {
@@ -60,7 +59,7 @@ export function createComboGroup({
 
   const el = createDiv({
     id,
-    className: `${className || ''} combo-group`.trim(),
+    className: `${classes.combo || ''} combo-group`.trim(),
   })
 
   build({
