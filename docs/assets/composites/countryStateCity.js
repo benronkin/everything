@@ -236,8 +236,6 @@ function listen(el) {
     inputEl.addEventListener('change', () => {
       // empty subsequent inputs
       const name = inputEl.name
-      const stateEl = stateEl
-      const cityEl = cityEl
       if (name === 'country') {
         stateEl.value = ''
         cityEl.value = ''
