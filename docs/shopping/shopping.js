@@ -58,10 +58,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-// ------------------------
-// Helpers
-// ------------------------
-
 function build() {
   document.head.title = 'Shopping | Everything App'
   const body = document.body
@@ -139,10 +135,6 @@ function resetSuggestionsUI() {
   })
 }
 
-// ------------------------
-// Handlers
-// ------------------------
-
 function handleToggleSuggestionsUI() {
   document
     .getElementById('suggestions-list')
@@ -178,6 +170,7 @@ function handleAddSuggestionToShoppingList({ item }) {
   state.set('shopping-list', sItems)
   state.set('suggestions-list', [...state.get('suggestions-list')])
   upodateShoppingList(sItems.join(','))
+  handleToggleSuggestionsUI()
 }
 
 function handleDeleteSuggestionClick({ item }) {

@@ -54,6 +54,7 @@
       import { setMessage } from '../assets/js/ui.js'
       import { removeToasts } from '../assets/partials/toast.js'
       import { createNav } from '../assets/composites/nav.js'
+      import { createRightDrawer } from '../assets/composites/rightDrawer.js'
       import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
       import { createComboGroup } from '../assets/partials/comboGroup.js'
       import { fetchGeoIndex, updateGeoIndex } from '../journal/journal.api.js'
@@ -73,6 +74,8 @@
           className: 'mt-20 w-100',
         })
         columnsWrapperEl.appendChild(mainPanelEl)
+        columnsWrapperEl.appendChild(createRightDrawer())
+
         return mainPanelEl
       }
 

@@ -10,30 +10,14 @@ import { postWebAppJson } from '../js/io.js'
 import { listRecipeCategories } from './recipeCategories.js'
 import { listRecipes } from './recipes.js'
 
-// ----------------------
-// Globals
-// ----------------------
-
 const loginContainer = document.querySelector('#login-container')
 const leftPanelList = document.querySelector('#left-panel-list')
 let mainIconGroup
 
-// ----------------------
-// Event listeners
-// ----------------------
-
-/* When page is loaded */
 document.addEventListener('DOMContentLoaded', async () => {
   handleDOMContentLoaded()
 })
 
-// ------------------------
-// Event handler functions
-// ------------------------
-
-/**
- * Handle DOMContentLoaded
- */
 async function handleDOMContentLoaded() {
   // create and add page elements
   const wrapperEl = document.querySelector('.wrapper')
@@ -68,9 +52,6 @@ async function handleDOMContentLoaded() {
   wrapperEl.appendChild(footerEl)
 }
 
-/**
- * Handle login form submit
- */
 async function handleLoginFormSubmit(e) {
   e.preventDefault()
   const form = e.target.closest('.form-horizontal')
@@ -110,13 +91,6 @@ async function handleLoginFormSubmit(e) {
   btn.disabled = false
 }
 
-// ------------------------
-// Helpers
-// ------------------------
-
-/**
- * Populate the admin sidebar's link list
- */
 function showAdminRoutes(data) {
   const c = document.querySelector('#columns-container').closest('.container')
   c.classList.remove('hidden')
@@ -131,9 +105,6 @@ function showAdminRoutes(data) {
   }
 }
 
-/**
- * Hanlde an admin sidebar's link click
- */
 function handleLeftPanelLinkClick(el) {
   switch (el.dataset.id) {
     case 'admin-recipe-cateogries':
