@@ -8,9 +8,6 @@ import { log } from '../../assets/js/logger.js'
 import { state } from '../../assets/js/state.js'
 
 const css = `
-.input-group {
-  margin-bottom: 40px;
-}
 `
 
 export function createEntryGroup() {

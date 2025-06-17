@@ -54,7 +54,7 @@ function build(el) {
       placeholder: 'Country',
       autocomplete: 'off',
       classes: {
-        combo: 'combo-country',
+        combo: 'combo-country mb-40',
         input: 'field',
         icon: 'fa-flag',
       },
@@ -67,7 +67,7 @@ function build(el) {
       autocomplete: 'off',
       placeholder: 'State',
       classes: {
-        combo: 'combo-state',
+        combo: 'combo-state mb-40',
         input: 'field',
         icon: 'fa-map',
       },
@@ -128,7 +128,11 @@ function react(el) {
 }
 
 function listen(el) {
-  el.querySelector('input[name="country"').addEventListener('click', () =>
+  const countryEl = el.querySelector('input[name="country"]')
+  const stateEl = el.querySelector('input[name="state"]')
+  const cityEl = el.querySelector('input[name="city"]')
+
+  countryEl.addEventListener('click', () =>
     state.set('country-state-city-page', 1)
   )
 
@@ -172,8 +176,8 @@ function listen(el) {
       const name = input.name
 
       const tree = state.get('country-state-city-tree')
-      const countryVal = el.querySelector('input[name="country"]').value.trim()
-      const stateVal = el.querySelector('input[name="state"]').value.trim()
+      const countryVal = countryEl.value.trim()
+      const stateVal = stateEl.value.trim()
 
       let labels = []
       if (name === 'country') {
@@ -218,36 +222,22 @@ function listen(el) {
   )
 
   /* set pageUi */
-  el.querySelector('input[name="country"]').addEventListener('keyup', () =>
-    setPageUi({ el, page: 1 })
-  )
+  countryEl.addEventListener('keyup', () => setPageUi({ el, page: 1 }))
+  countryEl.addEventListener('change', () => setPageUi({ el, page: 1 }))
 
-  el.querySelector('input[name="state"]').addEventListener('keyup', () =>
-    setPageUi({ el, page: 2 })
-  )
+  stateEl.addEventListener('keyup', () => setPageUi({ el, page: 2 }))
+  stateEl.addEventListener('change', () => setPageUi({ el, page: 2 }))
 
-  el.querySelector('input[name="city"]').addEventListener('keyup', () =>
-    setPageUi({ el, page: 3 })
-  )
-  el.querySelector('input[name="country"]').addEventListener('change', () =>
-    setPageUi({ el, page: 1 })
-  )
-
-  el.querySelector('input[name="state"]').addEventListener('change', () =>
-    setPageUi({ el, page: 2 })
-  )
-
-  el.querySelector('input[name="city"]').addEventListener('change', () =>
-    setPageUi({ el, page: 3 })
-  )
+  cityEl.addEventListener('keyup', () => setPageUi({ el, page: 3 }))
+  cityEl.addEventListener('change', () => setPageUi({ el, page: 3 }))
 
   /* reset next inputs */
   el.querySelectorAll('input').forEach((inputEl) =>
     inputEl.addEventListener('change', () => {
       // empty subsequent inputs
       const name = inputEl.name
-      const stateEl = el.querySelector('input[name="state"]')
-      const cityEl = el.querySelector('input[name="city"]')
+      const stateEl = stateEl
+      const cityEl = cityEl
       if (name === 'country') {
         stateEl.value = ''
         cityEl.value = ''
@@ -258,70 +248,50 @@ function listen(el) {
   )
 }
 
-function getPage(desiredPage) {
-  if ([0, 1].includes(desiredPage)) return desiredPage
+function getPage(desiredPage, el) {
+  if (desiredPage === 0 || desiredPage === 1) return desiredPage
+  const country = hasValue('country', el)
+  const state = hasValue('state', el)
 
-  const hasCountry = document
-    .querySelector('input[name="country"]')
-    .textContent.trim().length
-  const hasState = document
-    .querySelector('input[name="state"]')
-    .textContent.trim().length
-
-  switch (desiredPage) {
-    case 2:
-      if (hasValue('country')) {
-        return 2
-      } else {
-        return 1
-      }
-    case 3:
-      if (hasValue('country') && hasValue('state')) {
-        return 3
-      } else if (hasValue('country')) {
-        return 2
-      } else {
-        return 1
-      }
-  }
+  if (desiredPage === 2) return country ? 2 : 1
+  if (desiredPage === 3) return country ? (state ? 3 : 2) : 1
 }
 
 function setPageUi({ el, page }) {
   const comboEls = el.querySelectorAll('.combo-group')
-  comboEls.forEach((i) => i.classList.add('invisible'))
+  comboEls.forEach((i) => i.classList.add('hidden'))
 
   const iEls = el.querySelectorAll('.edit-header i')
-  iEls.forEach((i) => i.classList.add('invisible'))
+  iEls.forEach((i) => i.classList.add('hidden'))
 
   const headerEl = el.querySelector('.edit-header')
-  headerEl.classList.remove('invisible')
+  headerEl.classList.remove('hidden')
 
   const locationEl = el.querySelector('.edit-header h5')
-  const prevEl = el.querySelector('.fa-chevron-left')
-  const nextEl = el.querySelector('.fa-chevron-right')
-  const endEl = el.querySelector('.fa-close')
+  const prevEl = el.querySelector('.edit-header .fa-chevron-left')
+  const nextEl = el.querySelector('.edit-header .fa-chevron-right')
+  const endEl = el.querySelector('.edit-header .fa-close')
 
   switch (page) {
     case 0:
-      comboEls.forEach((i) => i.classList.remove('invisible'))
-      headerEl.classList.add('invisible')
+      comboEls.forEach((i) => i.classList.remove('hidden'))
+      headerEl.classList.add('hidden')
       break
     case 1:
-      log(headerEl.className)
-      el.querySelector('.combo-country').classList.remove('invisible')
-      if (hasValue('country')) nextEl.classList.remove('invisible')
+      el.querySelector('.combo-country').classList.remove('hidden')
+      if (hasValue('country')) nextEl.classList.remove('hidden')
       locationEl.textContent = 'COUNTRY'
       break
     case 2:
-      el.querySelector('.combo-state').classList.remove('invisible')
-      prevEl.classList.remove('invisible')
-      if (hasValue('state')) nextEl.classList.remove('invisible')
+      el.querySelector('.combo-state').classList.remove('hidden')
+      prevEl.classList.remove('hidden')
+      if (hasValue('state')) nextEl.classList.remove('hidden')
       locationEl.textContent = 'STATE'
       break
     case 3:
-      el.querySelector('.combo-city').classList.remove('invisible')
-      prevEl.classList.remove('invisible')
-      if (hasValue('city')) endEl.classList.remove('invisible')
+      el.querySelector('.combo-city').classList.remove('hidden')
+      prevEl.classList.remove('hidden')
+      if (hasValue('city')) endEl.classList.remove('hidden')
       locationEl.textContent = 'CITY'
       break
   }
