@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link rel="stylesheet" href="../assets/css/all.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="shortcut icon" href="../assets/img/favicon.ico" />
+    <title></title>
+  </head>
+  <body class="dark-mode">
+    <script type="module">
+      import { handleTokenQueryParam } from '../assets/js/io.js'
+      import { state } from '../assets/js/state.js'
+      import { createDiv } from '../assets/partials/div.js'
+      import { createHeader } from '../assets/partials/header.js'
+      import { createNav } from '../assets/composites/nav.js'
+      import { createRightDrawer } from '../assets/composites/rightDrawer.js'
+      import { createFooter } from '../assets/composites/footer.js'
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          build()
+
+          handleTokenQueryParam()
+
+          const token = localStorage.getItem('authToken')
+          if (!token) {
+            console.log('handleDOMContentLoaded: no token')
+            setMessage({
+              type: 'danger',
+              message: 'Authentication failed',
+              position: 'BOTTOM_RIGHT',
+            })
+            document.querySelector('#main-panel').classList.remove('hidden')
+            return
+          }
+        } catch (error) {
+          console.trace(error)
+        }
+      })
+
+      function build() {
+        document.head.title = 'Oops | Everything App'
+        const body = document.body
+        body.classList.add('dark-mode')
+
+        const wrapperEl = createDiv({
+          className: 'wrapper',
+        })
+        body.prepend(wrapperEl)
+
+        wrapperEl.appendChild(
+          createNav({
+            title:
+              '<i class="fa-solid fa-face-grin-squint-tears"></i> Where are we?',
+          })
+        )
+
+        wrapperEl.appendChild(createDiv({ id: 'for-grid-dont-delete' }))
+
+        const columnsWrapperEl = createDiv({
+          className: 'columns-wrapper',
+        })
+        wrapperEl.appendChild(columnsWrapperEl)
+
+        columnsWrapperEl.appendChild(
+          createDiv({
+            id: 'main-panel',
+            html: [
+              createHeader({ html: 'This page does not exist.', type: 'h3' }),
+            ],
+          })
+        )
+
+        columnsWrapperEl.appendChild(createRightDrawer())
+        wrapperEl.appendChild(createFooter())
+      }
+    </script>
+  </body>
+</html>
