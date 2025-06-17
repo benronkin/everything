@@ -1,10 +1,7 @@
 /* global Quill */
 
 import { injectStyle } from '../js/ui.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
+import { log } from '../js/logger.js'
 
 const css = `
 .ql-container {
@@ -19,6 +16,7 @@ const css = `
   word-break: break-word;
   overflow-wrap: anywhere;
 } 
+
 .ql-toolbar.ql-snow {
   border: none;
   background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
@@ -45,21 +43,23 @@ const css = `
   display: inline-flex !important;
   align-items: center !important;
   line-height: normal !important;
+  padding-left: 0 !important;
+  font-weight: normal !important;
 }
-
 .ql-picker-label::before {
   position: static !important; /* let flexbox center it */
   margin-left: 6px; /* optional tweak */
 }
+.quill-span {
+  padding: 0;
+  position: relative;
+}
+.quill-span button {
+  padding: 0;  
+  margin-bottom: 14px;
+}
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createDivQuill({ div } = {}) {
   injectStyle(css)
 
@@ -91,5 +91,51 @@ export function createDivQuill({ div } = {}) {
     theme: 'snow',
   })
 
+  addPlainText(quill)
+
   return quill
+}
+
+function addPlainText(quill) {
+  // add
+  quill.root.addEventListener('keydown', (e) => {
+    const isPastePlain = e.metaKey && e.shiftKey && e.key === 'V'
+
+    if (isPastePlain) {
+      e.preventDefault()
+
+      navigator.clipboard
+        .readText()
+        .then((text) => {
+          const cursor = quill.getSelection()?.index ?? 0
+          quill.insertText(cursor, text, 'user')
+        })
+        .catch((err) => {
+          console.warn('Could not read clipboard:', err)
+        })
+    }
+  })
+
+  // add plain-text button to toolbar
+  const toolbar = quill.getModule('toolbar')
+  const container = toolbar.container
+
+  const span = document.createElement('span')
+  span.className = 'ql-formats quill-span'
+
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.innerHTML = '📋'
+  button.className = 'ql-paste-plain'
+  button.title = 'Paste plain-text'
+
+  button.onclick = () => {
+    navigator.clipboard.readText().then((text) => {
+      const cursor = quill.getSelection()?.index ?? 0
+      quill.insertText(cursor, text, 'user')
+    })
+  }
+
+  container.appendChild(span)
+  span.appendChild(button)
 }

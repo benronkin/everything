@@ -405,6 +405,36 @@ main {
 .p-10 {
   padding: 10px !important;
 }
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='poppins']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='poppins']::before {
+  content: 'Poppins';
+  font-family: 'Poppins', sans-serif;
+}
+
+.ql-snow
+  .ql-picker.ql-font
+  .ql-picker-label[data-value='times-new-roman']::before,
+.ql-snow
+  .ql-picker.ql-font
+  .ql-picker-item[data-value='times-new-roman']::before {
+  content: 'Times New Roman';
+  font-family: 'Times New Roman', serif;
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='arial']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='arial']::before {
+  content: 'Arial';
+  font-family: Arial, sans-serif;
+}
+.ql-font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+.ql-font-times-new-roman {
+  font-family: 'Times New Roman', serif;
+}
+.ql-font-arial {
+  font-family: Arial, sans-serif;
+}
 .r-0 {
   right: 0 !important;
 }

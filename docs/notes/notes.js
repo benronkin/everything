@@ -45,13 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-// ------------------------
-// Helpers
-// ------------------------
-
-/**
- *
- */
 function build() {
   document.head.title = 'Notes | Everything App'
   const body = document.body
@@ -73,17 +66,10 @@ function build() {
   wrapperEl.appendChild(createFooter())
 }
 
-/**
- * Subscribe to state.
- */
 function react() {
   state.on('icon-click:add-note', 'notes', reactAddNote)
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
 }
-
-/**
- * Add a journal entry
- */
 
 async function reactAddNote({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
@@ -104,9 +90,6 @@ async function reactAddNote({ id: btnId }) {
   delete addBtn.disabled
 }
 
-/**
- *
- */
 async function reactNoteDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
