@@ -77,7 +77,7 @@ function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
-      log(`mainPanel is hiding itself on app-mode: ${appMode}`)
+      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
       return
     }
     reactAppMode(el)
@@ -90,7 +90,7 @@ function react(el) {
 function reactAppMode(el) {
   const doc = state.get('active-doc')
   el.classList.remove('hidden')
-  log('mainPanel is showing itself on active-doc')
+  // log('mainPanel is showing itself on active-doc')
 
   el.querySelector('[data-id="recipe-title"]').value = doc.title || ''
   el.querySelector('[data-id="recipe-notes"]').value = doc.notes || ''

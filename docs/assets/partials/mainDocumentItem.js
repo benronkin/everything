@@ -14,12 +14,13 @@ import { state } from '../js/state.js'
 
 const css = `
 .md-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 12px;
   border-radius: var(--border-radius);
   cursor: pointer;
-  display: flex;
   font-weight: 500;
-  justify-content: space-between;
   margin-bottom: 4px;
   padding: 4px 14px;
   transition: all 0.2s ease-in-out;

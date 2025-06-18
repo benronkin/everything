@@ -28,6 +28,9 @@ const css = `
 #main-panel form {
   gap: 0 !important;
 }
+#main-panel input {
+  border-bottom: 1px solid var(--gray0);
+}
 `
 
 export function mainPanel() {
@@ -75,7 +78,7 @@ function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
-      log(`mainPanel is hiding itself on app-mode: ${appMode}`)
+      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
       return
     }
     reactAppMode(el)
@@ -108,7 +111,7 @@ async function reactAppMode(el) {
   }
 
   el.classList.remove('hidden')
-  log('mainPanel is showing itself on active-doc')
+  // log('mainPanel is showing itself on active-doc')
 
   el.querySelector('#note-title').value = doc.title
 
@@ -118,7 +121,7 @@ async function reactAppMode(el) {
   el.querySelector('#note-id').insertHtml(doc.id)
 
   if (state.get('active-doc').role === 'peer')
-    document.querySelector('.danger-zone').remove()
+    document.querySelector('.danger-zone')?.remove()
 }
 
 async function handleUpdateNote() {

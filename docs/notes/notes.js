@@ -9,6 +9,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createNote, deleteNote, fetchNotes } from './notes.api.js'
+import { createPeerGroup } from '../assets/partials/peerGroup.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -68,7 +69,19 @@ function build() {
 
 function react() {
   state.on('icon-click:add-note', 'notes', reactAddNote)
+
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
+
+  state.on('active-doc', 'notes', (doc) => {
+    document.querySelector('#toolbar .peer-group')?.remove()
+    if (doc?.peers.length) {
+      document
+        .querySelector('#toolbar .icons')
+        .appendChild(
+          createPeerGroup({ peers: doc.peers, className: 'ml-auto' })
+        )
+    }
+  })
 }
 
 async function reactAddNote({ id: btnId }) {

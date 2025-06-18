@@ -258,6 +258,9 @@ ul {
 .mb-40 {
   margin-bottom: 40px !important;
 }
+.ml-auto {
+  margin-left: auto !important;
+}
 .ml-20 {
   margin-left: 20px !important;
 }

@@ -12,9 +12,8 @@ const css = `
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   border-radius: var(--border-radius);  
-  padding: 10px;
 }
 `
 

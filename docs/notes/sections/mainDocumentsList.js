@@ -1,16 +1,24 @@
+import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
+import { createSpan } from '../../assets/partials/span.js'
+import { createPeerGroup } from '../../assets/partials/peerGroup.js'
+import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
+const css = `
+.md-item .title {
+  flex: 1 1 auto;           /* take all leftover width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* … when it runs out */
+}
+`
 
-/**
- * Constuctor of a custom element
- */
 export function mainDocumentsList() {
+  injectStyle(css)
+
   const el = createMainDocumentsList({
     id: 'left-panel-list',
     className: 'mt-10',
@@ -21,28 +29,16 @@ export function mainDocumentsList() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    // populate children
     const children = docs.map((doc) => {
-      const html = doc.title
+      const html = [createSpan({ html: doc.title })]
+      if (doc.peers.length) {
+        html.push(createPeerGroup({ peers: doc.peers }))
+      }
       return createMainDocumentItem({ id: doc.id, html })
     })
     el.deleteChildren().addChildren(children)
-
-    // select previously active child
-    // const priorDoc = state.get('active-doc')
-    // if (priorDoc) {
-    //   const child = el.getChildById(priorDoc.id)
-    //   child && (child.selected = true)
-    // }
   })
 
   setMessage()

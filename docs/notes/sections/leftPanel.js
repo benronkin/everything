@@ -69,7 +69,7 @@ function react(el) {
     }
 
     el.classList.remove('hidden')
-    log(`letPanel is showing itself on app-mode: ${appMode}`)
+    // log(`letPanel is showing itself on app-mode: ${appMode}`)
   })
 
   state.on('main-documents', 'leftPanel', (docs) => {

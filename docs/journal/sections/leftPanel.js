@@ -62,13 +62,13 @@ function build(el) {
 function react(el) {
   state.on('app-mode', 'leftPanel', (appMode) => {
     if (appMode !== 'left-panel') {
-      log(`letPanel is hiding itself on app-mode: ${appMode}`)
+      // log(`letPanel is hiding itself on app-mode: ${appMode}`)
       el.classList.add('hidden')
       return
     }
 
     el.classList.remove('hidden')
-    log(`letPanel is showing itself on app-mode: ${appMode}`)
+    // log(`letPanel is showing itself on app-mode: ${appMode}`)
 
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
@@ -82,7 +82,7 @@ function react(el) {
     const docExists = docs.findIndex((el) => el.id === currentId)
     if (!docExists) {
       state.set('active-doc', null)
-      log('leftPanel is nullyfing active-doc on main-documents')
+      // log('leftPanel is nullyfing active-doc on main-documents')
       return
     }
   })
