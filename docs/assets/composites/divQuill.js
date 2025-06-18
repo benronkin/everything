@@ -56,7 +56,35 @@ const css = `
 }
 .quill-span button {
   padding: 0;  
-  margin-bottom: 14px;
+  margin-bottom: 7px;
+}
+.ql-editor .ql-ui {
+  top: -5px !important;
+}
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 0 !important;
+}
+.ql-editor li.ql-indent-1:not(.ql-direction-rtl) {
+  padding-left: 3rem !important;
+}
+.ql-editor li.ql-indent-2:not(.ql-direction-rtl) {
+  padding-left: 4.5rem !important;
+}
+.ql-editor li.ql-indent-3:not(.ql-direction-rtl) {
+  padding-left: 6rem !important;
+  }  
+.ql-editor li.ql-indent-4:not(.ql-direction-rtl) {
+  padding-left: 7.5rem !important;
+}
+.ql-editor li.ql-indent-5:not(.ql-direction-rtl) {
+  padding-left: 9rem !important;
+}
+
+@media (min-width: 768px) {
+  .quill-span button {
+    margin-bottom: 0;
+  }
 }
 `
 
