@@ -12,10 +12,6 @@ import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
 import { removeToasts } from '../../assets/partials/toast.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 #main-panel {
   width: 100%;
@@ -34,13 +30,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function mainPanel() {
   injectStyle(css)
 
@@ -55,13 +44,6 @@ export function mainPanel() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {
   el.appendChild(
     createInputGroup({
@@ -82,7 +64,6 @@ function build(el) {
       div: divEl,
     })
   )
-
   el.appendChild(dangerZone())
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
@@ -90,9 +71,6 @@ function build(el) {
   el.appendChild(createSpan({ id: 'note-id', className: 'smaller' }))
 }
 
-/**
- *
- */
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
@@ -104,9 +82,6 @@ function react(el) {
   })
 }
 
-/**
- *
- */
 function listen(el) {
   el.querySelector('#note-title').addEventListener('keyup', () => {
     removeToasts()
@@ -123,9 +98,6 @@ function listen(el) {
   })
 }
 
-/**
- *
- */
 async function reactAppMode(el) {
   const doc = state.get('active-doc')
 
@@ -144,11 +116,11 @@ async function reactAppMode(el) {
   const delta = quill.clipboard.convert({ html: doc.note })
   quill.setContents(delta, 'silent')
   el.querySelector('#note-id').insertHtml(doc.id)
+
+  if (state.get('active-doc').role === 'peer')
+    document.querySelector('.danger-zone').remove()
 }
 
-/**
- *
- */
 async function handleUpdateNote() {
   debouncedUpdate()
 }
