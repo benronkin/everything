@@ -1,34 +1,40 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createPeer } from '../../assets/partials/peer.js'
+import { createIcon } from './icon.js'
 import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
 const css = `
 .peer-group {
-  flex: 0 0 auto;           /* don’t shrink */
   display: flex;
+  flex: 0 0 auto;           /* don’t shrink */
   gap: 4px;
+  align-items: center;
 }
-
 `
 
-export function createPeerGroup({ id, className = '', peers } = {}) {
+export function createPeerGroup({
+  id,
+  className = '',
+  peers,
+  showShare = false,
+} = {}) {
   injectStyle(css)
 
   className = `peer-group ${className}`.trim()
   const el = createDiv({ className, id })
 
-  build({ el, peers })
+  build({ el, peers, showShare })
 
   return el
 }
 
-function build({ el, peers }) {
+function build({ el, peers, showShare }) {
   const peersToShow = peers.slice(0, 3)
   peersToShow.forEach((p) => el.appendChild(createPeer({ name: p.name })))
 
-  if (peers.length > 3) {
+  if (peers?.length > 3) {
     el.appendChild(
       createDiv({
         className: 'peer more',
@@ -36,4 +42,14 @@ function build({ el, peers }) {
       })
     )
   }
+
+  if (showShare)
+    el.appendChild(
+      createIcon({
+        classes: {
+          primary: 'fa-arrow-up-right-from-square',
+          other: ['secondary'],
+        },
+      })
+    )
 }

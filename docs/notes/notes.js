@@ -74,12 +74,14 @@ function react() {
 
   state.on('active-doc', 'notes', (doc) => {
     document.querySelector('#toolbar .peer-group')?.remove()
-    if (doc?.peers.length) {
-      document
-        .querySelector('#toolbar .icons')
-        .appendChild(
-          createPeerGroup({ peers: doc.peers, className: 'ml-auto' })
-        )
+    if (doc) {
+      document.querySelector('#toolbar .icons').appendChild(
+        createPeerGroup({
+          peers: doc.peers,
+          className: 'ml-auto',
+          showShare: true,
+        })
+      )
     }
   })
 }

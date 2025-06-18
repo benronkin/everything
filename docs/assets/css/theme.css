@@ -298,6 +298,15 @@ i.primary:hover {
   color: var(--gray6);
   background-color: var(--purple3);
 }
+i.secondary {
+  background-color: var(--teal2);
+  padding: 5px;
+  transition: all 0.2s ease-in-out;
+}
+i.secondary:hover {
+  color: var(--gray6);
+  background-color: var(--teal3);
+}
 input,
 textarea {
   background-color: transparent;

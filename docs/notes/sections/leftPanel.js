@@ -63,7 +63,7 @@ function build(el) {
 function react(el) {
   state.on('app-mode', 'leftPanel', (appMode) => {
     if (appMode !== 'left-panel') {
-      log(`letPanel is hiding itself on app-mode: ${appMode}`)
+      // log(`letPanel is hiding itself on app-mode: ${appMode}`)
       el.classList.add('hidden')
       return
     }

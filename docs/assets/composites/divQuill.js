@@ -16,7 +16,10 @@ const css = `
   word-break: break-word;
   overflow-wrap: anywhere;
 } 
-
+#editor {
+  border-bottom-left-radius: var(--border-radius) !important;
+  border-bottom-right-radius: var(--border-radius) !important;
+}
 .ql-toolbar.ql-snow {
   border: none;
   background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
@@ -26,8 +29,8 @@ const css = `
   box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
 }
 .ql-container.ql-snow {
-  background-color: var(--gray1);
-  border: none;
+  background-color: var(--gray1) !important;
+  border: none !important;
 }
 .ql-snow .ql-stroke {
   stroke: var(--gray5);
