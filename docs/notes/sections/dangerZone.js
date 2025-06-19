@@ -45,8 +45,9 @@ function react(el) {
     const modalBody = doc.title
 
     const modal = el.querySelector('#modal-delete')
-    modal.querySelector('#modal-delete-header').insertHtml('Delete note:')
-    modal.querySelector('#modal-delete-body').insertHtml(modalBody)
+    console.log(modal.innerHTML)
+    modal.querySelector('.modal-header').insertHtml('Delete note:')
+    modal.querySelector('.modal-body').insertHtml(modalBody)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
   })

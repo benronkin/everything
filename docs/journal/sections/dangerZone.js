@@ -32,21 +32,14 @@ export function dangerZone() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function react(el) {
   state.on('icon-click:show-delete-modal-icon', 'dangerZone', () => {
     const doc = state.get('active-doc')
     const modalBody = createEntryTitle(doc)
 
     const modal = el.querySelector('#modal-delete')
-    modal.querySelector('#modal-delete-header').insertHtml('Delete entry:')
-    modal.querySelector('#modal-delete-body').insertHtml(modalBody)
+    modal.querySelector('.modal-header').insertHtml('Delete entry:')
+    modal.querySelector('.modal-body').insertHtml(modalBody)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
   })

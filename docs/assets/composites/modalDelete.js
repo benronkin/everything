@@ -12,52 +12,50 @@ import { createSpan } from '../partials/span.js'
 // -------------------------------
 
 const css = `
-  dialog {
-    padding: 20px 30px;
-    max-width: 400px;
-    width: 90%;
-    margin: auto;
-  }
-  #modal-delete .input-group {
+.modal {
+  padding: 0;
+  max-width: 400px;
+}
+.modal .input-group {
   width: 100%;
   display: flex;
   align-items: center;
   margin-top: 20px;
 }  
-#modal-delete .input-group i {
+.modal .input-group i {
   padding: 8px 0;  
   color: var(--gray6);
 }
-  #modal-delete-header {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
-  #modal-delete-body {
-    margin-bottom: 20px;
-  }
-  #modal-delete-group {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    margin: 40px 0 20px;
-  }
-  #modal-delete-input {
-    width: 100%;
-    padding: 8px 10px;
-  }
+.modal .modal-header {
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  margin: 0;
+}
+.modal .modal-body {
+  display: block;
+  padding: 30px 20px;
+  margin: 0;
+}
+.modal .input-group {
+  padding: 0 20px 20px;
+}
+.modal .input-group input {
+  flex: 1 1 auto;   /* or simply flex: 1;             */
+  width: 100%;      /* keeps it full-width in Safari   */
+  min-width: 0;     /* prevents overflow in Chrome     */
+}
+.modal .modal-button-group {
+  display:flex; 
+  justify-content:flex-start;
+  align-items: center;
+  gap:20px; 
+  padding: 12px 20px;
+  margin: 0;
+}
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constructor for a modal-delete
- */
-export function createModalDelete({ id, password = true }) {
+export function createModalDelete({ password = true }) {
   injectStyle(css)
 
   const el = document.createElement('dialog')
@@ -66,39 +64,32 @@ export function createModalDelete({ id, password = true }) {
   react({ el, password })
   listen({ el, password })
 
+  el.id = 'modal-delete'
+
   el.message = message.bind(el)
   el.getPassword = getPassword.bind(el)
   el.setPassword = setPassword.bind(el)
 
-  if (id) {
-    el.id = id
-    el.dataset.id = id
-  }
-
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function build({ el, password }) {
+  const divEl = createDiv({ className: 'modal' })
+  el.appendChild(divEl)
+
   const headerEl = createHeader({
-    id: 'modal-delete-header',
+    className: 'modal-header',
     type: 'h3',
   })
-  el.appendChild(headerEl)
+  divEl.appendChild(headerEl)
 
   let spanEl = createSpan({
-    id: 'modal-delete-body',
+    className: 'modal-body',
   })
-  el.appendChild(spanEl)
+  divEl.appendChild(spanEl)
 
   if (password) {
-    el.appendChild(
+    divEl.appendChild(
       createDiv({
         className: 'input-group',
         html: [
@@ -115,8 +106,8 @@ function build({ el, password }) {
     )
   }
 
-  let divEl = createDiv({ id: 'modal-delete-group' })
-  el.appendChild(divEl)
+  const groupEl = createDiv({ className: 'modal-button-group' })
+  divEl.appendChild(groupEl)
 
   let buttonEl = createButton({
     id: 'modal-delete-btn',
@@ -124,7 +115,7 @@ function build({ el, password }) {
     className: 'primary',
   })
 
-  divEl.appendChild(buttonEl)
+  groupEl.appendChild(buttonEl)
 
   buttonEl = createButton({
     id: 'modal-cancel-btn',
@@ -132,18 +123,14 @@ function build({ el, password }) {
     className: 'bordered',
   })
 
-  divEl.appendChild(buttonEl)
+  groupEl.appendChild(buttonEl)
 
   spanEl = createSpan({
-    id: 'modal-delete-message',
-    className: 'smaller',
+    className: 'modal-message smaller',
   })
   divEl.appendChild(spanEl)
 }
 
-/**
- *
- */
 export function react({ el, password }) {
   state.on('button-click:modal-cancel-btn', 'modalDelete', () => {
     password && (el.querySelector('#modal-delete-input').value = '')
@@ -177,7 +164,7 @@ function listen({ el, password }) {
  *
  */
 function message(text = '') {
-  this.querySelector('#modal-delete-message').insertHtml(text)
+  this.querySelector('.modal-message').insertHtml(text)
 }
 
 /**

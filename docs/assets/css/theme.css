@@ -250,14 +250,22 @@ label.primary:hover {
   box-shadow: 0 0 10px var(--purple3);
 }
 dialog {
+  margin: auto;
+  color: var(--gray6);
   border: none;
   border-radius: var(--border-radius);
-  background: var(--gray2);
-  color: var(--gray6);
-  box-shadow: var(--card-shadow);
+  background-color: color-mix(in srgb, var(--gray1) 99%, transparent);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
 }
 dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.9);
+}
+dialog .modal .modal-header {
+  border-bottom: 1px dotted var(--gray2);
+}
+dialog .modal .modal-button-group {
+  background: color-mix(in srgb, var(--gray6) 3%, transparent);
+  border-top: 1px solid var(--gray1);
 }
 footer {
   background: var(--gray1);

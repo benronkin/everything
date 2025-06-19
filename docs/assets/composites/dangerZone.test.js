@@ -41,7 +41,7 @@ describe('Create a dangerZone section', () => {
     showModalIcon.click()
 
     expect(state.get('icon-click:show-delete-modal-icon')).toBeTruthy()
-    expect(modal.querySelector('#modal-delete-body').textContent).toBe(
+    expect(modal.querySelector('.modal-body').textContent).toBe(
       'Kirkland Brewery (4/18)'
     )
     // modal should react to the state change

@@ -59,6 +59,7 @@
       import { createComboGroup } from '../assets/partials/comboGroup.js'
       import { fetchGeoIndex, updateGeoIndex } from '../journal/journal.api.js'
       import { createModalshare } from '../assets/composites/modalShare.js'
+      import { createPill } from '../assets/partials/pill.js'
       import { log } from '../assets/js/logger.js'
 
       const mainPanelEl = createMainPanel()
@@ -85,6 +86,14 @@
         modalShareEl.setHeader(`Share Smarty pants!`)
         modalShareEl.showModal()
       })()
+
+      // mainPanelEl.appendChild(
+      //   createPill({
+      //     classes: { icon: 'fa-check' },
+      //     isSelected: true,
+      //     html: 'Ben',
+      //   })
+      // )
 
       function countryStateCity() {
         /* Design components: */

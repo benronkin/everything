@@ -11,45 +11,42 @@ import { fetchPeers } from '../../users/users.api.js'
 import { log } from '../js/logger.js'
 
 const css = `
-  dialog {
-    padding: 20px 30px;
-    max-width: 400px;
-    width: 90%;
-    margin: auto;
-  }
-  #modal-share .input-group {
+.modal {
+  padding: 0;
+  max-width: 400px;
+}
+.modal .input-group {
   width: 100%;
   display: flex;
   align-items: center;
   margin-top: 20px;
 }  
-#modal-share .input-group i {
+.modal .input-group i {
   padding: 8px 0;  
   color: var(--gray6);
 }
-  #modal-share-header {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
-  #modal-share-body {
-    margin-bottom: 20px;
-  }
-  #modal-share-group {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    margin: 40px 0 20px;
-  }
-  #modal-share-input {
-    width: 100%;
-    padding: 8px 10px;
-  }
+.modal .modal-header {
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  margin: 0;
+}
+.modal .modal-body {
+  display: block;
+  padding: 30px 20px;
+  margin: 0;
+}
+.modal .modal-button-group {
+  display:flex; 
+  justify-content:flex-start;
+  align-items: center;
+  gap:20px; 
+  padding: 12px 20px;
+  margin: 0;
+}
 `
 
-export function createModalshare({ id } = {}) {
+export function createModalshare() {
   injectStyle(css)
 
   const el = document.createElement('dialog')
@@ -58,47 +55,48 @@ export function createModalshare({ id } = {}) {
   react(el)
   listen(el)
 
-  id && (el.id = id)
-
+  el.id = 'modal-share'
   el.setHeader = setHeader.bind(el)
 
   return el
 }
 
 function build(el) {
-  const headerEl = createHeader({
-    id: 'modal-share-header',
-    type: 'h3',
-  })
-  el.appendChild(headerEl)
-
-  let spanEl = createSpan({
-    id: 'modal-share-body',
-  })
-  el.appendChild(spanEl)
-
-  let divEl = createDiv({ id: 'modal-share-group' })
+  const divEl = createDiv({ className: 'modal' })
   el.appendChild(divEl)
 
+  const headerEl = createHeader({
+    className: 'modal-header',
+    type: 'h3',
+  })
+  divEl.appendChild(headerEl)
+
+  let spanEl = createSpan({
+    className: 'modal-body',
+  })
+  divEl.appendChild(spanEl)
+
+  const groupEl = createDiv({ className: 'modal-button-group' })
+  divEl.appendChild(groupEl)
+
   let buttonEl = createButton({
-    id: 'modal-share-btn',
+    id: 'modal-first-btn',
     html: 'save',
     className: 'primary',
   })
 
-  divEl.appendChild(buttonEl)
+  groupEl.appendChild(buttonEl)
 
   buttonEl = createButton({
-    id: 'modal-cancel-btn',
+    id: 'modal-second-btn',
     html: 'Cancel',
     className: 'bordered',
   })
 
-  divEl.appendChild(buttonEl)
+  groupEl.appendChild(buttonEl)
 
   spanEl = createSpan({
-    id: 'modal-share-message',
-    className: 'smaller',
+    className: 'modal-message smaller',
   })
   divEl.appendChild(spanEl)
 }
@@ -107,7 +105,19 @@ export function react(el) {
   state.on('active-doc', 'modalShare', async (doc) => {
     if (!doc) return
 
-    const peers = await fetchPeers()
+    const { peers } = await fetchPeers()
+    peers.sort()
+    const bodyEl = el.querySelector('.modal-body')
+    bodyEl.innerHTML = ''
+    for (const peer of peers) {
+      bodyEl.appendChild(
+        createPill({
+          classes: { pill: 'mr-10', icon: 'fa-check' },
+          html: peer.first_name,
+          isSelected: doc.peers.find((dp) => dp.id === peer.id),
+        })
+      )
+    }
   })
 }
 
@@ -126,5 +136,5 @@ function listen(el) {
 }
 
 function setHeader(html) {
-  this.querySelector('#modal-share-header').insertHtml(html)
+  this.querySelector('.modal-header').insertHtml(html)
 }

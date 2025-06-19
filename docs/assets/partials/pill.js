@@ -10,22 +10,29 @@ const css = `
   display: inline-flex;
   align-items: center;
   gap: 4px; 
-  padding: 2px 10px;
   margin: 2px;
   font-size: 0.8rem;
   border-radius: 9999px;
-  background: var(--gray3);
-  color: var(--white);
+  background: var(--gray2);
+  color: var(--gray6);
   cursor: pointer;
   user-select: none;
   transition: background 0.15s ease;
+  width: fit-content;
+  padding: 2px 8px 2px 10px;
+}
+.pill span {
+  margin: 0 20px 0 21px;
 }
 .pill.active {
   background: var(--pastel-green);
   color: var(--gray0);
 }
+.pill.active span {
+  margin-left: 0px;
+}
 .pill:not(.active):hover {
-  background: var(--gray4);
+  background: var(--gray3);
 }    
 `
 
@@ -39,7 +46,7 @@ export function createPill({ id, classes, html, isSelected = false } = {}) {
   listen(el)
 
   id && (el.id = id)
-  classes?.pill && (el.className = `pill ${classes.pill}`.trim())
+  el.className = `pill ${classes?.pill || ''}`.trim()
   classes?.span && el.querySelector('span').classList.add(classes.span)
   html && el.querySelector('span').insertHtml(html)
 
@@ -48,7 +55,6 @@ export function createPill({ id, classes, html, isSelected = false } = {}) {
   const iEl = el.querySelector('i')
   iEl.classList.add('hidden')
   classes?.icon && iEl.classList.add(classes.icon)
-  el.dataset.selected = isSelected
 
   if (isSelected) el.toggle()
 
@@ -56,8 +62,8 @@ export function createPill({ id, classes, html, isSelected = false } = {}) {
 }
 
 function build(el) {
-  el.appendChild(createSpan())
   el.appendChild(createIcon())
+  el.appendChild(createSpan())
 }
 
 function react(el) {
@@ -71,7 +77,7 @@ function listen(el) {
 }
 
 function toggle() {
-  this.toggleAttribute('data-selected')
-  this.classList.toggle('active', this.dataset.selected)
-  this.querySelector('i').classList.toggle('hidden', !this.dataset.selected)
+  const isSelected = this.toggleAttribute('data-selected')
+  this.classList.toggle('active', isSelected)
+  this.querySelector('i').classList.toggle('hidden', !isSelected)
 }
