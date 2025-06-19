@@ -58,6 +58,44 @@
       import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
       import { createComboGroup } from '../assets/partials/comboGroup.js'
       import { fetchGeoIndex, updateGeoIndex } from '../journal/journal.api.js'
+      import { createModalshare } from '../assets/composites/modalShare.js'
+      import { log } from '../assets/js/logger.js'
+
+      const mainPanelEl = createMainPanel()
+
+      ;(function modalShare() {
+        const modalShareEl = createModalshare()
+        mainPanelEl.appendChild(modalShareEl)
+
+        state.set('active-doc', {
+          accessed_at: '2025-06-19T01:13:01.149Z',
+          created_at: '2025-06-04T16:12:42.175Z',
+          id: 'df570e9a-a54e-48d8-ab4c-55e3576d0707',
+          owner_first_name: 'Ben',
+          peers: [
+            { id: '2', name: 'Noa' },
+            { id: '3', name: 'Shelley' },
+          ],
+          role: 'owner',
+          title: 'Smarty pants!',
+          updated_at: '2025-06-18T17:06:17.941Z',
+          user_id: '1',
+        })
+
+        modalShareEl.setHeader(`Share Smarty pants!`)
+        modalShareEl.showModal()
+      })()
+
+      function countryStateCity() {
+        /* Design components: */
+        mainPanelEl.appendChild(createCountryStateCity())
+        //
+        ;(async function () {
+          const { tree } = await fetchGeoIndex()
+          state.set('country-state-city-tree', JSON.parse(tree))
+          state.set('country-state-city-page', 0)
+        })()
+      }
 
       function createMainPanel() {
         const wrapperEl = createDiv({ className: 'wrapper' })
@@ -78,17 +116,6 @@
 
         return mainPanelEl
       }
-
-      const mainPanelEl = createMainPanel()
-
-      /* Design components: */
-      mainPanelEl.appendChild(createCountryStateCity())
-      //
-      ;(async function () {
-        const { tree } = await fetchGeoIndex()
-        state.set('country-state-city-tree', JSON.parse(tree))
-        state.set('country-state-city-page', 0)
-      })()
     </script>
   </body>
 </html>

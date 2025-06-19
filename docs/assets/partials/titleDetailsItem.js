@@ -20,9 +20,6 @@ const css = `
   border: 1px solid var(--gray0);
   border-radius: var(--border-radius);
 }
-.td-item.draggable-target {
-  cursor: move;
-}
 .td-item .grid {
   display: grid;
   grid-template-columns: 1fr auto;

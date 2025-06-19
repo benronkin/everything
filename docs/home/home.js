@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return
     }
 
-    const { tasks } = await fetchTasks(token)
+    const { tasks } = await fetchTasks()
     const defaultPage = state.get('default-page')
     const nextPage = await getNextPage(tasks, defaultPage)
     window.location.href = nextPage

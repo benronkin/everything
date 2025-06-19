@@ -48,7 +48,7 @@ function build({ el, peers, showShare }) {
       createIcon({
         classes: {
           primary: 'fa-arrow-up-right-from-square',
-          other: ['secondary'],
+          other: ['secondary', 'sharer'],
         },
       })
     )

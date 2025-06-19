@@ -13,8 +13,8 @@ export async function deleteTask(id) {
   return { error }
 }
 
-export async function fetchTasks(token) {
-  const { tasks, error } = await getWebApp(`${url}/read?token=${token}`)
+export async function fetchTasks() {
+  const { tasks, error } = await getWebApp(`${url}/read`)
 
   return { tasks, error }
 }

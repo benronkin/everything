@@ -76,19 +76,44 @@ function build(el) {
 
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
-    if (appMode !== 'main-panel') {
+    if (appMode === 'main-panel') {
+      el.classList.remove('hidden')
+      // log('mainPanel is showing itself on active-doc')
+    } else {
       el.classList.add('hidden')
       // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
-      return
     }
-    reactAppMode(el)
+  })
+
+  state.on('active-doc', 'mainPanel', async (doc) => {
+    if (!doc) return
+    if (!doc.note) {
+      const { note: noteDoc } = await fetchNote(doc.id)
+      doc.note = noteDoc.note
+      state.set('active-doc', doc)
+    }
+
+    el.querySelector('#note-title').value = doc.title
+
+    const quill = state.get('quill')
+    const delta = quill.clipboard.convert({ html: doc.note })
+    quill.setContents(delta, 'silent')
+    el.querySelector('#note-id').insertHtml(doc.id)
+
+    if (state.get('active-doc').role === 'peer')
+      document.querySelector('.danger-zone')?.remove()
   })
 }
 
 function listen(el) {
-  el.querySelector('#note-title').addEventListener('keyup', () => {
+  const titleEl = el.querySelector('#note-title')
+  titleEl.addEventListener('keyup', () => {
     removeToasts()
     handleUpdateNote()
+  })
+
+  titleEl.addEventListener('change', () => {
+    if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
 
   const quill = state.get('quill')
@@ -99,29 +124,6 @@ function listen(el) {
     removeToasts()
     handleUpdateNote()
   })
-}
-
-async function reactAppMode(el) {
-  const doc = state.get('active-doc')
-
-  if (!doc.note) {
-    const { note: noteDoc } = await fetchNote(doc.id)
-    doc.note = noteDoc.note
-    state.set('active-doc', doc)
-  }
-
-  el.classList.remove('hidden')
-  // log('mainPanel is showing itself on active-doc')
-
-  el.querySelector('#note-title').value = doc.title
-
-  const quill = state.get('quill')
-  const delta = quill.clipboard.convert({ html: doc.note })
-  quill.setContents(delta, 'silent')
-  el.querySelector('#note-id').insertHtml(doc.id)
-
-  if (state.get('active-doc').role === 'peer')
-    document.querySelector('.danger-zone')?.remove()
 }
 
 async function handleUpdateNote() {
