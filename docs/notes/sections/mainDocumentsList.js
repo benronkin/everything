@@ -33,7 +33,7 @@ function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
     const children = docs.map((doc) => {
       const html = [createSpan({ html: doc.title })]
-      if (doc.peers.length) {
+      if (doc?.peers?.length) {
         html.push(createPeerGroup({ peers: doc.peers }))
       }
       return createMainDocumentItem({ id: doc.id, html })

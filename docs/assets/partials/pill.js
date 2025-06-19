@@ -29,7 +29,7 @@ const css = `
 }    
 `
 
-export function createPill({ id, classes, html } = {}) {
+export function createPill({ id, classes, html, isSelected = false } = {}) {
   injectStyle(css)
 
   const el = createDiv({ id })
@@ -40,9 +40,17 @@ export function createPill({ id, classes, html } = {}) {
 
   id && (el.id = id)
   classes?.pill && (el.className = `pill ${classes.pill}`.trim())
-  classes?.icon && el.querySelector('i').classList.add(classes.icon)
   classes?.span && el.querySelector('span').classList.add(classes.span)
   html && el.querySelector('span').insertHtml(html)
+
+  el.toggle = toggle.bind(el)
+
+  const iEl = el.querySelector('i')
+  iEl.classList.add('hidden')
+  classes?.icon && iEl.classList.add(classes.icon)
+  el.dataset.selected = isSelected
+
+  if (isSelected) el.toggle()
 
   return el
 }
@@ -57,7 +65,13 @@ function react(el) {
 }
 
 function listen(el) {
-  // el.addEventListener('click', () => {
-  //   state.set('stateVar', 'value')
-  // })
+  el.addEventListener('click', () => {
+    el.toggle()
+  })
+}
+
+function toggle() {
+  this.toggleAttribute('data-selected')
+  this.classList.toggle('active', this.dataset.selected)
+  this.querySelector('i').classList.toggle('hidden', !this.dataset.selected)
 }

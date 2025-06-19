@@ -90,7 +90,6 @@ function react(el) {
     if (!doc.note) {
       const { note: noteDoc } = await fetchNote(doc.id)
       doc.note = noteDoc.note
-      state.set('active-doc', doc)
     }
 
     el.querySelector('#note-title').value = doc.title

@@ -116,6 +116,7 @@ async function reactNoteDelete() {
 
   modalEl.close()
 
+  state.set('active-doc', null)
   const filteredDocs = state
     .get('main-documents')
     .filter((doc) => doc.id !== id)

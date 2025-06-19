@@ -30,7 +30,7 @@ export function createPeerGroup({
   return el
 }
 
-function build({ el, peers, showShare }) {
+function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
   peersToShow.forEach((p) => el.appendChild(createPeer({ name: p.name })))
 
