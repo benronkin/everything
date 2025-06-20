@@ -108,6 +108,9 @@ export function react(el) {
 
     const { peers } = await fetchPeers()
     peers.sort()
+
+    el.querySelector('.modal-header').insertHtml(`Share: ${doc.title}`)
+
     const bodyEl = el.querySelector('.modal-body')
     bodyEl.innerHTML = ''
     for (const peer of peers) {
@@ -115,7 +118,7 @@ export function react(el) {
         createPill({
           classes: { pill: 'mr-10', icon: 'fa-check' },
           html: peer.first_name,
-          dataset: { id: peer.id, role: 'pill' },
+          dataset: { id: peer.id, name: peer.name, role: 'pill' },
           isSelected: doc.peers.find((dp) => dp.id === peer.id),
         })
       )
@@ -138,14 +141,22 @@ function listen(el) {
 
   el.querySelector('#modal-first-btn').addEventListener('click', async (e) => {
     e.preventDefault()
+    el.close()
+    const id = state.get('active-doc')
     const selectedPills = document.querySelectorAll('.active[data-role="pill"')
-    const peers = [...selectedPills].map((e) => e.dataset.id)
+    const peers = [...selectedPills].map((p) => ({
+      id: p.dataset.id,
+      name: p.dataset.name,
+    }))
     const data = {
-      id: state.get('active-doc'),
-      peers,
+      id,
+      peers: peers.map((p) => p.id),
     }
-    const { message } = await shareNote(data)
-    log(message)
+    await shareNote(data)
+    const docs = [...state.get('main-documents')]
+    const idx = docs.findIndex((d) => d.id === id)
+    docs[idx].peers = peers
+    state.set('main-documents', docs)
   })
 
   el.querySelector('#modal-second-btn').addEventListener('click', () =>

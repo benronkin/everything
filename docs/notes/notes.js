@@ -89,11 +89,6 @@ function react() {
 
   state.on('sharer-click', 'notes', () => {
     const modalEl = document.querySelector('#modal-share')
-    const id = state.get('active-id')
-    const { title } = {
-      ...state.get('main-documents').find((d) => d.id === id),
-    }
-    modalEl.setHeader(`Share: ${title}`)
     modalEl.showModal()
   })
 }
