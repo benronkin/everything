@@ -60,8 +60,12 @@ export function createTextarea({
  *
  */
 function listen(el) {
-  el.addEventListener('keyup', () => el.resize())
-  el.addEventListener('change', () => el.resize())
+  el.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') el.resize()
+  })
+  el.addEventListener('change', () => {
+    el.resize()
+  })
 }
 
 // -------------------------------
@@ -72,6 +76,8 @@ function listen(el) {
  *
  */
 function resize() {
-  this.style.height = '1px'
+  const { scrollTop } = document.documentElement // or window.pageYOffset
+  this.style.height = 'auto'
   this.style.height = 25 + this.scrollHeight + 'px'
+  document.documentElement.scrollTop = scrollTop
 }
