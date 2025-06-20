@@ -152,7 +152,8 @@ function listen(el) {
       id,
       peers: peers.map((p) => p.id),
     }
-    await shareNote(data)
+    const { message } = await shareNote(data)
+    log(message)
     const docs = [...state.get('main-documents')]
     const idx = docs.findIndex((d) => d.id === id)
     docs[idx].peers = peers

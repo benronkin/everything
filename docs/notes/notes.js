@@ -10,7 +10,6 @@ import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createNote, deleteNote, fetchNotes } from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
-import { createPeerGroup } from '../assets/partials/peerGroup.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -72,20 +71,6 @@ function react() {
   state.on('icon-click:add-note', 'notes', reactAddNote)
 
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
-
-  state.on('active-doc', 'notes', (id) => {
-    document.querySelector('#toolbar .peer-group')?.remove()
-    if (id) {
-      const doc = { ...state.get('main-documents').find((d) => d.id === id) }
-      document.querySelector('#toolbar .icons').appendChild(
-        createPeerGroup({
-          peers: doc.peers,
-          className: 'ml-auto',
-          showShare: true,
-        })
-      )
-    }
-  })
 
   state.on('sharer-click', 'notes', () => {
     const modalEl = document.querySelector('#modal-share')

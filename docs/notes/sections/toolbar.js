@@ -1,5 +1,6 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createPeerGroup } from '../../assets/partials/peerGroup.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 
@@ -27,6 +28,21 @@ function react(el) {
   state.on('app-mode', 'Notes toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
     backEl.classList.toggle('hidden', appMode !== 'main-panel')
+  })
+
+  state.on('active-doc', 'notes', (id) => {
+    el.querySelector('.peer-group')?.remove()
+
+    if (id) {
+      const doc = { ...state.get('main-documents').find((d) => d.id === id) }
+      el.querySelector('.icons').appendChild(
+        createPeerGroup({
+          peers: doc.peers,
+          className: 'ml-auto',
+          showShare: doc.role === 'owner',
+        })
+      )
+    }
   })
 }
 
