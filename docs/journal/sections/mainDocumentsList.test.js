@@ -43,6 +43,6 @@ describe('Creating a list of mainDocumentItems', () => {
   it('expects item id def456 to be in the active-docs', () => {
     mdItemEl.click()
 
-    expect(state.get('active-doc').id).toEqual('def456')
+    expect(state.get('active-doc')).toEqual('def456')
   })
 })

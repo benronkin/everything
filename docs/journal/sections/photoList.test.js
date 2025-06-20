@@ -24,11 +24,13 @@ describe('Photo gallery for the active-doc', () => {
       ),
     }))
 
-    state.set('active-doc', {
+    const doc = {
       id: 'def456',
       location: "Don't yell at me",
       visit_date: '2025-06-23T',
-    })
+    }
+
+    state.set('active-doc', doc.id)
 
     await photoListEl.showPhotos()
 

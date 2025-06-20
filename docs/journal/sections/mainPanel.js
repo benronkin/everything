@@ -123,7 +123,8 @@ function react(el) {
  *
  */
 function reactAppMode(el) {
-  const doc = state.get('active-doc')
+  const id = state.get('active-doc')
+  const doc = { ...state.get('main-documents').find((d) => d.id === id) }
   el.classList.remove('hidden')
   // log('mainPanel is showing itself on active-doc')
 
@@ -171,7 +172,7 @@ async function reactAddPhoto() {
     const compressed = await imageCompression(file, compressionOptions)
     formData.set('file', compressed)
 
-    formData.set('entry', state.get('active-doc').id)
+    formData.set('entry', state.get('active-doc'))
 
     const { message } = await addEntryPhoto(formData)
 

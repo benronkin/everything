@@ -45,10 +45,10 @@ export function photoList() {
  *
  */
 async function showPhotos() {
-  const doc = state.get('active-doc')
+  const id = state.get('active-doc')
   this.deleteChildren()
 
-  const { photos = [], error } = await fetchEntryPhotosMetadata(doc.id)
+  const { photos = [], error } = await fetchEntryPhotosMetadata(id)
 
   if (error) {
     console.error(error)

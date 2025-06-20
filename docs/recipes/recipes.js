@@ -97,9 +97,9 @@ function react() {
 
   state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
 
-  state.on('active-doc', 'recipes', async (resp) => {
-    if (resp) {
-      updateRecipeAccess(resp.id)
+  state.on('active-doc', 'recipes', async (id) => {
+    if (id) {
+      updateRecipeAccess(id)
       // fore list to update itself
       const { recipes } = await fetchRecentRecipes()
       state.set('main-documents', recipes)
@@ -149,7 +149,7 @@ async function reactRecipeAdd() {
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', doc)
+  state.set('active-doc', id)
   state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
@@ -162,7 +162,7 @@ async function reactRecipeDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
 
-  const id = state.get('active-doc').id
+  const id = state.get('active-doc')
   const password = modalEl.getPassword()
   const { error } = await deleteRecipe(id, password)
 
@@ -213,17 +213,11 @@ async function handleFieldChange(e) {
   const section = elem.name
   let value = elem.value
 
-  const doc = state.get('active-doc')
-  const id = doc.id
-
-  doc[section] = value
-
+  const id = state.get('active-doc')
   const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
-  docs[idx] = doc
-
+  docs[idx][section] = value
   state.set('main-documents', docs)
-  state.set('active-doc', doc)
 
   try {
     const { error } = await updateRecipe({ id, section, value })

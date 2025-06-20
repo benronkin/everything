@@ -37,13 +37,6 @@ function react(el) {
       return createMainDocumentItem({ id: doc.id, html })
     })
     el.deleteChildren().addChildren(children)
-
-    // select previously active child
-    // const priorDoc = state.get('active-doc')
-    // if (priorDoc) {
-    //   const child = el.getChildById(priorDoc.id)
-    //   child && (child.selected = true)
-    // }
   })
 
   setMessage()

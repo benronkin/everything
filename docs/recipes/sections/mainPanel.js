@@ -88,7 +88,8 @@ function react(el) {
  *
  */
 function reactAppMode(el) {
-  const doc = state.get('active-doc')
+  const id = state.get('active-doc')
+  const doc = { ...state.get('main-documents').find((d) => d.id === id) }
   el.classList.remove('hidden')
   // log('mainPanel is showing itself on active-doc')
 

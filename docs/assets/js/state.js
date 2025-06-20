@@ -18,7 +18,6 @@ export const state = {
   get(key) {
     return this._data[key]
   },
-
   /**
    * Get the subscribers of a state variable
    * @param {string} stateVar The state variable

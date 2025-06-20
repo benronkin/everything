@@ -85,8 +85,10 @@ function react(el) {
     }
   })
 
-  state.on('active-doc', 'mainPanel', async (doc) => {
-    if (!doc) return
+  state.on('active-doc', 'mainPanel', async (id) => {
+    if (!id) return
+
+    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     if (!doc.note) {
       const { note: noteDoc } = await fetchNote(doc.id)
       doc.note = noteDoc.note
@@ -99,8 +101,7 @@ function react(el) {
     quill.setContents(delta, 'silent')
     el.querySelector('#note-id').insertHtml(doc.id)
 
-    if (state.get('active-doc').role === 'peer')
-      document.querySelector('.danger-zone')?.remove()
+    if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
 }
 
@@ -132,7 +133,7 @@ async function handleUpdateNote() {
 const debouncedUpdate = debounce(async () => {
   setMessage({ message: 'saving...', type: 'quiet' })
   const note = state.get('quill').root.innerHTML
-  const id = state.get('active-doc').id
+  const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
   const { message } = await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })

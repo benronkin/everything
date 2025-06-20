@@ -72,7 +72,7 @@ function react(el) {
 
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
-    const currentId = state.get('active-doc')?.id
+    const currentId = state.get('active-doc')
     if (!currentId) {
       el.querySelector('#left-panel-list').reset()
       return

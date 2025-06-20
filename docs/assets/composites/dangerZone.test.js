@@ -8,11 +8,13 @@ beforeAll(() => {
   el = dangerZone()
   document.querySelector('body').appendChild(el)
 
-  state.set('active-doc', {
+  const doc = {
     id: 'abc123',
     location: 'Kirkland Brewery',
     visit_date: '2024-04-18T22:00:00.000Z',
-  })
+  }
+  state.set('main-documents', [doc])
+  state.set('active-doc', doc.id)
 })
 
 describe('Create a dangerZone section', () => {

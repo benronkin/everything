@@ -68,7 +68,7 @@
         const modalShareEl = createModalshare()
         mainPanelEl.appendChild(modalShareEl)
 
-        state.set('active-doc', {
+        const doc = {
           accessed_at: '2025-06-19T01:13:01.149Z',
           created_at: '2025-06-04T16:12:42.175Z',
           id: 'df570e9a-a54e-48d8-ab4c-55e3576d0707',
@@ -81,7 +81,9 @@
           title: 'Smarty pants!',
           updated_at: '2025-06-18T17:06:17.941Z',
           user_id: '1',
-        })
+        }
+
+        state.set('active-doc', doc.id)
 
         modalShareEl.setHeader(`Share Smarty pants!`)
         modalShareEl.showModal()

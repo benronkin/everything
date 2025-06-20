@@ -36,7 +36,13 @@ const css = `
 }    
 `
 
-export function createPill({ id, classes, html, isSelected = false } = {}) {
+export function createPill({
+  id,
+  classes,
+  dataset = {},
+  html,
+  isSelected = false,
+} = {}) {
   injectStyle(css)
 
   const el = createDiv({ id })
@@ -50,11 +56,15 @@ export function createPill({ id, classes, html, isSelected = false } = {}) {
   classes?.span && el.querySelector('span').classList.add(classes.span)
   html && el.querySelector('span').insertHtml(html)
 
-  el.toggle = toggle.bind(el)
-
   const iEl = el.querySelector('i')
   iEl.classList.add('hidden')
   classes?.icon && iEl.classList.add(classes.icon)
+
+  for (const [k, v] of Object.entries(dataset)) {
+    el.dataset[k] = v
+  }
+
+  el.toggle = toggle.bind(el)
 
   if (isSelected) el.toggle()
 

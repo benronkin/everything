@@ -3,11 +3,10 @@ import { injectStyle } from '../js/ui.js'
 import { createButton } from '../partials/button.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
-import { createIcon } from '../partials/icon.js'
-import { createInput } from '../partials/input.js'
 import { createSpan } from '../partials/span.js'
 import { createPill } from '../partials/pill.js'
 import { fetchPeers } from '../../users/users.api.js'
+import { shareNote } from '../../notes/notes.api.js'
 import { log } from '../js/logger.js'
 
 const css = `
@@ -81,7 +80,7 @@ function build(el) {
 
   let buttonEl = createButton({
     id: 'modal-first-btn',
-    html: 'save',
+    html: 'update',
     className: 'primary',
   })
 
@@ -102,8 +101,10 @@ function build(el) {
 }
 
 export function react(el) {
-  state.on('active-doc', 'modalShare', async (doc) => {
-    if (!doc) return
+  state.on('active-doc', 'modalShare', async (id) => {
+    if (!id) return
+
+    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
 
     const { peers } = await fetchPeers()
     peers.sort()
@@ -114,6 +115,7 @@ export function react(el) {
         createPill({
           classes: { pill: 'mr-10', icon: 'fa-check' },
           html: peer.first_name,
+          dataset: { id: peer.id, role: 'pill' },
           isSelected: doc.peers.find((dp) => dp.id === peer.id),
         })
       )
@@ -133,6 +135,22 @@ function listen(el) {
       el.close()
     }
   })
+
+  el.querySelector('#modal-first-btn').addEventListener('click', async (e) => {
+    e.preventDefault()
+    const selectedPills = document.querySelectorAll('.active[data-role="pill"')
+    const peers = [...selectedPills].map((e) => e.dataset.id)
+    const data = {
+      id: state.get('active-doc'),
+      peers,
+    }
+    const { message } = await shareNote(data)
+    log(message)
+  })
+
+  el.querySelector('#modal-second-btn').addEventListener('click', () =>
+    el.close()
+  )
 }
 
 function setHeader(html) {

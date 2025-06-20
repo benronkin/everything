@@ -73,9 +73,10 @@ function react() {
 
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
 
-  state.on('active-doc', 'notes', (doc) => {
+  state.on('active-doc', 'notes', (id) => {
     document.querySelector('#toolbar .peer-group')?.remove()
-    if (doc) {
+    if (id) {
+      const doc = { ...state.get('main-documents').find((d) => d.id === id) }
       document.querySelector('#toolbar .icons').appendChild(
         createPeerGroup({
           peers: doc.peers,
@@ -88,7 +89,11 @@ function react() {
 
   state.on('sharer-click', 'notes', () => {
     const modalEl = document.querySelector('#modal-share')
-    modalEl.setHeader(`Share: ${state.get('active-doc').title}`)
+    const id = state.get('active-id')
+    const { title } = {
+      ...state.get('main-documents').find((d) => d.id === id),
+    }
+    modalEl.setHeader(`Share: ${title}`)
     modalEl.showModal()
   })
 }
@@ -106,7 +111,7 @@ async function reactAddNote({ id: btnId }) {
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', doc)
+  state.set('active-doc', id)
   state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
@@ -116,7 +121,7 @@ async function reactNoteDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
 
-  const id = state.get('active-doc').id
+  const id = state.get('active-doc')
   const { message } = await deleteNote(id)
 
   setMessage({ message })

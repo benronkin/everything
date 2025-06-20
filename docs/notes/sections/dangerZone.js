@@ -41,7 +41,8 @@ export function dangerZone() {
  */
 function react(el) {
   state.on('icon-click:show-delete-modal-icon', 'dangerZone', () => {
-    const doc = state.get('active-doc')
+    const id = state.get('active-doc')
+    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     const modalBody = doc.title
 
     const modal = el.querySelector('#modal-delete')

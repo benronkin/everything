@@ -76,8 +76,6 @@ export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
 export function handleMainDocumentClick(e) {
   const el = e.target.closest('.md-item')
 
-  const mainDocuments = state.get('main-documents')
-  const activeDoc = mainDocuments.find((doc) => doc.id === el.id)
-  state.set('active-doc', activeDoc)
+  state.set('active-doc', el.id)
   state.set('app-mode', 'main-panel')
 }
