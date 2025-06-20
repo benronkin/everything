@@ -3,10 +3,6 @@ export const bookmarks = [
     header: { html: 'Fun' },
     items: [
       {
-        html: '<i class="fa-brands fa-reddit"></i> Reddit',
-        url: 'https://www.reddit.com',
-      },
-      {
         html: 'CBC Podcasts',
         url: 'https://www.cbc.ca/listen/cbc-podcasts',
       },
