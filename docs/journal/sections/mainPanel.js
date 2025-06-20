@@ -95,7 +95,7 @@ function build(el) {
 
   el.appendChild(dangerZone())
 
-  el.appendChild(createHeader({ type: 'h5', html: 'Id' }))
+  el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
 
   el.appendChild(createSpan({ id: 'journal-id' }))
 }

@@ -2,10 +2,6 @@ import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 i {
   border-radius: 8px;
@@ -25,13 +21,10 @@ i.shake {
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 export function createIcon({
   id = `i-${crypto.randomUUID()}`,
   classes,
+  dataset = {},
   role,
 } = {}) {
   injectStyle(css)
@@ -41,8 +34,10 @@ export function createIcon({
   el.shake = shake.bind(el)
 
   el.id = id
-  el.dataset.id = id
   role && (el.role = role)
+  for (const [k, v] of Object.entries(dataset)) {
+    el.dataset[k] = v
+  }
 
   handleClasses({ el, classes })
 
@@ -51,13 +46,6 @@ export function createIcon({
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function listen(el) {
   el.addEventListener('click', (e) => {
     // prevent icon parents from responding to these events
@@ -77,14 +65,16 @@ function listen(el) {
         ? el._classes.primary
         : el._classes.secondary,
     })
+
+    if (el.dataset?.role) {
+      state.set(`${el.dataset.role}-click`, {
+        id: el.id,
+        className: el.className,
+      })
+    }
   })
 }
 
-/**
- * Covert the object of classes to a string
- * and set as className
- * @param {Object} classes - must include classes.primary, may inclde classes.secondary (string), and/o classes.other (array)
- */
 function handleClasses({ el, classes }) {
   if (!classes) {
     el.className = 'fa-solid'
@@ -111,10 +101,6 @@ function handleClasses({ el, classes }) {
   el.className = arr
   el._classes = classes
 }
-
-// -------------------------------
-// Object methods
-// -------------------------------
 
 function shake() {
   this.classList.add('shake')

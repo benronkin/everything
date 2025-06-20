@@ -50,6 +50,9 @@ function build({ el, peers = [], showShare }) {
           primary: 'fa-arrow-up-right-from-square',
           other: ['secondary', 'sharer'],
         },
+        dataset: {
+          role: 'sharer',
+        },
       })
     )
 }

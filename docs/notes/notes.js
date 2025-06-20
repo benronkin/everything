@@ -9,6 +9,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createNote, deleteNote, fetchNotes } from './notes.api.js'
+import { createModalShare } from '../assets/composites/modalShare.js'
 import { createPeerGroup } from '../assets/partials/peerGroup.js'
 import { log } from '../assets/js/logger.js'
 
@@ -63,7 +64,7 @@ function build() {
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
-
+  wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
@@ -83,6 +84,12 @@ function react() {
         })
       )
     }
+  })
+
+  state.on('sharer-click', 'notes', () => {
+    const modalEl = document.querySelector('#modal-share')
+    modalEl.setHeader(`Share: ${state.get('active-doc').title}`)
+    modalEl.showModal()
   })
 }
 

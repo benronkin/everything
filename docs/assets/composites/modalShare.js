@@ -46,7 +46,7 @@ const css = `
 }
 `
 
-export function createModalshare() {
+export function createModalShare() {
   injectStyle(css)
 
   const el = document.createElement('dialog')
