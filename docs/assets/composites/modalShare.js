@@ -118,7 +118,7 @@ export function react(el) {
         createPill({
           classes: { pill: 'mr-10', icon: 'fa-check' },
           html: peer.first_name,
-          dataset: { id: peer.id, name: peer.name, role: 'pill' },
+          dataset: { id: peer.id, first_name: peer.first_name, role: 'pill' },
           isSelected: doc.peers.find((dp) => dp.id === peer.id),
         })
       )
