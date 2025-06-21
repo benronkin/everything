@@ -36,15 +36,35 @@ select {
   line-height: inherit;
 }
 
-h2 {
-  margin-bottom: 20px;
-}
-h3 {
-  margin: 20px 0;
+h1 {
+  font-size: 2.5rem;
   white-space: nowrap;
 }
+h2 {
+  font-size: 2rem;
+  white-space: nowrap;
+}
+h3 {
+  font-size: 1.75rem;
+  white-space: nowrap;
+}
+h3 i {
+  font-size: inherit;
+}
 h4 {
-  margin: 20px 0 10px;
+  font-size: 1.5rem;
+  white-space: nowrap;
+}
+h4 i {
+  font-size: inherit;
+}
+h5 {
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+h6 {
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
 i {

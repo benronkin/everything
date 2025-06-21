@@ -1,5 +1,5 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { insertHtml } from '../../assets/js/format.js'
+import { createHeader } from '../../assets/partials/header.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
@@ -7,29 +7,26 @@ import { log } from '../../assets/js/logger.js'
 const css = `
 `
 
-export function create({ id, className = '', html } = {}) {
+export function profile() {
   injectStyle(css)
 
-  const el = createDiv({ className, id })
-
-  el.insertHtml = insertHtml.bind(el)
+  const el = createDiv()
 
   build(el)
   react(el)
   listen(el)
 
-  id && (el.id = id)
-  if (className.length) {
-    for (const c of className.split(' ')) {
-      el.classList.add(c)
-    }
-  }
-  html && el.insertHtml(html)
-
   return el
 }
 
-function build(el) {}
+function build(el) {
+  el.appendChild(
+    createHeader({
+      html: '<i class="fa-solid fa-circle-user"></i> Profile',
+      type: 'h4',
+    })
+  )
+}
 
 function react(el) {
   // state.on('stateVar', 'subscriberName', (stateValue) => {})

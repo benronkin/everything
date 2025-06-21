@@ -303,7 +303,7 @@ i.primary {
   transition: all 0.2s ease-in-out;
 }
 i.primary:hover {
-  color: var(--gray6);
+  color: inherit;
   background-color: var(--purple3);
 }
 i.secondary {
@@ -351,7 +351,7 @@ main {
 }
 .bookmarks-section .span-group h5,
 .bookmarks-section .span-group i {
-  color: var(--gray3);
+  color: inherit;
 }
 .bookmarks-section .bookmark {
   background: var(--gray0);
@@ -384,7 +384,7 @@ main {
 .select-group i,
 .span-group i,
 .ta-group i {
-  color: var(--gray3);
+  color: inherit;
 }
 .input-group:has(input:focus) i,
 .select-group:has(input:focus) i,
@@ -467,9 +467,9 @@ main {
 .r-0 {
   right: 0 !important;
 }
-
 .span-group span {
-  color: var(--gray4);
+  color: inherit;
+  transition: all 0.2s ease-in-out;
 }
 .suggestion-item:hover {
   color: var(--teal3);

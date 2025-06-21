@@ -2,10 +2,6 @@ import { state } from '../js/state.js'
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .list-item {
   align-items: center;
@@ -40,19 +36,11 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Constructor for a custom listItem element
- */
 export function createListItem({ html, className, id } = {}) {
   injectStyle(css)
   const el = createDiv()
 
   el.id = id || `i-${crypto.randomUUID()}`
-  el.dataset.id = el.id
 
   el.className = 'list-item'
   if (className) {
@@ -72,19 +60,12 @@ export function createListItem({ html, className, id } = {}) {
   return el
 }
 
-// -------------------------------
-// Event handlers
-// -------------------------------
-
-/**
- *
- */
 function listen({ el }) {
   el.addEventListener('click', () => {
     if (el.draggable) {
       return
     }
     // list manages active class
-    state.set('item-click', el.dataset.id)
+    state.set('item-click', el.id)
   })
 }

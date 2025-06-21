@@ -1,0 +1,73 @@
+import { state } from '../assets/js/state.js'
+import { nav } from './sections/nav.js'
+import { rightDrawer } from './sections/rightDrawer.js'
+import { leftPanel } from './sections/leftPanel.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { toolbar } from './sections/toolbar.js'
+import { profile } from './sections/profile.js'
+import { createDiv } from '../assets/partials/div.js'
+import { createFooter } from '../assets/composites/footer.js'
+import { handleTokenQueryParam } from '../assets/js/io.js'
+import { setMessage } from '../assets/js/ui.js'
+import { log } from '../assets/js/logger.js'
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    build()
+
+    handleTokenQueryParam()
+
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
+
+    react()
+    listen()
+
+    state.set('app-mode', 'left-panel')
+    state.set('default-page', 'settings')
+    window.state = state // avail to browser console
+
+    document.getElementById('main-item-profile').click() // <<< DELETE THIS ONE
+  } catch (error) {
+    setMessage({ message: error.message, type: 'danger' })
+    // window.location.href = `../home/index.html?message=${error.message}`
+    console.trace(error)
+  }
+})
+
+async function build() {
+  document.head.title = 'Settings | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
+
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
+
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper',
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(leftPanel())
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(rightDrawer())
+
+  wrapperEl.appendChild(createFooter())
+}
+
+function react() {
+  state.on('item-click', 'leftPanel', (id) => {
+    let p
+    switch (id) {
+      case 'main-item-profile':
+        state.set('app-mode', 'main-panel')
+        document.getElementById('settings-wrapper').insertHtml(profile())
+        break
+    }
+  })
+}
+
+function listen() {}

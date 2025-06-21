@@ -34,9 +34,9 @@ const items = [
     id: 'rd-item-journal',
   },
   {
-    html: '<i class="fa-solid fa-lock"></i> Admin',
-    url: '../admin/index.html',
-    id: 'rd-item-admin',
+    html: '<i class="fa-solid fa-gear"></i> Settings',
+    url: '../settings/index.html',
+    id: 'rd-item-settings',
   },
 ]
 
