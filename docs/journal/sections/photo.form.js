@@ -89,8 +89,8 @@ function build(el) {
 function react(el) {
   state.on('icon-click:add-photo-toggle', 'mainPanel', () => {
     el.classList.toggle('hidden')
-
     el.querySelector('input[type="file"]').value = ''
+    el.querySelector('span.file-name').innerHTML = ''
     el.querySelector('#photo-caption-input').value = ''
     el.querySelector('.form-message').insertHtml('')
   })

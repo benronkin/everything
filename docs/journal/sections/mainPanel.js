@@ -13,10 +13,6 @@ import { photoList } from './photoList.js'
 import { addEntryPhoto } from '../journal.api.js'
 import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 #main-panel {
   width: 100%;
@@ -37,13 +33,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function mainPanel() {
   injectStyle(css)
 
@@ -58,13 +47,6 @@ export function mainPanel() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {
   el.appendChild(createEntryGroup())
 
@@ -100,9 +82,6 @@ function build(el) {
   el.appendChild(createSpan({ id: 'journal-id' }))
 }
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
@@ -119,9 +98,6 @@ function react(el) {
   })
 }
 
-/**
- *
- */
 function reactAppMode(el) {
   const id = state.get('active-doc')
   const doc = { ...state.get('main-documents').find((d) => d.id === id) }
@@ -140,9 +116,6 @@ function reactAppMode(el) {
   el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
 }
 
-/**
- *
- */
 async function reactAddPhoto() {
   const addPhotoForm = document.querySelector('#add-photo-form')
   const formMessage = addPhotoForm.querySelector('.form-message')
@@ -176,8 +149,13 @@ async function reactAddPhoto() {
 
     const { message } = await addEntryPhoto(formData)
 
-    if (message) {
-      formMessage.insertHtml(message)
+    formMessage.insertHtml(message)
+
+    if (message === 'Photo uploaded') {
+      addPhotoForm.querySelector('button').disabled = false
+      addPhotoForm.querySelector('#photo-caption-input').value = ''
+      addPhotoForm.querySelector('span.file-name').innerHTML = ''
+      addPhotoForm.querySelector('input[type="file"]').value = ''
     }
     // refresh photos to show added photo
     document.querySelector('#photo-list').showPhotos()
