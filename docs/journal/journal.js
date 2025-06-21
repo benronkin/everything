@@ -37,18 +37,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const [entriesResp, geoIndexResp] = await Promise.all([
+    const [entriesResp, geoIndexResp, defaultsResp] = await Promise.all([
       fetchRecentEntries(),
       fetchGeoIndex(),
+      fetchDefaults(),
     ])
 
     const { data } = entriesResp
     const { tree } = geoIndexResp
+    const { defaults } = defaultsResp
     state.set('main-documents', data)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'journal')
     state.set('country-state-city-tree', JSON.parse(tree))
     state.set('country-state-city-page', 0)
+    state.set('journal-defaults', defaults)
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
@@ -115,10 +118,10 @@ async function reactEntryAdd({ id: btnId }) {
     return
   }
 
-  const { defaults, error: error2 } = await fetchDefaults()
-  if (error2) {
-    console.error(`Journal server error: ${error2}`)
-    return
+  const defaults = state.get('journal-defaults') || {
+    city: '',
+    state: '',
+    country: '',
   }
 
   const dateString = new Date().toISOString()

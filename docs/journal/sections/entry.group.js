@@ -1,4 +1,4 @@
-import { injectStyle } from '../../assets/js/ui.js'
+import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
@@ -16,7 +16,6 @@ export function createEntryGroup() {
   const el = createDiv({ id: 'entry-group' })
 
   build(el)
-  listen(el)
 
   return el
 }
@@ -90,11 +89,4 @@ function build(el) {
       placeholder: 'Add details...',
     })
   )
-
-  return el
 }
-
-/**
- *
- */
-function listen() {}
