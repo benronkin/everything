@@ -11,13 +11,14 @@ const css = `
 .collapsible-group {
   display: flex;
   justify-content: center;
+  gap: 20px;
   align-items: center;
   height: 38px;
   border: 1px solid var(--gray2);
   border-radius: var(--border-radius);
   width: fit-content;
   transition: all 0.2s ease-in-out;
-  padding: 4px 10px;
+  padding: 6px 10px;
   box-sizing: content-box;
 }
 .collapsible-group.collapsed {
