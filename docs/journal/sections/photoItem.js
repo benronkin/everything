@@ -12,6 +12,9 @@ import { deleteEntryPhoto, updatePhotoCaption } from '../journal.api.js'
 // -------------------------------
 
 const css = `
+.photo-item {
+  margin-top: 20px;
+}
 .photo-item.container {
   padding: 0;
   width: 100%;
@@ -70,7 +73,7 @@ function build(el) {
 
   el.appendChild(
     createInput({
-      className: 'photo-caption mt-20',
+      className: 'photo-caption mt-20 w-100',
       placeholder: 'Add caption...',
       name: 'caption',
     })
