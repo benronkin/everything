@@ -60,13 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-// ------------------------
-// Helper functions
-// ------------------------
-
-/**
- *
- */
 async function build() {
   document.head.title = 'Journal | Everything App'
   const body = document.body
@@ -88,9 +81,6 @@ async function build() {
   wrapperEl.appendChild(createFooter())
 }
 
-/**
- *
- */
 function react() {
   state.on('form-submit:left-panel-search', 'journal', reactSearch)
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)
@@ -103,10 +93,6 @@ function listen() {
     field.addEventListener('change', handleFieldChange)
   })
 }
-
-/**
- * Add a journal entry
- */
 
 async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
@@ -144,9 +130,6 @@ async function reactEntryAdd({ id: btnId }) {
   delete addBtn.disabled
 }
 
-/**
- *
- */
 async function reactEntryDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
@@ -170,9 +153,6 @@ async function reactEntryDelete() {
   state.set('app-mode', 'left-panel')
 }
 
-/**
- *
- */
 async function reactSearch() {
   let resp
 
@@ -193,10 +173,6 @@ async function reactSearch() {
   state.set('main-documents', data)
 }
 
-/**
- * Handle journal entry field change
- */
-
 async function handleFieldChange(e) {
   const elem = e.target
   const section = elem.name
@@ -216,6 +192,10 @@ async function handleFieldChange(e) {
 
     if (['city', 'state', 'country'].includes(section)) {
       await updateJournalDefaults({ id, section, value })
+
+      const defaults = state.get('journal-defaults')
+      defaults[section] = value
+      state.set('journal-defaults', defaults)
     }
   } catch (err) {
     log(err)
