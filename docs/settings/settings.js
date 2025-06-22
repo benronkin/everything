@@ -9,6 +9,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { setMessage } from '../assets/js/ui.js'
+import { getMe } from '../users/users.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
+    const { user } = await getMe()
+    state.set('user', user)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
@@ -60,7 +63,6 @@ async function build() {
 
 function react() {
   state.on('item-click', 'leftPanel', (id) => {
-    let p
     switch (id) {
       case 'main-item-profile':
         state.set('app-mode', 'main-panel')

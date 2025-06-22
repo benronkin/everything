@@ -1,23 +1,21 @@
 /* global imageCompression */
-import { addEntryPhoto } from '../journal.api.js'
+import { addEntryPhoto } from '../../journal/journal.api.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createForm } from '../../assets/partials/form.js'
 import { createFileInput } from '../../assets/partials/fileInput.js'
 import { createButton } from '../../assets/partials/button.js'
-import { createInput } from '../../assets/partials/input.js'
-import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSpan } from '../../assets/partials/span.js'
 
 const css = `
 `
 
-export function createPhotoForm() {
+export function createAvatarForm() {
   injectStyle(css)
 
   const el = createForm({
-    id: 'add-photo-form',
+    id: 'profile-avatar',
     children: [
       createFileInput({
         id: 'photo-file-input',
@@ -25,33 +23,13 @@ export function createPhotoForm() {
         accept: 'image/*',
         iconClass: 'fa-camera',
       }),
-      createInputGroup({
-        id: 'photo-caption-input',
-        classes: { group: 'bb-white', icon: 'fa-pencil' },
-        name: 'caption',
-        placeholder: 'Describe this photo...',
-      }),
-      createDiv({
-        className: 'flex mt-20',
-        html: [
-          createButton({
-            id: 'upload-photo-button',
-            className: 'primary',
-            html: '<i class="fa-solid fa-upload"></i> Upload',
-            type: 'submit',
-            disabled: true,
-          }),
-          createSpan({ className: 'form-message' }),
-        ],
-      }),
+      createSpan({ className: 'form-message' }),
     ],
   })
 
   build(el)
   react(el)
   listen(el)
-
-  el.className = 'hidden'
 
   return el
 }

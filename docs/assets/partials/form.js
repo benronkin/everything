@@ -18,7 +18,6 @@ import { log } from '../js/logger.js'
 
 const css = `
 form {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

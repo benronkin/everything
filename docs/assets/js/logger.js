@@ -13,13 +13,6 @@ const typeColor = {
 
 const reset = '\x1b[0m'
 
-// ------------------------
-// Exports
-// ------------------------
-
-/**
- * Log in debug
- */
 export function log(...args) {
   if (localStorage.getItem('debug') !== 'true') return
 

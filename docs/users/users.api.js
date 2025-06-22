@@ -8,3 +8,9 @@ export async function fetchPeers() {
 
   return { peers }
 }
+
+export async function getMe() {
+  const { user } = await getWebApp(`${url}/me`)
+
+  return { user }
+}

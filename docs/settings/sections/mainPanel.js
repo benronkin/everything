@@ -42,9 +42,7 @@ export function mainPanel() {
 }
 
 function build(el) {
-  el.appendChild(
-    createDiv({ id: 'settings-wrapper', className: 'outer-wrapper' })
-  )
+  el.appendChild(createDiv({ id: 'settings-wrapper' }))
 }
 
 function react(el) {

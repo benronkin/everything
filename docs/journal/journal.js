@@ -83,7 +83,9 @@ async function build() {
 
 function react() {
   state.on('form-submit:left-panel-search', 'journal', reactSearch)
+
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)
+
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 }
 
