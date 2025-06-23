@@ -7,6 +7,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
+import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createEntry,
@@ -37,21 +38,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const [entriesResp, geoIndexResp, defaultsResp] = await Promise.all([
+    const [{ data }, { tree }, { defaults }, { user }] = await Promise.all([
       fetchRecentEntries(),
       fetchGeoIndex(),
       fetchDefaults(),
+      getMe(),
     ])
 
-    const { data } = entriesResp
-    const { tree } = geoIndexResp
-    const { defaults } = defaultsResp
     state.set('main-documents', data)
     state.set('app-mode', 'left-panel')
-    state.set('default-page', 'journal')
     state.set('country-state-city-tree', JSON.parse(tree))
     state.set('country-state-city-page', 0)
     state.set('journal-defaults', defaults)
+    state.set('user', user)
+    state.set('default-page', 'journal')
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })

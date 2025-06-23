@@ -3,20 +3,10 @@ import { state } from '../js/state.js'
 import { createTable } from '../assets/partials/table.js'
 import { createSelect } from '../assets/partials/select.js'
 import { createSpan } from '../assets/partials/span.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
+import { getMe } from '../users/users.api.js'
 
 const mainPanelEl = document.querySelector('#main-panel')
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Get and display all recipes
- */
 export async function listRecipes() {
   const [recipesResp, categoriesResp] = await Promise.all([
     getWebApp(`${state.getWebAppUrl()}/recipes/read?fields=id,title,category`),

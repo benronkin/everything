@@ -10,6 +10,7 @@ import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createNote, deleteNote, fetchNotes } from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
+import { getMe } from '../users/users.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -27,15 +28,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    const resp = await fetchNotes()
-    const { notes, error } = resp
-
-    if (error) {
-      setMessage({ message: error, type: 'danger' })
-    }
+    const [{ notes }, { user }] = await Promise.all([fetchNotes(), getMe()])
 
     state.set('main-documents', notes)
     state.set('app-mode', 'left-panel')
+    state.set('user', user)
     state.set('default-page', 'notes')
     window.state = state // avail to browser console
     setMessage({ message: '' })

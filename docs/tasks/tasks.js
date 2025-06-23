@@ -8,6 +8,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createTitleDetailsItem } from '../assets/partials/titleDetailsItem.js'
 import { setMessage } from '../assets/js/ui.js'
+import { getMe } from '../users/users.api.js'
 import {
   createTask,
   deleteTask,
@@ -31,10 +32,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    const resp = await fetchTasks()
-    const { tasks } = resp
+    const [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
+
     state.set('main-documents', tasks)
     state.set('app-mode', 'main-panel')
+    state.set('user', user)
     state.set('default-page', 'tasks')
     setMessage()
     window.state = state // avail to browser console

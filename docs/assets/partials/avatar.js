@@ -5,9 +5,22 @@ import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
 const css = `
+.avatar {
+  background-color: var(--purple4);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  color: var(--gray1);
+  font-weight: 700;
+}
 `
 
-export function createAvatar({ className = '', name, url } = {}) {
+export function createAvatar({ className = '', name, url, id } = {}) {
   injectStyle(css)
 
   const el = url
@@ -26,18 +39,17 @@ export function createAvatar({ className = '', name, url } = {}) {
       el.classList.add(c)
     }
   }
+  id && (el.id = id)
 
   return el
 }
 
 function build(el) {}
 
-function react(el) {
-  // state.on('stateVar', 'subscriberName', (stateValue) => {})
-}
+function react(el) {}
 
 function listen(el) {
-  // el.addEventListener('click', () => {
-  //   state.set('stateVar', 'value')
-  // })
+  el.addEventListener('click', () => {
+    state.set('right-drawer-toggle-click', true)
+  })
 }

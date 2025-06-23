@@ -8,6 +8,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createMainDocumentItem } from '../assets/partials/mainDocumentItem.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
+import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createRecipe,
@@ -35,8 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const resp = await fetchCategoriesAndRecipes()
-    let { categories, recipes } = resp
+    let [{ categories, recipes }, { user }] = await Promise.all([
+      fetchCategoriesAndRecipes(),
+      getMe(),
+    ])
 
     categories = categories.map((c) => ({
       value: c.id,
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('main-documents', recipes)
     state.set('recipe-categories', categories)
     state.set('app-mode', 'left-panel')
+    state.set('user', user)
     state.set('default-page', 'recipes')
     window.state = state // avail to browser console
   } catch (error) {

@@ -10,6 +10,7 @@ import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { log } from '../assets/js/logger.js'
 import { handleAddToBothLists } from './shopping.handlers.js'
+import { getMe } from '../users/users.api.js'
 import {
   fetchCartAndSuggestions,
   upodateShoppingList,
@@ -30,8 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    const resp = await fetchCartAndSuggestions()
-    const { shoppingList, shoppingSuggestions } = resp
+    const [{ shoppingList, shoppingSuggestions }, { user }] = await Promise.all(
+      [fetchCartAndSuggestions(), getMe()]
+    )
+
     state.set(
       'shopping-list',
       shoppingList
@@ -47,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .filter(Boolean)
     )
     state.set('app-mode', 'main-panel')
+    state.set('user', user)
     state.set('default-page', 'shopping')
     window.state = state // avail to browser console
     setMessage({ message: '' })

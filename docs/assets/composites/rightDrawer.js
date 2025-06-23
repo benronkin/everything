@@ -3,10 +3,6 @@ import { injectStyle } from '../js/ui.js'
 import { createList } from '../partials/list.js'
 import { createMenuItem } from '../partials/menuItem.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const items = [
   {
     html: '<i class="fa-solid fa-list-check"></i> Tasks',
@@ -93,10 +89,6 @@ const css = `
 
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
 export function createRightDrawer({ active } = {}) {
   injectStyle(css)
 
@@ -113,13 +105,6 @@ export function createRightDrawer({ active } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function build({ el, active }) {
   const listItems = items.map(({ html, url, id }) =>
     createMenuItem({ value: html, url, id, type: 'anchor' })
@@ -132,27 +117,18 @@ function build({ el, active }) {
   }
 }
 
-/**
- * Subscribe to and set state.
- */
 function react(el) {
-  state.on('icon-click:toggle-right-drawer', 'rightDrawer', () => {
+  state.on('right-drawer-toggle-click', 'rightDrawer', () => {
     el.classList.toggle('open')
   })
 }
 
-/**
- *
- */
 function listen({ el }) {
   document.addEventListener('click', (e) => {
     hanleRightDrawerClose(e, el)
   })
 }
 
-/**
- * Close rightDrawer when clicking on document
- */
 function hanleRightDrawerClose(e, el) {
   if (
     e.target.closest('[data-id="right-drawer"]') ||

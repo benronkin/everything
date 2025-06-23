@@ -78,15 +78,24 @@ function react(el) {
 }
 
 function listen(el) {
-  el.querySelector('#delete-avatar-btn').addEventListener('click', deleteAvatar)
+  el.querySelector('#delete-avatar-btn').addEventListener('click', async () => {
+    const { message } = await deleteAvatar()
+    const user = state.get('user')
+    delete user.avatar
+    state.set('user', user)
+  })
 }
 
 function insertImage(url, el) {
+  const avatarWrapperEl = el.querySelector('#avatar-wrapper')
+  const deleteAvatarBtn = el.querySelector('#delete-avatar-btn')
+  avatarWrapperEl.innerHTML = ''
+  deleteAvatarBtn.classList.add('hidden')
   if (!url) {
-    log('Did not receive a url')
+    log('Did not receive avatar url')
     return
   }
   const imgEl = createImage({ src: url, className: 'avatar' })
-  el.querySelector('#avatar-wrapper').insertHtml(imgEl)
-  el.querySelector('#delete-avatar-btn').classList.remove('hidden')
+  avatarWrapperEl.insertHtml(imgEl)
+  deleteAvatarBtn.classList.remove('hidden')
 }

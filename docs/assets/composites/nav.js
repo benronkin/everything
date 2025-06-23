@@ -1,13 +1,10 @@
 import { injectStyle } from '../js/ui.js'
+import { createAvatar } from '../partials/avatar.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
 import { createIcon } from '../partials/icon.js'
 import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 
@@ -49,16 +46,13 @@ nav .brand i:hover {
 }
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-export function createNav({ title, disableRightDrawer = false } = {}) {
+export function createNav({ title } = {}) {
   injectStyle(css)
 
   const el = document.createElement('nav')
 
-  build({ el, disableRightDrawer })
+  build(el)
+  react(el)
   listen(el)
 
   el.querySelector('h3').innerHTML = title
@@ -66,11 +60,7 @@ export function createNav({ title, disableRightDrawer = false } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-function build({ el, disableRightDrawer }) {
+function build(el) {
   const containerEl = createDiv({ className: 'container' })
   el.appendChild(containerEl)
 
@@ -78,15 +68,18 @@ function build({ el, disableRightDrawer }) {
   containerEl.appendChild(brandEl)
 
   brandEl.appendChild(createHeader({ type: 'h3' }))
+}
 
-  if (!disableRightDrawer) {
-    containerEl.appendChild(
-      createIcon({
+function react(el) {
+  state.on('user', 'nav', (user) => {
+    el.querySelector('.container').appendChild(
+      createAvatar({
+        name: user.first_name,
+        url: user.avatar,
         id: 'toggle-right-drawer',
-        classes: { primary: 'fa-bars', other: ['btn'] },
       })
     )
-  }
+  })
 }
 
 function listen(el) {
