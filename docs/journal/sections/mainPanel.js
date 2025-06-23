@@ -49,7 +49,7 @@ function build(el) {
 
   const phw = createDiv({
     id: 'photos-header-wrapper',
-    className: 'flex mt-20',
+    className: 'flex mt-20 align-center',
   })
 
   el.appendChild(phw)

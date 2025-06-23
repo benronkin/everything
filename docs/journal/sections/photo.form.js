@@ -9,6 +9,7 @@ import { createButton } from '../../assets/partials/button.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { log } from '../../assets/js/logger.js'
 
 const css = `
 `
@@ -56,16 +57,7 @@ export function createPhotoForm() {
   return el
 }
 
-function build(el) {
-  el.addEventListener('change', () => {
-    const fileInput = el.querySelector('input[type="file"]')
-    if (fileInput?.files?.length) {
-      delete el.querySelector('button').disabled
-    } else {
-      el.querySelector('button').disabled = true
-    }
-  })
-}
+function build(el) {}
 
 function react(el) {
   state.on('icon-click:add-photo-toggle', 'photo form', () => {
@@ -83,6 +75,15 @@ function react(el) {
 }
 
 function listen(el) {
+  el.addEventListener('change', () => {
+    const fileInput = el.querySelector('input[type="file"]')
+    if (fileInput?.files?.length) {
+      delete el.querySelector('button').disabled
+    } else {
+      el.querySelector('button').disabled = true
+    }
+  })
+
   el.querySelector('#hidden-file-input').addEventListener('change', (e) => {
     const file = e.target.files[0]
     if (file) {

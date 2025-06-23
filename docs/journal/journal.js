@@ -90,7 +90,6 @@ function react() {
 }
 
 function listen() {
-  /* When journal field loses focus */
   document.querySelectorAll('.field').forEach((field) => {
     field.addEventListener('change', handleFieldChange)
   })

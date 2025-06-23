@@ -2,6 +2,7 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createImage } from '../../assets/partials/image.js'
 import { createAvatarForm } from './avatar.form.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
@@ -24,8 +25,6 @@ export function profile() {
 }
 
 function build(el) {
-  log(state.get('user'))
-
   el.appendChild(
     createHeader({
       className: 'mb-20',
@@ -62,12 +61,32 @@ function build(el) {
       ],
     })
   )
+
+  el.appendChild(
+    createDiv({
+      id: 'avatar-wrapper',
+    })
+  )
+
+  const url = state.get('user')?.avatar
+  if (url) insertImage(url, el)
 }
 
-function react(el) {}
+function react(el) {
+  state.on('user', 'profile', (user) => insertImage(user.avatar, el))
+}
 
 function listen(el) {
   // el.addEventListener('click', () => {
   //   state.set('stateVar', 'value')
   // })
+}
+
+function insertImage(url, el) {
+  if (!url) {
+    log('Did not receive a url')
+    return
+  }
+  const imgEl = createImage({ src: url, className: 'avatar' })
+  el.getElementById('avatar-wrapper').insertHtml(imgEl)
 }

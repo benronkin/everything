@@ -1,5 +1,5 @@
 /* global imageCompression */
-import { addEntryPhoto } from '../../journal/journal.api.js'
+import { createAvatar } from '../../users/users.api.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
@@ -34,16 +34,7 @@ export function createAvatarForm() {
   return el
 }
 
-function build(el) {
-  el.addEventListener('change', () => {
-    const fileInput = el.querySelector('input[type="file"]')
-    if (fileInput?.files?.length) {
-      delete el.querySelector('button').disabled
-    } else {
-      el.querySelector('button').disabled = true
-    }
-  })
-}
+function build(el) {}
 
 function react(el) {
   state.on('icon-click:add-photo-toggle', 'photo form', () => {
@@ -61,63 +52,32 @@ function react(el) {
 }
 
 function listen(el) {
-  el.querySelector('#hidden-file-input').addEventListener('change', (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      el.querySelector('.file-name').insertHtml(file.name)
-      el.querySelector('button').removeAttribute('disabled')
-      delete el.querySelector('button').dataset.disabled
-    } else {
-      el.querySelector('.file-name').insertHtml('')
-      el.querySelector('button').disabled = true
-      el.querySelector('button').dataset.disabled = true
+  el.querySelector('#hidden-file-input').addEventListener(
+    'change',
+    async (e) => {
+      const file = e.target.files[0]
+      if (!file) return
+
+      const compressionOptions = {
+        maxWidthOrHeight: 125,
+        useWebWorker: true,
+        fileType: 'image/jpeg',
+        exifOrientation: null,
+      }
+
+      try {
+        const compressed = await imageCompression(file, compressionOptions)
+        const formData = new FormData()
+        formData.set('file', compressed)
+        formData.set('entry', state.get('active-doc'))
+
+        const { message, url } = await createAvatar(formData)
+        const user = state.get('user')
+        user.avatar = url
+        state.set('user', user)
+      } catch (error) {
+        console.error(error)
+      }
     }
-  })
-}
-
-async function reactAddPhoto(el) {
-  const formMessage = el.querySelector('.form-message')
-
-  const formData = new FormData(el)
-
-  const file = formData.get('file')
-  if (!file || file.size === 0) {
-    const message = 'Please select an image'
-    formMessage.insertHtml(message)
-    return
-  }
-
-  el.querySelector('button').disabled = true
-  formMessage.insertHtml('Uploading...')
-
-  const compressionOptions = {
-    maxWidthOrHeight: 600,
-    useWebWorker: true,
-    fileType: 'image/jpeg',
-    exifOrientation: null,
-  }
-
-  try {
-    const file = formData.get('file')
-    const compressed = await imageCompression(file, compressionOptions)
-    formData.set('file', compressed)
-
-    formData.set('entry', state.get('active-doc'))
-
-    const { message } = await addEntryPhoto(formData)
-
-    formMessage.insertHtml(message)
-
-    if (message === 'Photo uploaded') {
-      el.querySelector('button').disabled = false
-      el.querySelector('#photo-caption-input').value = ''
-      el.querySelector('span.file-name').innerHTML = ''
-      el.querySelector('input[type="file"]').value = ''
-    }
-    // refresh photos to show added photo
-    document.querySelector('#photo-list').showPhotos()
-  } catch (error) {
-    console.error(error)
-    formMessage.insertHtml(error.message)
-  }
+  )
 }
