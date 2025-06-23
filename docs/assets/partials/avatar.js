@@ -11,6 +11,7 @@ const css = `
   width: 30px;
   border-radius: 50%;
   font-weight: 700;
+  border: 1px solid #e5e5e5;
 }
 div.avatar {
   padding: 10px;
