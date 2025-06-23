@@ -56,9 +56,10 @@ function listen(el) {
         const formData = new FormData()
         formData.set('file', compressed)
 
-        const { message, url } = await createAvatar(formData)
+        const { message, data } = await createAvatar(formData)
+
         const user = state.get('user')
-        user.avatar = url
+        user.avatar = data.url
         state.set('user', user)
         log(message)
       } catch (error) {
