@@ -47,7 +47,7 @@ function listen(el) {
       const compressionOptions = {
         maxWidthOrHeight: 125,
         useWebWorker: true,
-        fileType: 'image/jpeg',
+        fileType: 'image/png',
         exifOrientation: null,
       }
 
