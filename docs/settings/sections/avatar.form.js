@@ -2,10 +2,8 @@
 import { createAvatar } from '../../users/users.api.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
-import { createDiv } from '../../assets/partials/div.js'
 import { createForm } from '../../assets/partials/form.js'
 import { createFileInput } from '../../assets/partials/fileInput.js'
-import { createButton } from '../../assets/partials/button.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { log } from '../../assets/js/logger.js'
 
