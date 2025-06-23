@@ -7,6 +7,7 @@ import { createForm } from '../../assets/partials/form.js'
 import { createFileInput } from '../../assets/partials/fileInput.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { log } from '../../assets/js/logger.js'
 
 const css = `
 `
