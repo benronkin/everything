@@ -35,15 +35,7 @@ export function createAvatarForm() {
 
 function build(el) {}
 
-function react(el) {
-  state.on('icon-click:add-photo-toggle', 'photo form', () => {
-    el.classList.toggle('hidden')
-    el.querySelector('input[type="file"]').value = ''
-    el.querySelector('span.file-name').innerHTML = ''
-    el.querySelector('#photo-caption-input').value = ''
-    el.querySelector('.form-message').insertHtml('')
-  })
-}
+function react(el) {}
 
 function listen(el) {
   el.querySelector('#hidden-file-input').addEventListener(
@@ -63,7 +55,6 @@ function listen(el) {
         const compressed = await imageCompression(file, compressionOptions)
         const formData = new FormData()
         formData.set('file', compressed)
-        formData.set('entry', state.get('active-doc'))
 
         const { message, url } = await createAvatar(formData)
         const user = state.get('user')
