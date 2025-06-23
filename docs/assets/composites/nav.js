@@ -72,6 +72,8 @@ function build(el) {
 
 function react(el) {
   state.on('user', 'nav', (user) => {
+    el.querySelector('#toggle-right-drawer')?.remove()
+
     el.querySelector('.container').appendChild(
       createAvatar({
         name: user.first_name,
