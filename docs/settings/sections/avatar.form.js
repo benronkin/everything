@@ -44,11 +44,6 @@ function react(el) {
     el.querySelector('#photo-caption-input').value = ''
     el.querySelector('.form-message').insertHtml('')
   })
-
-  state.on('button-click:upload-photo-button', 'photo form', ({ e }) => {
-    e.preventDefault()
-    reactAddPhoto(el)
-  })
 }
 
 function listen(el) {
@@ -75,6 +70,7 @@ function listen(el) {
         const user = state.get('user')
         user.avatar = url
         state.set('user', user)
+        log(message)
       } catch (error) {
         console.error(error)
       }
