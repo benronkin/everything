@@ -88,5 +88,5 @@ function insertImage(url, el) {
     return
   }
   const imgEl = createImage({ src: url, className: 'avatar' })
-  el.getElementById('avatar-wrapper').insertHtml(imgEl)
+  el.querySelector('#avatar-wrapper').insertHtml(imgEl)
 }
