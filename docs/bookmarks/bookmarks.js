@@ -13,6 +13,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createFooter } from '../assets/composites/footer.js'
+import { getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -20,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     build()
 
     handleTokenQueryParam()
+
+    const { user } = await getMe()
+    state.set('user', user)
 
     const token = localStorage.getItem('authToken')
     if (!token) {
