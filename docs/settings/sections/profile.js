@@ -6,6 +6,7 @@ import { createImage } from '../../assets/partials/image.js'
 import { createAvatarForm } from './avatar.form.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
+import { deleteAvatar } from '../../users/users.api.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 
@@ -56,7 +57,7 @@ function build(el) {
         createButton({
           id: 'delete-avatar-btn',
           html: 'delete photo',
-          className: 'bordered',
+          className: 'bordered hidden',
         }),
       ],
     })
@@ -77,9 +78,7 @@ function react(el) {
 }
 
 function listen(el) {
-  // el.addEventListener('click', () => {
-  //   state.set('stateVar', 'value')
-  // })
+  el.querySelector('#delete-avatar-btn').addEventListener('click', deleteAvatar)
 }
 
 function insertImage(url, el) {
@@ -89,4 +88,5 @@ function insertImage(url, el) {
   }
   const imgEl = createImage({ src: url, className: 'avatar' })
   el.querySelector('#avatar-wrapper').insertHtml(imgEl)
+  el.querySelector('#delete-avatar-btn').classList.remove('hidden')
 }

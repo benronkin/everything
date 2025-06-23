@@ -4,7 +4,15 @@ import { getWebApp, postWebAppForm } from '../assets/js/io.js'
 const url = `${state.const('APP_URL')}/users`
 
 export async function createAvatar(formData) {
-  const { message } = await postWebAppForm(`${url}/avatar/create`, formData)
+  const { message, data } = await postWebAppForm(
+    `${url}/avatar/create`,
+    formData
+  )
+  return { message, data }
+}
+
+export async function deleteAvatar() {
+  const { message } = await getWebApp(`${url}/avatar/delete`)
   return { message }
 }
 

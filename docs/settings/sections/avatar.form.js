@@ -1,10 +1,10 @@
 /* global imageCompression */
-import { createAvatar } from '../../users/users.api.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createForm } from '../../assets/partials/form.js'
 import { createFileInput } from '../../assets/partials/fileInput.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { createAvatar } from '../../users/users.api.js'
 import { log } from '../../assets/js/logger.js'
 
 const css = `
@@ -59,7 +59,7 @@ function listen(el) {
         const { message, data } = await createAvatar(formData)
 
         const user = state.get('user')
-        user.avatar = data.url
+        user.avatar = data?.url
         state.set('user', user)
         log(message)
       } catch (error) {
