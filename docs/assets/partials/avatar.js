@@ -5,18 +5,20 @@ import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
 const css = `
-.avatar {
-  background-color: var(--purple4);
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.avatar {  
   cursor: pointer;
   height: 30px;
   width: 30px;
   border-radius: 50%;
-  color: var(--gray1);
   font-weight: 700;
+}
+div.avatar {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--purple4);
+  color: var(--gray1);
 }
 `
 
