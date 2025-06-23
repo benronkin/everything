@@ -95,7 +95,7 @@ function insertImage(url, el) {
     log('Did not receive avatar url')
     return
   }
-  const imgEl = createImage({ src: url, className: 'avatar' })
+  const imgEl = createImage({ src: url })
   avatarWrapperEl.insertHtml(imgEl)
   deleteAvatarBtn.classList.remove('hidden')
 }
