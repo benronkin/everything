@@ -3,6 +3,10 @@ export const bookmarks = [
     header: { html: 'Fun' },
     items: [
       {
+        html: 'Classics',
+        url: 'https://tubitv.com/category/classics',
+      },
+      {
         html: 'CBC Podcasts',
         url: 'https://www.cbc.ca/listen/cbc-podcasts',
       },
