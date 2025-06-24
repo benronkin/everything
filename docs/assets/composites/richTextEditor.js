@@ -103,6 +103,16 @@ function listen(el) {
   })
 
   const tb = el.querySelector('.rte-toolbar')
+
+  tb.querySelectorAll('.fa-solid').forEach((el) =>
+    el.addEventListener('mousedown', () => {
+      const sel = window.getSelection()
+      if (sel && sel.rangeCount) {
+        el._selectedRange = sel.getRangeAt(0).cloneRange()
+      }
+    })
+  )
+
   tb.querySelector('.fa-list-ul').addEventListener('click', () =>
     handleList('UL')
   )
@@ -276,8 +286,19 @@ function handleHeading(e) {
   popup.querySelectorAll('li').forEach((li) =>
     li.addEventListener('click', () => {
       const heading = li.getAttribute('value')
-      const node = getCaretNode()
-      if (!node) return
+
+      const sel = window.getSelection()
+      const toolbarBtn = document.querySelector('.fa-heading')
+      const savedRange = toolbarBtn._selectedRange
+      if (!savedRange) return
+
+      sel.removeAllRanges()
+      sel.addRange(savedRange)
+
+      const node =
+        savedRange.startContainer.nodeType === Node.ELEMENT_NODE
+          ? savedRange.startContainer
+          : savedRange.startContainer.parentElement
 
       const block = node.closest('div, h1, h2, h3, h4, h5, h6')
       if (!block) return
@@ -287,7 +308,10 @@ function handleHeading(e) {
           ? document.createElement('div')
           : document.createElement(heading)
 
-      replacement.innerHTML = block.innerHTML
+      while (block.firstChild) {
+        replacement.appendChild(block.firstChild)
+      }
+
       block.replaceWith(replacement)
       placeCaretInside(replacement)
 
