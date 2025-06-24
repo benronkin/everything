@@ -1,4 +1,4 @@
-/* global Quill */
+/* global hljs Quill */
 
 import { injectStyle } from '../js/ui.js'
 import { log } from '../js/logger.js'

@@ -119,7 +119,7 @@ export function react(el) {
           classes: { pill: 'mr-10', icon: 'fa-check' },
           html: peer.first_name,
           dataset: { id: peer.id, name: peer.first_name, role: 'pill' },
-          isSelected: doc.peers.find((dp) => dp.id === peer.id),
+          isSelected: doc?.peers.find((dp) => dp.id === peer.id),
         })
       )
     }

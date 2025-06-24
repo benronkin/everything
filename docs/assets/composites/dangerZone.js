@@ -23,7 +23,7 @@ export function createDangerZone({ id, modalId, password } = {}) {
 
   const el = createDiv({
     id,
-    className: 'danger-zone flex danger-box u-mt-40 u-mb-20',
+    className: 'danger-zone flex align-center danger-box u-mt-40 u-mb-20',
   })
 
   build({ el, modalId, password })
