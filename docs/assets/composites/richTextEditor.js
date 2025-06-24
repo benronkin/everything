@@ -1,17 +1,19 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../partials/icon.js'
+import { createPopup } from '../partials/popup.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 
 const css = `
 .rich-text-editor .rte-toolbar {
   border: none;
-  background-color: color-mix(in srgb, var(--gray6) 2%, transparent);
+  background-color: #050005;
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
   padding: 10px;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 10px;
 }
 .rich-text-editor .rte-editor {
   background-color: var(--gray1);
@@ -26,9 +28,12 @@ const css = `
 .rich-text-editor .rte-editor li[data-indent]{
   padding-left: calc(var(--indent, 0) * 2ch);
 }
+.rich-text-editor .rte-editor ol, 
+.rich-text-editor .rte-editor ul {
+  margin-left: 10px;
+}
 .rich-text-editor .rte-editor ul {
   list-style-type: disc;
-  margin-left: 10px;
 }
 .rich-text-editor .rte-editor li[data-indent] {
   list-style-position: outside;
@@ -61,12 +66,13 @@ export function createRichTextEditor({
 function build(el) {
   const toolbarEl = createDiv({ className: 'rte-toolbar' })
   el.appendChild(toolbarEl)
-  const icons = ['fa-list']
+  const icons = ['fa-list-ul', 'fa-list-ol', 'fa-heading']
   for (const icon of icons) {
     toolbarEl.appendChild(createIcon({ classes: { primary: icon } }))
   }
 
   el.appendChild(createDiv({ className: 'rte-editor' }))
+  el.appendChild(createPopup())
 }
 
 function listen(el) {
@@ -97,7 +103,15 @@ function listen(el) {
   })
 
   const tb = el.querySelector('.rte-toolbar')
-  tb.querySelector('.fa-list').addEventListener('click', handleOl)
+  tb.querySelector('.fa-list-ul').addEventListener('click', () =>
+    handleList('UL')
+  )
+
+  tb.querySelector('.fa-list-ol').addEventListener('click', () =>
+    handleList('OL')
+  )
+
+  tb.querySelector('.fa-heading').addEventListener('click', handleHeading)
 }
 
 function handleEnter() {
@@ -216,12 +230,12 @@ function getSurroundingElement(tagName = 'div') {
   return currentBlock
 }
 
-function handleOl() {
+function handleList(tagName) {
   const div = getSurroundingElement('div')
   if (!div) return
 
   const parent = div.parentElement
-  if (parent?.nodeName === 'UL' || div.nodeName === 'LI') return
+  if (parent?.nodeName === tagName || div.nodeName === 'LI') return
 
   const content = div.innerHTML
   const li = document.createElement('li')
@@ -230,16 +244,58 @@ function handleOl() {
   const prev = div.previousElementSibling
   const next = div.nextElementSibling
 
-  if (prev?.nodeName === 'UL') {
+  if (prev?.nodeName === tagName) {
     prev.appendChild(li)
     div.remove()
-  } else if (next?.nodeName === 'UL') {
+  } else if (next?.nodeName === tagName) {
     next.insertBefore(li, next.firstChild)
     div.remove()
   } else {
-    const ul = document.createElement('ul')
+    const ul = document.createElement(tagName)
     ul.appendChild(li)
     div.replaceWith(ul)
   }
   placeCaretInside(li)
+}
+
+function handleHeading(e) {
+  const btn = e.target
+  const rect = btn.getBoundingClientRect()
+
+  const popup = document.querySelector('.rich-text-editor .popup')
+  popup.insertHtml(
+    `<ul>
+      <li value="h3">H3</li>
+      <li value="h4">H4</li>
+      <li value="h5">H5</li>
+      <li value="h6">H6</li>
+      <li value="normal">Normal</li>
+    </ul>`
+  )
+
+  popup.querySelectorAll('li').forEach((li) =>
+    li.addEventListener('click', () => {
+      const heading = li.getAttribute('value')
+      const node = getCaretNode()
+      if (!node) return
+
+      const block = node.closest('div, h1, h2, h3, h4, h5, h6')
+      if (!block) return
+
+      const replacement =
+        heading === 'normal'
+          ? document.createElement('div')
+          : document.createElement(heading)
+
+      replacement.innerHTML = block.innerHTML
+      block.replaceWith(replacement)
+      placeCaretInside(replacement)
+
+      popup.classList.add('hidden')
+    })
+  )
+
+  popup.style.top = `${rect.bottom + 5 + window.scrollY}px`
+  popup.style.left = `${rect.left + window.scrollX}px`
+  popup.classList.toggle('hidden')
 }
