@@ -22,15 +22,18 @@ const css = `
 .rich-text-editor .rte-editor:focus {
   outline: none;
 }
-.rich-text-editor .rte-editor div[data-indent] {
+.rich-text-editor .rte-editor div[data-indent], 
+.rich-text-editor .rte-editor li[data-indent]{
   padding-left: calc(var(--indent, 0) * 2ch);
 }
 .rich-text-editor .rte-editor ul {
   list-style-type: disc;
   margin-left: 10px;
 }
-.rich-text-editor .rte-editor ol {
-  margin-left: 10px;
+.rich-text-editor .rte-editor li[data-indent] {
+  list-style-position: outside;
+  margin-left: calc(var(--indent, 0) * 2ch);
+  padding-left: 0;
 }
 `
 
@@ -119,6 +122,20 @@ function getCaretNode() {
 }
 
 function handleEnterInLi(li) {
+  const isEmpty = li.innerHTML.trim() === '' || li.innerHTML === '<br>'
+  const list = li.closest('ul, ol')
+  if (!list) return
+
+  if (isEmpty) {
+    const newDiv = document.createElement('div')
+    newDiv.appendChild(document.createElement('br'))
+
+    li.remove()
+    list.insertAdjacentElement('afterend', newDiv)
+    placeCaretInside(newDiv)
+    return
+  }
+
   const newLi = document.createElement('li')
   newLi.appendChild(document.createElement('br'))
   li.insertAdjacentElement('afterend', newLi)
@@ -133,23 +150,29 @@ function handleEnterInDiv(div) {
 }
 
 function handleTab() {
-  const div = getSurroundingElement('div')
-  if (!div) return
+  const node = getCaretNode()
+  if (!node) return
 
-  const level = parseInt(div.dataset.indent || '0', 10)
-  div.dataset.indent = level + 1
-  div.style.setProperty('--indent', level + 1)
+  const block = node.closest('div, li')
+  if (!block) return
+
+  const level = parseInt(block.dataset.indent || '0', 10)
+  block.dataset.indent = level + 1
+  block.style.setProperty('--indent', level + 1)
 }
 
 function handleShiftTab() {
-  const div = getSurroundingElement('div')
-  if (!div) return
+  const node = getCaretNode()
+  if (!node) return
 
-  const level = parseInt(div.dataset.indent || '0', 10)
+  const block = node.closest('div, li')
+  if (!block) return
+
+  const level = parseInt(block.dataset.indent || '0', 10)
   const nextLevel = Math.max(0, level - 1)
 
-  div.dataset.indent = nextLevel
-  div.style.setProperty('--indent', nextLevel)
+  block.dataset.indent = nextLevel
+  block.style.setProperty('--indent', nextLevel)
 }
 
 function handleBackspace(el) {
