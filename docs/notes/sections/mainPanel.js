@@ -1,5 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDivQuill } from '../../assets/composites/divQuill.js'
+import { createRichTextEditor } from '../../assets/composites/richTextEditor.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
@@ -58,15 +59,18 @@ function build(el) {
     })
   )
 
-  const divEl = createDiv({ id: 'editor' })
-  el.appendChild(divEl)
+  // const divEl = createDiv({ id: 'editor' })
+  // el.appendChild(divEl)
 
-  state.set(
-    'quill',
-    createDivQuill({
-      div: divEl,
-    })
-  )
+  // state.set(
+  //   'quill',
+  //   createDivQuill({
+  //     div: divEl,
+  //   })
+  // )
+
+  el.appendChild(createRichTextEditor({ className: 'mt-20' }))
+
   el.appendChild(dangerZone())
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
@@ -96,9 +100,10 @@ function react(el) {
 
     el.querySelector('#note-title').value = doc.title
 
-    const quill = state.get('quill')
-    const delta = quill.clipboard.convert({ html: doc.note })
-    quill.setContents(delta, 'silent')
+    // const quill = state.get('quill')
+    // const delta = quill.clipboard.convert({ html: doc.note })
+    // quill.setContents(delta, 'silent')
+    el.querySelector('.rte-editor').insertHtml(doc.note)
     el.querySelector('#note-id').insertHtml(doc.id)
 
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
@@ -116,14 +121,19 @@ function listen(el) {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
 
-  const quill = state.get('quill')
-
-  quill.on('text-change', (delta, oldDelta, source) => {
-    // source === 'user' if the user typed or edited
-    // source === 'api' if you called quill.setContents(), insertText(), etc.
+  el.querySelector('.rte-editor').addEventListener('input', () => {
     removeToasts()
     handleUpdateNote()
   })
+
+  // const quill = state.get('quill')
+
+  // quill.on('text-change', (delta, oldDelta, source) => {
+  //   // source === 'user' if the user typed or edited
+  //   // source === 'api' if you called quill.setContents(), insertText(), etc.
+  //   removeToasts()
+  //   handleUpdateNote()
+  // })
 }
 
 async function handleUpdateNote() {
@@ -132,7 +142,8 @@ async function handleUpdateNote() {
 
 const debouncedUpdate = debounce(async () => {
   setMessage({ message: 'saving...', type: 'quiet' })
-  const note = state.get('quill').root.innerHTML
+  // const note = state.get('quill').root.innerHTML
+  const note = document.querySelector('.rte-editor').innerHTML
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
   const { message } = await updateNote({ id, title, note })

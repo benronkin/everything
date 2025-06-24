@@ -488,3 +488,6 @@ main {
   background: var(--purple0);
   color: var(--gray6);
 }
+.toast.quiet {
+  background-color: var(--gray0);
+}

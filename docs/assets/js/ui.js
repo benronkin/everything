@@ -84,6 +84,7 @@ export function setMessage({
   message,
   className,
   type = 'message',
+  showProgress = true,
   autoClose = 3000,
   position = 'BOTTOM_RIGHT',
 } = {}) {
@@ -111,6 +112,7 @@ export function setMessage({
     case 'quiet':
       removeToasts()
       className = 'quiet'
+      showProgress = false
       break
     case 'warn':
       message = _createWarnMessage(message)
@@ -122,7 +124,7 @@ export function setMessage({
     message,
     className,
     autoClose,
-    showProgress: true,
+    showProgress,
     position,
   })
 

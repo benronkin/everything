@@ -93,7 +93,7 @@ export function createToast({
 
   const el = createDiv({
     id,
-    className: `toast ${className}.trim()`,
+    className: `toast ${className}`.trim(),
     html: message,
   })
 
