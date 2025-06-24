@@ -1,6 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
-import { createPeer } from '../../assets/partials/peer.js'
+import { createAvatar } from './avatar.js'
 import { createIcon } from './icon.js'
 import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
@@ -14,7 +14,7 @@ const css = `
 }
 `
 
-export function createPeerGroup({
+export function createAvatarGroup({
   id,
   className = '',
   peers,
@@ -32,7 +32,9 @@ export function createPeerGroup({
 
 function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
-  peersToShow.forEach((p) => el.appendChild(createPeer({ name: p.name })))
+  peersToShow.forEach((p) =>
+    el.appendChild(createAvatar({ name: p.name, url: p.url }))
+  )
 
   if (peers?.length > 3) {
     el.appendChild(

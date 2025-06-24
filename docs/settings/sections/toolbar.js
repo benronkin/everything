@@ -1,6 +1,6 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createPeerGroup } from '../../assets/partials/peerGroup.js'
+import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 
@@ -30,12 +30,12 @@ function react(el) {
   })
 
   state.on('active-doc', 'notes', (id) => {
-    el.querySelector('.peer-group')?.remove()
+    el.querySelector('.avatar-group')?.remove()
 
     if (id) {
       const doc = { ...state.get('main-documents').find((d) => d.id === id) }
       el.querySelector('.icons').appendChild(
-        createPeerGroup({
+        createAvatarGroup({
           peers: doc.peers,
           className: 'ml-auto',
           showShare: doc.role === 'owner',

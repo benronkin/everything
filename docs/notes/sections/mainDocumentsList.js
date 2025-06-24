@@ -4,7 +4,7 @@ import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { createPeerGroup } from '../../assets/partials/peerGroup.js'
+import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { log } from '../../assets/js/logger.js'
 
 const css = `
@@ -34,7 +34,7 @@ function react(el) {
     const children = docs.map((doc) => {
       const html = [createSpan({ html: doc.title })]
       if (doc?.peers?.length) {
-        html.push(createPeerGroup({ peers: doc.peers }))
+        html.push(createAvatarGroup({ peers: doc.peers }))
       }
       return createMainDocumentItem({ id: doc.id, html })
     })

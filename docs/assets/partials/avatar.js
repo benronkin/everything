@@ -14,7 +14,6 @@ const css = `
   border: 1px solid #e5e5e5;
 }
 div.avatar {
-  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
