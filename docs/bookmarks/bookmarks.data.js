@@ -126,10 +126,6 @@ export const bookmarks = [
         html: 'Low cost phone',
         url: 'https://www.amazon.com/dp/B0DLHNWHRF/?coliid=IVS2S4SS9KKTE&amp;colid=19WWYHWR5IJ0F&amp;ref_=list_c_wl_lv_ov_lig_dp_it&amp;th=1',
       },
-      {
-        html: 'Private credit card',
-        url: 'https://privacy.com/pricing',
-      },
     ],
   },
 ]
