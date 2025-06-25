@@ -41,14 +41,13 @@ const css = `
 export function createPhotoItem({ id, imgSrc, caption }) {
   injectStyle(css)
 
-  const el = createDiv({ id, className: 'photo-item container' })
+  const el = createDiv({ id, className: 'photo-item list-item container' })
 
   build(el)
   listen(el)
 
   imgSrc && (el.querySelector('img').src = imgSrc)
   caption && (el.querySelector('input').value = caption)
-  el.dataset.listItem = true
 
   return el
 }

@@ -22,7 +22,7 @@ i.shake {
 `
 
 export function createIcon({
-  id = `i-${crypto.randomUUID()}`,
+  id = `ev${crypto.randomUUID()}`,
   classes,
   dataset = {},
   role,

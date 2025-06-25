@@ -55,8 +55,6 @@ export function createMainDocumentItem({ id, selected, hidden, html } = {}) {
 
   el.insertHtml(html)
 
-  // replace the element type class
-  el.classList.remove('list-item')
   el.classList.add('md-item')
 
   // Augment the base listItem click state with active-doc

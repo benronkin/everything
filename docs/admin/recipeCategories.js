@@ -139,7 +139,7 @@ function handleCategoryFormSubmit(e) {
   } else {
     const cat = createListItem({
       title: category,
-      id: `i-${crypto.randomUUID()}`,
+      id: `ev${crypto.randomUUID()}`,
       textColor: 'var(--gray6)',
       bgColor: 'var(--purple2)',
     })

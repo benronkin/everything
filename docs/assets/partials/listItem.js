@@ -40,7 +40,8 @@ export function createListItem({ html, className, id } = {}) {
   injectStyle(css)
   const el = createDiv()
 
-  el.id = id || `i-${crypto.randomUUID()}`
+  el.id = id || `ev${crypto.randomUUID()}`
+  el.dataset.id = el.id
 
   el.className = 'list-item'
   if (className) {
@@ -48,8 +49,6 @@ export function createListItem({ html, className, id } = {}) {
       el.classList.add(c)
     }
   }
-
-  el.dataset.listItem = true
 
   if (html) {
     el.insertHtml(html)

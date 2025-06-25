@@ -160,7 +160,7 @@ function getChildren() {
  * Get item by id
  */
 function getChildById(id) {
-  return this.querySelector(`#${id}`)
+  return this.querySelector(`[data-id="${id}"]`)
 }
 
 /**

@@ -27,12 +27,12 @@ describe('Creating a list of mainDocumentItems', () => {
       {
         id: 'abc123',
         location: 'Seattle Opera',
-        visit_date: '2025-05-12T',
+        visit_date: '2025-05-12',
       },
       {
         id: 'def456',
         location: "Don't yell at me",
-        visit_date: '2025-06-23T',
+        visit_date: '2025-06-23',
       },
     ])
 
