@@ -143,7 +143,8 @@ function deleteChild(id) {
  * remove all sueprListItems
  */
 function deleteChildren() {
-  this.getChildren().forEach((child) => this.deleteChild(child.id))
+  const existingChildren = this.getChildren()
+  existingChildren.forEach((child) => this.deleteChild(child.id))
   return this // for chaining
 }
 
@@ -151,7 +152,7 @@ function deleteChildren() {
  * get all iistItems
  */
 function getChildren() {
-  const children = [...this.querySelectorAll('[data-list-item]')]
+  const children = [...this.querySelectorAll('.list-item')]
   return children
 }
 
@@ -159,7 +160,7 @@ function getChildren() {
  * Get item by id
  */
 function getChildById(id) {
-  return this.querySelector(`[data-id="${id}"]`)
+  return this.querySelector(`#${id}`)
 }
 
 /**

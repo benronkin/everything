@@ -6,17 +6,9 @@ import { state } from '../../assets/js/state.js'
 import { createList } from '../../assets/partials/list.js'
 import { shoppingItem } from './shoppingItem.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
-
 // import { setMessage } from '../../assets/js/ui.js'
 import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function shoppingList() {
   const el = createList({
     id: 'shopping-list',
@@ -29,13 +21,6 @@ export function shoppingList() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('shopping-list', 'shoppingList', (items) => {
     el.deleteChildren()
