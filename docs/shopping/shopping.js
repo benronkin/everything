@@ -1,5 +1,8 @@
 import { state } from '../assets/js/state.js'
-import { handleAddItem } from './shopping.handlers.js'
+import {
+  handleAddItem,
+  handleAddSuggestionToShoppingList,
+} from './shopping.handlers.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -8,7 +11,6 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
-import { log } from '../assets/js/logger.js'
 import { handleAddToBothLists } from './shopping.handlers.js'
 import { getMe } from '../users/users.api.js'
 import {
@@ -16,6 +18,7 @@ import {
   upodateShoppingList,
   upodateSuggestionsList,
 } from './shopping.api.js'
+import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   build()
@@ -166,16 +169,6 @@ function handleFormKeyup({ value }) {
   if (!slEl.querySelectorAll('.suggestion-item:not(.hidden)').length) {
     resetSuggestionsUI()
   }
-}
-
-function handleAddSuggestionToShoppingList({ item }) {
-  const sItems = state.get('shopping-list')
-  sItems.unshift(item)
-  state.set('shopping-list', sItems)
-  state.set('suggestions-list', [...state.get('suggestions-list')])
-  upodateShoppingList(sItems.join(','))
-  handleToggleSuggestionsUI()
-  document.querySelector('[name="new-item').value = ''
 }
 
 function handleDeleteSuggestionClick({ item }) {

@@ -5,6 +5,8 @@ import { log } from '../assets/js/logger.js'
 export async function handleAddItem(item) {
   if (!item.length) return
 
+  item = item.toLowerCase().trim()
+
   const sItems = state.get('shopping-list')
   if (sItems.includes(item)) {
     return { message: `${item} already on the list` }
@@ -22,6 +24,17 @@ export async function handleAddItem(item) {
     return { error: resp.error }
   }
   return
+}
+
+export async function handleAddSuggestionToShoppingList({ item }) {
+  handleAddItem(item)
+  document
+    .getElementById('suggestions-list')
+    .classList.toggle(
+      'hidden',
+      !document.getElementById('suggest-icon').classList.contains('primary')
+    )
+  document.querySelector('[name="new-item').value = ''
 }
 
 export async function handleAddToBothLists(item) {
