@@ -3,8 +3,16 @@ export const bookmarks = [
     header: { html: 'Fun' },
     items: [
       {
+        html: 'Web APIs',
+        url: 'https://developer.mozilla.org/en-US/docs/Web/API',
+      },
+      {
         html: 'Classics',
         url: 'https://tubitv.com/category/classics',
+      },
+      {
+        html: 'Masterpiece',
+        url: 'https://www.pbs.org/wgbh/masterpiece',
       },
       {
         html: 'CBC Podcasts',

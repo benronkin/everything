@@ -66,7 +66,7 @@ export function createRichTextEditor({
 function build(el) {
   const toolbarEl = createDiv({ className: 'rte-toolbar' })
   el.appendChild(toolbarEl)
-  const icons = ['fa-list-ul', 'fa-list-ol', 'fa-heading']
+  const icons = ['fa-list-ul', 'fa-list-ol', 'fa-heading', 'fa-code']
   for (const icon of icons) {
     toolbarEl.appendChild(createIcon({ classes: { primary: icon } }))
   }
@@ -103,13 +103,17 @@ function listen(el) {
   })
 
   const tb = el.querySelector('.rte-toolbar')
+  const editor = el.querySelector('.rte-editor')
 
   tb.querySelectorAll('.fa-solid').forEach((el) =>
     el.addEventListener('mousedown', () => {
       const sel = window.getSelection()
-      if (sel && sel.rangeCount) {
-        el._selectedRange = sel.getRangeAt(0).cloneRange()
+
+      if (!sel || !sel.rangeCount) {
+        const node = editor.firstElementChild
+        placeCaretInside(node)
       }
+      el._selectedRange = sel.getRangeAt(0).cloneRange()
     })
   )
 
@@ -122,6 +126,8 @@ function listen(el) {
   )
 
   tb.querySelector('.fa-heading').addEventListener('click', handleHeading)
+
+  tb.querySelector('.fa-code').addEventListener('click', handleCode)
 }
 
 function handleEnter() {
@@ -215,33 +221,26 @@ function handleBackspace(el) {
 }
 
 function placeCaretInside(node) {
+  // create a new Range object, which represents a fragment of the document
   const range = document.createRange()
+  // set the range start at the beginning of the node (offset 0)
   range.setStart(node, 0)
+  // collapse the range to a single point (insertion point), removing any selection
   range.collapse(true)
 
+  // get the current selection (the user's text selection or caret)
   const sel = window.getSelection()
+  // clear any existing selection or caret from the document
   sel.removeAllRanges()
+  // apply the newly created range — this places the caret inside the node
   sel.addRange(range)
 }
 
-function getSurroundingElement(tagName = 'div') {
-  const selection = window.getSelection()
-  if (!selection || !selection.rangeCount) return
-
-  const range = selection.getRangeAt(0)
-  const node =
-    range.startContainer.nodeType === Node.ELEMENT_NODE
-      ? range.startContainer
-      : range.startContainer.parentElement
-
-  const currentBlock = node?.closest(tagName)
-  if (!currentBlock) return
-
-  return currentBlock
-}
-
 function handleList(tagName) {
-  const div = getSurroundingElement('div')
+  const node = getCaretNode()
+  if (!node) return
+
+  const div = node.closest('div')
   if (!div) return
 
   const parent = div.parentElement
@@ -290,7 +289,6 @@ function handleHeading(e) {
       const sel = window.getSelection()
       const toolbarBtn = document.querySelector('.fa-heading')
       const savedRange = toolbarBtn._selectedRange
-      if (!savedRange) return
 
       sel.removeAllRanges()
       sel.addRange(savedRange)
@@ -314,6 +312,55 @@ function handleHeading(e) {
 
       block.replaceWith(replacement)
       placeCaretInside(replacement)
+
+      popup.classList.add('hidden')
+    })
+  )
+
+  popup.style.top = `${rect.bottom + 5 + window.scrollY}px`
+  popup.style.left = `${rect.left + window.scrollX}px`
+  popup.classList.toggle('hidden')
+}
+
+function handleCode(e) {
+  const btn = e.target
+  const rect = btn.getBoundingClientRect()
+
+  const popup = document.querySelector('.rich-text-editor .popup')
+  popup.insertHtml(
+    `<ul>
+      <li value="javascript">Javascript</li>
+      <li value="html">HTML</li>
+      <li value="css">CSS</li>
+      <li value="json">JSON</li>
+      <li value="bash">Bash</li>
+    </ul>`
+  )
+
+  popup.querySelectorAll('li').forEach((li) =>
+    li.addEventListener('click', () => {
+      const language = li.getAttribute('value')
+
+      const sel = window.getSelection()
+      const toolbarBtn = document.querySelector('.fa-code')
+      const savedRange = toolbarBtn._selectedRange
+
+      sel.removeAllRanges()
+      sel.addRange(savedRange)
+
+      const node =
+        savedRange.startContainer.nodeType === Node.ELEMENT_NODE
+          ? savedRange.startContainer
+          : savedRange.startContainer.parentElement
+
+      const preEl = document.createElement('pre')
+      const codeEl = document.createElement('code')
+      codeEl.className = `language-${language}`
+      preEl.appendChild(codeEl)
+
+      node.replacceWith(preEl)
+
+      placeCaretInside(codeEl)
 
       popup.classList.add('hidden')
     })
