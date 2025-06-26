@@ -104,6 +104,9 @@ function react(el) {
     // const delta = quill.clipboard.convert({ html: doc.note })
     // quill.setContents(delta, 'silent')
     el.querySelector('.rte-editor').insertHtml(doc.note)
+    const codeEls = el.querySelectorAll('pre code')
+    codeEls.forEach(hljs.highlightElement)
+
     el.querySelector('#note-id').insertHtml(doc.id)
 
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
@@ -142,6 +145,11 @@ async function handleUpdateNote() {
 
 const debouncedUpdate = debounce(async () => {
   // const note = state.get('quill').root.innerHTML
+  document.querySelectorAll('.rte-editor pre code').forEach((code) => {
+    if (code.dataset.highlighted === 'yes') {
+      delete code.dataset.highlighted
+    }
+  })
   const note = document.querySelector('.rte-editor').innerHTML
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value

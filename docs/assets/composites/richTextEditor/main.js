@@ -42,7 +42,7 @@ const css = `
   padding-left: 0;
 }
 .rich-text-editor pre {
-  background: #121212;
+  background: #121212 !important;
   color: #f8f8f2;
   padding: 10px;
   border-radius: 5px;
@@ -51,11 +51,12 @@ const css = `
   font-size: 0.9rem;
   line-height: 1.4;
   margin: 10px 0;
-}
-.rich-text-editor code {
-  display: block;
-  white-space: pre;
-  min-height: 22.4px;
+  }
+  .rich-text-editor code {
+    background: #121212 !important;
+    display: block;
+    white-space: pre;
+    min-height: 22.4px;
 }
 `
 
@@ -77,6 +78,8 @@ export function createRichTextEditor({
   const editorEl = el.querySelector('.rte-editor')
   editorEl.contentEditable = true
   editorEl.insertHtml(html)
+
+  hljs.configure({ ignoreUnescapedHTML: true })
   return el
 }
 

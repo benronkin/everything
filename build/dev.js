@@ -15,11 +15,6 @@ import { checkStyles } from './checkStyles.js'
  */
 async function build() {
   console.clear()
-  // const resp = await checkStyles()
-  // if (resp) {
-  //   console.log(resp)
-  //   process.exit(1)
-  // }
   setProdUrl()
   updateAdminPage()
   execSync(

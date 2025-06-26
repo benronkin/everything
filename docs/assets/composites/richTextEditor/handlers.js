@@ -7,6 +7,7 @@ export function listen(el) {
   const editorEl = el.querySelector('.rte-editor')
 
   editorEl.addEventListener('keydown', (e) => {
+    console.log('e.key', e.key)
     if (e.key === 'Enter') {
       e.preventDefault()
       handleEnter()
@@ -106,8 +107,7 @@ function handleEnterInLi(li) {
 }
 
 function handleEnterInDiv(div) {
-  const sel = state.get('rte-saved-range')
-  const range = sel.getRangeAt(0)
+  const range = state.get('rte-saved-range')
 
   const atStart =
     range.startOffset === 0 && range.startContainer === div.firstChild
