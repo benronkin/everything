@@ -141,7 +141,6 @@ async function handleUpdateNote() {
 }
 
 const debouncedUpdate = debounce(async () => {
-  setMessage({ message: 'saving...', type: 'quiet' })
   // const note = state.get('quill').root.innerHTML
   const note = document.querySelector('.rte-editor').innerHTML
   const id = state.get('active-doc')

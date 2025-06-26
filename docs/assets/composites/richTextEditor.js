@@ -150,17 +150,13 @@ function handleEnter() {
   const node = getCaretNode()
   if (!node) return
 
+  if (node.closest('code')) return handleEnterInCode()
+
   const li = node.closest('li')
   if (li) return handleEnterInLi(li)
 
-  const div = node.closest('div:not(.rte-editor)')
-  if (div) {
-    console.log('', div.innerHTML)
-    return handleEnterInDiv(div)
-  }
-
-  console.log('here')
-  return handleEnterInDiv()
+  const div = node.closest('div')
+  if (div) return handleEnterInDiv(div)
 }
 
 function getCaretNode() {
@@ -185,6 +181,24 @@ function getCaretNode() {
 function getLastEditorElement() {
   const editor = document.querySelector('.rte-editor')
   return editor.lastElementChild
+}
+
+function handleEnterInCode() {
+  const sel = window.getSelection()
+  if (!sel || !sel.rangeCount) return
+
+  const range = sel.getRangeAt(0)
+  range.deleteContents()
+
+  const br = document.createTextNode('\n')
+  range.insertNode(br)
+
+  // move caret after the \n
+  range.setStartAfter(br)
+  range.collapse(true)
+
+  sel.removeAllRanges()
+  sel.addRange(range)
 }
 
 function handleEnterInLi(li) {
@@ -416,4 +430,12 @@ function handleCode(e) {
   popup.style.top = `${rect.bottom + 5 + window.scrollY}px`
   popup.style.left = `${rect.left + window.scrollX}px`
   popup.classList.toggle('hidden')
+}
+
+function getTopBlock(node) {
+  const editor = document.querySelector('.rte-editor')
+  while (node && node.parentElement !== editor) {
+    node = node.parentElement
+  }
+  return node
 }
