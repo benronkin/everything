@@ -1,6 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDivQuill } from '../../assets/composites/divQuill.js'
-import { createRichTextEditor } from '../../assets/composites/richTextEditor.js'
+import { createRichTextEditor } from '../../assets/composites/richTextEditor/main.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'

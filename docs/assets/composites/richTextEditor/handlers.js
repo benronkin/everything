@@ -1,97 +1,9 @@
-import { injectStyle } from '../../assets/js/ui.js'
-import { createDiv } from '../../assets/partials/div.js'
-import { createIcon } from '../partials/icon.js'
-import { createPopup } from '../partials/popup.js'
-import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
+import { state } from '../../js/state.js'
+import { getCaretNode, placeCaretInside, saveSelectedRange } from './helpers.js'
 
-const css = `
-.rich-text-editor .rte-toolbar {
-  border: none;
-  background-color: #050005;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
-  padding: 10px;
-  display: flex;
-  gap: 10px;
-}
-.rich-text-editor .rte-editor {
-  background-color: var(--gray1);
-  padding: 10px;
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
-}
-.rich-text-editor .rte-editor:focus {
-  outline: none;
-}
-.rich-text-editor .rte-editor div[data-indent], 
-.rich-text-editor .rte-editor li[data-indent]{
-  padding-left: calc(var(--indent, 0) * 2ch);
-}
-.rich-text-editor .rte-editor ol, 
-.rich-text-editor .rte-editor ul {
-  margin-left: 10px;
-}
-.rich-text-editor .rte-editor ul {
-  list-style-type: disc;
-}
-.rich-text-editor .rte-editor li[data-indent] {
-  list-style-position: outside;
-  margin-left: calc(var(--indent, 0) * 2ch);
-  padding-left: 0;
-}
-.rich-text-editor pre {
-  background: #121212;
-  color: #f8f8f2;
-  padding: 10px;
-  border-radius: 5px;
-  overflow-x: auto;
-  font-family: Menlo, Monaco, Consolas, monospace;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin: 10px 0;
-}
-.rich-text-editor code {
-  display: block;
-  white-space: pre;
-  min-height: 22.4px;
-}
-`
+export function listen(el) {
+  document.addEventListener('selectionchange', saveSelectedRange)
 
-export function createRichTextEditor({
-  className = '',
-  html = '<div><br></div>',
-}) {
-  injectStyle(css)
-
-  const el = createDiv({ className: 'rich-text-editor' })
-
-  build(el)
-  listen(el)
-
-  for (const c of className.split(' ')) {
-    el.classList.add(c)
-  }
-
-  const editorEl = el.querySelector('.rte-editor')
-  editorEl.contentEditable = true
-  editorEl.insertHtml(html)
-  return el
-}
-
-function build(el) {
-  const toolbarEl = createDiv({ className: 'rte-toolbar' })
-  el.appendChild(toolbarEl)
-  const icons = ['fa-list-ul', 'fa-list-ol', 'fa-heading', 'fa-code']
-  for (const icon of icons) {
-    toolbarEl.appendChild(createIcon({ classes: { primary: icon } }))
-  }
-
-  el.appendChild(createDiv({ className: 'rte-editor' }))
-  el.appendChild(createPopup())
-}
-
-function listen(el) {
   const editorEl = el.querySelector('.rte-editor')
 
   editorEl.addEventListener('keydown', (e) => {
@@ -119,18 +31,9 @@ function listen(el) {
   })
 
   const tb = el.querySelector('.rte-toolbar')
-  const editor = el.querySelector('.rte-editor')
 
   tb.querySelectorAll('.fa-solid').forEach((el) =>
-    el.addEventListener('mousedown', () => {
-      const sel = window.getSelection()
-
-      if (!sel || !sel.rangeCount) {
-        const node = editor.firstElementChild
-        placeCaretInside(node)
-      }
-      el._selectedRange = sel.getRangeAt(0).cloneRange()
-    })
+    el.addEventListener('mousedown', saveSelectedRange)
   )
 
   tb.querySelector('.fa-list-ul').addEventListener('click', () =>
@@ -159,46 +62,26 @@ function handleEnter() {
   if (div) return handleEnterInDiv(div)
 }
 
-function getCaretNode() {
-  const sel = window.getSelection()
-  if (!sel || !sel.rangeCount) {
-    return getLastEditorElement()
-  }
-
-  let node = sel.focusNode
-  if (node.nodeType === Node.TEXT_NODE) {
-    node = node.parentElement
-  }
-
-  const editor = document.querySelector('.rte-editor')
-  if (!editor.contains(node)) {
-    return getLastEditorElement()
-  }
-
-  return node
-}
-
-function getLastEditorElement() {
-  const editor = document.querySelector('.rte-editor')
-  return editor.lastElementChild
-}
-
 function handleEnterInCode() {
-  const sel = window.getSelection()
-  if (!sel || !sel.rangeCount) return
+  const range = state.get('rte-saved-range')
+  if (!range) return
 
-  const range = sel.getRangeAt(0)
+  const br = document.createElement('br')
+  const spacer = document.createTextNode('\u200B') // zero-width space to ensure height
+
   range.deleteContents()
-
-  const br = document.createTextNode('\n')
   range.insertNode(br)
+  br.parentNode.insertBefore(spacer, br.nextSibling)
 
-  // move caret after the \n
-  range.setStartAfter(br)
-  range.collapse(true)
-
+  const sel = window.getSelection()
   sel.removeAllRanges()
-  sel.addRange(range)
+
+  const newRange = document.createRange()
+  newRange.setStart(spacer, 1)
+  newRange.collapse(true)
+
+  sel.addRange(newRange)
+  saveSelectedRange()
 }
 
 function handleEnterInLi(li) {
@@ -223,7 +106,7 @@ function handleEnterInLi(li) {
 }
 
 function handleEnterInDiv(div) {
-  const sel = window.getSelection()
+  const sel = state.get('rte-saved-range')
   const range = sel.getRangeAt(0)
 
   const atStart =
@@ -282,22 +165,6 @@ function handleBackspace(el) {
   }
 }
 
-function placeCaretInside(node) {
-  // create a new Range object, which represents a fragment of the document
-  const range = document.createRange()
-  // set the range start at the beginning of the node (offset 0)
-  range.setStart(node, 0)
-  // collapse the range to a single point (insertion point), removing any selection
-  range.collapse(true)
-
-  // get the current selection (the user's text selection or caret)
-  const sel = window.getSelection()
-  // clear any existing selection or caret from the document
-  sel.removeAllRanges()
-  // apply the newly created range — this places the caret inside the node
-  sel.addRange(range)
-}
-
 function handleList(tagName) {
   const node = getCaretNode()
   if (!node) return
@@ -348,7 +215,7 @@ function handleHeading(e) {
     li.addEventListener('click', () => {
       const heading = li.getAttribute('value')
 
-      const sel = window.getSelection()
+      const sel = state.get('rte-saved-range')
       const toolbarBtn = document.querySelector('.fa-heading')
       const savedRange = toolbarBtn._selectedRange
 
@@ -403,15 +270,20 @@ function handleCode(e) {
     li.addEventListener('click', () => {
       const language = li.getAttribute('value')
 
-      const sel = window.getSelection()
-      const toolbarBtn = document.querySelector('.fa-code')
-      const savedRange = toolbarBtn._selectedRange
-
-      sel.removeAllRanges()
-      sel.addRange(savedRange)
-
       const node = getCaretNode()
-      console.log('node', node)
+
+      // update language of existing code element
+      if (node.tagName === 'CODE') {
+        node.classList.forEach((cls) => {
+          if (cls.startsWith('language-')) {
+            node.classList.remove(cls)
+          }
+        })
+        node.classList.add(`language-${language}`)
+        popup.classList.add('hidden')
+        return
+      }
+
       const replacement = node.closest('.rte-editor > *')
 
       const preEl = document.createElement('pre')
@@ -430,12 +302,4 @@ function handleCode(e) {
   popup.style.top = `${rect.bottom + 5 + window.scrollY}px`
   popup.style.left = `${rect.left + window.scrollX}px`
   popup.classList.toggle('hidden')
-}
-
-function getTopBlock(node) {
-  const editor = document.querySelector('.rte-editor')
-  while (node && node.parentElement !== editor) {
-    node = node.parentElement
-  }
-  return node
 }
