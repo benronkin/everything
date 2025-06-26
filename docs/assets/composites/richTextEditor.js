@@ -40,6 +40,22 @@ const css = `
   margin-left: calc(var(--indent, 0) * 2ch);
   padding-left: 0;
 }
+.rich-text-editor pre {
+  background: #121212;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 10px 0;
+}
+.rich-text-editor code {
+  display: block;
+  white-space: pre;
+  min-height: 22.4px;
+}
 `
 
 export function createRichTextEditor({
@@ -137,18 +153,38 @@ function handleEnter() {
   const li = node.closest('li')
   if (li) return handleEnterInLi(li)
 
-  const div = node.closest('div')
-  if (div) return handleEnterInDiv(div)
+  const div = node.closest('div:not(.rte-editor)')
+  if (div) {
+    console.log('', div.innerHTML)
+    return handleEnterInDiv(div)
+  }
+
+  console.log('here')
+  return handleEnterInDiv()
 }
 
 function getCaretNode() {
   const sel = window.getSelection()
-  if (!sel || !sel.rangeCount) return null
+  if (!sel || !sel.rangeCount) {
+    return getLastEditorElement()
+  }
 
-  const range = sel.getRangeAt(0)
-  return range.startContainer.nodeType === Node.ELEMENT_NODE
-    ? range.startContainer
-    : range.startContainer.parentElement
+  let node = sel.focusNode
+  if (node.nodeType === Node.TEXT_NODE) {
+    node = node.parentElement
+  }
+
+  const editor = document.querySelector('.rte-editor')
+  if (!editor.contains(node)) {
+    return getLastEditorElement()
+  }
+
+  return node
+}
+
+function getLastEditorElement() {
+  const editor = document.querySelector('.rte-editor')
+  return editor.lastElementChild
 }
 
 function handleEnterInLi(li) {
@@ -173,10 +209,22 @@ function handleEnterInLi(li) {
 }
 
 function handleEnterInDiv(div) {
+  const sel = window.getSelection()
+  const range = sel.getRangeAt(0)
+
+  const atStart =
+    range.startOffset === 0 && range.startContainer === div.firstChild
+
   const newDiv = document.createElement('div')
   newDiv.appendChild(document.createElement('br'))
-  div.insertAdjacentElement('afterend', newDiv)
-  placeCaretInside(newDiv)
+
+  if (atStart) {
+    div.insertAdjacentElement('beforebegin', newDiv)
+    placeCaretInside(div)
+  } else {
+    div.insertAdjacentElement('afterend', newDiv)
+    placeCaretInside(newDiv)
+  }
 }
 
 function handleTab() {
@@ -348,17 +396,16 @@ function handleCode(e) {
       sel.removeAllRanges()
       sel.addRange(savedRange)
 
-      const node =
-        savedRange.startContainer.nodeType === Node.ELEMENT_NODE
-          ? savedRange.startContainer
-          : savedRange.startContainer.parentElement
+      const node = getCaretNode()
+      console.log('node', node)
+      const replacement = node.closest('.rte-editor > *')
 
       const preEl = document.createElement('pre')
       const codeEl = document.createElement('code')
       codeEl.className = `language-${language}`
       preEl.appendChild(codeEl)
 
-      node.replacceWith(preEl)
+      replacement.replaceWith(preEl)
 
       placeCaretInside(codeEl)
 

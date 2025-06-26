@@ -82,6 +82,7 @@ function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode === 'main-panel') {
       el.classList.remove('hidden')
+      document.querySelector('.rte-editor').focus()
       // log('mainPanel is showing itself on active-doc')
     } else {
       el.classList.add('hidden')
