@@ -18,6 +18,10 @@ const css = `
 .editor-wrapper .viewer * {
   margin: 20px 0;
 }
+.editor-wrapper .viewer .comment * {
+  margin: 0;
+}  
+
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
