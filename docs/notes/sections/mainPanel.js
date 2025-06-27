@@ -121,7 +121,36 @@ function listen(el) {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
 
-  el.querySelector('.editor').addEventListener('change', () => {
+  const editorEl = el.querySelector('.editor')
+  const viewerEl = el.querySelector('.viewer')
+
+  document
+    .querySelector('#toolbar .fa-pencil')
+    .addEventListener('click', (e) => {
+      e.target.classList.toggle('on')
+      viewerEl.classList.toggle('hidden')
+      viewerEl.insertHtml(editorEl.value)
+      editorEl.classList.toggle('hidden')
+      editorEl.resize()
+
+      document
+        .querySelectorAll('.ta-icon')
+        .forEach((i) =>
+          i.classList.toggle('hidden', !e.target.classList.contains('on'))
+        )
+    })
+
+  document.querySelectorAll('.ta-icon').forEach((i) => {
+    i.addEventListener('mousedown', saveSelectedRange)
+
+    i.addEventListener('mouseup', (e) => {
+      const snippet = e.currentTarget.dataset.snippet || '--snippet missing--'
+      insertBlock(snippet)
+      editorEl.focus()
+    })
+  })
+
+  editorEl.addEventListener('change', () => {
     removeToasts()
     handleUpdateNote()
   })
@@ -143,3 +172,48 @@ const debouncedUpdate = debounce(async () => {
   const { message } = await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
 }, 2000)
+
+/**
+ * Save the selection inside the textarea
+ * before it disappears due to icon click
+ */
+export function saveSelectedRange() {
+  const editor = document.querySelector('.editor')
+
+  state.set('editor-selection', {
+    start: editor.selectionStart,
+    end: editor.selectionEnd,
+  })
+}
+
+/**
+ * Insert a block of markup into the textarea
+ * at the caret's position
+ * @param {string} block - The DOM element to insert
+ */
+function insertBlock(block) {
+  const selection = state.get('editor-selection')
+  if (!selection) {
+    console.log('No editor selection saved')
+    return
+  }
+
+  const editorEl = document.querySelector('.editor')
+  const start = editorEl.selectionStart
+  const end = editorEl.selectionEnd
+  // const { start, end } = selection
+  const value = editorEl.value
+  const placeholder = '$1'
+
+  let caretOffset = block.indexOf(placeholder)
+  if (caretOffset !== -1) {
+    block = block.replace(placeholder, '')
+  } else {
+    caretOffset = block.length
+  }
+
+  editorEl.value = value.slice(0, start) + block + value.slice(end)
+
+  const caretPos = start + caretOffset
+  editorEl.setSelectionRange(caretPos, caretPos)
+}

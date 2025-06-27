@@ -17,6 +17,10 @@ const css = `
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
+.editor-wrapper .viewer hr {
+  border: 1px dotted var(--gray1);
+  margin: 30px 0;
+}  
 .editor-wrapper .viewer ul {
   list-style-type: disc;
 }
@@ -56,7 +60,7 @@ const css = `
 .editor-wrapper .editor:focus {
   border-bottom: none !important;
 }
-#toolbar .icons .fa-code.on {
+#toolbar .icons .fa-pencil.on {
   background: var(--gray2);
 }
 `
@@ -67,37 +71,19 @@ export function createEditor({ className = '' } = {}) {
   const el = createDiv({ className: 'editor-wrapper' })
 
   build(el)
-  listen(el)
+  // listen(el)
 
   for (const c of className.split(' ')) {
     if (c.length) el.classList.add(c)
   }
-
-  const editorEl = el.querySelector('.editor')
 
   hljs.configure({ ignoreUnescapedHTML: true })
   return el
 }
 
 function build(el) {
-  document
-    .querySelector('#toolbar .icons')
-    .appendChild(
-      createIcon({ classes: { primary: 'fa-code', other: 'primary' } })
-    )
-
   el.appendChild(createDiv({ className: 'viewer' }))
   el.appendChild(createTextarea({ className: 'editor hidden' }))
 }
 
-function listen(el) {
-  document.querySelector('.fa-code').addEventListener('click', (e) => {
-    e.target.classList.toggle('on')
-    const viewer = el.querySelector('.viewer')
-    const editor = el.querySelector('.editor')
-    viewer.classList.toggle('hidden')
-    viewer.insertHtml(editor.value)
-    editor.classList.toggle('hidden')
-    editor.resize()
-  })
-}
+// function listen(el) {}

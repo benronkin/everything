@@ -15,6 +15,14 @@ export function toolbar() {
         id: 'add-note',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
+      createIcon({ classes: { primary: 'fa-pencil', other: 'primary' } }),
+      createIcon({
+        classes: {
+          primary: 'fa-paragraph',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: { snippet: '<div>\n  $1\n</div>' },
+      }),
     ],
   })
 
