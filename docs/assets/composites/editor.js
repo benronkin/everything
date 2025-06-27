@@ -18,10 +18,6 @@ const css = `
 .editor-wrapper .viewer * {
   margin: 20px 0;
 }
-.editor-wrapper .viewer .comment * {
-  margin: 0;
-}  
-
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
@@ -58,8 +54,13 @@ const css = `
 .editor-wrapper .viewer .comment {
   margin-left: 30px;
   border-left: 5px solid var(--gray3);
-  padding-left: 10px;
+  padding: 10px;
+  background: #222222;
 }
+.editor-wrapper .viewer .comment * {
+  margin: 0;
+  color: var(--gray4);
+}  
 .editor-wrapper .editor {
   width: 100%;
   padding: 10px;
