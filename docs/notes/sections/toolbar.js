@@ -16,7 +16,10 @@ export function toolbar() {
         id: 'add-note',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
-      createIcon({ classes: { primary: 'fa-pencil', other: 'primary' } }),
+      createIcon({
+        id: 'edit',
+        classes: { primary: 'fa-pencil', other: 'primary hidden' },
+      }),
       createSelect({
         id: 'ta-header-select',
         className: 'ta-select primary p-5-0 hidden',
@@ -86,8 +89,11 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'Notes toolbar', (appMode) => {
-    const backEl = el.querySelector('#back')
-    backEl.classList.toggle('hidden', appMode !== 'main-panel')
+    const mainPanelButtonIds = ['#back', '#edit']
+
+    mainPanelButtonIds.forEach((id) =>
+      el.querySelector(id).classList.toggle('hidden', appMode !== 'main-panel')
+    )
   })
 
   state.on('active-doc', 'notes', (id) => {
