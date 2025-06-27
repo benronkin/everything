@@ -14,6 +14,17 @@ const css = `
   align-items: center;
   width: 100%;
 }
+#toolbar.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--gray0);
+  border-bottom: 1px solid var(--gray1);
+  margin-top: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional */
+}
 #toolbar .container .icons {
   display: flex;
   justify-content: flex-start;
@@ -48,6 +59,7 @@ export function createToolbar({ children = [], classes = {} } = {}) {
   const el = document.createElement('div')
 
   build({ el, classes, children })
+  listen(el)
 
   el.id = 'toolbar'
   el.dataset.id = 'toolbar'
@@ -80,4 +92,14 @@ function build({ el, children, classes }) {
     divEl.classList.add(c)
   }
   classes.primary && divEl.classList.add(classes.primary)
+}
+
+function listen(el) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      el.classList.add('sticky')
+    } else {
+      el.classList.remove('sticky')
+    }
+  })
 }
