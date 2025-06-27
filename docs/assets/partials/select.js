@@ -1,5 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { createIcon } from './icon.js'
+import { state } from '../js/state.js'
 
 // -------------------------------
 // Globals
@@ -65,27 +66,6 @@ export function createSelect({
 
   const el = document.createElement('div')
 
-  Object.defineProperties(el, {
-    classes: {
-      get() {
-        return el.className
-      },
-      set(newValue = '') {
-        el.className = `select-wrapper ${newValue}`.trim()
-      },
-    },
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = `${id}-select-wrapper`
-      },
-    },
-  })
-
   addElementParts({ el, name })
 
   el.getOptionByLabel = getOptionByLabel.bind(el)
@@ -102,8 +82,10 @@ export function createSelect({
 
   el.value = value
   el.selectByValue(value)
-  el.dataId = id
-  el.classes = className
+  id && (el.id = id)
+  className && (el.className = `select-wrapper ${className}`.trim())
+
+  listen(el)
 
   return el
 }
@@ -223,4 +205,10 @@ function addElementParts({ el, name }) {
   el.appendChild(divEl)
   const iconEl = createIcon({ classes: { primary: 'fa-caret-down' } })
   divEl.appendChild(iconEl)
+}
+
+function listen(el) {
+  el.querySelector('.custom-select').addEventListener('change', (e) => {
+    state.set(`select-click:${el.id || el.name}`, e.target.value)
+  })
 }

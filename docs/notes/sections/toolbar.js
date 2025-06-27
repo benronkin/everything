@@ -1,5 +1,6 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createSelect } from '../../assets/partials/select.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
@@ -16,15 +17,66 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
       createIcon({ classes: { primary: 'fa-pencil', other: 'primary' } }),
+      createSelect({
+        id: 'ta-header-select',
+        className: 'ta-select primary p-5-0 hidden',
+        options: [
+          {
+            label: 'H',
+            value: '',
+            selected: 'true',
+          },
+          { label: 'H3', value: '<h3 id="">$1</h3>' },
+          { label: 'H4', value: '<h4 id="">$1</h4>' },
+          { label: 'H5', value: '<h5 id="">$1</h5>' },
+          { label: 'Normal', value: '<div>\n  $1\n</div>' },
+        ],
+      }),
       createIcon({
         classes: {
-          primary: 'fa-paragraph',
+          primary: 'fa-list-ul',
           other: ['primary', 'ta-icon', 'hidden'],
         },
-        dataset: { snippet: '<div>\n  $1\n</div>' },
+        dataset: { snippet: '<ul>\n  <li>$1</li>\n</ul>' },
+      }),
+      createIcon({
+        classes: {
+          primary: 'fa-list-ol',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: { snippet: '<ol>\n  <li>$1</li>\n</ol>' },
+      }),
+      createIcon({
+        classes: {
+          primary: 'fa-window-minimize',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: { snippet: '  <li>$1</li>' },
+      }),
+      createIcon({
+        classes: {
+          primary: 'fa-code',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: {
+          snippet: '<pre><code class="language-javascript">//$1\n</code></pre>',
+        },
+      }),
+      createIcon({
+        classes: {
+          primary: 'fa-circle-info',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: {
+          snippet: '<div class="comment">\n  $1\n</div>',
+        },
       }),
     ],
   })
+
+  el.querySelector('.ta-select').style.width = '40px'
+  el.querySelector('.ta-select .custom-select').style.padding = '5px'
+  el.querySelector('.ta-select .caret-wrapper').style.right = 0
 
   react(el)
   listen(el)

@@ -108,6 +108,12 @@ function react(el) {
 
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
+
+  state.on('select-click:ta-header-select', 'mainPanel', (value) => {
+    insertBlock(value)
+    document.querySelector('#ta-header-select').selectByLabel('H')
+    document.querySelector('.editor').focus()
+  })
 }
 
 function listen(el) {
@@ -138,9 +144,13 @@ function listen(el) {
         .forEach((i) =>
           i.classList.toggle('hidden', !e.target.classList.contains('on'))
         )
+
+      document
+        .querySelector('#ta-header-select')
+        .classList.toggle('hidden', !e.target.classList.contains('on'))
     })
 
-  document.querySelectorAll('.ta-icon').forEach((i) => {
+  document.querySelectorAll('i.ta-icon').forEach((i) => {
     i.addEventListener('mousedown', saveSelectedRange)
 
     i.addEventListener('mouseup', (e) => {
@@ -150,9 +160,74 @@ function listen(el) {
     })
   })
 
+  document
+    .querySelector('.ta-select')
+    .addEventListener('mousedown', saveSelectedRange)
+
   editorEl.addEventListener('change', () => {
     removeToasts()
     handleUpdateNote()
+  })
+
+  editorEl.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.key === 'Enter') {
+      e.preventDefault() // prevent the default Enter behavior
+
+      const editor = e.currentTarget
+      const { selectionEnd, value } = editor
+
+      // find the index of the next newline after the caret
+      const lineEnd = value.indexOf('\n', selectionEnd)
+
+      // if no newline is found, we’re at the last line → insert at end
+      // otherwise, insert just after the current line
+      const insertPos = lineEnd === -1 ? value.length : lineEnd + 1
+
+      const before = value.slice(0, insertPos) // content before the insertion point
+      const after = value.slice(insertPos) // content after the insertion point
+
+      // insert a new line at insertPos
+      editor.value = before + '\n' + after
+
+      // move the caret to the beginning of the new empty line
+      editor.setSelectionRange(insertPos + 1, insertPos)
+    }
+
+    if (e.metaKey && e.shiftKey) {
+      const iconMap = {
+        c: '.fa-code',
+        i: '.fa-window-minimize',
+        m: '.fa-circle-info',
+        o: '.fa-list-ol',
+        u: '.fa-list-ul',
+      }
+
+      const optionMap = {
+        h: 'H3',
+        d: 'Normal',
+      }
+
+      let block
+      let selector = iconMap[e.key]
+      let el = document.querySelector(selector)
+      if (el) {
+        block = el.dataset.snippet
+      } else {
+        selector = optionMap[e.key]
+        el = [...document.querySelectorAll('#ta-header-select option')].find(
+          (opt) => opt.label === selector
+        )
+        if (el) {
+          block = el.value
+        }
+      }
+
+      if (!block) return
+      e.preventDefault()
+      saveSelectedRange()
+      insertBlock(block)
+      editorEl.focus()
+    }
   })
 }
 
