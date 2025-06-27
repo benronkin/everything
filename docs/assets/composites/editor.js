@@ -10,6 +10,10 @@ const css = `
   background-color: var(--gray0);
   border-bottom-left-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 100%;
 }
 .editor-wrapper .viewer * {
   margin: 20px 0;

@@ -9,6 +9,7 @@ const css = `
 #toolbar {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   margin: 20px 0;
   gap: 20px;
   align-items: center;
