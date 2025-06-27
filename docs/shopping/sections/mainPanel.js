@@ -26,6 +26,9 @@ const css = `
 #main-panel form {
   gap: 0 !important;
 }
+#main-panel .list-item .fa-trash {
+  font-size: 30px;
+}
 `
 
 // -------------------------------
