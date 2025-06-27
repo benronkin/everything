@@ -55,3 +55,9 @@ export function getTopBlock(node) {
   }
   return node
 }
+
+export function createEmptyNode() {
+  const newDiv = document.createElement('div')
+  newDiv.appendChild(document.createElement('br'))
+  return newDiv
+}

@@ -1,6 +1,5 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { createDivQuill } from '../../assets/composites/divQuill.js'
-import { createRichTextEditor } from '../../assets/composites/richTextEditor/main.js'
+import { createEditor } from '../../assets/composites/editor.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
@@ -69,7 +68,7 @@ function build(el) {
   //   })
   // )
 
-  el.appendChild(createRichTextEditor({ className: 'mt-20' }))
+  el.appendChild(createEditor({ className: 'mt-20' }))
 
   el.appendChild(dangerZone())
 
@@ -100,10 +99,9 @@ function react(el) {
 
     el.querySelector('#note-title').value = doc.title
 
-    // const quill = state.get('quill')
-    // const delta = quill.clipboard.convert({ html: doc.note })
-    // quill.setContents(delta, 'silent')
-    el.querySelector('.rte-editor').insertHtml(doc.note)
+    el.querySelector('.editor').value = doc.note
+    el.querySelector('.viewer').insertHtml(doc.note)
+
     const codeEls = el.querySelectorAll('pre code')
     codeEls.forEach(hljs.highlightElement)
 
@@ -124,19 +122,10 @@ function listen(el) {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
 
-  el.querySelector('.rte-editor').addEventListener('input', () => {
+  el.querySelector('.editor').addEventListener('change', () => {
     removeToasts()
     handleUpdateNote()
   })
-
-  // const quill = state.get('quill')
-
-  // quill.on('text-change', (delta, oldDelta, source) => {
-  //   // source === 'user' if the user typed or edited
-  //   // source === 'api' if you called quill.setContents(), insertText(), etc.
-  //   removeToasts()
-  //   handleUpdateNote()
-  // })
 }
 
 async function handleUpdateNote() {
@@ -144,13 +133,12 @@ async function handleUpdateNote() {
 }
 
 const debouncedUpdate = debounce(async () => {
-  // const note = state.get('quill').root.innerHTML
   document.querySelectorAll('.rte-editor pre code').forEach((code) => {
     if (code.dataset.highlighted === 'yes') {
       delete code.dataset.highlighted
     }
   })
-  const note = document.querySelector('.rte-editor').innerHTML
+  const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
   const { message } = await updateNote({ id, title, note })
