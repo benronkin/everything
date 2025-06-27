@@ -31,6 +31,11 @@ const css = `
   padding-left: 1.2em;
   margin: 10px 0;
 }  
+.editor-wrapper .viewer ol li ol,
+.editor-wrapper .viewer ul li ul {
+  margin: 10px 0;
+}
+
 .editor-wrapper .viewer th,
 .editor-wrapper .viewer td {
   padding: 5px;
