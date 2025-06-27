@@ -17,6 +17,9 @@ const css = `
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
+.editor-wrapper .viewer ul {
+  list-style-type: disc;
+}
 .editor-wrapper .viewer ol,
 .editor-wrapper .viewer ul {
   list-style-position: inside;
