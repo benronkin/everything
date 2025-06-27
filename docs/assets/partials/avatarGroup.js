@@ -22,7 +22,7 @@ export function createAvatarGroup({
 } = {}) {
   injectStyle(css)
 
-  className = `peer-group ${className}`.trim()
+  className = `avatar-group ${className}`.trim()
   const el = createDiv({ className, id })
 
   build({ el, peers, showShare })

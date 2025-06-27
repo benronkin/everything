@@ -61,7 +61,9 @@ export function createTextarea({
  */
 function listen(el) {
   el.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') el.resize()
+    if (e.key === 'Enter') {
+      el.resize()
+    }
   })
   el.addEventListener('change', () => {
     el.resize()

@@ -68,7 +68,7 @@ function build(el) {
   //   })
   // )
 
-  el.appendChild(createEditor({ className: 'mt-20' }))
+  el.appendChild(createEditor())
 
   el.appendChild(dangerZone())
 
@@ -98,7 +98,6 @@ function react(el) {
     }
 
     el.querySelector('#note-title').value = doc.title
-
     el.querySelector('.editor').value = doc.note
     el.querySelector('.viewer').insertHtml(doc.note)
 
