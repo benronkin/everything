@@ -43,7 +43,20 @@ const css = `
 .editor-wrapper .viewer ul li ul {
   margin: 10px 0;
 }
-
+.editor-wrapper .viewer div,
+.editor-wrapper .viewer h3,  
+.editor-wrapper .viewer h4,  
+.editor-wrapper .viewer h5,  
+.editor-wrapper .viewer p,  
+.editor-wrapper .viewer pre,
+.editor-wrapper .viewer code {
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .editor-wrapper .viewer th,
 .editor-wrapper .viewer td {
   padding: 5px;
