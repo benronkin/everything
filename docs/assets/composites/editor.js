@@ -18,13 +18,7 @@ const css = `
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
-.editor-wrapper .viewer div,
-.editor-wrapper .viewer h1,
-.editor-wrapper .viewer h2,
-.editor-wrapper .viewer h3,
-.editor-wrapper .viewer h4,
-.editor-wrapper .viewer h5,
-.editor-wrapper .viewer h6 {
+.editor-wrapper .viewer :is(div, h1, h2. h3, h4, h5, h6) {
   white-space: pre-wrap;
 }
 .editor-wrapper .viewer hr {
@@ -39,11 +33,8 @@ const css = `
   list-style-position: inside;
   padding-left: 0;
 }
-.editor-wrapper .viewer ol li,
-.editor-wrapper .viewer ul li {
-  text-indent: -1.2em;
-  padding-left: 1.2em;
-  margin: 10px 0;
+.editor-wrapper .viewer  li {
+  padding-left: 0.5rem;
 }  
 .editor-wrapper .viewer ol li ol,
 .editor-wrapper .viewer ul li ul {
