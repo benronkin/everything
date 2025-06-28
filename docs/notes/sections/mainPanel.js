@@ -70,6 +70,8 @@ function build(el) {
 
   el.appendChild(createEditor())
 
+  el.appendChild(createDiv({ id: 'toc-list' }))
+
   el.appendChild(dangerZone())
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
@@ -130,26 +132,33 @@ function listen(el) {
   const editorEl = el.querySelector('.editor')
   const viewerEl = el.querySelector('.viewer')
 
-  document
-    .querySelector('#toolbar .fa-pencil')
-    .addEventListener('click', (e) => {
-      e.target.classList.toggle('on')
-      viewerEl.classList.toggle('hidden')
+  document.querySelector('#toc').addEventListener('click', () => {
+    const tocListEl = document.getElementById('toc-list')
+    if (!tocListEl.classList.contains('open')) {
+      updateTableOfContents()
+    }
+    tocListEl.classList.toggle('open')
+  })
 
-      viewerEl.insertHtml(standardizeViewer(editorEl.value))
-      editorEl.classList.toggle('hidden')
-      editorEl.resize()
+  document.querySelector('#edit').addEventListener('click', (e) => {
+    e.target.classList.toggle('on')
+    const isEditOn = e.target.classList.contains('on')
 
-      document
-        .querySelectorAll('.ta-icon')
-        .forEach((i) =>
-          i.classList.toggle('hidden', !e.target.classList.contains('on'))
-        )
+    viewerEl.classList.toggle('hidden')
+    viewerEl.insertHtml(standardizeViewer(editorEl.value))
+    editorEl.classList.toggle('hidden')
+    editorEl.resize()
 
-      document
-        .querySelector('#ta-header-select')
-        .classList.toggle('hidden', !e.target.classList.contains('on'))
-    })
+    document
+      .querySelectorAll('.ta-icon')
+      .forEach((i) => i.classList.toggle('hidden', !isEditOn))
+
+    document.querySelector('#toc').classList.toggle('hidden', isEditOn)
+
+    document
+      .querySelector('#ta-header-select')
+      .classList.toggle('hidden', !isEditOn)
+  })
 
   document.querySelectorAll('i.ta-icon').forEach((i) => {
     i.addEventListener('mousedown', saveSelectedRange)
@@ -164,11 +173,6 @@ function listen(el) {
   document
     .querySelector('#ta-header-select')
     .addEventListener('mousedown', saveSelectedRange)
-
-  editorEl.addEventListener('change', () => {
-    removeToasts()
-    handleUpdateNote()
-  })
 
   editorEl.addEventListener('keydown', (e) => {
     if (e.metaKey && e.key === 'Enter') {
@@ -229,6 +233,11 @@ function listen(el) {
       insertBlock(block)
       editorEl.focus()
     }
+  })
+
+  editorEl.addEventListener('keyup', () => {
+    removeToasts()
+    handleUpdateNote()
   })
 }
 
@@ -327,18 +336,51 @@ function escapeHtmlBlocks(text) {
  * Remove leading and trailing empty lines from code blocks
  */
 function trimCodeBlocks(text) {
-  const re = /<code class="language-[^"]*">([\s\S]*?)<\/code>/g
+  const re = /<code class="(language-[^"]*)">([\s\S]*?)<\/code>/g
 
-  const replacer = (_, codeContent) => {
+  const replacer = (_, langClass, codeContent) => {
     let lines = codeContent.split('\n')
     if (lines[0].trim() === '') lines.shift()
     if (lines[lines.length - 1].trim() === '') lines.pop()
 
-    const escaped = lines.join('\n')
+    const trimmed = lines.join('\n')
 
-    return `<code class="language-html">${escaped}</code>`
+    return `<code class="${langClass}">${trimmed}</code>`
   }
 
-  const updated = text.replace(re, replacer)
-  return updated
+  return text.replace(re, replacer)
+}
+
+function updateTableOfContents() {
+  const viewerEl = document.querySelector('.viewer')
+  const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
+  const tocEl = document.querySelector('#toc-list')
+
+  tocEl.innerHTML = ''
+
+  tocEl.appendChild(
+    createHeader({
+      html: document.querySelector('#note-title').value,
+      type: 'h5',
+      className: 'toc-header',
+    })
+  )
+
+  headerEls.forEach((h) => {
+    tocEl.appendChild(
+      createDiv({
+        className: `toc-item p-left-${(parseInt(h.tagName[1]) - 3) * 10}`,
+        html: h.textContent,
+        dataset: { id: h.id },
+      })
+    )
+  })
+
+  tocEl.querySelectorAll('.toc-item').forEach((i) =>
+    i.addEventListener('click', (e) => {
+      document
+        .getElementById(e.target.dataset.id)
+        .scrollIntoView({ behavior: 'smooth' })
+    })
+  )
 }

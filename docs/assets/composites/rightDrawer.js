@@ -86,7 +86,6 @@ const css = `
 #right-drawer.open {
   transform: translateX(0);
 }
-
 `
 
 export function createRightDrawer({ active } = {}) {

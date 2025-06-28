@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const [{ notes }, { user }] = await Promise.all([fetchNotes(), getMe()])
 
     state.set('main-documents', notes)
-    // state.set('active-doc', 'i-9fef4948-5e88-4b11-8b2a-c61817797c3b')
-    // state.set('app-mode', 'main-panel')
-    state.set('app-mode', 'left-panel')
+    state.set('active-doc', 'i-9fef4948-5e88-4b11-8b2a-c61817797c3b')
+    state.set('app-mode', 'main-panel')
+    // state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'notes')
     window.state = state // avail to browser console

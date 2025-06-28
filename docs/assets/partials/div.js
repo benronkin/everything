@@ -16,7 +16,7 @@ const css = `
 /**
  * Constructor for custom span element
  */
-export function createDiv({ className, id, html } = {}) {
+export function createDiv({ className, id, html, dataset = {} } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -28,10 +28,14 @@ export function createDiv({ className, id, html } = {}) {
 
   if (id) {
     el.id = id
-    el.dataset.id = id // needed for uuids that start with a digit
+    el.dataset.id = id
   }
   className && (el.className = className)
   html && el.insertHtml(html)
+
+  for (const [k, v] of Object.entries(dataset)) {
+    el.dataset[k] = v
+  }
 
   return el
 }

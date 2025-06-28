@@ -95,6 +95,21 @@ const css = `
 #toolbar .icons .fa-pencil.on {
   background: var(--gray2);
 }
+ #toc-list {
+  position: fixed;
+  top: var(--nav-height);
+  right: 0;
+  height: calc(100% - var(--nav-height));
+  z-index: 1000;
+  background: var(--gray1);
+  width: 250px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+  transition: all 300ms ease;
+  transform: translateX(100%);
+}
+#toc-list.open {
+  transform: translateX(0);
+}
 `
 
 export function createEditor({ className = '' } = {}) {

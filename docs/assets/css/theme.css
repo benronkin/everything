@@ -428,12 +428,6 @@ main {
   border-radius: var(--border-radius);
   box-shadow: 0 0 6px rgba(0, 255, 255, 0.08);
 }
-.p-0 {
-  padding: 0 !important;
-}
-.p-10 {
-  padding: 10px !important;
-}
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='poppins']::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='poppins']::before {
   content: 'Poppins';
