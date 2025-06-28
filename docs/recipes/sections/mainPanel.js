@@ -93,16 +93,15 @@ function reactAppMode(el) {
   el.classList.remove('hidden')
   // log('mainPanel is showing itself on active-doc')
 
-  el.querySelector('[data-id="recipe-title"]').value = doc.title || ''
-  el.querySelector('[data-id="recipe-notes"]').value = doc.notes || ''
-  el.querySelector('[data-id="recipe-notes"]').resize()
-  el.querySelector('[data-id="recipe-related"]').value = doc.related || ''
-  el.querySelector('[data-id="recipe-ingredients"]').value =
-    doc.ingredients || ''
-  el.querySelector('[data-id="recipe-ingredients"]').resize()
-  el.querySelector('[data-id="recipe-method"]').value = doc.method || ''
-  el.querySelector('[data-id="recipe-method"]').resize()
-  el.querySelector('[data-id="recipe-category"]').value = doc.category || ''
-  el.querySelector('[data-id="recipe-tags"]').value = doc.tags || ''
-  el.querySelector('[data-id="recipe-id"]').insertHtml(doc.id)
+  el.querySelector('#recipe-title').value = doc.title || ''
+  el.querySelector('#recipe-notes').value = doc.notes || ''
+  el.querySelector('#recipe-notes').resize()
+  el.querySelector('#recipe-related').value = doc.related || ''
+  el.querySelector('#recipe-ingredients').value = doc.ingredients || ''
+  el.querySelector('#recipe-ingredients').resize()
+  el.querySelector('#recipe-method').value = doc.method || ''
+  el.querySelector('#recipe-method').resize()
+  el.querySelector('#recipe-category').selectByValue(doc.category || '')
+  el.querySelector('#recipe-tags').value = doc.tags || ''
+  el.querySelector('#recipe-id').insertHtml(doc.id)
 }

@@ -96,7 +96,7 @@ async function build(el) {
       id: 'recipe-category',
       classes: {
         group: 'mb-40',
-        textarea: 'field',
+        select: 'field',
         icon: 'fa-layer-group',
       },
     })

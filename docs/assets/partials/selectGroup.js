@@ -42,7 +42,7 @@ export function createSelectGroup({
 
   if (className || classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createSelectGroup Oops: pass-in optional classes object: { icon: ''} `
+      `createSelectGroup Oops: pass-in optional classes object: { group: '', select: '', icon: ''} `
     )
   }
 
@@ -50,6 +50,7 @@ export function createSelectGroup({
 
   build({
     el,
+    className: classes?.select,
     id,
     name,
     value,
@@ -57,9 +58,7 @@ export function createSelectGroup({
   })
 
   classes?.group && (el.className = classes.group)
-  el.classList.add('input-group')
-
-  classes?.input && (el.querySelector('input').className = classes.input)
+  el.classList.add('select-group')
 
   if (classes?.icon) {
     const arr = classes.icon.split(' ')
@@ -79,12 +78,13 @@ export function createSelectGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, id, name, value, options }) {
+function build({ el, id, className, name, value, options }) {
   el.appendChild(createIcon())
 
   el.appendChild(
     createSelect({
       id,
+      className,
       name,
       value,
       options,

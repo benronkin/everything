@@ -61,12 +61,12 @@ export function createSelect({
   className = '',
   name = '',
   options = [],
-}) {
+} = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
 
-  addElementParts({ el, name })
+  addElementParts({ el, name, className })
 
   el.getOptionByLabel = getOptionByLabel.bind(el)
   el.getOptionByValue = getOptionByValue.bind(el)
@@ -80,10 +80,18 @@ export function createSelect({
 
   el.setOptions(options)
 
-  el.value = value
-  el.selectByValue(value)
   id && (el.id = id)
-  className && (el.className = `select-wrapper ${className}`.trim())
+  el.className = 'select-wrapper'
+
+  if (value) {
+    el.value = value
+    el.selectByValue(value)
+  } else {
+    const opt = el.getSelected()
+    if (opt) {
+      el.selectByValue(opt.value)
+    }
+  }
 
   listen(el)
 
@@ -195,9 +203,9 @@ function unselect() {
 /**
  *
  */
-function addElementParts({ el, name }) {
+function addElementParts({ el, className, name }) {
   const selectEl = document.createElement('select')
-  selectEl.className = 'custom-select'
+  selectEl.className = `custom-select ${className}`.trim()
   selectEl.name = name
   el.appendChild(selectEl)
   const divEl = document.createElement('div')
