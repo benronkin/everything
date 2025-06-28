@@ -89,9 +89,9 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'Notes toolbar', (appMode) => {
-    const mainPanelButtonIds = ['#back', '#edit']
+    const ids = ['#back', '#edit']
 
-    mainPanelButtonIds.forEach((id) =>
+    ids.forEach((id) =>
       el.querySelector(id).classList.toggle('hidden', appMode !== 'main-panel')
     )
   })
@@ -114,6 +114,10 @@ function react(el) {
 
 function listen(el) {
   el.querySelector('#back').addEventListener('click', () => {
+    const classes = ['.ta-icon', '.ta-select']
+    classes.forEach((c) =>
+      el.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
+    )
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })

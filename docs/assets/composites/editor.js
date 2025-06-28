@@ -6,21 +6,27 @@ import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
 const css = `
+
 .editor-wrapper .viewer {
   background-color: var(--gray0);
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
   display: flex;
+  gap: 1rem;
   flex-direction: column;
   flex-wrap: wrap;
   max-width: 100%;
 }
-.editor-wrapper .viewer * {
-  margin: 20px 0;
-}
 .editor-wrapper .viewer h3:not(:first-child) {
   margin-top: 40px;
 }  
+.editor-wrapper .viewer div,
+.editor-wrapper .viewer h1,
+.editor-wrapper .viewer h2,
+.editor-wrapper .viewer h3,
+.editor-wrapper .viewer h4,
+.editor-wrapper .viewer h5,
+.editor-wrapper .viewer h6 {
+  white-space: pre-wrap;
+}
 .editor-wrapper .viewer hr {
   border: 1px dotted var(--gray1);
   margin: 30px 0;
@@ -43,27 +49,39 @@ const css = `
 .editor-wrapper .viewer ul li ul {
   margin: 10px 0;
 }
-.editor-wrapper .viewer div,
-.editor-wrapper .viewer h3,  
-.editor-wrapper .viewer h4,  
-.editor-wrapper .viewer h5,  
-.editor-wrapper .viewer p,  
-.editor-wrapper .viewer pre,
-.editor-wrapper .viewer code ,
-.editor-wrapper .viewer span {
-  display: block;
+.editor-wrapper .viewer code {
+  font-family: monospace;
+  background: #1a1a1a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
   white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  word-break: break-word;
   max-width: 100%;
-  box-sizing: border-box;
 }
+.editor-wrapper .viewer pre {
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 4px;
+  }
+  
+.editor-wrapper .viewer pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  overflow-y: hidden;
+}
+
+.editor-wrapper .viewer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
 .editor-wrapper .viewer th,
 .editor-wrapper .viewer td {
-  padding: 5px;
-}
-.editor-wrapper .viewer td:not(:last-child) {
-  padding-right: 20px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gray2);
+  text-align: left;
 }
 .editor-wrapper .viewer .comment {
   margin-left: 30px;

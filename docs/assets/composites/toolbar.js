@@ -29,6 +29,7 @@ const css = `
 #toolbar .container .icons {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: flex;
   align-items: center;
   gap: 10px;
   height: 38px;
