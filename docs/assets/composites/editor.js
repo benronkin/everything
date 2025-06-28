@@ -49,7 +49,8 @@ const css = `
 .editor-wrapper .viewer h5,  
 .editor-wrapper .viewer p,  
 .editor-wrapper .viewer pre,
-.editor-wrapper .viewer code {
+.editor-wrapper .viewer code ,
+.editor-wrapper .viewer span {
   display: block;
   white-space: pre-wrap;
   word-wrap: break-word;
