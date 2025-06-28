@@ -98,7 +98,7 @@ function build({ el, children, classes }) {
 
 function listen(el) {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
+    if (window.scrollY > 150) {
       el.classList.add('sticky')
     } else {
       el.classList.remove('sticky')
