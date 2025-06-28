@@ -99,7 +99,7 @@ function react(el) {
 
     el.querySelector('#note-title').value = doc.title
     el.querySelector('.editor').value = doc.note
-    el.querySelector('.viewer').insertHtml(doc.note)
+    el.querySelector('.viewer').insertHtml(standardizeViewer(doc.note))
 
     const codeEls = el.querySelectorAll('pre code')
     codeEls.forEach(hljs.highlightElement)
@@ -135,7 +135,8 @@ function listen(el) {
     .addEventListener('click', (e) => {
       e.target.classList.toggle('on')
       viewerEl.classList.toggle('hidden')
-      viewerEl.insertHtml(editorEl.value)
+
+      viewerEl.insertHtml(standardizeViewer(editorEl.value))
       editorEl.classList.toggle('hidden')
       editorEl.resize()
 
@@ -161,7 +162,7 @@ function listen(el) {
   })
 
   document
-    .querySelector('.ta-select')
+    .querySelector('#ta-header-select')
     .addEventListener('mousedown', saveSelectedRange)
 
   editorEl.addEventListener('change', () => {
@@ -291,4 +292,53 @@ function insertBlock(block) {
 
   const caretPos = start + caretOffset
   editorEl.setSelectionRange(caretPos, caretPos)
+}
+
+/**
+ * Various manipulation of the note
+ * before it is injected into the viewer
+ * as markup
+ */
+function standardizeViewer(text) {
+  text = escapeHtmlBlocks(text)
+  text = trimCodeBlocks(text)
+  return text
+}
+
+/**
+ * Get the value of the editor and convert
+ * HTML blocks inside code.language-html to
+ * strings so that the viewer can render them
+ */
+function escapeHtmlBlocks(text) {
+  const re = /<code class="language-html">([\s\S]*?)<\/code>/g
+
+  const replacer = (_, codeConteent) => {
+    const escaped = codeConteent
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+    return `<code class="language-html">${escaped}</code>`
+  }
+  return text.replace(re, replacer)
+}
+
+/**
+ * Remove leading and trailing empty lines from code blocks
+ */
+function trimCodeBlocks(text) {
+  const re = /<code class="language-[^"]*">([\s\S]*?)<\/code>/g
+
+  const replacer = (_, codeContent) => {
+    let lines = codeContent.split('\n')
+    if (lines[0].trim() === '') lines.shift()
+    if (lines[lines.length - 1].trim() === '') lines.pop()
+
+    const escaped = lines.join('\n')
+
+    return `<code class="language-html">${escaped}</code>`
+  }
+
+  const updated = text.replace(re, replacer)
+  return updated
 }

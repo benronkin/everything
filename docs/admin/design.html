@@ -48,6 +48,7 @@
       import { createList } from '../assets/partials/list.js'
       import { createListItem } from '../assets/partials/listItem.js'
       import { createMenuItem } from '../assets/partials/menuItem.js'
+      import { createSelect } from '../assets/partials/select.js'
       import { createSelectGroup } from '../assets/partials/selectGroup.js'
       import { createModalDelete } from '../assets/composites/modalDelete.js'
       import { createCollapsibleGroup } from '../assets/partials/collapsibleGroup.js'
@@ -65,8 +66,7 @@
       const mainPanelEl = createMainPanel()
 
       mainPanelEl.appendChild(
-        createSelectGroup({
-          classes: { group: 'mt-10', select: 'field', icon: 'fa-pencil' },
+        createSelect({
           options: [{ label: 'hello', value: 'hello', selected: true }],
         })
       )

@@ -22,7 +22,6 @@ export function toolbar() {
       }),
       createSelect({
         id: 'ta-header-select',
-        className: 'ta-select primary p-5-0 hidden',
         options: [
           {
             label: 'H',
@@ -77,9 +76,12 @@ export function toolbar() {
     ],
   })
 
-  el.querySelector('.ta-select').style.width = '40px'
-  el.querySelector('.ta-select .custom-select').style.padding = '5px'
-  el.querySelector('.ta-select .caret-wrapper').style.right = 0
+  const headerEl = el.querySelector('#ta-header-select')
+  headerEl.classList.add('hidden')
+  headerEl.style.width = '30px'
+  headerEl.style.padding = '5px'
+  headerEl.querySelector('.custom-select').style.padding = '5px'
+  headerEl.querySelector(' .caret-wrapper').style.right = '-3px'
 
   react(el)
   listen(el)
