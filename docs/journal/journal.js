@@ -129,7 +129,6 @@ async function reactEntryAdd({ id: btnId }) {
   state.set('main-documents', [doc, ...state.get('main-documents')])
   state.set('active-doc', doc.id)
   state.set('app-mode', 'main-panel')
-  document.querySelector('#journal-notes').resize()
 
   delete addBtn.disabled
 }
