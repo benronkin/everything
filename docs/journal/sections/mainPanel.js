@@ -95,7 +95,8 @@ function react(el) {
     document.querySelector('#photo-list').showPhotos()
 
     el.querySelector('#journal-location').value = doc.location
-    el.querySelector('#journal-visit-date').value = doc.visit_date.split('T')[0]
+    el.querySelector('#journal-visit-date').value =
+      doc.visit_date?.split('T')[0] || ''
     el.querySelector('#journal-street').value = doc.street
     el.querySelector('#journal-city').value = doc.city
     el.querySelector('#journal-state').value = doc.state
