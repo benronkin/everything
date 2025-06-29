@@ -8,7 +8,6 @@ import { log } from '../js/logger.js'
 const css = `
 textarea {
   border: none;
-  cursor: pointer;
   text-decoration: none;
   border-radius: var(--border-radius);
   min-height: 1.2em;
