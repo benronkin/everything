@@ -100,8 +100,8 @@ function react(el) {
     }
 
     el.querySelector('#note-title').value = doc.title
-    el.querySelector('.editor').value = doc.note
-    el.querySelector('.viewer').insertHtml(standardizeViewer(doc.note))
+    el.querySelector('.editor-wrapper').setEditor(doc.note)
+    el.querySelector('.editor-wrapper').setViewer(doc.note)
 
     const codeEls = el.querySelectorAll('pre code')
     codeEls.forEach(hljs.highlightElement)
@@ -112,7 +112,7 @@ function react(el) {
   })
 
   state.on('select-click:ta-header-select', 'mainPanel', (value) => {
-    insertBlock(value)
+    document.querySelector('.editor-wrapper').insertBlock(value)
     document.querySelector('#ta-header-select').selectByLabel('H')
     document.querySelector('.editor').focus()
   })
@@ -134,7 +134,7 @@ function react(el) {
     document.querySelector('#toc-list').classList.remove('open')
 
     viewerEl.classList.toggle('hidden')
-    viewerEl.insertHtml(standardizeViewer(editorEl.value))
+    document.querySelector('.editor-wrapper').setViewer(editorEl.value)
     editorEl.classList.toggle('hidden')
     editorEl.resize()
 
@@ -174,18 +174,22 @@ function listen(el) {
   const editorEl = el.querySelector('.editor')
 
   document.querySelectorAll('i.ta-icon').forEach((i) => {
-    i.addEventListener('mousedown', saveSelectedRange)
+    i.addEventListener('mousedown', () => {
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+    })
 
     i.addEventListener('mouseup', (e) => {
       const snippet = e.currentTarget.dataset.snippet || '--snippet missing--'
-      insertBlock(snippet)
+      document.querySelector('.editor-wrapper').insertBlock(snippet)
       editorEl.focus()
     })
   })
 
   document
     .querySelector('#ta-header-select')
-    .addEventListener('mousedown', saveSelectedRange)
+    .addEventListener('mousedown', () => {
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+    })
 
   editorEl.addEventListener('keydown', (e) => {
     if (e.metaKey && e.key === 'Enter') {
@@ -242,8 +246,8 @@ function listen(el) {
 
       if (!block) return
       e.preventDefault()
-      saveSelectedRange()
-      insertBlock(block)
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+      document.querySelector('.editor-wrapper').insertBlock(block)
       editorEl.focus()
     }
   })
@@ -270,99 +274,6 @@ const debouncedUpdate = debounce(async () => {
   const { message } = await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
 }, 2000)
-
-/**
- * Save the selection inside the textarea
- * before it disappears due to icon click
- */
-export function saveSelectedRange() {
-  const editor = document.querySelector('.editor')
-
-  state.set('editor-selection', {
-    start: editor.selectionStart,
-    end: editor.selectionEnd,
-  })
-}
-
-/**
- * Insert a block of markup into the textarea
- * at the caret's position
- * @param {string} block - The DOM element to insert
- */
-function insertBlock(block) {
-  const selection = state.get('editor-selection')
-  if (!selection) {
-    console.log('No editor selection saved')
-    return
-  }
-
-  const editorEl = document.querySelector('.editor')
-  const start = editorEl.selectionStart
-  const end = editorEl.selectionEnd
-  // const { start, end } = selection
-  const value = editorEl.value
-  const placeholder = '$1'
-
-  let caretOffset = block.indexOf(placeholder)
-  if (caretOffset !== -1) {
-    block = block.replace(placeholder, '')
-  } else {
-    caretOffset = block.length
-  }
-
-  editorEl.value = value.slice(0, start) + block + value.slice(end)
-
-  const caretPos = start + caretOffset
-  editorEl.setSelectionRange(caretPos, caretPos)
-}
-
-/**
- * Various manipulation of the note
- * before it is injected into the viewer
- * as markup
- */
-function standardizeViewer(text) {
-  text = escapeHtmlBlocks(text)
-  text = trimCodeBlocks(text)
-  return text
-}
-
-/**
- * Get the value of the editor and convert
- * HTML blocks inside code.language-html to
- * strings so that the viewer can render them
- */
-function escapeHtmlBlocks(text) {
-  const re = /<code class="language-html">([\s\S]*?)<\/code>/g
-
-  const replacer = (_, codeConteent) => {
-    const escaped = codeConteent
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-    return `<code class="language-html">${escaped}</code>`
-  }
-  return text.replace(re, replacer)
-}
-
-/**
- * Remove leading and trailing empty lines from code blocks
- */
-function trimCodeBlocks(text) {
-  const re = /<code class="(language-[^"]*)">([\s\S]*?)<\/code>/g
-
-  const replacer = (_, langClass, codeContent) => {
-    let lines = codeContent.split('\n')
-    if (lines[0].trim() === '') lines.shift()
-    if (lines[lines.length - 1].trim() === '') lines.pop()
-
-    const trimmed = lines.join('\n')
-
-    return `<code class="${langClass}">${trimmed}</code>`
-  }
-
-  return text.replace(re, replacer)
-}
 
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')

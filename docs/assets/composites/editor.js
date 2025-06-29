@@ -85,6 +85,7 @@ const css = `
   color: var(--gray4);
 }  
 .editor-wrapper .editor {
+  cursor: auto;
   width: 100%;
   padding: 10px;
   background: var(--gray1);
@@ -142,6 +143,60 @@ export function createEditor({ className = '' } = {}) {
   }
 
   hljs.configure({ ignoreUnescapedHTML: true })
+
+  el.setEditor = function (value) {
+    el.querySelector('.editor').value = value
+  }
+
+  el.setViewer = function (markup) {
+    el.querySelector('.viewer').insertHtml(standardizeViewer(markup))
+  }
+
+  /**
+   * Save the selection inside the textarea
+   * before it disappears due to icon click
+   */
+  el.saveSelectedRange = function () {
+    const editor = document.querySelector('.editor')
+
+    state.set('editor-selection', {
+      start: editor.selectionStart,
+      end: editor.selectionEnd,
+    })
+  }
+
+  /**
+   * Insert a block of markup into the textarea
+   * at the caret's position
+   * @param {string} block - The DOM element to insert
+   */
+  el.insertBlock = function (block) {
+    const selection = state.get('editor-selection')
+    if (!selection) {
+      console.log('No editor selection saved')
+      return
+    }
+
+    const editorEl = document.querySelector('.editor')
+    const start = editorEl.selectionStart
+    const end = editorEl.selectionEnd
+    // const { start, end } = selection
+    const value = editorEl.value
+    const placeholder = '$1'
+
+    let caretOffset = block.indexOf(placeholder)
+    if (caretOffset !== -1) {
+      block = block.replace(placeholder, '')
+    } else {
+      caretOffset = block.length
+    }
+
+    editorEl.value = value.slice(0, start) + block + value.slice(end)
+
+    const caretPos = start + caretOffset
+    editorEl.setSelectionRange(caretPos, caretPos)
+  }
+
   return el
 }
 
@@ -150,4 +205,72 @@ function build(el) {
   el.appendChild(createTextarea({ className: 'editor hidden' }))
 }
 
-// function listen(el) {}
+/**
+ * Various manipulation of the note
+ * before it is injected into the viewer
+ * as markup
+ */
+function standardizeViewer(text) {
+  text = escapeHtmlBlocks(text)
+  text = trimCodeBlocks(text)
+  text = trimCommentBlocks(text)
+  return text
+}
+
+/**
+ * Get the value of the editor and convert
+ * HTML blocks inside code.language-html to
+ * strings so that the viewer can render them
+ */
+function escapeHtmlBlocks(text) {
+  if (!text) return ''
+
+  const re = /<code class="language-html">([\s\S]*?)<\/code>/g
+
+  const replacer = (_, codeConteent) => {
+    const escaped = codeConteent
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+    return `<code class="language-html">${escaped}</code>`
+  }
+  return text.replace(re, replacer)
+}
+
+/**
+ * Remove leading and trailing empty lines from code blocks
+ */
+function trimCodeBlocks(text) {
+  const re = /<code class="(language-[^"]*)">([\s\S]*?)<\/code>/g
+
+  const replacer = (_, langClass, codeContent) => {
+    let lines = codeContent.split('\n')
+    if (lines[0].trim() === '') lines.shift()
+    if (lines[lines.length - 1].trim() === '') lines.pop()
+
+    const trimmed = lines.join('\n')
+
+    return `<code class="${langClass}">${trimmed}</code>`
+  }
+
+  return text.replace(re, replacer)
+}
+
+/**
+ * Remove leading and trailing empty lines from comment blocks
+ */
+function trimCommentBlocks(text) {
+  const re = /<div class="comment([^"]*)">([\s\S]*?)<\/div>/g
+
+  const replacer = (_, otherClasses, commentContent) => {
+    let lines = commentContent.split('\n')
+    if (lines[0].trim() === '') lines.shift()
+    if (lines[lines.length - 1].trim() === '') lines.pop()
+
+    const trimmed = lines.join('\n')
+
+    return `<div class="comment ${otherClasses}">${trimmed}</div>`
+  }
+
+  return text.replace(re, replacer)
+}
