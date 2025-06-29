@@ -93,7 +93,7 @@ const css = `
 .editor-wrapper .editor:focus {
   border-bottom: none !important;
 }
-#toolbar .icons .fa-pencil.on {
+#toolbar .icons .on {
   background: var(--gray2);
 }
  #toc-list {

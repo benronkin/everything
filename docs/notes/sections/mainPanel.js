@@ -123,6 +123,7 @@ function react(el) {
 
   state.on('icon-click:back', 'mainPanel', () => {
     document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#toc').classList.remove('on')
   })
 
   state.on('icon-click:edit', 'mainPanel', () => {
@@ -152,6 +153,8 @@ function react(el) {
   })
 
   state.on('icon-click:toc', 'mainPanel', () => {
+    document.querySelector('#toc').classList.toggle('on')
+
     const tocListEl = document.getElementById('toc-list')
     if (!tocListEl.classList.contains('open')) {
       updateTableOfContents()
