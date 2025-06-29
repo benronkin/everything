@@ -91,7 +91,11 @@ function build(el) {
     createSelectGroup({
       name: 'rating',
       id: 'journal-rating',
-      classes: { group: 'mb-40 w-fc', select: 'field', icon: 'fa-face-smile' },
+      classes: {
+        group: 'mb-40 w-fc p-5-0',
+        select: 'field',
+        icon: 'fa-face-smile',
+      },
       options: [
         { value: '', label: '' },
         { value: 'great', label: '🔥' },
