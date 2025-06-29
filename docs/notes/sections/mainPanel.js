@@ -301,7 +301,7 @@ const debouncedUpdate = debounce(async () => {
   const title = document.querySelector('#note-title').value
   const { message } = await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
-}, 2000)
+}, 3000)
 
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')
