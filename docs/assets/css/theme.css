@@ -340,6 +340,10 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
+select.primary {
+  background-color: var(--purple2);
+  box-shadow: var(--shadow-small);
+}
 .bg-blue0 {
   background-color: var(--blue0) !important;
 }

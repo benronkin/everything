@@ -1,5 +1,6 @@
 import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createSelectGroup } from '../../assets/partials/selectGroup.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
@@ -83,6 +84,20 @@ function build(el) {
       id: 'journal-phone',
       placeholder: 'Phone',
       classes: { group: 'mb-40', input: 'field', icon: 'fa-phone' },
+    })
+  )
+
+  el.appendChild(
+    createSelectGroup({
+      name: 'rating',
+      id: 'journal-rating',
+      classes: { group: 'mb-40 w-fc', select: 'field', icon: 'fa-face-smile' },
+      options: [
+        { value: '', label: '' },
+        { value: 'great', label: '🔥' },
+        { value: 'medium', label: '🆗' },
+        { value: 'bad', label: '🤮' },
+      ],
     })
   )
 

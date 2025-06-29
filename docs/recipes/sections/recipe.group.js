@@ -95,7 +95,7 @@ async function build(el) {
       name: 'category',
       id: 'recipe-category',
       classes: {
-        group: 'mb-40',
+        group: 'mb-40 w-fc',
         select: 'field',
         icon: 'fa-layer-group',
       },

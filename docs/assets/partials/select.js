@@ -11,8 +11,6 @@ const css = `
   position: relative;
   display: flex;
   align-items: center;
-  background-color: var(--purple2); 
-  box-shadow: var(--shadow-small);
   border-radius: var(--border-radius);
   padding: 5px 10px;
   height: 20px;

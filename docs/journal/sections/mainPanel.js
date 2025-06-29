@@ -94,15 +94,15 @@ function react(el) {
 
     document.querySelector('#photo-list').showPhotos()
 
-    el.querySelector('[data-id="journal-location"]').value = doc.location
-    el.querySelector('[data-id="journal-visit-date"]').value =
-      doc.visit_date.split('T')[0]
-    el.querySelector('[data-id="journal-notes"]').value = doc.notes
-    el.querySelector('[data-id="journal-street"]').value = doc.street
-    el.querySelector('[data-id="journal-city"]').value = doc.city
-    el.querySelector('[data-id="journal-state"]').value = doc.state
-    el.querySelector('[data-id="journal-country"]').value = doc.country
-    el.querySelector('[data-id="journal-phone"]').value = doc.phone
-    el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
+    el.querySelector('#journal-location').value = doc.location
+    el.querySelector('#journal-visit-date').value = doc.visit_date.split('T')[0]
+    el.querySelector('#journal-street').value = doc.street
+    el.querySelector('#journal-city').value = doc.city
+    el.querySelector('#journal-state').value = doc.state
+    el.querySelector('#journal-country').value = doc.country
+    el.querySelector('#journal-phone').value = doc.phone
+    el.querySelector('#journal-rating').selectByValue(doc.rating || '')
+    el.querySelector('#journal-notes').value = doc.notes
+    el.querySelector('#journal-id').insertHtml(doc.id)
   })
 }

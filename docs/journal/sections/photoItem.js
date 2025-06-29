@@ -17,14 +17,14 @@ const css = `
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border: none;
+  border: none !important;
 }
 .photo-item.container {
   padding: 0;
   width: 100%;
 }
 .photo-item:hover {
-  border: none;
+  border: none !important;
 }
 .journal-photo {
   max-width: 100%;
