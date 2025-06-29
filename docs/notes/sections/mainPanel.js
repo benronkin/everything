@@ -116,6 +116,48 @@ function react(el) {
     document.querySelector('#ta-header-select').selectByLabel('H')
     document.querySelector('.editor').focus()
   })
+
+  state.on('right-drawer-toggle-click', 'mainPanel', () => {
+    document.querySelector('#toc-list').classList.remove('open')
+  })
+
+  state.on('icon-click:back', 'mainPanel', () => {
+    document.querySelector('#toc-list').classList.remove('open')
+  })
+
+  state.on('icon-click:edit', 'mainPanel', () => {
+    const editEl = document.querySelector('#edit')
+    const editorEl = el.querySelector('.editor')
+    const viewerEl = el.querySelector('.viewer')
+
+    editEl.classList.toggle('on')
+    document.querySelector('#toc-list').classList.remove('open')
+
+    viewerEl.classList.toggle('hidden')
+    viewerEl.insertHtml(standardizeViewer(editorEl.value))
+    editorEl.classList.toggle('hidden')
+    editorEl.resize()
+
+    const isEditOn = editEl.classList.contains('on')
+
+    document
+      .querySelectorAll('.ta-icon')
+      .forEach((i) => i.classList.toggle('hidden', !isEditOn))
+
+    document.querySelector('#toc').classList.toggle('hidden', isEditOn)
+
+    document
+      .querySelector('#ta-header-select')
+      .classList.toggle('hidden', !isEditOn)
+  })
+
+  state.on('icon-click:toc', 'mainPanel', () => {
+    const tocListEl = document.getElementById('toc-list')
+    if (!tocListEl.classList.contains('open')) {
+      updateTableOfContents()
+    }
+    tocListEl.classList.toggle('open')
+  })
 }
 
 function listen(el) {
@@ -130,35 +172,6 @@ function listen(el) {
   })
 
   const editorEl = el.querySelector('.editor')
-  const viewerEl = el.querySelector('.viewer')
-
-  document.querySelector('#toc').addEventListener('click', () => {
-    const tocListEl = document.getElementById('toc-list')
-    if (!tocListEl.classList.contains('open')) {
-      updateTableOfContents()
-    }
-    tocListEl.classList.toggle('open')
-  })
-
-  document.querySelector('#edit').addEventListener('click', (e) => {
-    e.target.classList.toggle('on')
-    const isEditOn = e.target.classList.contains('on')
-
-    viewerEl.classList.toggle('hidden')
-    viewerEl.insertHtml(standardizeViewer(editorEl.value))
-    editorEl.classList.toggle('hidden')
-    editorEl.resize()
-
-    document
-      .querySelectorAll('.ta-icon')
-      .forEach((i) => i.classList.toggle('hidden', !isEditOn))
-
-    document.querySelector('#toc').classList.toggle('hidden', isEditOn)
-
-    document
-      .querySelector('#ta-header-select')
-      .classList.toggle('hidden', !isEditOn)
-  })
 
   document.querySelectorAll('i.ta-icon').forEach((i) => {
     i.addEventListener('mousedown', saveSelectedRange)
@@ -367,9 +380,13 @@ function updateTableOfContents() {
   )
 
   headerEls.forEach((h) => {
+    let indent = parseInt(h.tagName[1]) - 3
+    // default padding left is 10px, so indent 0
+    // has it and everyone else has 2 more
+    if (indent > 0) indent++
     tocEl.appendChild(
       createDiv({
-        className: `toc-item p-left-${(parseInt(h.tagName[1]) - 3) * 10}`,
+        className: `toc-item p-left-${indent * 10}`,
         html: h.textContent,
         dataset: { id: h.id },
       })
@@ -378,9 +395,12 @@ function updateTableOfContents() {
 
   tocEl.querySelectorAll('.toc-item').forEach((i) =>
     i.addEventListener('click', (e) => {
-      document
-        .getElementById(e.target.dataset.id)
-        .scrollIntoView({ behavior: 'smooth' })
+      const target = document.getElementById(e.target.dataset.id)
+      const yOffset = -180
+      const y =
+        target.getBoundingClientRect().top + window.pageYOffset + yOffset
+
+      window.scrollTo({ top: y, behavior: 'smooth' })
     })
   )
 }

@@ -124,6 +124,7 @@ function listen(el) {
     classes.forEach((c) =>
       el.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
     )
+
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })

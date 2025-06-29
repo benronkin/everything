@@ -110,6 +110,23 @@ const css = `
 #toc-list.open {
   transform: translateX(0);
 }
+.toc-header {
+  background: var(--teal2);
+  color: black;
+  font-weight: 700;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+}
+.toc-item {
+  cursor: pointer;
+  padding: 10px;
+}
+.toc-item.p-left-0 {
+  margin-top: 15px;
+}
+.toc-item:hover {
+  background: var(--gray2);
+}
 `
 
 export function createEditor({ className = '' } = {}) {
