@@ -45,7 +45,7 @@ function build(el) {
     createInputGroup({
       name: 'street',
       id: 'journal-street',
-      placeholder: 'street',
+      placeholder: 'Street address',
       classes: { group: 'mb-40', input: 'field', icon: 'fa-road' },
     })
   )
@@ -73,7 +73,7 @@ function build(el) {
       name: 'country',
       id: 'journal-country',
       placeholder: 'Country',
-      classes: { input: 'field', icon: 'fa-flag' },
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-flag' },
     })
   )
 
@@ -81,8 +81,8 @@ function build(el) {
     createInputGroup({
       name: 'phone',
       id: 'journal-phone',
-      placeholder: 'phone',
-      classes: { input: 'field', icon: 'fa-phone' },
+      placeholder: 'Phone',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-phone' },
     })
   )
 
