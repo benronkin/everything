@@ -99,6 +99,9 @@ function build(el) {
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
 
   el.appendChild(createSpan({ id: 'note-id', className: 'smaller' }))
+
+  el.querySelector('#note-title').taxIndex = '0'
+  el.querySelector('.editor').taxIndex = '1'
 }
 
 function react(el) {

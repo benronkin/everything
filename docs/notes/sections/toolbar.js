@@ -130,4 +130,12 @@ function listen(el) {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })
+
+  // toolbar shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.shiftKey && e.key === 'e') {
+      e.preventDefault()
+      document.querySelector('#edit').click()
+    }
+  })
 }
