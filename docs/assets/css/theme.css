@@ -340,10 +340,6 @@ input:-webkit-autofill {
 main {
   background: var(--body-bg);
 }
-select.primary {
-  background-color: var(--purple2);
-  box-shadow: var(--shadow-small);
-}
 .bg-blue0 {
   background-color: var(--blue0) !important;
 }
@@ -432,38 +428,12 @@ select.primary {
   border-radius: var(--border-radius);
   box-shadow: 0 0 6px rgba(0, 255, 255, 0.08);
 }
-.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='poppins']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='poppins']::before {
-  content: 'Poppins';
-  font-family: 'Poppins', sans-serif;
-}
-
-.ql-snow
-  .ql-picker.ql-font
-  .ql-picker-label[data-value='times-new-roman']::before,
-.ql-snow
-  .ql-picker.ql-font
-  .ql-picker-item[data-value='times-new-roman']::before {
-  content: 'Times New Roman';
-  font-family: 'Times New Roman', serif;
-}
-
-.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='arial']::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='arial']::before {
-  content: 'Arial';
-  font-family: Arial, sans-serif;
-}
-.ql-font-poppins {
-  font-family: 'Poppins', sans-serif;
-}
-.ql-font-times-new-roman {
-  font-family: 'Times New Roman', serif;
-}
-.ql-font-arial {
-  font-family: Arial, sans-serif;
-}
 .r-0 {
   right: 0 !important;
+}
+.select-wrapper.primary {
+  background-color: var(--purple2);
+  box-shadow: var(--shadow-small);
 }
 .span-group span {
   color: inherit;

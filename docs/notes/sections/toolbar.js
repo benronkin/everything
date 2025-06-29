@@ -26,6 +26,7 @@ export function toolbar() {
       }),
       createSelect({
         id: 'ta-header-select',
+        className: 'primary p-5',
         options: [
           {
             label: 'H',

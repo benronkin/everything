@@ -19,6 +19,7 @@ const css = `
 .custom-select {
   appearance: none;
   background-color: transparent;
+  border-radius: var(--border-radius);
   color: var(--gray5);
   border: none;
   font-size: 0.9rem; 
@@ -64,7 +65,7 @@ export function createSelect({
 
   const el = document.createElement('div')
 
-  addElementParts({ el, name, className })
+  addElementParts({ el, name })
 
   el.getOptionByLabel = getOptionByLabel.bind(el)
   el.getOptionByValue = getOptionByValue.bind(el)
@@ -79,7 +80,7 @@ export function createSelect({
   el.setOptions(options)
 
   id && (el.id = id)
-  el.className = 'select-wrapper'
+  el.className = `select-wrapper  ${className}`.trim()
 
   if (value) {
     el.value = value
@@ -201,9 +202,9 @@ function unselect() {
 /**
  *
  */
-function addElementParts({ el, className, name }) {
+function addElementParts({ el, name }) {
   const selectEl = document.createElement('select')
-  selectEl.className = `custom-select ${className}`.trim()
+  selectEl.className = 'custom-select'
   selectEl.name = name
   el.appendChild(selectEl)
   const divEl = document.createElement('div')

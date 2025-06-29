@@ -96,38 +96,6 @@ const css = `
 #toolbar .icons .on {
   background: var(--gray2);
 }
- #toc-list {
-  position: fixed;
-  top: var(--nav-height);
-  right: 0;
-  height: calc(100% - var(--nav-height));
-  z-index: 1000;
-  background: var(--gray1);
-  width: 250px;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
-  transition: all 300ms ease;
-  transform: translateX(100%);
-}
-#toc-list.open {
-  transform: translateX(0);
-}
-.toc-header {
-  background: var(--teal2);
-  color: black;
-  font-weight: 700;
-  padding: 10px;
-  transition: all 0.2s ease-in-out;
-}
-.toc-item {
-  cursor: pointer;
-  padding: 10px;
-}
-.toc-item.p-left-0 {
-  margin-top: 15px;
-}
-.toc-item:hover {
-  background: var(--gray2);
-}
 `
 
 export function createEditor({ className = '' } = {}) {
