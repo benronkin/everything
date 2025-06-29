@@ -22,11 +22,7 @@ export function createEntryTitle({ location, visit_date, rating }) {
     className: 'flex align-center w-100',
     html: [
       createDiv({
-        className: 'flex align-center',
-        html: [
-          createSpan({ html: `${location} ` }),
-          createSpan({ html: formatted, className: 'smaller fw-200' }),
-        ],
+        html: `${location} <span class="smaller fw-200 p-0">${formatted}</span>`,
       }),
       createSpan({ html: ratingLabel }),
     ],
