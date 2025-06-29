@@ -254,6 +254,9 @@ ul {
   justify-content: space-between;
   gap: 10px;
 }
+.fw-200 {
+  font-weight: 200 !important;
+}
 .hidden {
   display: none !important;
 }
