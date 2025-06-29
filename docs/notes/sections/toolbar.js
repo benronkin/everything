@@ -66,8 +66,7 @@ export function toolbar() {
           other: ['primary', 'ta-icon', 'hidden'],
         },
         dataset: {
-          snippet:
-            '<pre><code class="language-javascript">// $1\n</code></pre>',
+          snippet: '<pre><code class="language-javascript">\n$1\n</code></pre>',
         },
       }),
       createIcon({
