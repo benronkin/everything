@@ -34,8 +34,8 @@ function build(el) {
 
   el.appendChild(
     createInputGroup({
-      name: 'visit-date',
-      id: 'journal-visit-date',
+      name: 'visit_date',
+      id: 'journal-visit_date',
       type: 'date',
       classes: { group: 'mb-40', input: 'field', icon: 'fa-calendar' },
       value: new Date().toISOString().split('T')[0],
