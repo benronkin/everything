@@ -50,7 +50,6 @@ export function createSelectGroup({
 
   build({
     el,
-    className: classes?.select,
     id,
     name,
     value,
@@ -67,6 +66,14 @@ export function createSelectGroup({
     }
   }
 
+  if (classes?.wrapper) {
+    el.querySelector('.select-wrapper').classList.add(classes.wrapper)
+  }
+
+  if (classes?.select) {
+    el.querySelector('.custom-select').classList.add(classes.select)
+  }
+
   return el
 }
 
@@ -78,13 +85,12 @@ export function createSelectGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, id, className, name, value, options }) {
+function build({ el, id, name, value, options }) {
   el.appendChild(createIcon())
 
   el.appendChild(
     createSelect({
       id,
-      className,
       name,
       value,
       options,
