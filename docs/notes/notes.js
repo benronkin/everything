@@ -96,6 +96,7 @@ async function reactAddNote({ id: btnId }) {
   state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
+  document.querySelector('#edit').click()
 }
 
 async function reactNoteDelete() {
