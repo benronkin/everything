@@ -35,14 +35,17 @@ export function insertHtml(content) {
  * parts in local time
  */
 export function formatDateParts(isoDateString) {
-  const dateObj = new Date(isoDateString)
-
-  return {
-    year: dateObj.getFullYear(),
-    month: dateObj.getMonth() + 1,
-    day: dateObj.getDate(),
-    hour: dateObj.getHours(),
-    minute: dateObj.getMinutes(),
-    second: dateObj.getSeconds(),
+  const obj = {
+    year: 'na',
+    month: 'na',
+    day: 'na',
   }
+  if (isoDateString) {
+    const [datePart, _] = isoDateString.split('T')
+    const [year, month, day] = datePart.split('-')
+    obj.year = year
+    obj.month = month
+    obj.day = day
+  }
+  return obj
 }
