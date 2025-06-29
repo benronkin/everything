@@ -53,7 +53,7 @@ export function createCollapsibleGroup({
   const el = createGroup({ id, className })
 
   build({ el, html })
-  react(el)
+  // react(el)
   listen(el)
 
   el.classList.add('collapsible-group')
@@ -90,16 +90,13 @@ function build({ el, html }) {
 /**
  * Subscribe to state.
  */
-function react(el) {
-  const stateKey = `icon-click:${el.querySelector('.toggler').id}`
-  state.on(stateKey, 'collapsibleGroup', () => {
-    el.classList.toggle('collapsed')
-  })
-}
+function react(el) {}
 
 /**
  *
  */
 function listen(el) {
-  // el.addEventListener('click', () => {})
+  el.querySelector('.toggler').addEventListener('click', () => {
+    el.classList.toggle('collapsed')
+  })
 }
