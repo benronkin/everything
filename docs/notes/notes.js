@@ -8,7 +8,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
-import { createNote, deleteNote, fetchNotes } from './notes.api.js'
+import { createNote, deleteNote, fetchNotes, searchNotes } from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
 import { log } from '../assets/js/logger.js'
@@ -69,6 +69,8 @@ function build() {
 }
 
 function react() {
+  state.on('form-submit:left-panel-search', 'journal', reactSearch)
+
   state.on('icon-click:add-note', 'notes', reactAddNote)
 
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
@@ -116,4 +118,24 @@ async function reactNoteDelete() {
     .filter((doc) => doc.id !== id)
   state.set('main-documents', filteredDocs)
   state.set('app-mode', 'left-panel')
+}
+
+async function reactSearch() {
+  let resp
+
+  const query = document.querySelector('[name="search-note"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchNotes(query)
+  } else {
+    // get most recent notes instead
+    resp = await fetchNotes()
+  }
+
+  const { data, message } = resp
+  if (message) {
+    console.error(`Notes server error: ${message}`)
+    return
+  }
+  state.set('main-documents', data)
 }

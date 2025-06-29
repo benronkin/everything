@@ -24,6 +24,16 @@ export async function fetchNotes() {
   return { notes, error }
 }
 
+/**
+ * @param {String} q - The search query
+ */
+export async function searchNotes(q) {
+  const { notes, error } = await getWebApp(
+    `${url}/search?q=${q.trim().toLowerCase()}`
+  )
+  return { data: notes, error }
+}
+
 export async function shareNote({ id, peers }) {
   const { message } = await postWebAppJson(`${url}/share`, { id, peers })
   return { message }
