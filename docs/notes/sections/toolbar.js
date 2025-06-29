@@ -136,6 +136,13 @@ function listen(el) {
     if (e.metaKey && e.shiftKey && e.key === 'e') {
       e.preventDefault()
       document.querySelector('#edit').click()
+      return
+    }
+
+    if (e.metaKey && e.shiftKey && e.key === 'n') {
+      e.preventDefault()
+      document.querySelector('#add-note').click()
+      return
     }
   })
 }
