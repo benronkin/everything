@@ -43,6 +43,15 @@ function build(el) {
 
   el.appendChild(
     createInputGroup({
+      name: 'street',
+      id: 'journal-street',
+      placeholder: 'street',
+      classes: { group: 'mb-40', input: 'field', icon: 'fa-road' },
+    })
+  )
+
+  el.appendChild(
+    createInputGroup({
       name: 'city',
       id: 'journal-city',
       placeholder: 'City',
@@ -68,11 +77,14 @@ function build(el) {
     })
   )
 
-  // const cscEl = createCountryStateCity()
-  // cscEl.querySelector('[name="city"').dataset.id = 'journal-city'
-  // cscEl.querySelector('[name="state"').dataset.id = 'journal-state'
-  // cscEl.querySelector('[name="country"').dataset.id = 'journal-country'
-  // el.appendChild(cscEl)
+  el.appendChild(
+    createInputGroup({
+      name: 'phone',
+      id: 'journal-phone',
+      placeholder: 'phone',
+      classes: { input: 'field', icon: 'fa-phone' },
+    })
+  )
 
   el.appendChild(
     createSpanGroup({

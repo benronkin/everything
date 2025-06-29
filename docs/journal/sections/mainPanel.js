@@ -98,9 +98,11 @@ function react(el) {
     el.querySelector('[data-id="journal-visit-date"]').value =
       doc.visit_date.split('T')[0]
     el.querySelector('[data-id="journal-notes"]').value = doc.notes
+    el.querySelector('[data-id="journal-street"]').value = doc.street
     el.querySelector('[data-id="journal-city"]').value = doc.city
     el.querySelector('[data-id="journal-state"]').value = doc.state
     el.querySelector('[data-id="journal-country"]').value = doc.country
+    el.querySelector('[data-id="journal-phone"]').value = doc.phone
     el.querySelector('[data-id="journal-id"]').insertHtml(doc.id)
   })
 }

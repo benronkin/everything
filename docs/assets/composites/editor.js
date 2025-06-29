@@ -38,7 +38,7 @@ const css = `
 }  
 .editor-wrapper .viewer ol li ol,
 .editor-wrapper .viewer ul li ul {
-  margin: 10px 0;
+  margin: 0;
 }
 .editor-wrapper .viewer code {
   font-family: monospace;

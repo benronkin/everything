@@ -118,9 +118,11 @@ async function reactEntryAdd({ id: btnId }) {
     location: 'New entry',
     created_at: dateString,
     visit_date: dateString,
+    street: '',
     city: defaults.city,
     state: defaults.state,
     country: defaults.country,
+    phone: '',
     notes: '',
   }
 
