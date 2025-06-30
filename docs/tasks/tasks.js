@@ -121,7 +121,7 @@ async function handleAddTask() {
   document.getElementById('tasks-list').addChild(newChild, 'bottom')
   document.querySelector('input[name="task"]').value = ''
 
-  const { error } = await createTask(title)
+  const { error } = await createTask(title, id)
 
   if (error) {
     // revert operation
