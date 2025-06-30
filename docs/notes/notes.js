@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     state.set('main-documents', notes)
     state.set('app-mode', 'left-panel')
-    // state.set('active-doc', 'i-9fef4948-5e88-4b11-8b2a-c61817797c3b')
-    // state.set('app-mode', 'main-panel')
-    // setTimeout(() => document.querySelector('#toc').click(), 50)
+    state.set('app-mode', 'main-panel')
+    state.set('active-doc', 'i-9fef4948-5e88-4b11-8b2a-c61817797c3b')
+    setTimeout(() => document.querySelector('#edit').click(), 50)
     state.set('user', user)
     state.set('default-page', 'notes')
 

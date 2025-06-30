@@ -273,9 +273,10 @@ function listen(el) {
 
     if (e.metaKey && e.shiftKey) {
       const iconMap = {
+        a: '.fa-link',
         c: '.fa-code',
-        i: '.fa-window-minimize',
-        m: '.fa-circle-info',
+        i: '.fa-minus',
+        m: '.fa-message',
         o: '.fa-list-ol',
         u: '.fa-list-ul',
       }

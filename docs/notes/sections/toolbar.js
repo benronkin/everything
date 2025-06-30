@@ -55,7 +55,7 @@ export function toolbar() {
       }),
       createIcon({
         classes: {
-          primary: 'fa-window-minimize',
+          primary: 'fa-minus',
           other: ['primary', 'ta-icon', 'hidden'],
         },
         dataset: { snippet: '  <li>$1</li>' },
@@ -71,11 +71,20 @@ export function toolbar() {
       }),
       createIcon({
         classes: {
-          primary: 'fa-circle-info',
+          primary: 'fa-message',
           other: ['primary', 'ta-icon', 'hidden'],
         },
         dataset: {
           snippet: '<div class="comment">\n  $1\n</div>',
+        },
+      }),
+      createIcon({
+        classes: {
+          primary: 'fa-link',
+          other: ['primary', 'ta-icon', 'hidden'],
+        },
+        dataset: {
+          snippet: '<a href="$1"></a>',
         },
       }),
     ],
