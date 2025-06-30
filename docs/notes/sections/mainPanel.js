@@ -36,6 +36,9 @@ const css = `
   top: var(--nav-height);
   right: 0;
   height: calc(100% - var(--nav-height));
+  /* make the pane itself scrollable */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;   /* smooth momentum scroll on iOS */
   z-index: 1000;
   background: var(--gray1);
   width: 250px;
@@ -51,7 +54,7 @@ const css = `
   color: black;
   font-weight: 700;
   padding: 10px;
-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .toc-item {
   cursor: pointer;
