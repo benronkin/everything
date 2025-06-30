@@ -8,8 +8,9 @@ const url = `${state.const('APP_URL')}/journal`
  */
 export async function createEntry() {
   const visit_date = new Date().toISOString()
-  const { id, error } = await postWebAppJson(`${url}/create`, { visit_date })
-  return { id, error }
+  const id = `ev${crypto.randomUUID()}`
+  const { error } = await postWebAppJson(`${url}/create`, { id, visit_date })
+  return { error }
 }
 
 /**
