@@ -42,7 +42,7 @@ export function toolbar() {
  */
 function react(el) {
   state.on('app-mode', 'Journal toolbar', (appMode) => {
-    const mainPanelEls = ['#back', '#add-entry', '#copy-address']
+    const mainPanelEls = ['#back', '#copy-address']
 
     mainPanelEls.forEach((i) => {
       const itemEl = el.querySelector(i)
