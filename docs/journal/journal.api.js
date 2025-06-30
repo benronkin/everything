@@ -6,9 +6,7 @@ const url = `${state.const('APP_URL')}/journal`
 /**
  *
  */
-export async function createEntry() {
-  const visit_date = new Date().toISOString()
-  const id = `ev${crypto.randomUUID()}`
+export async function createEntry(id, visit_date) {
   const { error } = await postWebAppJson(`${url}/create`, { id, visit_date })
   return { error }
 }

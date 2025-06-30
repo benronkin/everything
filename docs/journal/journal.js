@@ -99,7 +99,10 @@ async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
 
-  const { id, error } = await createEntry()
+  const id = `ev${crypto.randomUUID()}`
+  const visit_date = new Date().toISOString()
+
+  const { error } = await createEntry(id, visit_date)
   if (error) {
     console.error(`Journal server error: ${error}`)
     return
@@ -127,7 +130,7 @@ async function reactEntryAdd({ id: btnId }) {
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', doc.id)
+  state.set('active-doc', id)
   state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
