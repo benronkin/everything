@@ -35,7 +35,6 @@ select {
   font-size: inherit;
   line-height: inherit;
 }
-
 h1 {
   font-size: 2.5rem;
 }
@@ -60,11 +59,12 @@ h5 {
 h6 {
   font-size: 1rem;
 }
-
 i {
   cursor: pointer;
 }
-
+input[type='date'] {
+  text-align: left;
+}
 select {
   cursor: pointer;
 }
@@ -349,7 +349,7 @@ ul {
   grid-template-rows: auto auto 1fr auto;
 }
 
-/* mobile */
+/* desktop */
 
 @media (min-width: 768px) {
   * {
