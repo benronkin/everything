@@ -1,6 +1,7 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createEditor } from '../../assets/composites/editor.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
@@ -50,6 +51,8 @@ const css = `
   transform: translateX(0);
 }
 .toc-header {
+  position: sticky;
+  top: 0;
   background: var(--teal2);
   color: black;
   font-weight: 700;
@@ -189,6 +192,11 @@ function react(el) {
     }
     tocListEl.classList.toggle('open')
   })
+
+  state.on('icon-click:close-toc-list', 'mainPanel', () => {
+    document.querySelector('#toc').classList.remove('on')
+    document.getElementById('toc-list').classList.remove('open')
+  })
 }
 
 function listen(el) {
@@ -315,9 +323,15 @@ function updateTableOfContents() {
 
   tocEl.appendChild(
     createHeader({
-      html: document.querySelector('#note-title').value,
+      html: [
+        document.querySelector('#note-title').value,
+        createIcon({
+          id: 'close-toc-list',
+          classes: { primary: 'fa-circle-xmark' },
+        }),
+      ],
       type: 'h5',
-      className: 'toc-header',
+      className: 'toc-header flex align-center',
     })
   )
 
