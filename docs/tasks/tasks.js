@@ -106,11 +106,22 @@ async function handleAddTask() {
   const title = inputEl.value?.trim()
   if (!title.length) return
 
-  const newChild = createTitleDetailsItem({ id: new Date().getTime(), title })
-  document.getElementById('tasks-list').addChild(newChild)
+  const id = `ev${crypto.randomUUID()}`
+  const newChild = createTitleDetailsItem({ id, title })
+
+  newChild.querySelectorAll('.field').forEach((field) =>
+    field.addEventListener('change', () =>
+      state.set('field-change:tasks-list', {
+        id,
+        section: field.name,
+        value: field.value,
+      })
+    )
+  )
+  document.getElementById('tasks-list').addChild(newChild, 'bottom')
   document.querySelector('input[name="task"]').value = ''
 
-  const { id, error } = await createTask(title)
+  const { error } = await createTask(title)
 
   if (error) {
     // revert operation
