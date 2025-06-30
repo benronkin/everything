@@ -76,7 +76,7 @@ function react(el) {
     navigator.clipboard.writeText(address).catch((err) => {
       console.error('Clipboard write failed:', err)
     })
-    setMessage({ message: `Copied to clipboard: ${address}` })
+    setMessage({ message: `Copied: "${address}"` })
   })
 }
 
