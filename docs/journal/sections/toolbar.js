@@ -1,6 +1,7 @@
 import { state } from '../../assets/js/state.js'
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { setMessage } from '../../assets/js/ui.js'
 // import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
@@ -60,9 +61,10 @@ function react(el) {
     const docs = state.get('main-documents')
     const doc = docs.find((d) => d.id === id)
 
-    if (!navigator.clipboard || !doc) return
+    let address = doc.street.trim()
 
-    let address = doc.street
+    if (!navigator.clipboard || !doc || !address) return
+
     if (!streetHasCoords(doc.street)) {
       if (doc.city.trim().length) {
         address = `${address} ${doc.city.trim()}`
@@ -74,6 +76,7 @@ function react(el) {
     navigator.clipboard.writeText(address).catch((err) => {
       console.error('Clipboard write failed:', err)
     })
+    setMessage({ message: `Copied to clipboard: ${address}` })
   })
 }
 
