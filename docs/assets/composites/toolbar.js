@@ -29,10 +29,9 @@ const css = `
 #toolbar .container .icons {
   display: flex;
   justify-content: flex-start;
-  flex-wrap: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  height: 38px;
   border: 1px dotted var(--gray1);
   border-radius: 10px;
     padding: 4px 10px;

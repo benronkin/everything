@@ -32,6 +32,23 @@ const css = `
 #main-panel input {
   border-bottom: 1px solid var(--gray0);
 }
+/* headline style for the title input */
+#note-title {
+  font-size: 1.8rem;      /* big, h2-ish */
+  font-weight: 700;
+  line-height: 1.2;
+  border: none;           /* kill the input underline */
+  background: transparent;
+  width: 100%;
+  padding: 4px 0 2px;
+}
+
+/* add a faint divider under the title so it still feels editable */
+#note-title:focus,
+#note-title:hover {
+  border-bottom: 1px solid var(--gray3);
+  outline: none;
+}
 #toc-list {
   position: fixed;
   top: var(--nav-height);
