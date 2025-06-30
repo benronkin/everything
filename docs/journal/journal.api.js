@@ -7,7 +7,8 @@ const url = `${state.const('APP_URL')}/journal`
  *
  */
 export async function createEntry() {
-  const { id, error } = await getWebApp(`${url}/create`)
+  const visit_date = new Date().toISOString()
+  const { id, error } = await postWebAppJson(`${url}/create`, { visit_date })
   return { id, error }
 }
 
