@@ -21,11 +21,14 @@ export function toolbar() {
         id: 'add-entry',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
+      createIcon({
+        id: 'copy-address',
+        classes: { primary: 'fa-clipboard', other: ['primary', 'hidden'] },
+      }),
     ],
   })
 
   react(el)
-  listen(el)
 
   return el
 }
@@ -39,17 +42,54 @@ export function toolbar() {
  */
 function react(el) {
   state.on('app-mode', 'Journal toolbar', (appMode) => {
-    const backEl = el.querySelector('#back')
-    backEl.classList.toggle('hidden', appMode !== 'main-panel')
+    const mainPanelEls = ['#back', '#add-entry', '#copy-address']
+
+    mainPanelEls.forEach((i) => {
+      const itemEl = el.querySelector(i)
+      itemEl.classList.toggle('hidden', appMode !== 'main-panel')
+    })
+  })
+
+  state.on('icon-click:back', 'Journal toolbar', () => {
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
+  })
+
+  state.on('icon-click:copy-address', 'Journal toolbar', () => {
+    const id = state.get('active-doc')
+    const docs = state.get('main-documents')
+    const doc = docs.find((d) => d.id === id)
+
+    if (!navigator.clipboard || !doc) return
+
+    let address = doc.street
+    if (!streetHasCoords(doc.street)) {
+      if (doc.city.trim().length) {
+        address = `${address} ${doc.city.trim()}`
+        if (doc.state.trim().length) {
+          address = `${address}, ${doc.state.trim()}`
+        }
+      }
+    }
+    navigator.clipboard.writeText(address).catch((err) => {
+      console.error('Clipboard write failed:', err)
+    })
   })
 }
 
 /**
- * Set event handlers which can set state.
+ * Returns true when `doc.street` contains something that looks like a
+ * latitude-longitude pair, e.g. “37.7749, -122.4194”.
+ *
+ * @param {{ street?: string }} doc
  */
-function listen(el) {
-  el.querySelector('#back').addEventListener('click', () => {
-    state.set('active-doc', null)
-    state.set('app-mode', 'left-panel')
-  })
+export function streetHasCoords(street) {
+  if (!street) return false
+
+  // latitude  -90 →  90   with optional decimal
+  // longitude -180 → 180  with optional decimal
+  const coordRE =
+    /\b-?(?:90|[0-8]?\d)(?:\.\d+)?,\s*-?(?:180|1[0-7]\d|[0-9]?\d)(?:\.\d+)?\b/
+
+  return coordRE.test(street)
 }
