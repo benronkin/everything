@@ -153,11 +153,26 @@ function listen(el) {
       return
     }
 
-    if (e.key === 'Tab') {
+    if (e.target.classList.contains('editor')) {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault()
+        const ew = document.querySelector('.editor-wrapper')
+        ew.saveSelectedRange()
+        ew.insertBlock('  ')
+      }
+    }
+
+    if (e.key === 'Tab' && e.shiftKey) {
       e.preventDefault()
-      const ew = document.querySelector('.editor-wrapper')
-      ew.saveSelectedRange()
-      ew.insertBlock('  ')
+
+      const editorEl = document.querySelector('.editor')
+      const start = editorEl.selectionStart
+      const end = editorEl.selectionEnd
+
+      if (start >= 2 && start === end) {
+        // delete the two chars before the caret
+        editorEl.setRangeText('', start - 2, start, 'end')
+      }
     }
   })
 }
