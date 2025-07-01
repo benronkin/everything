@@ -6,7 +6,7 @@ import { state } from '../js/state.js'
 import { log } from '../js/logger.js'
 
 const css = `
-.peer-group {
+.avatar-group {
   display: flex;
   flex: 0 0 auto;           /* don’t shrink */
   gap: 4px;
