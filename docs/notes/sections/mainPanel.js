@@ -102,6 +102,23 @@ export function mainPanel() {
   return el
 }
 
+export async function executeNoteUpdate() {
+  const note = document.querySelector('.editor').value
+  const id = state.get('active-doc')
+  const title =
+    document.querySelector('#note-title').value.trim() || 'Untitled note'
+
+  const docs = state.get('main-documents')
+  const doc = docs.find((d) => d.id === id)
+  doc.title = title
+  doc.note = note
+
+  await updateNote({ id, title, note })
+  setMessage({ message: 'saved', type: 'quiet' })
+  // used to force save after 15 seconds of no-save
+  state.set('mainPanel:last-save', Date.now())
+}
+
 function build(el) {
   el.appendChild(
     createInputGroup({
@@ -328,23 +345,6 @@ async function handleUpdateNote() {
 }
 
 const debouncedUpdate = debounce(executeNoteUpdate, 3000)
-
-async function executeNoteUpdate() {
-  const note = document.querySelector('.editor').value
-  const id = state.get('active-doc')
-  const title =
-    document.querySelector('#note-title').value.trim() || 'Untitled note'
-
-  const docs = state.get('main-documents')
-  const doc = docs.find((d) => d.id === id)
-  doc.title = title
-  doc.note = note
-
-  await updateNote({ id, title, note })
-  setMessage({ message: 'saved', type: 'quiet' })
-  // used to force save after 15 seconds of no-save
-  state.set('mainPanel:last-save', Date.now())
-}
 
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')

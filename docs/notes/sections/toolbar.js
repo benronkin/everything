@@ -4,6 +4,7 @@ import { createSelect } from '../../assets/partials/select.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
+import { executeNoteUpdate } from './mainPanel.js'
 
 export function toolbar() {
   const el = createToolbar({
@@ -98,18 +99,16 @@ export function toolbar() {
   headerEl.querySelector(' .caret-wrapper').style.right = '-3px'
 
   react(el)
-  listen(el)
 
   return el
 }
 
 function react(el) {
-  state.on('app-mode', 'Notes toolbar', (appMode) => {
+  state.on('app-mode', 'toolbar', (appMode) => {
     const ids = ['#back', '#edit', '#toc']
-
-    ids.forEach((id) =>
+    ids.forEach((id) => {
       el.querySelector(id).classList.toggle('hidden', appMode !== 'main-panel')
-    )
+    })
   })
 
   state.on('active-doc', 'notes', (id) => {
@@ -126,17 +125,23 @@ function react(el) {
       )
     }
   })
-}
 
-function listen(el) {
-  el.querySelector('#back').addEventListener('click', () => {
+  state.on('icon-click:back', 'toolbar', () => {
     const classes = ['.ta-icon', '.ta-select']
     classes.forEach((c) =>
       el.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
     )
 
+    if (!document.querySelector('.editor').classList.contains('hidden'))
+      executeNoteUpdate()
+
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
+  })
+
+  state.on('icon-click:edit', 'toolbar', () => {
+    if (!document.querySelector('.editor').classList.contains('hidden'))
+      executeNoteUpdate()
   })
 
   // toolbar shortcuts
