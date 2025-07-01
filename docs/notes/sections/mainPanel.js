@@ -293,7 +293,7 @@ function listen(el) {
         a: '.fa-link',
         c: '.fa-code',
         i: '.fa-minus',
-        m: '.fa-message',
+        b: '.fa-quote-left',
         o: '.fa-list-ol',
         u: '.fa-list-ul',
       }

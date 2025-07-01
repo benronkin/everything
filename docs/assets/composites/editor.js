@@ -74,7 +74,8 @@ const css = `
   border: 1px solid var(--gray2);
   text-align: left;
 }
-.editor-wrapper .viewer .comment {
+.editor-wrapper .viewer .comment,
+.editor-wrapper .viewer blockquote {
   margin-left: 30px;
   border-left: 5px solid var(--gray3);
   padding: 10px;
