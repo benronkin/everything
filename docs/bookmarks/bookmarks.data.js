@@ -1,7 +1,11 @@
 export const bookmarks = [
   {
-    header: { html: 'Fun' },
+    header: { html: 'Top' },
     items: [
+      {
+        html: 'Everything Local',
+        url: 'http://localhost:5500/docs/notes/index.html',
+      },
       {
         html: 'Web APIs',
         url: 'https://developer.mozilla.org/en-US/docs/Web/API',
