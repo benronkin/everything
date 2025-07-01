@@ -75,7 +75,7 @@ export function toolbar() {
           other: ['primary', 'ta-icon', 'hidden'],
         },
         dataset: {
-          snippet: '<div class="comment">\n  $1\n</div>',
+          snippet: '<div class="comment">\n$1\n</div>',
         },
       }),
       createIcon({
