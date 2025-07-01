@@ -147,7 +147,7 @@ function listen(el) {
       return
     }
 
-    if (e.metaKey && e.shiftKey && e.key === 'n') {
+    if (e.ctrlKey && e.shiftKey && e.key === 'N') {
       e.preventDefault()
       document.querySelector('#add-note').click()
       return
