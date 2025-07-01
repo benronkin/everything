@@ -69,7 +69,7 @@ function build() {
 }
 
 function react() {
-  state.on('form-submit:left-panel-search', 'journal', reactSearch)
+  state.on('form-submit:left-panel-search', 'notes', reactSearch)
 
   state.on('icon-click:add-note', 'notes', reactAddNote)
 

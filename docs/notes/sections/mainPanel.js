@@ -327,7 +327,14 @@ const debouncedUpdate = debounce(async () => {
   })
   const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
-  const title = document.querySelector('#note-title').value
+  const title =
+    document.querySelector('#note-title').value.trim() || 'Untitled note'
+
+  const docs = state.get('main-documents')
+  const doc = docs.find((d) => d.id === id)
+  doc.title = title
+  doc.note = note
+
   const { message } = await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
 }, 3000)
