@@ -81,4 +81,5 @@ function resize() {
   this.style.height = 'auto'
   this.style.height = 25 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop
+  console.log('resized to', this.style.height)
 }

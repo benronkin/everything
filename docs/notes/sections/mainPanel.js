@@ -156,6 +156,7 @@ function react(el) {
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {
+    el.querySelector('.editor-wrapper').setEditor('Loading...')
     if (!id) return
 
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
