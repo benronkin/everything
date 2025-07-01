@@ -141,7 +141,9 @@ export function createEditor({ className = '' } = {}) {
   el.insertBlock = function (block) {
     const selection = state.get('editor-selection')
     if (!selection) {
-      console.log('No editor selection saved')
+      console.log(
+        'No editor selection was saved prior to this insertBlock. Did you save one???'
+      )
       return
     }
 

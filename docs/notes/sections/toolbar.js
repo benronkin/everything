@@ -152,5 +152,12 @@ function listen(el) {
       document.querySelector('#add-note').click()
       return
     }
+
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const ew = document.querySelector('.editor-wrapper')
+      ew.saveSelectedRange()
+      ew.insertBlock('  ')
+    }
   })
 }
