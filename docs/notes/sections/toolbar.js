@@ -36,7 +36,7 @@ export function toolbar() {
           { label: 'H3', value: '<h3 id="">$1</h3>' },
           { label: 'H4', value: '<h4 id="">$1</h4>' },
           { label: 'H5', value: '<h5 id="">$1</h5>' },
-          { label: 'Normal', value: '<div>\n  $1\n</div>' },
+          { label: 'Normal', value: '<div>$1\n</div>' },
         ],
       }),
       createIcon({
