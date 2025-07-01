@@ -316,15 +316,20 @@ function listen(el) {
 }
 
 async function handleUpdateNote() {
-  debouncedUpdate()
+  const now = Date.now()
+  const last = state.get('mainPanel:last-save') || 1
+
+  if (last && now - last >= 15000) {
+    // force update after 15 seconds of no-save
+    await executeNoteUpdate()
+  } else {
+    debouncedUpdate()
+  }
 }
 
-const debouncedUpdate = debounce(async () => {
-  document.querySelectorAll('.rte-editor pre code').forEach((code) => {
-    if (code.dataset.highlighted === 'yes') {
-      delete code.dataset.highlighted
-    }
-  })
+const debouncedUpdate = debounce(executeNoteUpdate, 3000)
+
+async function executeNoteUpdate() {
   const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
   const title =
@@ -335,9 +340,11 @@ const debouncedUpdate = debounce(async () => {
   doc.title = title
   doc.note = note
 
-  const { message } = await updateNote({ id, title, note })
+  await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
-}, 3000)
+  // used to force save after 15 seconds of no-save
+  state.set('mainPanel:last-save', Date.now())
+}
 
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')
