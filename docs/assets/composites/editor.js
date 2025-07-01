@@ -124,7 +124,18 @@ export function createEditor({ className = '' } = {}) {
   }
 
   el.setViewer = function (markup) {
-    el.querySelector('.viewer').insertHtml(standardizeViewer(markup))
+    const html = standardizeViewer(markup)
+    el.querySelector('.viewer').insertHtml(html)
+
+    // required for inert scripts to run
+    const scripts = el.querySelectorAll('.viewer script')
+    for (const script of scripts) {
+      try {
+        eval(script.textContent)
+      } catch (err) {
+        console.error('Script execution failed:', err)
+      }
+    }
   }
 
   /**
