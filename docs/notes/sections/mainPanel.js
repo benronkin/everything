@@ -299,7 +299,7 @@ function listen(el) {
       }
 
       const optionMap = {
-        h: 'H3',
+        h: 'H1',
         d: 'Normal',
       }
 
@@ -368,7 +368,7 @@ function updateTableOfContents() {
   )
 
   headerEls.forEach((h) => {
-    let indent = parseInt(h.tagName[1]) - 3
+    let indent = parseInt(h.tagName[1]) - 1
     // default padding left is 10px, so indent 0
     // has it and everyone else has 2 more
     if (indent > 0) indent++

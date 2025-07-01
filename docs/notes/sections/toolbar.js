@@ -34,6 +34,8 @@ export function toolbar() {
             value: '',
             selected: 'true',
           },
+          { label: 'H1', value: '<h1 id="">$1</h1>' },
+          { label: 'H2', value: '<h2 id="">$1</h2>' },
           { label: 'H3', value: '<h3 id="">$1</h3>' },
           { label: 'H4', value: '<h4 id="">$1</h4>' },
           { label: 'H5', value: '<h5 id="">$1</h5>' },
