@@ -128,22 +128,29 @@ function react(el) {
     }
   })
 
-  state.on('icon-click:back', 'toolbar', () => {
+  state.on('icon-click:back', 'toolbar', async () => {
     const classes = ['.ta-icon', '.ta-select']
     classes.forEach((c) =>
       el.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
     )
 
-    if (!document.querySelector('.editor').classList.contains('hidden'))
-      executeNoteUpdate()
+    const editorEl = document.querySelector('.editor')
+    if (!editorEl.classList.contains('hidden')) {
+      await executeNoteUpdate()
+      editorEl.classList.add('hidden')
+      document.querySelector('.viewer').classList.remove('hidden')
+    }
 
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })
 
-  state.on('icon-click:edit', 'toolbar', () => {
-    if (!document.querySelector('.editor').classList.contains('hidden'))
-      executeNoteUpdate()
+  state.on('icon-click:edit', 'toolbar', async () => {
+    const editorEl = document.querySelector('.editor')
+    if (!editorEl.classList.contains('hidden')) {
+      await executeNoteUpdate()
+      document.querySelector('.viewer').classList.remove('hidden')
+    }
   })
 
   // toolbar shortcuts

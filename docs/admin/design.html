@@ -38,6 +38,7 @@
   </head>
   <body class="dark-mode">
     <script type="module">
+      import { Cache } from '../assets/js/cache.js'
       import { state } from '../assets/js/state.js'
       import { createDiv } from '../assets/partials/div.js'
       import { createFileInput } from '../assets/partials/fileInput.js'
@@ -63,14 +64,18 @@
       import { createPill } from '../assets/partials/pill.js'
       import { log } from '../assets/js/logger.js'
 
-      const mainPanelEl = createMainPanel()
+      // caching
+      ;(async () => {
+        const cache = new Cache()
+        console.log('cache', await cache.exists())
+      })()
 
-      mainPanelEl.appendChild(
-        createSelect({
-          options: [{ label: 'hello', value: 'hello', selected: true }],
-        })
-      )
-
+      // const mainPanelEl = createMainPanel()
+      // mainPanelEl.appendChild(
+      //   createSelect({
+      //     options: [{ label: 'hello', value: 'hello', selected: true }],
+      //   })
+      // )
       // ;(function modalShare() {
       //   const modalShareEl = createModalShare()
       //   mainPanelEl.appendChild(modalShareEl)
