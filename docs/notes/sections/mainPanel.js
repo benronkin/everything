@@ -370,8 +370,8 @@ function updateTableOfContents() {
 
   headerEls.forEach((h) => {
     let indent = parseInt(h.tagName[1]) - 1
-    // default padding left is 10px, so indent 0
-    // has it and everyone else has 2 more
+    // default padding left is 10px, which is what
+    // h1 has, so h2 and beyond needs 1 more
     if (indent > 0) indent++
     tocEl.appendChild(
       createDiv({
