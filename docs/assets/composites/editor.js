@@ -21,12 +21,12 @@ const css = `
 .editor-wrapper .viewer :is(div, h1, h2. h3, h4, h5, h6) {
   white-space: pre-wrap;
 }
-
 .editor-wrapper .viewer h1:not(:first-child) {
   margin-top: 30px;
 }
-
-
+.editor-wrapper .viewer h2 {
+  margin: 20px 0 5px;
+}
 .editor-wrapper .viewer hr {
   border: 1px dotted var(--gray1);
   margin: 30px 0;
