@@ -155,7 +155,9 @@ function handleFormKeyup({ value }) {
   if (document.getElementById('suggest-icon').classList.contains('primary'))
     return
 
-  if (!value.trim().length) {
+  value = value.trim().toLowerCase()
+
+  if (!value.length) {
     resetSuggestionsUI()
     return
   }
