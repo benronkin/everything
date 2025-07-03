@@ -4,13 +4,6 @@ import { createList } from '../../assets/partials/list.js'
 import { suggestionItem } from './suggestionItem.js'
 import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function suggestionsList() {
   const el = createList({
     id: 'suggestions-list',
@@ -22,23 +15,45 @@ export function suggestionsList() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 function react(el) {
-  state.on('suggestions-list', 'suggestionsList', (suggestionArr) => {
-    el.deleteChildren()
-    if (!suggestionArr.length) {
-      return
-    }
-    const shoppingItems = state.get('shopping-list')
-    suggestionArr = suggestionArr.filter(
-      (arrItem) => !shoppingItems.includes(arrItem)
-    )
-    const children = suggestionArr.map((arrItem) =>
-      suggestionItem({ item: arrItem })
-    )
-    el.addChildren(children)
-  })
+  state.on('suggestions-list', 'suggestionsList', () => refreshSuggestions(el))
+
+  state.on('shopping-list', 'suggestionsList', () => refreshSuggestions(el))
+}
+
+function refreshSuggestions(el) {
+  const cartArr = state.get('shopping-list')
+  const suggestionsEl = document.getElementById('suggestions-list')
+
+  const suggestIcon = document.getElementById('suggest-icon')
+  const addInput = document.querySelector('[name="new-item"]')
+  const addValue = addInput.value.trim().toLowerCase()
+
+  let suggestionsArr = state.get('suggestions-list')
+
+  if (!suggestionsArr) {
+    suggestionsEl.classList.add('hidden')
+    return
+  }
+
+  suggestionsArr = suggestionsArr.filter((s) => !cartArr.includes(s))
+
+  if (addValue.length) {
+    suggestionsArr = suggestionsArr.filter((s) => s.includes(addValue))
+  }
+
+  el.deleteChildren()
+
+  if (!suggestionsArr.length) {
+    suggestionsEl.classList.add('hidden')
+    return
+  }
+
+  suggestionsEl.classList.toggle(
+    'hidden',
+    !suggestIcon.classList.contains('primary') && !addValue.length
+  )
+
+  const children = suggestionsArr.map((item) => suggestionItem({ item }))
+  el.addChildren(children)
 }
