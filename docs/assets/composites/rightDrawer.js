@@ -1,40 +1,7 @@
 import { state } from '../js/state.js'
-import { injectStyle } from '../js/ui.js'
+import { injectStyle, navList } from '../js/ui.js'
 import { createList } from '../partials/list.js'
 import { createMenuItem } from '../partials/menuItem.js'
-
-const items = [
-  {
-    html: '<i class="fa-solid fa-list-check"></i> Tasks',
-    url: '../tasks/index.html',
-    id: 'rd-item-tasks',
-  },
-  {
-    html: '<i class="fa-solid fa-cake-candles"></i> Recipes',
-    url: '../recipes/index.html',
-    id: 'rd-item-recipes',
-  },
-  {
-    html: '<i class="fa-solid fa-cart-shopping"></i> Shopping',
-    url: '../shopping/index.html',
-    id: 'rd-item-shopping',
-  },
-  {
-    html: '<i class="fa-solid fa-note-sticky"></i> Notes',
-    url: '../notes/index.html',
-    id: 'rd-item-notes',
-  },
-  {
-    html: '<i class="fa-solid fa-book"></i> Journal',
-    url: '../journal/index.html',
-    id: 'rd-item-journal',
-  },
-  {
-    html: '<i class="fa-solid fa-gear"></i> Settings',
-    url: '../settings/index.html',
-    id: 'rd-item-settings',
-  },
-]
 
 const css = `
 .nav {
@@ -105,9 +72,15 @@ export function createRightDrawer({ active } = {}) {
 }
 
 function build({ el, active }) {
-  const listItems = items.map(({ html, url, id }) =>
-    createMenuItem({ value: html, url, id, type: 'anchor' })
+  const listItems = navList.map((ni) =>
+    createMenuItem({
+      value: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
+      url: `../${ni.url}`,
+      id: `rd-item-${ni.id}`,
+      type: 'anchor',
+    })
   )
+
   el.addChildren(listItems)
   if (active) {
     const id = `rd-item-${active}`

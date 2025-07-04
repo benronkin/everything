@@ -1,8 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { insertHtml } from '../../assets/js/format.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
 
 const css = `
 `
@@ -11,8 +9,6 @@ export function create({ id, className = '', html } = {}) {
   injectStyle(css)
 
   const el = createDiv({ className, id })
-
-  el.insertHtml = insertHtml.bind(el)
 
   build(el)
   react(el)

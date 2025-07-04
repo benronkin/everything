@@ -3,28 +3,14 @@ import { createSpan } from '../../assets/partials/span.js'
 import { createToast, removeToasts } from '../../assets/partials/toast.js'
 import { log } from './logger.js'
 
-// ----------------------
-// Globals
-// ----------------------
-
 let sharedStyleEl = null
 
-// ------------------------
-// Exports
-// ------------------------
-
-/**
- * Detect if mobile device
- */
 export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   )
 }
 
-/**
- * Inject partials' css to the dom
- */
 export function injectStyle(css) {
   if (!sharedStyleEl) {
     sharedStyleEl = document.createElement('style')
@@ -38,9 +24,6 @@ export function injectStyle(css) {
   }
 }
 
-/**
- *
- */
 export function isoToReadable(isoString) {
   const date = new Date(isoString)
   const now = new Date()
@@ -53,9 +36,51 @@ export function isoToReadable(isoString) {
   return date.toLocaleDateString('en-US', options)
 }
 
-/**
- * Resize the textarea
- */
+export const navList = [
+  {
+    icon: 'fa-house',
+    label: 'home',
+    url: 'home/index.html',
+    id: 'home',
+  },
+  {
+    icon: 'fa-list-check',
+    label: 'Tasks',
+    url: 'tasks/index.html',
+    id: 'tasks',
+  },
+  {
+    icon: 'fa-cake-candles',
+    label: 'Recipes',
+    url: 'recipes/index.html',
+    id: 'recipes',
+  },
+  {
+    icon: 'fa-cart-shopping',
+    label: 'Shop',
+    url: 'shopping/index.html',
+    id: 'shopping',
+  },
+  {
+    icon: 'fa-note-sticky',
+    label: 'Notes',
+    url: 'notes/index.html',
+    id: 'notes',
+  },
+  {
+    icon: 'fa-book',
+    label: 'Journal',
+    url: 'journal/index.html',
+    id: 'journal',
+  },
+  {
+    icon: 'fa-gear',
+    label: 'Settings',
+    url: 'settings/index.html',
+    id: 'settings',
+  },
+]
+
 export function resizeTextarea(textarea) {
   // allow page to lay out the elements
   requestAnimationFrame(() => {
@@ -77,9 +102,6 @@ export function resizeTextarea(textarea) {
   })
 }
 
-/**
- * Show message toast
- */
 export function setMessage({
   message,
   className,
@@ -131,9 +153,6 @@ export function setMessage({
   document.querySelector('body').appendChild(toast)
 }
 
-/**
- * Toggle the expander's button group
- */
 export function toggleExpander(e) {
   // arrives from eventhandler or from a link click
   const el = e.target || e

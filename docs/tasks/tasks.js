@@ -7,8 +7,8 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createTitleDetailsItem } from '../assets/partials/titleDetailsItem.js'
-import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
+import { setMessage } from '../assets/js/ui.js'
 import {
   createTask,
   deleteTask,
@@ -47,13 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-// ------------------------
-// Helpers
-// ------------------------
-
-/**
- *
- */
 function build() {
   document.head.title = 'Tasks | Everything App'
   const body = document.body
@@ -74,9 +67,6 @@ function build() {
   wrapperEl.appendChild(createFooter())
 }
 
-/**
- * Subscribe to state.
- */
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
 
@@ -85,17 +75,6 @@ function react() {
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 
   state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
-}
-
-async function handleTaskUpdate({ id, section, value }) {
-  try {
-    const { error } = await updateTask({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
-  } catch (err) {
-    log(err)
-  }
 }
 
 async function handleAddTask() {
@@ -132,17 +111,35 @@ async function handleAddTask() {
   }
 }
 
-async function handleTaskDelete({ id }) {
-  const taskToDelete = document.getElementById(id)
-  taskToDelete.classList.add('hidden')
-
-  const { error } = await deleteTask(id)
-  if (error) {
-    taskToDelete.classList.remove('hidden')
-    setMessage({ message: error, type: 'warn' })
-    return
+async function handleTaskUpdate({ id, section, value }) {
+  try {
+    const { error } = await updateTask({ id, section, value })
+    if (error) {
+      throw new Error(error)
+    }
+  } catch (err) {
+    log(err)
   }
-  document.getElementById('tasks-list').deleteChild(id)
+}
+
+async function handleTaskDelete({ id }) {
+  // 1 ▸ optimistic local update
+  const tasks = state.get('main-documents')
+  const idx = tasks.findIndex((t) => t.id === id)
+  if (idx === -1) return // not found
+
+  const deleted = tasks.splice(idx, 1)[0] // remove 1 item
+  state.set('main-documents', [...tasks]) // triggers list re-render
+
+  // 2 ▸ server delete
+  const { error } = await deleteTask(id)
+
+  // 3 ▸ rollback if server failed
+  if (error) {
+    tasks.splice(idx, 0, deleted) // restore
+    state.set('main-documents', [...tasks])
+    setMessage({ message: error, type: 'warn' })
+  }
 }
 
 async function handleTaskDragged() {

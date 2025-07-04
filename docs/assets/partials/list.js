@@ -9,6 +9,10 @@ import { log } from '../js/logger.js'
 // -------------------------------
 
 const css = `
+.empty-state {
+  font-style: italic;
+  color: var(--gray3);
+}
 `
 
 // -------------------------------

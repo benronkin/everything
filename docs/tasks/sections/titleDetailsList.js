@@ -5,17 +5,11 @@ import { createTitleDetailsItem } from '../../assets/partials/titleDetailsItem.j
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
 import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function titleDetailsList() {
   const el = createList({
     id: 'tasks-list',
     className: 'mt-20',
+    emptyState: `<i class="fa-solid fa-umbrella-beach"></i> <span>Nothing to do today...</span>`,
   })
 
   react(el)
@@ -23,13 +17,6 @@ export function titleDetailsList() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('main-documents', 'titleDetailsList', (docs) => {
     const children = docs.map((doc) => {
