@@ -18,16 +18,16 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
       createIcon({
-        id: 'toc',
-        classes: { primary: 'fa-book-open', other: 'primary hidden' },
-      }),
-      createIcon({
         id: 'edit',
         classes: { primary: 'fa-pencil', other: 'primary hidden' },
       }),
+      createIcon({
+        id: 'toc',
+        classes: { primary: 'fa-book-open', other: 'primary hidden' },
+      }),
       createSelect({
         id: 'ta-header-select',
-        className: 'primary p-5',
+        className: 'primary p-5 ta-select',
         options: [
           {
             label: 'H',
@@ -106,13 +106,6 @@ export function toolbar() {
 }
 
 function react(el) {
-  state.on('app-mode', 'toolbar', (appMode) => {
-    const ids = ['#back', '#edit', '#toc']
-    ids.forEach((id) => {
-      el.querySelector(id).classList.toggle('hidden', appMode !== 'main-panel')
-    })
-  })
-
   state.on('active-doc', 'notes', (id) => {
     el.querySelector('.avatar-group')?.remove()
 
@@ -129,11 +122,6 @@ function react(el) {
   })
 
   state.on('icon-click:back', 'toolbar', async () => {
-    const classes = ['.ta-icon', '.ta-select']
-    classes.forEach((c) =>
-      el.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
-    )
-
     const editorEl = document.querySelector('.editor')
     if (!editorEl.classList.contains('hidden')) {
       await executeNoteUpdate()

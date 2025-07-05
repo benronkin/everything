@@ -146,13 +146,23 @@ function build(el) {
 
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
-    if (appMode === 'main-panel') {
-      el.classList.remove('hidden')
-      // log('mainPanel is showing itself on active-doc')
-    } else {
-      el.classList.add('hidden')
-      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
-    }
+    const inMainPanel = appMode === 'main-panel'
+
+    el.classList.toggle('hidden', !inMainPanel)
+
+    const classes = ['.ta-icon', '.ta-select']
+    classes.forEach((c) =>
+      document.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
+    )
+
+    const ids = ['#back', '#edit', '#toc']
+    ids.forEach((id) => {
+      document.querySelector(id).classList.toggle('hidden', !inMainPanel)
+    })
+
+    document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#toc').classList.remove('on')
+    document.querySelector('#edit').classList.remove('on')
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {
@@ -185,11 +195,6 @@ function react(el) {
 
   state.on('right-drawer-toggle-click', 'mainPanel', () => {
     document.querySelector('#toc-list').classList.remove('open')
-  })
-
-  state.on('icon-click:back', 'mainPanel', () => {
-    document.querySelector('#toc-list').classList.remove('open')
-    document.querySelector('#toc').classList.remove('on')
   })
 
   state.on('icon-click:edit', 'mainPanel', () => {
