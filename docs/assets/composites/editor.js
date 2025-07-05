@@ -94,7 +94,7 @@ const css = `
 .editor-wrapper .editor {
   cursor: auto;
   width: 100%;
-  padding: 10px;
+  padding: 20px;
   background: var(--gray0);
   border: 1px dotted var(--gray1);
 }
