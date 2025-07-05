@@ -95,7 +95,8 @@ const css = `
   cursor: auto;
   width: 100%;
   padding: 10px;
-  background: var(--gray1);
+  background: var(--gray0);
+  border: 1px dotted var(--gray1);
 }
 .editor-wrapper .editor:focus {
   border-bottom: none !important;
