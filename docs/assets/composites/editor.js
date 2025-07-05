@@ -99,7 +99,7 @@ const css = `
   border: 1px dotted var(--gray1);
 }
 .editor-wrapper .editor:focus {
-  border-bottom: none !important;
+  border: 1px dotted var(--gray1) !important;
 }
 #toolbar .icons .on {
   background: var(--gray2);
