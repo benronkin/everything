@@ -29,7 +29,7 @@ export async function fetchNotes() {
  */
 export async function searchNotes(q) {
   const { notes, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`
+    `${url}/search?q=${encodeURIComponent(q.trim().toLowerCase())}`
   )
   return { data: notes, error }
 }
