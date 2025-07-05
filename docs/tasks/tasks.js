@@ -86,18 +86,20 @@ async function handleAddTask() {
   if (!title.length) return
 
   const id = `ev${crypto.randomUUID()}`
-  const newChild = createTitleDetailsItem({ id, title })
 
-  newChild.querySelectorAll('.field').forEach((field) =>
-    field.addEventListener('change', () =>
-      state.set('field-change:tasks-list', {
-        id,
-        section: field.name,
-        value: field.value,
-      })
-    )
-  )
-  document.getElementById('tasks-list').addChild(newChild, 'bottom')
+  const doc = {
+    id,
+    title,
+    details: null,
+    created_at: new Date().toISOString(),
+    completed_at: null,
+    sort_order: 0,
+  }
+
+  const docs = state.get('main-documents')
+  docs.unshift(doc)
+  state.set('main-documents', docs)
+
   document.querySelector('input[name="task"]').value = ''
 
   const { error } = await createTask(title, id)
@@ -105,9 +107,9 @@ async function handleAddTask() {
   if (error) {
     // revert operation
     inputEl.value = title
-    newChild.remove()
+    docs.shift()
+    state.set('main-documents', docs)
     setMessage({ message: error, type: 'warn' })
-    return
   }
 }
 

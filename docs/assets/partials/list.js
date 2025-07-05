@@ -50,9 +50,7 @@ export function createList({ id, emptyState, className, enableDrag = false }) {
   className && (el.className = className)
   el.classList.add('list')
 
-  if (el.getChildren().length) {
-    el.querySelector('.empty-state').classList.remove('hidden')
-  }
+  react(el)
 
   return el
 }
@@ -61,9 +59,6 @@ export function createList({ id, emptyState, className, enableDrag = false }) {
 // Helpers
 // -------------------------------
 
-/**
- *
- */
 function build({ el, emptyState, enableDrag } = {}) {
   if (enableDrag) {
     el.enableDragging = () => enableDragging(el)
@@ -71,17 +66,21 @@ function build({ el, emptyState, enableDrag } = {}) {
   }
 
   if (emptyState) {
-    el._emptyState = emptyState
     const emptyStateDiv = createDiv({ className: 'empty-state' })
     el.appendChild(emptyStateDiv)
     emptyStateDiv.insertHtml(emptyState)
   }
 }
 
-/**
- * Respond to selection changed events that the list
- * generates on add events and others.
- */
+function react(el) {
+  state.on('list-changed', 'list', () => {
+    el.querySelector('.empty-state')?.classList.toggle(
+      'hidden',
+      el.getChildren().length
+    )
+  })
+}
+
 function listen(el) {
   // select/unselect should be implemented inside the custom list
   // state.on('item-click', 'list', (id) => {
@@ -89,8 +88,6 @@ function listen(el) {
   //     if (child.id === id) {
   //       child.classList.toggle('active')
   //     } else {
-  //       // select the clicked child
-  //       // and unselect the rest
   //       child.classList.remove('active')
   //     }
   //   })
@@ -110,24 +107,19 @@ function addChild(child, pos = 'top') {
   } else {
     this.appendChild(child)
   }
+  state.set('list-changed', true)
 }
 
 /**
  * Children can be added post creation of list
  */
 function addChildren(children = []) {
-  if (this._emptyState) {
-    this.querySelector('.empty-state').classList.toggle(
-      'hidden',
-      !!children.length
-    )
-  }
-
   if (children.length) {
     for (const child of children) {
       this.appendChild(child)
     }
   }
+  state.set('list-changed', true)
 }
 
 /**
@@ -138,9 +130,7 @@ function deleteChild(id) {
   if (item) {
     item.remove()
   }
-  if (!this.getChildren().length && this.querySelector('.empty-state')) {
-    this.querySelector('.empty-state').classList.remove('hidden')
-  }
+  state.set('list-changed', true)
 }
 
 /**
@@ -149,6 +139,7 @@ function deleteChild(id) {
 function deleteChildren() {
   const existingChildren = this.getChildren()
   existingChildren.forEach((child) => this.deleteChild(child.id))
+  state.set('list-changed', true)
   return this // for chaining
 }
 
@@ -217,6 +208,8 @@ function updateChild({ id, title, details }) {
     item.querySelector('[name="title"]').value = title
     item.querySelector('[name="details"]').value = details
   }
+
+  state.set('list-changed', true)
 
   return item
 }

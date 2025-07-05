@@ -19,6 +19,11 @@ export function titleDetailsList() {
 
 function react(el) {
   state.on('main-documents', 'titleDetailsList', (docs) => {
+    el.deleteChildren()
+    if (!docs.length) {
+      return
+    }
+
     const children = docs.map((doc) => {
       const item = createTitleDetailsItem({
         id: doc.id,
@@ -36,7 +41,7 @@ function react(el) {
       )
       return item
     })
-    el.deleteChildren().addChildren(children)
+    el.addChildren(children)
     setMessage()
   })
 

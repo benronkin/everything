@@ -56,7 +56,10 @@ export function createTitleDetailsItem({
 } = {}) {
   injectStyle(css)
 
-  const el = createDiv({ id, className: `td-item ${className}`.trim() })
+  const el = createDiv({
+    id,
+    className: `td-item list-item ${className}`.trim(),
+  })
 
   build(el)
   react(el)
