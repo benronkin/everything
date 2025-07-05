@@ -10,7 +10,6 @@ const css = `
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
   margin-top: 30px;
 }
 #home-bookmarks .bookmarks-holder:not(.hidden) {
@@ -83,6 +82,8 @@ function react(el) {
 }
 
 function buildBookmarks(bookmarks, el) {
+  el.innerHTML = ''
+
   for (const section of bookmarks) {
     const groupDiv = createDiv({
       className: 'bookmarks-group outer-wrapper mb-20',

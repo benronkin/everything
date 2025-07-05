@@ -38,7 +38,7 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'fs-125 field', icon: 'fa-utensils' },
+      classes: { group: '', input: 'field w-100', icon: 'fa-utensils' },
     })
   )
 
