@@ -36,9 +36,17 @@ function build(el) {
 
   el.appendChild(
     createInputGroup({
-      name: 'user-name',
-      classes: { icon: 'fa-user' },
+      name: 'first_name',
+      classes: { icon: 'fa-user', input: 'field' },
       placeholder: 'Enter name',
+    })
+  )
+
+  el.appendChild(
+    createInputGroup({
+      name: 'bookmarks',
+      classes: { icon: 'fa-bookmark', input: 'field', group: 'mt-30' },
+      placeholder: 'Enter your bookmarks note ID',
     })
   )
 
@@ -69,21 +77,29 @@ function build(el) {
     })
   )
 
-  const url = state.get('user')?.avatar
-  if (url) insertImage(url, el)
+  const user = state.get('user')
+  if (user) {
+    insertImage(user.avatar, el)
+    el.querySelector('[name="first_name"]').value = user.first_name || 'nope'
+    el.querySelector('[name="bookmarks"]').value = user.bookmarks || ''
+  }
 }
 
 function react(el) {
-  state.on('user', 'profile', (user) => insertImage(user.avatar, el))
-}
-
-function listen(el) {
-  el.querySelector('#delete-avatar-btn').addEventListener('click', async () => {
-    const { message } = await deleteAvatar()
+  state.on('button-click:delete-avatar-btn', 'profile', async () => {
+    await deleteAvatar()
     const user = state.get('user')
     delete user.avatar
     state.set('user', user)
   })
+}
+
+function listen(el) {
+  el.querySelectorAll('.field').forEach((f) =>
+    f.addEventListener('change', (e) => {
+      state.set('profile-field', { name: e.target.name, value: e.target.value })
+    })
+  )
 }
 
 function insertImage(url, el) {

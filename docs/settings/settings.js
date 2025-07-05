@@ -1,3 +1,5 @@
+/* global imageCompression */
+
 import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -8,6 +10,7 @@ import { profile } from './sections/profile.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
+import { createAvatar, updateUserField } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import { log } from '../assets/js/logger.js'
@@ -24,15 +27,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     react()
-    listen()
 
     const { user } = await getMe()
     state.set('user', user)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
-
-    document.getElementById('main-item-profile').click() // <<< DELETE THIS ONE
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     // window.location.href = `../home/index.html?message=${error.message}`
@@ -62,7 +62,7 @@ async function build() {
 }
 
 function react() {
-  state.on('item-click', 'leftPanel', (id) => {
+  state.on('item-click', 'settings', (id) => {
     switch (id) {
       case 'main-item-profile':
         state.set('app-mode', 'main-panel')
@@ -70,6 +70,34 @@ function react() {
         break
     }
   })
-}
 
-function listen() {}
+  state.on('profile-avatar', 'settings', async (file) => {
+    const compressionOptions = {
+      maxWidthOrHeight: 125,
+      useWebWorker: true,
+      fileType: 'image/png',
+      exifOrientation: null,
+    }
+
+    try {
+      const compressed = await imageCompression(file, compressionOptions)
+      const formData = new FormData()
+      formData.set('file', compressed)
+
+      const { message, data } = await createAvatar(formData)
+
+      const user = state.get('user')
+      user.avatar = data?.url
+      state.set('user', user)
+      log(message)
+    } catch (error) {
+      console.error(error)
+    }
+  })
+
+  state.on('profile-field', 'settings', async ({ name, value }) => {
+    const { message } = await updateUserField({ field: name, value })
+    // console.log(message)
+    setMessage({ message: 'Change saved' })
+  })
+}

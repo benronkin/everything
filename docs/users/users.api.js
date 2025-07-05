@@ -1,5 +1,5 @@
 import { state } from '../assets/js/state.js'
-import { getWebApp, postWebAppForm } from '../assets/js/io.js'
+import { getWebApp, postWebAppForm, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/users`
 
@@ -26,4 +26,10 @@ export async function getMe() {
   const { user } = await getWebApp(`${url}/me`)
 
   return { user }
+}
+
+export async function updateUserField({ field, value }) {
+  const { message } = await postWebAppJson(`${url}/update`, { field, value })
+
+  return { message }
 }

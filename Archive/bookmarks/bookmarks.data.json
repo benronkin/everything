@@ -1,0 +1,146 @@
+[
+  {
+    "header": { "label": "Top" },
+    "items": [
+      {
+        "label": "Everything Local",
+        "url": "http://localhost:5500/docs/notes/index.html"
+      },
+      {
+        "label": "Web APIs",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API"
+      },
+      {
+        "label": "Classics",
+        "url": "https://tubitv.com/category/classics"
+      },
+      {
+        "label": "Masterpiece",
+        "url": "https://www.pbs.org/wgbh/masterpiece"
+      },
+      {
+        "label": "CBC Podcasts",
+        "url": "https://www.cbc.ca/listen/cbc-podcasts"
+      },
+      {
+        "label": "Music",
+        "url": "https://open.spotify.com/home"
+      },
+      {
+        "label": "Merge Fruit",
+        "url": "https://www.cbc.ca/kids/games/all/fruit-merge"
+      },
+      {
+        "label": "Lexicon",
+        "url": "https://script.google.com/macros/s/AKfycbw55ljHMG4nHaIYAxWA7gDxlsiU_seR7Q02gRUa1PWtHAGB79o/exec"
+      }
+    ]
+  },
+
+  {
+    "header": {
+      "label": "Utils"
+    },
+    "items": [
+      {
+        "label": "<i class=\"fa-solid fa-code\"></i> Bookmarks data",
+        "url": "vscode://file////Users/benronkin/Documents/everything-app/client/docs/bookmarks/bookmarks.data.js"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-newspaper\"></i> NYT access",
+        "url": "https://www.spl.org/online-resources/magazines-and-newspapers"
+      },
+      {
+        "label": "GPT release notes",
+        "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+      },
+      {
+        "label": "Film Noir",
+        "url": "https://www.youtube.com/watch?v=ksy-j020uj8&amp;list=PLBFa2yUBFRr4ek6G4A0K0zFS_zt93kDZv&amp;index=340"
+      },
+      {
+        "label": "The Spice Way",
+        "url": "https://thespiceway.com"
+      },
+      {
+        "label": "Seattle Events",
+        "url": "https://visitseattle.org/?s&amp;frm=events&amp;event_begin=12%2F03%2F2022&amp;event_end=12%2F04%2F2022&amp;event_type%5B0%5D=festivals-special-events&amp;event_type%5B1%5D=history-heritage&amp;event_type%5B2%5D=museums&amp;event_type%5B3%5D=readings-lectures&amp;event_type%5B4%5D=theatre&amp;event_type%5B5%5D=visual-arts-galleries&amp;events_types%5B0%5D=in-person&amp;partner_parent_cat"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-house text-blue5\"></i> Zillow",
+        "url": "https://www.zillow.com/homedetails/8312-NE-148th-Pl-Kenmore-WA-98028/48927561_zpid/"
+      },
+      {
+        "label": "WA Air Quality",
+        "url": "https://enviwa.ecology.wa.gov/home/map"
+      },
+      {
+        "label": "Bloodworks",
+        "url": "https://donate.bloodworksnw.org/donor/auth/signin"
+      },
+      {
+        "label": "Recycling Electronics",
+        "url": "https://www.checkbook.org/puget-sound-area/how-to-safely-get-rid-of-unwanted-electronics/?&amp;tc=psd_axios&amp;axios_adlink=1&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=newsletter_axioslocal_seattle&amp;stream=top"
+      },
+      {
+        "label": "Supercuts Bothell",
+        "url": "https://www.supercuts.com/locations/nearme/haircut/WA/BOTHELL/18827-BOTHELL-WAY-NE-STE-105/81884"
+      }
+    ]
+  },
+
+  {
+    "collapsed": true,
+    "header": {
+      "label": "Everything"
+    },
+    "items": [
+      {
+        "label": "<i class=\"fa-solid fa-list-check\"></i> Tasks",
+        "url": "https://benronkin.github.io/everything/tasks/index.html"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-cake-candles\"></i> Recipes",
+        "url": "https://benronkin.github.io/everything/reicpes/index.html"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-cart-shopping\"></i> Shopping",
+        "url": "https://benronkin.github.io/everything/shopping/index.html"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-note-sticky\"></i> Notes",
+        "url": "https://benronkin.github.io/everything/notes/index.html"
+      },
+      {
+        "label": "<i class=\"fa-solid fa-book\"></i> Journal",
+        "url": "https://benronkin.github.io/everything/journal/index.html"
+      }
+    ]
+  },
+
+  {
+    "collapsed": true,
+    "header": {
+      "label": "Archive"
+    },
+    "items": [
+      {
+        "label": "Bloomberg",
+        "url": "https://www.bloombergradio.com"
+      },
+      {
+        "label": "Coinbase",
+        "url": "https://www.coinbase.com/assets"
+      },
+      {
+        "style": "background-color: rgb(8, 98, 15)",
+        "label": "<i class=\"fa-solid fa-sack-dollar text-yellow\"></i> Yahoo Portfolio",
+        "url": "https://finance.yahoo.com/portfolio/p_0/view/v2"
+      },
+      {
+        "label": "Low cost phone",
+        "url": "https://www.amazon.com/dp/B0DLHNWHRF/?coliid=IVS2S4SS9KKTE&amp;colid=19WWYHWR5IJ0F&amp;ref_=list_c_wl_lv_ov_lig_dp_it&amp;th=1"
+      }
+    ]
+  }
+]
