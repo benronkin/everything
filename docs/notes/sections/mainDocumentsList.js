@@ -31,6 +31,10 @@ export function mainDocumentsList() {
 
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
+    el.deleteChildren()
+
+    if (!docs || !docs.length) return
+
     const children = docs.map((doc) => {
       const html = [createSpan({ html: doc.title })]
       if (doc?.peers?.length) {
@@ -38,7 +42,7 @@ function react(el) {
       }
       return createMainDocumentItem({ id: doc.id, html })
     })
-    el.deleteChildren().addChildren(children)
+    el.addChildren(children)
   })
 
   setMessage()

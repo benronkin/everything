@@ -31,12 +31,16 @@ export function mainDocumentsList() {
  */
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    // populate children
+    el.deleteChildren()
+
+    if (!docs || !docs.length) return
+
     const children = docs.map((doc) => {
       const html = createEntryTitle(doc)
       return createMainDocumentItem({ id: doc.id, html })
     })
-    el.deleteChildren().addChildren(children)
+
+    el.addChildren(children)
   })
 
   setMessage()
