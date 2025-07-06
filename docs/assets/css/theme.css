@@ -367,6 +367,9 @@ main {
 .c-gray3 {
   color: var(--gray3) !important;
 }
+.c-purple3 {
+  color: var(--purple3) !important;
+}
 .c-red3 {
   color: var(--red3) !important;
 }
