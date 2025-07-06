@@ -242,11 +242,6 @@ function react(el) {
     }
     tocListEl.classList.toggle('open')
   })
-
-  state.on('icon-click:close-toc-list', 'mainPanel', () => {
-    document.querySelector('#toc').classList.remove('on')
-    document.getElementById('toc-list').classList.remove('open')
-  })
 }
 
 function listen(el) {
@@ -371,13 +366,7 @@ function updateTableOfContents() {
 
   tocEl.appendChild(
     createHeader({
-      html: [
-        document.querySelector('#note-title').value,
-        createIcon({
-          id: 'close-toc-list',
-          classes: { primary: 'fa-circle-xmark' },
-        }),
-      ],
+      html: [document.querySelector('#note-title').value],
       type: 'h5',
       className: 'toc-header flex align-center',
     })

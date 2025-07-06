@@ -106,7 +106,7 @@ function listen({ el }) {
 
 function hanleRightDrawerClose(e, el) {
   if (
-    e.target.closest('[data-id="right-drawer"]') ||
+    e.target.closest('#right-drawer') ||
     e.target.closest('#toggle-right-drawer')
   ) {
     // ignore clicks on above items

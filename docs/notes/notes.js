@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     react()
+    listen()
 
     const [{ notes }, { user }] = await Promise.all([fetchNotes(), getMe()])
 
@@ -78,6 +79,13 @@ function react() {
   state.on('sharer-click', 'notes', () => {
     const modalEl = document.querySelector('#modal-share')
     modalEl.showModal()
+  })
+}
+
+function listen() {
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#toc') && !e.target.closest('#toc-list'))
+      document.querySelector('#toc-list').classList.remove('open')
   })
 }
 
