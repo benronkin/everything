@@ -82,6 +82,10 @@ function updateFooterPartial() {
   const match = content.match(/<span id="version-number">(.*?)<\/span>/)
   const currentVersion = match ? match[1] : null
 
+  // Display last commit message for user
+  // to decide whether to increment a new version
+  console.log(`\nLast change: ${getLastCommitMessage()}`)
+
   // Prompt user for the new version
   const newVersion = readlineSync
     .question(`Version (${currentVersion}): `, {
@@ -105,15 +109,7 @@ function updateFooterPartial() {
  * Prompts for a commit message and runs gacp
  */
 function commitChanges() {
-  let lastCommitMessage = ''
-
-  try {
-    lastCommitMessage = execSync('git log -1 --pretty=%B', {
-      encoding: 'utf8',
-    }).trim()
-  } catch (error) {
-    console.log('❌ Could not retrieve last commit message.')
-  }
+  let lastCommitMessage = getLastCommitMessage()
 
   let commitMessage = readlineSync
     .question(`Commit message (${lastCommitMessage}): `, {
@@ -139,4 +135,18 @@ function commitChanges() {
   } catch (error) {
     console.error('❌ Error committing changes:', error.message)
   }
+}
+
+function getLastCommitMessage() {
+  let lastCommitMessage
+
+  try {
+    lastCommitMessage = execSync('git log -1 --pretty=%B', {
+      encoding: 'utf8',
+    }).trim()
+  } catch (error) {
+    console.log(error)
+    lastCommitMessage = '❌ Could not retrieve last commit message.'
+  }
+  return lastCommitMessage
 }

@@ -1,17 +1,16 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createEditor } from '../../assets/composites/editor.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
 import { fetchNote, updateNote } from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
 import { removeToasts } from '../../assets/partials/toast.js'
+import { log } from '../../assets/js/logger.js'
 
 const css = `
 #main-panel {
@@ -91,7 +90,7 @@ const css = `
 export function mainPanel() {
   injectStyle(css)
 
-  const el = createDiv({ className: 'mt-20 hidden' })
+  const el = createDiv({ className: 'mt-20' })
 
   build(el)
   react(el)

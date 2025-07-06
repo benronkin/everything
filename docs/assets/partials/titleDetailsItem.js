@@ -3,11 +3,6 @@ import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
 import { createTextarea } from './textarea.js'
-import { log } from '../js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 .td-item {
@@ -41,13 +36,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constructor
- */
 export function createTitleDetailsItem({
   title,
   details,
@@ -76,13 +64,6 @@ export function createTitleDetailsItem({
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function build(el) {
   let gridEl = createDiv({ className: 'grid title-wrapper' })
   el.appendChild(gridEl)
@@ -94,6 +75,7 @@ function build(el) {
   })
   titleEl.dataset.target = 'title'
   gridEl.appendChild(titleEl)
+  titleEl.resize()
 
   let iconsEl = createDiv({ className: 'icons' })
   gridEl.appendChild(iconsEl)
@@ -114,13 +96,13 @@ function build(el) {
   gridEl = createDiv({ className: 'grid details-wrapper hidden' })
   el.appendChild(gridEl)
 
-  const taEl = createTextarea({
+  const detailsEl = createTextarea({
     name: 'details',
     className: 'field',
     placeholder: 'Add details...',
   })
-  taEl.dataset.target = 'details'
-  gridEl.appendChild(taEl)
+  detailsEl.dataset.target = 'details'
+  gridEl.appendChild(detailsEl)
   iconsEl = createDiv({ className: 'icons' })
   gridEl.appendChild(iconsEl)
 
@@ -135,9 +117,6 @@ function build(el) {
   })
 }
 
-/**
- *
- */
 function react(el) {
   state.on('icon-click:sort-icon', 'titleDetailsItem', () => {
     const isSorting = document
@@ -148,29 +127,16 @@ function react(el) {
   })
 }
 
-/**
- *
- */
 function listen(el) {
   el.querySelector('.expander').addEventListener('click', (e) => {
     el.querySelector('.details-wrapper').classList.toggle(
       'hidden',
       e.target.classList.contains('fa-chevron-left')
     )
-    // el.querySelector('.fa-trash').classList.toggle(
-    //   'hidden',
-    //   e.target.classList.contains('fa-chevron-left')
-    // )
+    document.querySelector('[name="details"]').resize()
   })
 }
 
-// -------------------------------
-// Object methods
-// -------------------------------
-
-/**
- *
- */
 function setDraggable(isDraggable) {
   this.draggable = isDraggable
 

@@ -9,22 +9,12 @@ import { insertHtml } from '../js/format.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constructor for custom span element
- */
 export function createDiv({ className, id, html, dataset = {} } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
 
   el.insertHtml = insertHtml.bind(el)
-
-  build(el)
-  react(el)
 
   if (id) {
     el.id = id
@@ -39,17 +29,3 @@ export function createDiv({ className, id, html, dataset = {} } = {}) {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element. No need
- */
-function build(el) {}
-
-/**
- * Subscribe to and set state.
- */
-function react(el) {}
