@@ -202,6 +202,9 @@ function react(el) {
     const editorEl = el.querySelector('.editor')
     const viewerEl = el.querySelector('.viewer')
 
+    // Save scroll position BEFORE changing anything
+    const scrollY = window.scrollY
+
     editEl.classList.toggle('on')
     document.querySelector('#toc-list').classList.remove('open')
 
@@ -209,6 +212,9 @@ function react(el) {
     document.querySelector('.editor-wrapper').setViewer(editorEl.value)
     editorEl.classList.toggle('hidden')
     editorEl.resize()
+
+    // Restore scroll AFTER layout shift
+    window.scrollTo({ top: scrollY })
 
     const isEditOn = editEl.classList.contains('on')
 
