@@ -67,11 +67,11 @@ function react(el) {
     }
 
     try {
-      const text = noteDoc.note
-        .replace('<pre><code class="language-javascript">\n', '')
-        .replace('</code></pre>', '')
-        .trim()
-      const bookmarks = JSON.parse(text)
+      const re =
+        /<pre><code class="language-javascript">\s*([\s\S]*?)<\/code><\/pre>/s
+      const match = noteDoc.note.match(re)
+      const rawJson = match[1].trim()
+      const bookmarks = JSON.parse(rawJson)
       buildBookmarks(bookmarks, el)
     } catch (error) {
       console.log(error)
