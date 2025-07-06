@@ -158,7 +158,7 @@ function react(el) {
       document.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
     )
 
-    const ids = ['#back', '#edit', '#toc']
+    const ids = ['#back', '#edit', '#toc', '#doc-link']
     ids.forEach((id) => {
       document.querySelector(id).classList.toggle('hidden', !inMainPanel)
     })

@@ -8,7 +8,13 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
-import { createNote, deleteNote, fetchNotes, searchNotes } from './notes.api.js'
+import {
+  createNote,
+  deleteNote,
+  fetchNotes,
+  fetchNote,
+  searchNotes,
+} from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
 import { log } from '../assets/js/logger.js'
@@ -31,11 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const [{ notes }, { user }] = await Promise.all([fetchNotes(), getMe()])
 
-    state.set('main-documents', notes)
-    state.set('app-mode', 'left-panel')
-    // state.set('app-mode', 'main-panel')
-    // state.set('active-doc', 'i-9fef4948-5e88-4b11-8b2a-c61817797c3b')
-    // setTimeout(() => document.querySelector('#edit').click(), 50)
+    const urlParams = new URLSearchParams(window.location.search)
+    const id = urlParams.get('id')
+    if (id) {
+      const docExists = notes.find((note) => note.id === id)
+      if (!docExists) {
+        const newDoc = await fetchNote(id)
+        notes.unshift(newDoc)
+      }
+      state.set('main-documents', notes)
+      state.set('app-mode', 'main-panel')
+      state.set('active-doc', id)
+    } else {
+      state.set('main-documents', notes)
+      state.set('app-mode', 'left-panel')
+    }
+
     state.set('user', user)
     state.set('default-page', 'notes')
 

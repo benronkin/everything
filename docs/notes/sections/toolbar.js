@@ -1,5 +1,6 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createDocLinkIcon } from '../../assets/partials/docLinkIcon.js'
 import { createSelect } from '../../assets/partials/select.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
@@ -24,6 +25,10 @@ export function toolbar() {
       createIcon({
         id: 'toc',
         classes: { primary: 'fa-book-open', other: 'primary hidden' },
+      }),
+      createDocLinkIcon({
+        id: 'doc-link',
+        classes: { primary: 'fa-link', other: 'primary hidden' },
       }),
       createSelect({
         id: 'ta-header-select',
