@@ -124,6 +124,7 @@ export function createEditor({ className = '' } = {}) {
 
   el.setEditor = function (value) {
     el.querySelector('.editor').value = value
+    el.resize()
   }
 
   el.setViewer = function (markup) {

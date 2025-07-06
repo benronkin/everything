@@ -208,7 +208,6 @@ function react(el) {
     viewerEl.classList.toggle('hidden')
     document.querySelector('.editor-wrapper').setViewer(editorEl.value)
     editorEl.classList.toggle('hidden')
-    editorEl.resize()
 
     const isEditOn = editEl.classList.contains('on')
 
