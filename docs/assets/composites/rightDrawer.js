@@ -20,6 +20,9 @@ const css = `
   width: 100%;
   transition: background 200ms ease;
 }
+.nav .menu-item.active {
+  background: var(--purple2);
+}  
 .nav .menu-item:last-child {
   margin-top: auto;
 }
@@ -74,10 +77,10 @@ export function createRightDrawer({ active } = {}) {
 function build({ el, active }) {
   const listItems = navList.map((ni) =>
     createMenuItem({
-      value: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
+      html: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
       url: `../${ni.url}`,
       id: `rd-item-${ni.id}`,
-      type: 'anchor',
+      className: 'menu-item',
     })
   )
 
@@ -85,7 +88,7 @@ function build({ el, active }) {
   if (active) {
     const id = `rd-item-${active}`
     const child = el.getChildById(id)
-    child.selected = true
+    child.classList.add('active')
   }
 }
 

@@ -12,6 +12,7 @@ const css = `
   justify-content: center;
 }
 .nav-list-item {
+  display: flex;
   background: var(--gray0);
   width: 80px;
   height: 80px;
@@ -44,10 +45,10 @@ export function navList() {
 
   const children = items.map((ni) => {
     const item = createMenuItem({
-      value: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
+      html: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
       url: `../${ni.url}`,
-      id: `rd-item-${ni.id}`,
-      type: 'anchor',
+      id: `nl-item-${ni.id}`,
+      className: 'nav-list-item',
     })
     item.classList.add('nav-list-item')
     return item

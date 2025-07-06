@@ -105,6 +105,9 @@ export function mainPanel() {
 export async function executeNoteUpdate() {
   const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
+
+  if (!id) return // timed-out call after active-doc became null
+
   const title =
     document.querySelector('#note-title').value.trim() || 'Untitled note'
 
@@ -112,6 +115,7 @@ export async function executeNoteUpdate() {
   const doc = docs.find((d) => d.id === id)
   doc.title = title
   doc.note = note
+  state.set('main-documents', docs)
 
   await updateNote({ id, title, note })
   setMessage({ message: 'saved', type: 'quiet' })
