@@ -36,14 +36,17 @@ const css = `
 .editor-wrapper .viewer ul {
   list-style-type: disc;
 }
-.editor-wrapper .viewer ol,
-.editor-wrapper .viewer ul {
-  list-style-position: inside;
+.editor-wrapper .viewer li {
+  display: list-item;
+  list-style-position: outside;
   padding-left: 0;
+  text-indent: 0;
 }
-.editor-wrapper .viewer  li {
-  padding-left: 0.5rem;
-}  
+
+.editor-wrapper .viewer ul,
+.editor-wrapper .viewer ol {
+  padding-left: 1.5rem; /* controls bullet indent */
+}
 .editor-wrapper .viewer ol li ol,
 .editor-wrapper .viewer ul li ul {
   margin: 0;
