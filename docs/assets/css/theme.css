@@ -300,7 +300,6 @@ i.btn:hover {
 i.primary {
   background-color: var(--purple2);
   padding: 5px;
-  transition: all 0.2s ease-in-out;
 }
 i.primary:hover {
   color: inherit;
