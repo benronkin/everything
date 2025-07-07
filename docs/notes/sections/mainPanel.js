@@ -301,7 +301,7 @@ function listen(el) {
 
     if (e.metaKey && e.shiftKey) {
       const iconMap = {
-        a: '.fa-link',
+        a: '.fa-anchor',
         c: '.fa-code',
         i: '.fa-minus',
         b: '.fa-quote-left',

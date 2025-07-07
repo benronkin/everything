@@ -28,7 +28,7 @@ export function toolbar() {
       }),
       createDocLinkIcon({
         id: 'doc-link',
-        classes: { primary: 'fa-link', other: 'primary hidden' },
+        classes: { primary: 'fa-anchor', other: 'primary hidden' },
       }),
       createSelect({
         id: 'ta-header-select',
