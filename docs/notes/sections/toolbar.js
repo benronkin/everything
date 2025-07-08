@@ -28,7 +28,7 @@ export function toolbar() {
       }),
       createDocLinkIcon({
         id: 'doc-link',
-        classes: { primary: 'fa-anchor', other: 'primary hidden' },
+        classes: { primary: 'fa-link', other: 'primary hidden' },
       }),
       createSelect({
         id: 'ta-header-select',
@@ -88,7 +88,7 @@ export function toolbar() {
       }),
       createIcon({
         classes: {
-          primary: 'fa-link',
+          primary: 'fa-anchor',
           other: ['primary', 'ta-icon', 'hidden'],
         },
         dataset: {
