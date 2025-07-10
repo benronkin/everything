@@ -67,6 +67,9 @@ function listen(el) {
   el.addEventListener('change', () => {
     el.resize()
   })
+  el.addEventListener('paste', () => {
+    el.resize()
+  })
 }
 
 // -------------------------------
