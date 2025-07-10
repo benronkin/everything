@@ -75,7 +75,6 @@ function build(el) {
   })
   titleEl.dataset.target = 'title'
   gridEl.appendChild(titleEl)
-  titleEl.resize()
 
   let iconsEl = createDiv({ className: 'icons' })
   gridEl.appendChild(iconsEl)

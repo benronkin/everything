@@ -95,12 +95,9 @@ function reactAppMode(el) {
 
   el.querySelector('#recipe-title').value = doc.title || ''
   el.querySelector('#recipe-notes').value = doc.notes || ''
-  el.querySelector('#recipe-notes').resize()
   el.querySelector('#recipe-related').value = doc.related || ''
   el.querySelector('#recipe-ingredients').value = doc.ingredients || ''
-  el.querySelector('#recipe-ingredients').resize()
   el.querySelector('#recipe-method').value = doc.method || ''
-  el.querySelector('#recipe-method').resize()
   el.querySelector('#recipe-category').selectByValue(doc.category || '')
   el.querySelector('#recipe-tags').value = doc.tags || ''
   el.querySelector('#recipe-id').insertHtml(doc.id)
