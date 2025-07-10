@@ -1,10 +1,6 @@
 import { injectStyle, isMobile } from '../js/ui.js'
 import { log } from '../js/logger.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 textarea {
   border: none;
@@ -13,17 +9,9 @@ textarea {
   min-height: 1.2em;
   line-height: 1.2em;
   overflow-y: hidden; /* prevent scrollbars */
-  resize: none;
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 export function createTextarea({
   id,
   name,
@@ -51,13 +39,6 @@ export function createTextarea({
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function listen(el) {
   el.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
@@ -72,13 +53,6 @@ function listen(el) {
   })
 }
 
-// -------------------------------
-// Object methods
-// -------------------------------
-
-/**
- *
- */
 function resize() {
   const { scrollTop } = document.documentElement // or window.pageYOffset
   this.style.height = 'auto'
