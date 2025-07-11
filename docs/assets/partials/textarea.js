@@ -8,6 +8,7 @@ textarea {
   border-radius: var(--border-radius);
   min-height: 1.2em;
   line-height: 1.2em;
+  resize: none;
 }
 `
 
