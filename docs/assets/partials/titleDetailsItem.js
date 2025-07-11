@@ -134,6 +134,16 @@ function listen(el) {
     )
     document.querySelector('[name="details"]').resize()
   })
+
+  el.querySelectorAll('.field').forEach((field) =>
+    field.addEventListener('change', () => {
+      state.set('field-change:tasks-list', {
+        id: el.id,
+        section: field.name,
+        value: field.value,
+      })
+    })
+  )
 }
 
 function setDraggable(isDraggable) {

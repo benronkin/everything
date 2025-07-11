@@ -30,15 +30,7 @@ function react(el) {
         title: doc.title,
         details: doc.details,
       })
-      item.querySelectorAll('.field').forEach((field) =>
-        field.addEventListener('change', () =>
-          state.set('field-change:tasks-list', {
-            id: doc.id,
-            section: field.name,
-            value: field.value,
-          })
-        )
-      )
+
       return item
     })
     el.addChildren(children)

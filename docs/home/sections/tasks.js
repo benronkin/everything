@@ -22,13 +22,10 @@ export function tasks() {
 
   const el = createDiv({ className: 'tasks-wrapper' })
 
-  build(el)
   react(el)
 
   return el
 }
-
-function build(el) {}
 
 function react(el) {
   state.on('main-documents', 'mainPanel', (tasks) => {
@@ -69,7 +66,14 @@ function tasksHeader(hasTasks) {
  */
 function tasksBody(tasks) {
   const list = titleDetailsList()
-  const children = tasks.map((t) => createTitleDetailsItem(t))
+  const children = tasks.map((doc) => {
+    const item = createTitleDetailsItem({
+      id: doc.id,
+      title: doc.title,
+      details: doc.details,
+    })
+    return item
+  })
   list.deleteChildren().addChildren(children)
   return list
 }
