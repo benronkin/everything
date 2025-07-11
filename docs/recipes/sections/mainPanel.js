@@ -101,4 +101,6 @@ function reactAppMode(el) {
   el.querySelector('#recipe-category').selectByValue(doc.category || '')
   el.querySelector('#recipe-tags').value = doc.tags || ''
   el.querySelector('#recipe-id').insertHtml(doc.id)
+
+  document.querySelectorAll('textarea').forEach((ta) => ta.resize())
 }
