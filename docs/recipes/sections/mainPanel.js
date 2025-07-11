@@ -93,14 +93,12 @@ function reactAppMode(el) {
   el.classList.remove('hidden')
   // log('mainPanel is showing itself on active-doc')
 
-  el.querySelector('#recipe-title').value = doc.title || ''
-  el.querySelector('#recipe-notes').value = doc.notes || ''
-  el.querySelector('#recipe-related').value = doc.related || ''
-  el.querySelector('#recipe-ingredients').value = doc.ingredients || ''
-  el.querySelector('#recipe-method').value = doc.method || ''
+  el.querySelector('#recipe-title').value = doc.title
+  el.querySelector('#recipe-notes').setValue(doc.notes)
+  el.querySelector('#recipe-related').setValue(doc.related)
+  el.querySelector('#recipe-ingredients').setValue(doc.ingredients)
+  el.querySelector('#recipe-method').setValue(doc.method)
   el.querySelector('#recipe-category').selectByValue(doc.category || '')
   el.querySelector('#recipe-tags').value = doc.tags || ''
   el.querySelector('#recipe-id').insertHtml(doc.id)
-
-  document.querySelectorAll('textarea').forEach((ta) => ta.resize())
 }

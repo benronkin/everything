@@ -24,15 +24,13 @@ function react(el) {
       return
     }
 
-    const children = docs.map((doc) => {
-      const item = createTitleDetailsItem({
+    const children = docs.map((doc) =>
+      createTitleDetailsItem({
         id: doc.id,
         title: doc.title,
         details: doc.details,
       })
-
-      return item
-    })
+    )
     el.addChildren(children)
     setMessage()
   })

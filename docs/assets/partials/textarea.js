@@ -23,6 +23,7 @@ export function createTextarea({
 
   const el = document.createElement('textarea')
 
+  el.setValue = setValue.bind(el)
   el.resize = resize.bind(el)
 
   listen(el)
@@ -46,6 +47,7 @@ function listen(el) {
     }
   })
   el.addEventListener('change', () => {
+    console.log('i changed', el.id)
     el.resize()
   })
   el.addEventListener('paste', () => {
@@ -59,4 +61,9 @@ function resize() {
   this.style.height = 25 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop
   console.log('resized to', this.style.height)
+}
+
+function setValue(value = '') {
+  this.value = value
+  this.resize()
 }

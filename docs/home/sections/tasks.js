@@ -66,14 +66,13 @@ function tasksHeader(hasTasks) {
  */
 function tasksBody(tasks) {
   const list = titleDetailsList()
-  const children = tasks.map((doc) => {
-    const item = createTitleDetailsItem({
+  const children = tasks.map((doc) =>
+    createTitleDetailsItem({
       id: doc.id,
       title: doc.title,
       details: doc.details,
     })
-    return item
-  })
+  )
   list.deleteChildren().addChildren(children)
   return list
 }
