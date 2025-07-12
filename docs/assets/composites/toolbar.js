@@ -98,9 +98,11 @@ function build({ el, children, classes }) {
 function listen(el) {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 150) {
+      document.querySelector('.columns-wrapper').style.marginTop = '80px'
       el.classList.add('sticky')
     } else {
       el.classList.remove('sticky')
+      document.querySelector('.columns-wrapper').style.marginTop = 0
     }
   })
 }
