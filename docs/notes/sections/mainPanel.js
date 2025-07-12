@@ -248,7 +248,7 @@ function listen(el) {
   const titleEl = el.querySelector('#note-title')
   titleEl.addEventListener('keyup', () => {
     removeToasts()
-    handleUpdateNote()
+    persistNote()
   })
 
   titleEl.addEventListener('change', () => {
@@ -276,29 +276,6 @@ function listen(el) {
     })
 
   editorEl.addEventListener('keydown', (e) => {
-    if (e.metaKey && e.key === 'Enter') {
-      e.preventDefault() // prevent the default Enter behavior
-
-      const editor = e.currentTarget
-      const { selectionEnd, value } = editor
-
-      // find the index of the next newline after the caret
-      const lineEnd = value.indexOf('\n', selectionEnd)
-
-      // if no newline is found, we’re at the last line → insert at end
-      // otherwise, insert just after the current line
-      const insertPos = lineEnd === -1 ? value.length : lineEnd + 1
-
-      const before = value.slice(0, insertPos) // content before the insertion point
-      const after = value.slice(insertPos) // content after the insertion point
-
-      // insert a new line at insertPos
-      editor.value = before + '\n' + after
-
-      // move the caret to the beginning of the new empty line
-      editor.setSelectionRange(insertPos + 1, insertPos)
-    }
-
     if (e.metaKey && e.shiftKey) {
       const iconMap = {
         a: '.fa-anchor',
@@ -334,16 +311,47 @@ function listen(el) {
       document.querySelector('.editor-wrapper').saveSelectedRange()
       document.querySelector('.editor-wrapper').insertBlock(block)
       editorEl.focus()
+      return
+    }
+
+    if (e.metaKey && e.key === 's') {
+      e.preventDefault()
+      persistNote()
+      return
+    }
+
+    if (e.metaKey && e.key === 'Enter') {
+      e.preventDefault() // prevent the default Enter behavior
+
+      const editor = e.currentTarget
+      const { selectionEnd, value } = editor
+
+      // find the index of the next newline after the caret
+      const lineEnd = value.indexOf('\n', selectionEnd)
+
+      // if no newline is found, we’re at the last line → insert at end
+      // otherwise, insert just after the current line
+      const insertPos = lineEnd === -1 ? value.length : lineEnd + 1
+
+      const before = value.slice(0, insertPos) // content before the insertion point
+      const after = value.slice(insertPos) // content after the insertion point
+
+      // insert a new line at insertPos
+      editor.value = before + '\n' + after
+
+      // move the caret to the beginning of the new empty line
+      editor.setSelectionRange(insertPos + 1, insertPos)
+      return
     }
   })
 
   editorEl.addEventListener('keyup', () => {
     removeToasts()
-    handleUpdateNote()
+    persistNote()
   })
 }
 
-async function handleUpdateNote() {
+async function persistNote() {
   const now = Date.now()
   const last = state.get('mainPanel:last-save') || 1
 
