@@ -32,10 +32,12 @@ const css = `
   border-bottom: 1px solid var(--gray0);
 }
 /* headline style for the title input */
-#note-title {
+#note-title, .fa-note-sticky {
   font-size: 1.8rem;      /* big, h2-ish */
   font-weight: 700;
   line-height: 1.2;
+}
+#note-title {
   border: none;           /* kill the input underline */
   background: transparent;
   width: 100%;
