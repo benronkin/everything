@@ -209,6 +209,7 @@ function react(el) {
 
     editEl.classList.toggle('on')
     document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#toc').classList.remove('on')
 
     const scrollPercent =
       window.scrollY / (document.body.scrollHeight - window.innerHeight)
