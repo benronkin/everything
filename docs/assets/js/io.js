@@ -133,6 +133,22 @@ export async function postWebAppJson(path, clientData) {
   try {
     res = await fetch(req)
     const resp = await res.json()
+
+    const { status, message, unauthorized } = resp
+
+    if (unauthorized) {
+      setMessage({ message, type: 'danger' })
+      return
+    }
+
+    if (status !== 200) {
+      console.log(
+        `postWebAppJson ${status} sent by server for path: "${path}":`,
+        message
+      )
+      return { error: message }
+    }
+
     return resp
   } catch (err) {
     if (path.includes('http://') || path.includes('')) {

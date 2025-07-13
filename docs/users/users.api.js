@@ -22,6 +22,12 @@ export async function fetchPeers() {
   return { peers }
 }
 
+export async function fetchUsers() {
+  const { users } = await getWebApp(`${url}/users/read`)
+
+  return { users }
+}
+
 export async function getMe() {
   const { user } = await getWebApp(`${url}/me`)
 
