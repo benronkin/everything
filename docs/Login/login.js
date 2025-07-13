@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const urlParams = new URLSearchParams(window.location.search)
 
-    let message
+    let message = ''
 
     if (urlParams.get('message')) {
       message = urlParams.get('message')
