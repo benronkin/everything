@@ -30,7 +30,7 @@ async function build(el) {
   el.appendChild(
     createSelectGroup({
       id: 'entry-part',
-      name: 'entry-part',
+      name: 'part_of_speech',
       classes: {
         group: 'mb-40 w-fc',
         wrapper: 'primary',
@@ -61,7 +61,7 @@ async function build(el) {
   el.appendChild(
     createTextarea({
       id: 'entry-definition',
-      name: 'entry-definition',
+      name: 'definition',
       className: 'mb-20 field w-100',
       placeholder: 'Add definition',
     })
@@ -80,7 +80,7 @@ async function build(el) {
   el.appendChild(
     createTextarea({
       id: 'entry-synonyms',
-      name: 'entry-synonyms',
+      name: 'synonyms',
       className: 'mb-20 field w-100',
       placeholder: 'Add synonyms',
     })
@@ -99,7 +99,7 @@ async function build(el) {
   el.appendChild(
     createTextarea({
       id: 'entry-example',
-      name: 'entry-example',
+      name: 'example',
       className: 'mb-20 field w-100',
       placeholder: 'Add example',
     })

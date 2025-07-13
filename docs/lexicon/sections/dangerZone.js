@@ -10,6 +10,7 @@ export function dangerZone() {
 
   const el = createDangerZone({
     modalId: 'modal-delete',
+    password: false,
   })
 
   react(el)
@@ -27,8 +28,8 @@ function react(el) {
     const modalBody = doc.entry
 
     const modal = el.querySelector('#modal-delete')
-    modal.querySelector('#modal-delete-header').insertHtml('Delete entry:')
-    modal.querySelector('#modal-delete-body').insertHtml(modalBody)
+    modal.querySelector('.modal-header').insertHtml('Delete entry:')
+    modal.querySelector('.modal-body').insertHtml(modalBody)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
   })

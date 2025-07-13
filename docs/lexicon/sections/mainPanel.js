@@ -64,7 +64,7 @@ function react(el) {
     el.classList.remove('hidden')
 
     el.querySelector('#entry').value = doc.entry
-    el.querySelector('#entry-part').value = doc.part_of_speech
+    el.querySelector('#entry-part').selectByValue(doc.part_of_speech)
     el.querySelector('#entry-definition').setValue(doc.definition)
     el.querySelector('#entry-synonyms').setValue(doc.synonyms)
     el.querySelector('#entry-example').setValue(doc.example)
