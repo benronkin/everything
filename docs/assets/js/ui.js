@@ -68,7 +68,7 @@ export const navList = [
     id: 'notes',
   },
   {
-    icon: 'fa-graduation-cap',
+    icon: 'fa-spell-check',
     label: 'Lexicon',
     url: 'lexicon/index.html',
     id: 'lexicon',
