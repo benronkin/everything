@@ -71,25 +71,6 @@ async function build(el) {
     createSpanGroup({
       classes: {
         group: 'mt-30 mb-20',
-        icon: 'fa-water',
-      },
-      html: 'Synonyms',
-    })
-  )
-
-  el.appendChild(
-    createTextarea({
-      id: 'entry-synonyms',
-      name: 'synonyms',
-      className: 'mb-20 field w-100',
-      placeholder: 'Add synonyms',
-    })
-  )
-
-  el.appendChild(
-    createSpanGroup({
-      classes: {
-        group: 'mt-30 mb-20',
         icon: 'fa-feather-pointed',
       },
       html: 'Example',
@@ -102,6 +83,25 @@ async function build(el) {
       name: 'example',
       className: 'mb-20 field w-100',
       placeholder: 'Add example',
+    })
+  )
+
+  el.appendChild(
+    createSpanGroup({
+      classes: {
+        group: 'mt-30 mb-20',
+        icon: 'fa-water',
+      },
+      html: 'Synonyms',
+    })
+  )
+
+  el.appendChild(
+    createTextarea({
+      id: 'entry-synonyms',
+      name: 'synonyms',
+      className: 'mb-20 field w-100',
+      placeholder: 'Add synonyms',
     })
   )
 
