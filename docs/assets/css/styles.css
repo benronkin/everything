@@ -265,6 +265,9 @@ ul {
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
+.justify-between {
+  justify-content: space-between !important;
+}
 .m-0 {
   margin: 0 !important;
 }
