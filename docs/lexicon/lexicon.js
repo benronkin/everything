@@ -121,6 +121,8 @@ async function reactEntryAdd() {
     id,
     entry: 'new entry',
     created_at: new Date().toISOString(),
+    submitter: state.get('user').id,
+    submitterName: state.get('user').first_name,
   }
 
   const { error } = await createEntry(doc)
