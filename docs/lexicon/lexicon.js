@@ -115,13 +115,15 @@ async function reactEntryAdd() {
   const addBtn = document.getElementById('add-entry')
   addBtn.disabled = true
 
+  const id = `ev${crypto.randomUUID()}`
+
   const doc = {
-    id: `ev${crypto.randomUUID()}`,
-    entry: 'New entry',
+    id,
+    entry: 'new entry',
     created_at: new Date().toISOString(),
   }
 
-  const { id, error } = await createEntry(doc)
+  const { error } = await createEntry(doc)
   if (error) {
     setMessage({ message: `Lexicon server error: ${error}` })
     return
