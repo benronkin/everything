@@ -7,7 +7,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
-import { fetchUsers, getMe } from '../users/users.api.js'
+import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createEntry,
@@ -34,17 +34,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    let [{ entries }, { user }, { users }] = await Promise.all([
+    let [{ entries, error: entriesError }, { user }] = await Promise.all([
       fetchRecentEntries(),
       getMe(),
-      fetchUsers(),
     ])
 
-    entries = entries.map((e) => {
-      const submitterName = users.find((u) => u.id === e.submitter).first_name
-      e.submitterName = submitterName
-      return e
-    })
+    if (entriesError) {
+      setMessage({
+        message: `fetchRecentEntries server error: ${entriesError}`,
+        type: 'danger',
+      })
+      return
+    }
 
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
@@ -52,9 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       const docExists = entries.find((e) => e.id === id)
       if (!docExists) {
         const newDoc = await fetchEntry(id)
-        newDoc.submitterName = users.find(
-          (u) => u.id === newDoc.submitter
-        ).first_name
         entries.unshift(newDoc)
       }
       state.set('main-documents', entries)
