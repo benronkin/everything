@@ -393,6 +393,9 @@ main {
 .ta-group:has(textarea:focus) i {
   color: var(--gray6);
 }
+.list-header {
+  color: var(--gray3);
+}
 .list-item {
   border: 1px solid var(--gray1);
 }

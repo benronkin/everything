@@ -21,8 +21,7 @@ export async function fetchEntry(id) {
 }
 
 export async function fetchRecentEntries() {
-  const resp = await getWebApp(`${url}/latest`)
-  const { entries, error } = resp
+  const { entries, error } = await getWebApp(`${url}/latest`)
   return { entries, error }
 }
 
@@ -30,7 +29,7 @@ export async function searchEntries(q) {
   const { entries, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`
   )
-  return { data: entries, error }
+  return { entries, error }
 }
 
 export async function updateEntry({ id, section, value }) {

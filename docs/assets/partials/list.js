@@ -137,8 +137,11 @@ function deleteChild(id) {
  * remove all sueprListItems
  */
 function deleteChildren() {
-  const existingChildren = this.getChildren()
-  existingChildren.forEach((child) => this.deleteChild(child.id))
+  const emptyState = [...this.children].filter((c) =>
+    c.classList.contains('empty-state')
+  )
+
+  this.innerHTML = emptyState || ''
   state.set('list-changed', true)
   return this // for chaining
 }

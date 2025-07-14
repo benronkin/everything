@@ -169,12 +169,12 @@ async function reactEntriesSearch() {
     resp = await fetchRecentEntries()
   }
 
-  const { data, message } = resp
+  const { entries, message } = resp
   if (message) {
     console.error(`Lexicon server error: ${message}`)
     return
   }
-  state.set('main-documents', data)
+  state.set('main-documents', entries)
 }
 
 async function handleFieldChange(e) {
