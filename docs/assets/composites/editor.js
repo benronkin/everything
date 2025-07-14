@@ -27,7 +27,7 @@ const css = `
 .editor-wrapper .viewer h1,
 .editor-wrapper .viewer h2,
 .editor-wrapper .viewer h3 {
-  margin: 20px 0 5px;
+  margin: 20px 0 10px;
 }
 .editor-wrapper .viewer hr {
   border: 1px dotted var(--gray1);
