@@ -14,6 +14,12 @@ export async function deleteEntry(id) {
   return { error }
 }
 
+export async function fetchEntry(id) {
+  const resp = await getWebApp(`${url}/read-one?id=${id}`)
+  const { entry, error } = resp
+  return { entry, error }
+}
+
 export async function fetchRecentEntries() {
   const resp = await getWebApp(`${url}/latest`)
   const { entries, error } = resp

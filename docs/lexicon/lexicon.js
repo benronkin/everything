@@ -12,6 +12,7 @@ import { setMessage } from '../assets/js/ui.js'
 import {
   createEntry,
   deleteEntry,
+  fetchEntry,
   fetchRecentEntries,
   searchEntries,
   updateEntry,
@@ -45,12 +46,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       return e
     })
 
-    setMessage()
-    state.set('main-documents', entries)
-    state.set('app-mode', 'left-panel')
+    const urlParams = new URLSearchParams(window.location.search)
+    const id = urlParams.get('id')
+    if (id) {
+      const docExists = entries.find((e) => e.id === id)
+      if (!docExists) {
+        const newDoc = await fetchEntry(id)
+        newDoc.submitterName = users.find(
+          (u) => u.id === newDoc.submitter
+        ).first_name
+        entries.unshift(newDoc)
+      }
+      state.set('main-documents', entries)
+      state.set('active-doc', id)
+      state.set('app-mode', 'main-panel')
+    } else {
+      state.set('main-documents', entries)
+      state.set('app-mode', 'left-panel')
+    }
+
     state.set('user', user)
     state.set('default-page', 'lexicon')
     window.state = state // avail to browser console
+    setMessage()
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
