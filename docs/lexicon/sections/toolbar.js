@@ -9,10 +9,6 @@ export function toolbar() {
         id: 'back',
         classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
       }),
-      createIcon({
-        id: 'add-entry',
-        classes: { primary: 'fa-plus', other: ['primary'] },
-      }),
     ],
   })
 

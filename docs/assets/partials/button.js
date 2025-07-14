@@ -9,7 +9,8 @@ import { insertHtml } from '../js/format.js'
 const css = `
 button {
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 6px;
+  font-size: 0.85rem;
 }
 `
 

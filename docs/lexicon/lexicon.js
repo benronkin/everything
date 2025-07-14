@@ -95,7 +95,7 @@ async function build() {
 }
 
 function react() {
-  state.on('icon-click:add-entry', 'lexicon', reactEntryAdd)
+  state.on('button-click:add-entry', 'lexicon', reactEntryAdd)
 
   state.on('button-click:modal-delete-btn', 'lexicon', reactEntryDelete)
 
@@ -110,14 +110,11 @@ function listen() {
 }
 
 async function reactEntryAdd() {
-  const addBtn = document.getElementById('add-entry')
-  addBtn.disabled = true
-
   const id = `ev${crypto.randomUUID()}`
 
   const doc = {
     id,
-    entry: 'new entry',
+    entry: state.get('lexicon-search').q || 'new entry',
     created_at: new Date().toISOString(),
     submitter: state.get('user').id,
     submitterName: state.get('user').first_name,
@@ -132,8 +129,6 @@ async function reactEntryAdd() {
   state.set('main-documents', [doc, ...state.get('main-documents')])
   state.set('active-doc', id)
   state.set('app-mode', 'main-panel')
-
-  delete addBtn.disabled
 }
 
 async function reactEntryDelete() {
@@ -158,23 +153,26 @@ async function reactEntryDelete() {
 }
 
 async function reactEntriesSearch() {
-  let resp
+  const q = document
+    .querySelector('[name="search-lexicon"]')
+    .value.trim()
+    .toLowerCase()
 
-  const query = document.querySelector('[name="search-lexicon"]').value?.trim()
+  const { entries, message } = q
+    ? await searchEntries(q)
+    : await fetchRecentEntries()
 
-  if (query.length) {
-    resp = await searchEntries(query)
-  } else {
-    // get most recent entries instead
-    resp = await fetchRecentEntries()
-  }
-
-  const { entries, message } = resp
   if (message) {
-    console.error(`Lexicon server error: ${message}`)
+    setMessage({ message: `Lexicon server error: ${message}` })
     return
   }
+
+  const exactExists = entries.some(
+    (e) => e.matchType === 'exact' && e.entry.trim().toLowerCase() === q
+  )
+
   state.set('main-documents', entries)
+  state.set('lexicon-search', { q, exactExists })
 }
 
 async function handleFieldChange(e) {

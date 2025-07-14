@@ -3,6 +3,7 @@ import { log } from '../../assets/js/logger.js'
 import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
+import { newEntry } from './newEntry.js'
 import { search } from '../../assets/composites/search.js'
 
 const css = `
@@ -32,6 +33,8 @@ function build(el) {
       name: 'search-lexicon',
     })
   )
+
+  el.appendChild(newEntry())
 
   el.appendChild(mainDocumentsList())
 }
