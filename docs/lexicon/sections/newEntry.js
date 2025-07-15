@@ -38,28 +38,33 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('lexicon-search', 'newEntry', ({ q, exact, submitterFilter }) => {
-    // console.log('q', q)
-    // console.log('exact', exact)
-    // console.log('submitterFilter', submitterFilter)
+  state.on(
+    'lexicon-search',
+    'newEntry',
+    ({ q, filteredExists, exact, submitterFilter }) => {
+      // console.log('q', q)
+      // console.log('exact', exact)
+      // console.log('submitterFilter', submitterFilter)
 
-    const btn = el.querySelector('#add-entry')
-    const tip = el.querySelector('#entry-tip')
+      const btn = el.querySelector('#add-entry')
+      const tip = el.querySelector('#entry-tip')
+      submitterFilter = submitterFilter == 'Mine' ? 'you' : submitterFilter
 
-    el.classList.toggle('hidden', !q || exact.length)
-    btn.classList.toggle('hidden', exact.length)
-    tip.classList.toggle('hidden', !exact.length)
+      el.classList.toggle('hidden', !q || filteredExists)
+      btn.classList.toggle('hidden', exact.length)
+      tip.classList.toggle('hidden', !exact.length)
 
-    if (!q) return
+      if (!q) return
 
-    if (exact.length) {
-      el.querySelector(
-        '#no-entry'
-      ).textContent = `"${q}" added by ${submitterFilter}`
-      tip.textContent = `But ${exact[0].submitterName} did create this entry. Reset filter to view.`
-    } else {
-      el.querySelector('#no-entry').textContent = `"${q}"`
-      btn.innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
+      if (exact.length) {
+        el.querySelector(
+          '#no-entry'
+        ).textContent = `"${q}" created by ${submitterFilter}`
+        tip.textContent = `But ${exact[0].submitterName} did create this entry. Reset filter to view.`
+      } else {
+        el.querySelector('#no-entry').textContent = `"${q}"`
+        btn.innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
+      }
     }
-  })
+  )
 }

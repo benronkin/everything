@@ -123,11 +123,9 @@ function selectByLabel(label) {
 function selectByValue(value) {
   // remove prior select
   this.unselect()
-  const option = this.getOptionByValue(value)
-  if (option) {
-    option.setAttribute('selected', true)
-    this.querySelector('select').value = value
-  }
+  const option = this.getOptionByValue(value) || this.querySelector('option')
+  option.setAttribute('selected', true)
+  this.querySelector('select').value = value
 }
 
 function setOptions(options) {
@@ -164,6 +162,7 @@ function addElementParts({ el, name }) {
 
 function listen(el) {
   el.querySelector('.custom-select').addEventListener('change', (e) => {
+    el.selectByValue(e.target.value)
     state.set(`select-click:${el.id || el.name}`, e.target.value)
   })
 

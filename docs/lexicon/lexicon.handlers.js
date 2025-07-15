@@ -20,11 +20,14 @@ export async function fetchOrSearch() {
   const selected = document.getElementById('submitter-select').getSelected()
   const value = selected.value
   const submitterFilter = selected.textContent
-  const displayed = entries.filter((e) => e.submitter === value)
+  const filtered = entries.filter((e) => !value || e.submitter === value)
 
-  state.set('main-documents', displayed)
+  state.set('main-documents', filtered)
   state.set('lexicon-search', {
     q,
+    filteredExists: entries.filter(
+      (e) => e.entry === q && (!value || e.submitter === value)
+    ).length,
     exact: entries.filter((e) => e.submitter !== value),
     submitterFilter,
   })

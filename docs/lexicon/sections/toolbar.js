@@ -48,8 +48,8 @@ function react(el) {
 
     const sel = document.querySelector('#submitter-select')
     sel.setOptions(options)
-    const selectedVale = user.prefs?.lexicon?.submitterFilter || ''
-    sel.selectByValue(selectedVale)
+    const val = user.prefs?.lexicon?.submitterFilter || ''
+    sel.selectByValue(val)
   })
 
   state.on('select-click:submitter-select', 'toolbar', async (value) => {
