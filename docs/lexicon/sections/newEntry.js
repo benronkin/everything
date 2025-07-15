@@ -33,18 +33,33 @@ function build(el) {
   )
 
   el.appendChild(createButton({ id: 'add-entry', className: 'primary' }))
+
+  el.appendChild(createSpan({ id: 'entry-tip', className: 'ml-5 f-italic' }))
 }
 
 function react(el) {
-  state.on('lexicon-search', 'newEntry', ({ q, exactExists }) => {
+  state.on('lexicon-search', 'newEntry', ({ q, exact, submitterFilter }) => {
+    // console.log('q', q)
+    // console.log('exact', exact)
+    // console.log('submitterFilter', submitterFilter)
+
+    const btn = el.querySelector('#add-entry')
+    const tip = el.querySelector('#entry-tip')
+
+    el.classList.toggle('hidden', !q || exact.length)
+    btn.classList.toggle('hidden', exact.length)
+    tip.classList.toggle('hidden', !exact.length)
+
     if (!q) return
 
-    el.querySelector('#no-entry').textContent = `"${q}"`
-
-    el.querySelector(
-      '#add-entry'
-    ).innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
-
-    el.classList.toggle('hidden', exactExists)
+    if (exact.length) {
+      el.querySelector(
+        '#no-entry'
+      ).textContent = `"${q}" added by ${submitterFilter}`
+      tip.textContent = `But ${exact[0].submitterName} did create this entry. Reset filter to view.`
+    } else {
+      el.querySelector('#no-entry').textContent = `"${q}"`
+      btn.innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
+    }
   })
 }

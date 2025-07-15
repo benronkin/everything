@@ -44,18 +44,16 @@ function react(el) {
     ]
 
     const peers = users.filter((u) => u.id !== user.id)
-    peers.forEach((p) =>
-      options.push({ value: p.id, label: `${p.first_name}'s` })
-    )
+    peers.forEach((p) => options.push({ value: p.id, label: p.first_name }))
 
     const sel = document.querySelector('#submitter-select')
     sel.setOptions(options)
-    const selectedVale = user.prefs?.lexicon?.submitterSelect || ''
+    const selectedVale = user.prefs?.lexicon?.submitterFilter || ''
     sel.selectByValue(selectedVale)
   })
 
   state.on('select-click:submitter-select', 'toolbar', async (value) => {
-    await updateUserPrefs({ lexiconSubmitterSelect: value })
+    await updateUserPrefs({ lexiconSubmitterFilter: value })
     fetchOrSearch()
   })
 }

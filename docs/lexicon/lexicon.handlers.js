@@ -17,10 +17,15 @@ export async function fetchOrSearch() {
     return
   }
 
-  const exactExists = entries.some(
-    (e) => e.matchType === 'exact' && e.entry.trim().toLowerCase() === q
-  )
+  const selected = document.getElementById('submitter-select').getSelected()
+  const value = selected.value
+  const submitterFilter = selected.textContent
+  const displayed = entries.filter((e) => e.submitter === value)
 
-  state.set('main-documents', entries)
-  state.set('lexicon-search', { q, exactExists })
+  state.set('main-documents', displayed)
+  state.set('lexicon-search', {
+    q,
+    exact: entries.filter((e) => e.submitter !== value),
+    submitterFilter,
+  })
 }

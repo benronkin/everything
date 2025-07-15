@@ -254,6 +254,9 @@ ul {
   justify-content: space-between;
   gap: 10px;
 }
+.f-italic {
+  font-style: italic !important;
+}
 .fw-200 {
   font-weight: 200 !important;
 }
@@ -294,6 +297,9 @@ ul {
 }
 .ml-auto {
   margin-left: auto !important;
+}
+.ml-5 {
+  margin-left: 5px !important;
 }
 .ml-20 {
   margin-left: 20px !important;
