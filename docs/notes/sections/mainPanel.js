@@ -32,7 +32,7 @@ const css = `
   border-bottom: 1px solid var(--gray0);
 }
 /* headline style for the title input */
-#note-title, .fa-note-sticky {
+.input-group #note-title, .input-group .fa-note-sticky {
   font-size: 1.8rem;      /* big, h2-ish */
   font-weight: 700;
   line-height: 1.2;
