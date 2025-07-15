@@ -200,6 +200,9 @@ ul {
 .bb-white {
   border-bottom-color: white;
 }
+.b-none {
+  border: none !important;
+}
 .card {
   background-color: #fafafa;
   color: #666;

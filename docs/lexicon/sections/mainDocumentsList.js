@@ -4,7 +4,10 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
-import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
+import {
+  createMainDocumentItem,
+  handleMainDocumentClick,
+} from '../../assets/partials/mainDocumentItem.js'
 
 export function mainDocumentsList() {
   const el = createMainDocumentsList({
@@ -19,15 +22,23 @@ export function mainDocumentsList() {
 
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    const all = docs.filter((d) => !d.matchType)
-    const exact = docs.filter((d) => d.matchType === 'exact')
+    docs.forEach((entry) => {
+      entry.parts = entry.senses
+        .reduce((acc, s) => {
+          acc.push(s.partOfSpeech || 'missing')
+          return acc
+        }, [])
+        .join(', ')
+    })
+
+    const exact = docs.filter((d) => d.matchType !== 'related')
     const related = docs.filter((d) => d.matchType === 'related')
 
     const children = []
 
-    if (all.length) {
-      children.push(...all.map(createItem))
-    }
+    // if (all.length) {
+    //   children.push(...all.map(createItem))
+    // }
 
     if (exact.length) {
       children.push(
@@ -61,9 +72,15 @@ function createItem(doc) {
   const html = createDiv({
     className: 'flex justify-between w-100',
     html: [
-      createSpan({ html: doc.entry }),
-      createSpan({ html: doc.submitterName, className: 'c-gray3' }),
+      createSpan({ html: doc.title }),
+      createSpan({ html: `(${doc.parts})`, className: 'c-gray3' }),
     ],
   })
-  return createMainDocumentItem({ id: doc.id, html })
+  const li = createMainDocumentItem({ id: doc.id, html })
+  li.removeEventListener('click', handleMainDocumentClick)
+  li.addEventListener('click', () => {
+    state.set('active-doc', doc.title)
+    state.set('app-mode', 'main-panel')
+  })
+  return li
 }

@@ -4,18 +4,22 @@ import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/lexicon`
 
-export async function createEntry({ id, entry }) {
-  const { error } = await postWebAppJson(`${url}/create`, { id, entry })
+export async function createEntry({ id, title }) {
+  const { error } = await postWebAppJson(`${url}/create`, { id, title })
   return { error }
 }
 
-export async function deleteEntry(id) {
-  const { error } = await getWebApp(`${url}/delete?id=${id}`)
+export async function deleteEntry(title) {
+  const { error } = await getWebApp(`${url}/delete?title=${title}`)
+  return { error }
+}
+export async function deleteSense(id) {
+  const { error } = await getWebApp(`${url}/delete-one?id=${id}`)
   return { error }
 }
 
-export async function fetchEntry(id) {
-  const resp = await getWebApp(`${url}/read-one?id=${id}`)
+export async function fetchEntry(t) {
+  const resp = await getWebApp(`${url}/read-one?title=${t}`)
   const { entry, error } = resp
   return { entry, error }
 }
@@ -33,10 +37,14 @@ export async function searchEntries(q) {
 }
 
 export async function updateEntry({ id, section, value }) {
-  const { message, error } = await postWebAppJson(`${url}/update`, {
+  const { message, error } = await postWebAppJson(`${url}/update-one`, {
     id,
     value,
     section,
   })
   return { message, error }
+}
+
+export async function updateEntries(doc) {
+  return await postWebAppJson(`${url}/update`, doc)
 }

@@ -67,7 +67,9 @@ export function createSelectGroup({
   }
 
   if (classes?.wrapper) {
-    el.querySelector('.select-wrapper').classList.add(classes.wrapper)
+    classes.wrapper
+      .split(' ')
+      .forEach((c) => el.querySelector('.select-wrapper').classList.add(c))
   }
 
   if (classes?.select) {

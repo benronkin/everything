@@ -9,15 +9,14 @@ import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
+import { createEntry, fetchEntry } from './lexicon.api.js'
 import {
-  createEntry,
-  deleteEntry,
-  fetchEntry,
-  fetchRecentEntries,
-  updateEntry,
-} from './lexicon.api.js'
-import { fetchOrSearch } from './lexicon.handlers.js'
-import { log } from '../assets/js/logger.js'
+  handleSearch,
+  handleFieldChange,
+  handleNameChange,
+  handleEntryDelete,
+  handleSenseDelete,
+} from './lexicon.handlers.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -32,34 +31,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     react()
-    listen()
 
-    let [{ entries, error: entriesError }, { user }, { users }] =
-      await Promise.all([fetchRecentEntries(), getMe(), fetchUsers()])
-
-    if (entriesError) {
-      setMessage({
-        message: `fetchRecentEntries server error: ${entriesError}`,
-        type: 'danger',
-      })
-      return
-    }
+    let [{ user }, { users }] = await Promise.all([getMe(), fetchUsers()])
 
     if (user.prefs) user.prefs = JSON.parse(user.prefs)
 
     const urlParams = new URLSearchParams(window.location.search)
-    const id = urlParams.get('id')
-    if (id) {
-      const docExists = entries.find((e) => e.id === id)
-      if (!docExists) {
-        const newDoc = await fetchEntry(id)
-        entries.unshift(newDoc)
+    const t = urlParams.get('title')
+    if (t) {
+      const { entry } = await fetchEntry(t)
+      if (!entry) {
+        setMessage({ message: `"${t}" does not exist` })
+        return
       }
-      state.set('main-documents', entries)
-      state.set('active-doc', id)
+      entry.senses = JSON.parse(entry.senses)
+
+      state.set('main-documents', [entry])
+      state.set('active-doc', t)
       state.set('app-mode', 'main-panel')
     } else {
-      state.set('main-documents', entries)
       state.set('app-mode', 'left-panel')
     }
 
@@ -96,81 +86,56 @@ async function build() {
 }
 
 function react() {
+  state.on('icon-click:add', 'lexicon', reactEntryAdd)
+
   state.on('button-click:add-entry', 'lexicon', reactEntryAdd)
 
-  state.on('button-click:modal-delete-btn', 'lexicon', reactEntryDelete)
-
-  state.on('form-submit:left-panel-search', 'lexicon', fetchOrSearch)
-}
-
-function listen() {
-  // When field loses focus
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
+  state.on('button-click:modal-delete-btn', 'lexicon', () => {
+    const { title, id } = state.get('modal-delete-payload')
+    if (title) handleEntryDelete()
+    if (id) handleSenseDelete()
   })
+
+  state.on('form-submit:left-panel-search', 'lexicon', handleSearch)
+
+  state.on('field-change', 'lexicon', handleFieldChange)
+
+  state.on('name-change', 'lexicon', handleNameChange)
 }
 
 async function reactEntryAdd() {
+  const title =
+    state.get('active-doc') || state.get('lexicon-search').q || 'new entry'
+
   const id = `ev${crypto.randomUUID()}`
 
-  const doc = {
+  const sense = {
     id,
-    entry: state.get('lexicon-search').q || 'new entry',
+    title: title.trim().toLowerCase(),
     created_at: new Date().toISOString(),
     submitter: state.get('user').id,
-    submitterName: state.get('user').first_name,
   }
 
-  const { error } = await createEntry(doc)
+  const { error } = await createEntry(sense)
   if (error) {
     setMessage({ message: `Lexicon server error: ${error}` })
     return
   }
 
-  state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', id)
-  state.set('app-mode', 'main-panel')
-}
-
-async function reactEntryDelete() {
-  const modalEl = document.querySelector('#modal-delete')
-  modalEl.message('')
-
-  const id = state.get('active-doc')
-  const { error } = await deleteEntry(id)
-
-  if (error) {
-    modalEl.message(error)
-    return
-  }
-
-  modalEl.close()
-
-  const filteredDocs = state
-    .get('main-documents')
-    .filter((doc) => doc.id !== id)
-  state.set('main-documents', filteredDocs)
-  state.set('app-mode', 'left-panel')
-}
-
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
-
-  const id = state.get('active-doc')
   const docs = state.get('main-documents')
-  const idx = docs.findIndex((d) => d.id === id)
-  docs[idx][section] = value
-  state.set('main-documents', docs)
-
-  try {
-    const { error } = await updateEntry({ id, section, value })
-    if (error) {
-      throw new Error(error)
+  let doc = docs.find((d) => d.title === title)
+  if (doc) {
+    doc.senses.push(sense)
+  } else {
+    delete sense.entry
+    doc = {
+      title,
+      senses: [sense],
     }
-    // log(message)
-  } catch (error) {
-    setMessage({ message: error, type: 'danger' })
+    docs.unshift(doc)
   }
+
+  state.set('main-documents', [...docs])
+  state.set('active-doc', title) // reactivate mainPanel
+  state.set('app-mode', 'main-panel') // if added from left-panel
 }

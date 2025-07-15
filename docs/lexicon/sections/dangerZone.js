@@ -23,13 +23,12 @@ export function dangerZone() {
 
 function react(el) {
   state.on('icon-click:show-delete-modal-icon', 'dangerZone', () => {
-    const id = state.get('active-doc')
-    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
-    const modalBody = doc.entry
+    const title = state.get('active-doc')
+    state.set('modal-delete-payload', { title })
 
-    const modal = el.querySelector('#modal-delete')
+    const modal = document.querySelector('#modal-delete')
     modal.querySelector('.modal-header').insertHtml('Delete entry:')
-    modal.querySelector('.modal-body').insertHtml(modalBody)
+    modal.querySelector('.modal-body').insertHtml(title)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
   })

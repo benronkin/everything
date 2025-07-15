@@ -4,20 +4,9 @@ import { createIcon } from '../partials/icon.js'
 import { createSpan } from '../partials/span.js'
 import { createModalDelete } from './modalDelete.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createDangerZone({ id, modalId, password } = {}) {
   injectStyle(css)
 
@@ -31,13 +20,6 @@ export function createDangerZone({ id, modalId, password } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element.
- */
 function build({ el, modalId, password }) {
   const modalEl = createModalDelete({
     id: modalId,
