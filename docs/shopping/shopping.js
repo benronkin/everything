@@ -113,6 +113,7 @@ function react() {
     let sItems = state.get('shopping-list')
     sItems = sItems.filter((sItem) => sItem !== item)
     state.set('shopping-list', sItems)
+    upodateShoppingList(sItems.join(','))
   })
 
   state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
