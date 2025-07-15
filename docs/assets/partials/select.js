@@ -2,13 +2,8 @@ import { injectStyle } from '../js/ui.js'
 import { createIcon } from './icon.js'
 import { state } from '../js/state.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .select-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
   border-radius: var(--border-radius);
@@ -23,7 +18,6 @@ const css = `
   color: var(--gray5);
   border: none;
   font-size: 0.9rem; 
-  padding: 0 1.5rem 0 0.8rem;
   z-index: 2;
   width: 100%;
 }
@@ -33,12 +27,11 @@ const css = `
 }
 
 .caret-wrapper {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  margin-left: 10px;
 }
 
 .caret-wrapper i {
@@ -47,13 +40,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exported
-// -------------------------------
-
-/**
- *
- */
 export function createSelect({
   id = '',
   value = '',
@@ -97,20 +83,10 @@ export function createSelect({
   return el
 }
 
-// -------------------------------
-// Object methods
-// -------------------------------
-
-/**
- *
- */
 function getOptionByLabel(label) {
   return [...this.querySelectorAll('option')].find((opt) => opt.label === label)
 }
 
-/**
- *
- */
 function getOptionByValue(value) {
   value = value?.trim()
   if (!value) {
@@ -119,23 +95,14 @@ function getOptionByValue(value) {
   return [...this.querySelectorAll('option')].find((opt) => opt.value === value)
 }
 
-/**
- *
- */
 function getSelected() {
   return this.querySelector('option[selected="true"]')
 }
 
-/**
- *
- */
 function hasOptionLabel(label) {
   return !!this.getOptionByLabel(label)
 }
 
-/**
- *
- */
 function hasOptionValue(value) {
   if (!value?.trim()) {
     return false
@@ -143,9 +110,6 @@ function hasOptionValue(value) {
   return !!this.getOptionByValue(value)
 }
 
-/**
- *
- */
 function selectByLabel(label) {
   // remove prior select
   this.unselect()
@@ -156,9 +120,6 @@ function selectByLabel(label) {
   }
 }
 
-/**
- *
- */
 function selectByValue(value) {
   // remove prior select
   this.unselect()
@@ -169,9 +130,6 @@ function selectByValue(value) {
   }
 }
 
-/**
- *
- */
 function setOptions(options) {
   options.forEach((opt) => {
     const optEl = document.createElement('option')
@@ -184,9 +142,6 @@ function setOptions(options) {
   })
 }
 
-/**
- *
- */
 function unselect() {
   const oldSelected = this.getSelected()
   if (oldSelected) {
@@ -195,13 +150,6 @@ function unselect() {
   this.querySelector('select').value = ''
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function addElementParts({ el, name }) {
   const selectEl = document.createElement('select')
   selectEl.className = 'custom-select'
@@ -217,5 +165,19 @@ function addElementParts({ el, name }) {
 function listen(el) {
   el.querySelector('.custom-select').addEventListener('change', (e) => {
     state.set(`select-click:${el.id || el.name}`, e.target.value)
+  })
+
+  const selectEl = el.querySelector('.custom-select')
+
+  el.querySelector('.caret-wrapper i').addEventListener('click', () => {
+    if (typeof selectEl.showPicker === 'function') {
+      // Chrome 118+ opens native dropdown
+      selectEl.showPicker()
+    } else {
+      // fallback for Safari / Firefox / older Chromium
+      selectEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+      selectEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+      selectEl.focus() // keeps keyboard / VoiceOver happy
+    }
   })
 }

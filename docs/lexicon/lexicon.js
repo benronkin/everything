@@ -7,16 +7,16 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
-import { getMe } from '../users/users.api.js'
+import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createEntry,
   deleteEntry,
   fetchEntry,
   fetchRecentEntries,
-  searchEntries,
   updateEntry,
 } from './lexicon.api.js'
+import { fetchOrSearch } from './lexicon.handlers.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -34,10 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    let [{ entries, error: entriesError }, { user }] = await Promise.all([
-      fetchRecentEntries(),
-      getMe(),
-    ])
+    let [{ entries, error: entriesError }, { user }, { users }] =
+      await Promise.all([fetchRecentEntries(), getMe(), fetchUsers()])
 
     if (entriesError) {
       setMessage({
@@ -46,6 +44,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       return
     }
+
+    if (user.prefs) user.prefs = JSON.parse(user.prefs)
 
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     state.set('user', user)
+    state.set('users', users)
     state.set('default-page', 'lexicon')
     window.state = state // avail to browser console
     setMessage()
@@ -99,7 +100,7 @@ function react() {
 
   state.on('button-click:modal-delete-btn', 'lexicon', reactEntryDelete)
 
-  state.on('form-submit:left-panel-search', 'lexicon', reactEntriesSearch)
+  state.on('form-submit:left-panel-search', 'lexicon', fetchOrSearch)
 }
 
 function listen() {
@@ -150,29 +151,6 @@ async function reactEntryDelete() {
     .filter((doc) => doc.id !== id)
   state.set('main-documents', filteredDocs)
   state.set('app-mode', 'left-panel')
-}
-
-async function reactEntriesSearch() {
-  const q = document
-    .querySelector('[name="search-lexicon"]')
-    .value.trim()
-    .toLowerCase()
-
-  const { entries, message } = q
-    ? await searchEntries(q)
-    : await fetchRecentEntries()
-
-  if (message) {
-    setMessage({ message: `Lexicon server error: ${message}` })
-    return
-  }
-
-  const exactExists = entries.some(
-    (e) => e.matchType === 'exact' && e.entry.trim().toLowerCase() === q
-  )
-
-  state.set('main-documents', entries)
-  state.set('lexicon-search', { q, exactExists })
 }
 
 async function handleFieldChange(e) {

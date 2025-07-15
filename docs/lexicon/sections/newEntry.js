@@ -37,13 +37,14 @@ function build(el) {
 
 function react(el) {
   state.on('lexicon-search', 'newEntry', ({ q, exactExists }) => {
+    if (!q) return
+
     el.querySelector('#no-entry').textContent = `"${q}"`
 
     el.querySelector(
       '#add-entry'
     ).innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
 
-    console.log('exactExists', exactExists)
     el.classList.toggle('hidden', exactExists)
   })
 }
