@@ -141,7 +141,8 @@ function deleteChildren() {
     c.classList.contains('empty-state')
   )
 
-  this.innerHTML = emptyState || ''
+  this.innerHTML = ''
+  this.insertHtml(emptyState)
   state.set('list-changed', true)
   return this // for chaining
 }
