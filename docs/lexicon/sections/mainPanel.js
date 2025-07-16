@@ -41,6 +41,9 @@ export function mainPanel() {
 
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
+    const search = document.querySelector('[name="search-lexicon"]')
+    search.focus()
+
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
       return

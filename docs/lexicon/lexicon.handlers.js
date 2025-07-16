@@ -9,10 +9,9 @@ import {
 } from './lexicon.api.js'
 
 export async function handleSearch() {
-  const q = document
-    .querySelector('[name="search-lexicon"]')
-    .value.trim()
-    .toLowerCase()
+  const search = document.querySelector('[name="search-lexicon"]')
+
+  const q = search.value.trim().toLowerCase()
 
   if (!q) {
     state.set('main-documents', null)
