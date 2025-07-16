@@ -2,6 +2,7 @@ import { setMessage } from '../assets/js/ui.js'
 import { state } from '../assets/js/state.js'
 import {
   searchEntries,
+  createEntry,
   deleteEntry,
   deleteSense,
   updateEntry,
@@ -35,6 +36,43 @@ export async function handleSearch() {
     q,
     exact: entries.filter((e) => e.title === q),
   })
+}
+
+export async function handleEntryAdd() {
+  const title =
+    state.get('lexicon-search').q || state.get('active-doc') || 'new entry'
+
+  const id = `ev${crypto.randomUUID()}`
+
+  const sense = {
+    id,
+    title: title.trim().toLowerCase(),
+    created_at: new Date().toISOString(),
+    submitter: state.get('user').id,
+  }
+
+  const { error } = await createEntry(sense)
+  if (error) {
+    setMessage({ message: `Lexicon server error: ${error}` })
+    return
+  }
+
+  const docs = state.get('main-documents')
+  let doc = docs.find((d) => d.title === title)
+  if (doc) {
+    doc.senses.push(sense)
+  } else {
+    delete sense.entry
+    doc = {
+      title,
+      senses: [sense],
+    }
+    docs.unshift(doc)
+  }
+
+  state.set('main-documents', [...docs])
+  state.set('active-doc', title) // reactivate mainPanel
+  state.set('app-mode', 'main-panel') // if added from left-panel
 }
 
 export async function handleFieldChange(e) {

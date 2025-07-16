@@ -9,12 +9,13 @@ import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import { createEntry, fetchEntry } from './lexicon.api.js'
+import { fetchEntry } from './lexicon.api.js'
 import { search } from '../assets/composites/search.js'
 import {
   handleSearch,
   handleFieldChange,
   handleNameChange,
+  handleEntryAdd,
   handleEntryDelete,
   handleSenseDelete,
 } from './lexicon.handlers.js'
@@ -104,9 +105,9 @@ async function build() {
 }
 
 function react() {
-  state.on('icon-click:add', 'lexicon', reactEntryAdd)
+  state.on('icon-click:add', 'lexicon', handleEntryAdd)
 
-  state.on('button-click:add-entry', 'lexicon', reactEntryAdd)
+  state.on('button-click:add-entry', 'lexicon', handleEntryAdd)
 
   state.on('button-click:modal-delete-btn', 'lexicon', () => {
     const { title, id } = state.get('modal-delete-payload')
@@ -119,41 +120,4 @@ function react() {
   state.on('field-change', 'lexicon', handleFieldChange)
 
   state.on('name-change', 'lexicon', handleNameChange)
-}
-
-async function reactEntryAdd() {
-  const title =
-    state.get('active-doc') || state.get('lexicon-search').q || 'new entry'
-
-  const id = `ev${crypto.randomUUID()}`
-
-  const sense = {
-    id,
-    title: title.trim().toLowerCase(),
-    created_at: new Date().toISOString(),
-    submitter: state.get('user').id,
-  }
-
-  const { error } = await createEntry(sense)
-  if (error) {
-    setMessage({ message: `Lexicon server error: ${error}` })
-    return
-  }
-
-  const docs = state.get('main-documents')
-  let doc = docs.find((d) => d.title === title)
-  if (doc) {
-    doc.senses.push(sense)
-  } else {
-    delete sense.entry
-    doc = {
-      title,
-      senses: [sense],
-    }
-    docs.unshift(doc)
-  }
-
-  state.set('main-documents', [...docs])
-  state.set('active-doc', title) // reactivate mainPanel
-  state.set('app-mode', 'main-panel') // if added from left-panel
 }
