@@ -103,7 +103,7 @@ export function mainPanel() {
   return el
 }
 
-export async function executeNoteUpdate() {
+export function executeNoteUpdate() {
   const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
 
@@ -118,8 +118,10 @@ export async function executeNoteUpdate() {
   doc.note = note
   state.set('main-documents', docs)
 
-  await updateNote({ id, title, note })
-  setMessage({ message: 'saved', type: 'quiet' })
+  updateNote({ id, title, note }).then(() =>
+    setMessage({ message: 'saved', type: 'quiet' })
+  )
+
   // used to force save after 15 seconds of no-save
   state.set('mainPanel:last-save', Date.now())
 }
@@ -354,13 +356,13 @@ function listen(el) {
   })
 }
 
-async function persistNote() {
+function persistNote() {
   const now = Date.now()
   const last = state.get('mainPanel:last-save') || 1
 
   if (last && now - last >= 15000) {
     // force update after 15 seconds of no-save
-    await executeNoteUpdate()
+    executeNoteUpdate()
   } else {
     debouncedUpdate()
   }
