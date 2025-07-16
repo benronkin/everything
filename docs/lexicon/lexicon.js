@@ -10,6 +10,7 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createEntry, fetchEntry } from './lexicon.api.js'
+import { search } from '../assets/composites/search.js'
 import {
   handleSearch,
   handleFieldChange,
@@ -72,12 +73,29 @@ async function build() {
   const wrapperEl = createDiv({ className: 'wrapper' })
   body.prepend(wrapperEl)
   wrapperEl.appendChild(nav())
-  wrapperEl.appendChild(toolbar())
+
+  const div = createDiv()
+  wrapperEl.appendChild(div)
+
+  const searchEl = search({
+    id: 'left-panel-search',
+    classes: {
+      icon: 'fa-magnifying-glass',
+      group: 'outer-wrapper',
+      form: 'all-panel-search',
+    },
+    placeholder: 'Search lexicon...',
+    name: 'search-lexicon',
+  })
+  div.appendChild(searchEl)
+
+  div.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
     className: 'columns-wrapper',
   })
   wrapperEl.appendChild(columnsWrapperEl)
+
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())

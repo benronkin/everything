@@ -4,7 +4,7 @@ import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
 import { newEntry } from './newEntry.js'
-import { search } from '../../assets/composites/search.js'
+// import { search } from '../../assets/composites/search.js'
 
 const css = `
 #left-panel {
@@ -26,13 +26,13 @@ export function leftPanel() {
 }
 
 function build(el) {
-  el.appendChild(
-    search({
-      id: 'left-panel-search',
-      placeholder: 'Search lexicon...',
-      name: 'search-lexicon',
-    })
-  )
+  // el.appendChild(
+  //   search({
+  //     id: 'left-panel-search',
+  //     placeholder: 'Search lexicon...',
+  //     name: 'search-lexicon',
+  //   })
+  // )
 
   el.appendChild(newEntry())
 

@@ -30,6 +30,7 @@ export async function handleSearch() {
     e.senses = JSON.parse(e.senses)
   })
 
+  state.set('app-mode', 'left-panel')
   state.set('main-documents', entries)
   state.set('lexicon-search', {
     q,
