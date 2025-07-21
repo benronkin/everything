@@ -66,18 +66,44 @@ function react(el) {
       return
     }
 
-    try {
-      const re =
-        /<pre><code class="language-javascript">\s*([\s\S]*?)<\/code><\/pre>/s
-      const match = noteDoc.note.match(re)
-      const rawJson = match[1].trim()
-      const bookmarks = JSON.parse(rawJson)
-      buildBookmarks(bookmarks, el)
-    } catch (error) {
-      console.log(error)
-      el.insertHtml('Your bookmarks note is malformatted. Ask Daddy for help.')
-      return
+    const arr = []
+    let obj
+    let o
+
+    for (let line of noteDoc.note.split('\n')) {
+      line = line.trim()
+      if (!line.length) continue
+
+      if (line.startsWith('#')) {
+        const header = { label: line.replace('# ', '').trim() }
+        obj = {
+          header,
+          items: [],
+        }
+        arr.push(obj)
+        continue
+      }
+
+      const idx = line.indexOf(':')
+      const key = line.slice(0, idx).trim()
+      const value = line.slice(idx + 1).trim()
+
+      if (key === 'collapsed') {
+        obj.collapsed = value
+        continue
+      }
+
+      if (!o) {
+        o = {}
+        obj.items.push(o)
+      }
+
+      o[key] = value
+
+      if (o.label && o.url) o = null
     }
+
+    buildBookmarks(arr, el)
   })
 }
 
