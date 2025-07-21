@@ -75,7 +75,7 @@ function react(el) {
       if (!line.length) continue
 
       if (line.startsWith('#')) {
-        const header = { label: line.replace('# ', '').trim() }
+        const header = { label: line.replace('#', '').trim() }
         obj = {
           header,
           items: [],
