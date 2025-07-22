@@ -123,7 +123,7 @@ export function createEditor({ className = '' } = {}) {
     if (c.length) el.classList.add(c)
   }
 
-  hljs.configure({ ignoreUnescapedHTML: true })
+  // hljs.configure({ ignoreUnescapedHTML: true })
 
   el.setEditor = function (value) {
     el.querySelector('.editor').value = value
