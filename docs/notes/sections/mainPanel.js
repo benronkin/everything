@@ -1,5 +1,5 @@
-import { injectStyle } from '../../assets/js/ui.js'
 import { createEditor } from '../../assets/composites/editor.js'
+import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
@@ -157,19 +157,7 @@ function react(el) {
 
     el.classList.toggle('hidden', !inMainPanel)
 
-    const classes = ['.ta-icon', '.ta-select']
-    classes.forEach((c) =>
-      document.querySelectorAll(c).forEach((e) => e.classList.add('hidden'))
-    )
-
-    const ids = ['#back', '#edit', '#toc', '#doc-link']
-    ids.forEach((id) => {
-      document.querySelector(id).classList.toggle('hidden', !inMainPanel)
-    })
-
     document.querySelector('#toc-list').classList.remove('open')
-    document.querySelector('#toc').classList.remove('on')
-    document.querySelector('#edit').classList.remove('on')
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {
@@ -185,9 +173,6 @@ function react(el) {
     el.querySelector('#note-title').value = doc.title
     el.querySelector('.editor-wrapper').setEditor(doc.note)
     el.querySelector('.editor-wrapper').setViewer(doc.note)
-
-    const codeEls = el.querySelectorAll('pre code')
-    codeEls.forEach(hljs.highlightElement)
 
     el.querySelector('#note-id').insertHtml(doc.id)
 
@@ -205,13 +190,10 @@ function react(el) {
   })
 
   state.on('icon-click:edit', 'mainPanel', () => {
-    const editEl = document.querySelector('#edit')
     const editorEl = el.querySelector('.editor')
     const viewerEl = el.querySelector('.viewer')
 
-    editEl.classList.toggle('on')
     document.querySelector('#toc-list').classList.remove('open')
-    document.querySelector('#toc').classList.remove('on')
 
     const scrollPercent =
       window.scrollY / (document.body.scrollHeight - window.innerHeight)
@@ -224,28 +206,38 @@ function react(el) {
     const targetY =
       (document.body.scrollHeight - window.innerHeight) * scrollPercent
     window.scrollTo({ top: targetY, behavior: 'auto' })
-
-    const isEditOn = editEl.classList.contains('on')
-
-    document
-      .querySelectorAll('.ta-icon')
-      .forEach((i) => i.classList.toggle('hidden', !isEditOn))
-
-    document.querySelector('#toc').classList.toggle('hidden', isEditOn)
-
-    document
-      .querySelector('#ta-header-select')
-      .classList.toggle('hidden', !isEditOn)
   })
 
   state.on('icon-click:toc', 'mainPanel', () => {
-    document.querySelector('#toc').classList.toggle('on')
-
     const tocListEl = document.getElementById('toc-list')
     if (!tocListEl.classList.contains('open')) {
       updateTableOfContents()
     }
     tocListEl.classList.toggle('open')
+  })
+
+  state.on('icon-click:back', 'toolbar', async () => {
+    const editorEl = document.querySelector('.editor')
+    if (!editorEl.classList.contains('hidden')) {
+      executeNoteUpdate()
+      editorEl.classList.add('hidden')
+      document.querySelector('.viewer').classList.remove('hidden')
+    }
+
+    editorEl.value = ''
+    document.querySelector('.viewer').innerHTML = ''
+
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
+  })
+
+  state.on('icon-click:edit', 'toolbar', async () => {
+    const editorEl = document.querySelector('.editor')
+    if (!editorEl.classList.contains('hidden')) {
+      executeNoteUpdate()
+      editorEl.classList.add('hidden')
+      document.querySelector('.viewer').classList.remove('hidden')
+    }
   })
 }
 

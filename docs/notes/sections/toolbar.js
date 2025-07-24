@@ -106,11 +106,16 @@ export function toolbar() {
   headerEl.querySelector(' .caret-wrapper').style.right = '-3px'
 
   react(el)
+  listen(el)
 
   return el
 }
 
 function react(el) {
+  state.on('app-mode', 'toolbar', (appMode) =>
+    toggleToolbarButtons({ appMode })
+  )
+
   state.on('active-doc', 'notes', (id) => {
     el.querySelector('.avatar-group')?.remove()
 
@@ -126,30 +131,16 @@ function react(el) {
     }
   })
 
-  state.on('icon-click:back', 'toolbar', async () => {
-    const editorEl = document.querySelector('.editor')
-    if (!editorEl.classList.contains('hidden')) {
-      await executeNoteUpdate()
-      editorEl.classList.add('hidden')
-      document.querySelector('.viewer').classList.remove('hidden')
-    }
-
-    editorEl.value = ''
-    document.querySelector('.viewer').innerHTML = ''
-
-    state.set('active-doc', null)
-    state.set('app-mode', 'left-panel')
+  state.on('icon-click:toc', 'toolbar', () => {
+    document.querySelector('#toc').classList.toggle('on')
   })
 
-  state.on('icon-click:edit', 'toolbar', async () => {
-    const editorEl = document.querySelector('.editor')
-    if (!editorEl.classList.contains('hidden')) {
-      await executeNoteUpdate()
-      editorEl.classList.add('hidden')
-      document.querySelector('.viewer').classList.remove('hidden')
-    }
+  state.on('icon-click:edit', 'toolbar', () => {
+    document.querySelector('#edit').classList.toggle('on')
   })
+}
 
+function listen(el) {
   // toolbar shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.metaKey && e.shiftKey && e.key === 'e') {
@@ -186,4 +177,36 @@ function react(el) {
       }
     }
   })
+
+  el.querySelectorAll('.fa-solid').forEach((i) =>
+    i.addEventListener('click', (e) => toggleToolbarButtons({ i: e.target }))
+  )
+}
+
+function toggleToolbarButtons({ appMode, i }) {
+  const back = document.querySelector('#back')
+  const edit = document.querySelector('#edit')
+  const toc = document.querySelector('#toc')
+  const link = document.querySelector('#doc-link')
+
+  const isLeft = appMode === 'left-panel'
+  const isBack = i === back
+  const isOn = (i) => i && i.classList.contains('on')
+
+  back.classList.toggle('hidden', isLeft || isBack)
+  edit.classList.toggle('hidden', isLeft || isBack)
+  toc.classList.toggle('hidden', isOn(edit) || isLeft)
+  link.classList.toggle('hidden', isOn(edit) || isLeft)
+
+  if (isLeft || isBack) {
+    edit.classList.remove('on')
+    toc.classList.remove('on')
+  }
+
+  const classes = ['.ta-icon', '.ta-select']
+  classes.forEach((c) =>
+    document
+      .querySelectorAll(c)
+      .forEach((e) => e.classList.toggle('hidden', appMode || !isOn(edit)))
+  )
 }
