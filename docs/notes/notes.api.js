@@ -1,6 +1,5 @@
 import { state } from '../assets/js/state.js'
 import { getWebApp, postWebAppJson } from '../assets/js/io.js'
-import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/notes`
 
@@ -22,6 +21,16 @@ export async function fetchNote(id) {
 export async function fetchNotes() {
   const { notes, error } = await getWebApp(`${url}/read`)
   return { notes, error }
+}
+
+export async function fetchNoteHistories(id) {
+  const { histories } = await getWebApp(`${url}/history/read?id=${id}`)
+  return { histories }
+}
+
+export async function fetchNoteHistory(id) {
+  const { history } = await getWebApp(`${url}/history/read-one?id=${id}`)
+  return { history }
 }
 
 /**

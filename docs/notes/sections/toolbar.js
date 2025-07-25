@@ -26,6 +26,10 @@ export function toolbar() {
         id: 'toc',
         classes: { primary: 'fa-book-open', other: 'primary hidden' },
       }),
+      createIcon({
+        id: 'history',
+        classes: { primary: 'fa-clock-rotate-left', other: 'primary hidden' },
+      }),
       createDocLinkIcon({
         id: 'doc-link',
         classes: { primary: 'fa-link', other: 'primary hidden' },
@@ -138,6 +142,10 @@ function react(el) {
   state.on('icon-click:edit', 'toolbar', () => {
     document.querySelector('#edit').classList.toggle('on')
   })
+
+  state.on('icon-click:history', 'toolbar', () => {
+    document.querySelector('#history').classList.toggle('on')
+  })
 }
 
 function listen(el) {
@@ -185,22 +193,26 @@ function listen(el) {
 
 function toggleToolbarButtons({ appMode, i }) {
   const back = document.querySelector('#back')
+  const add = document.querySelector('#add')
   const edit = document.querySelector('#edit')
   const toc = document.querySelector('#toc')
   const link = document.querySelector('#doc-link')
+  const history = document.querySelector('#history')
 
   const isLeft = appMode === 'left-panel'
   const isBack = i === back
   const isOn = (i) => i && i.classList.contains('on')
 
   back.classList.toggle('hidden', isLeft || isBack)
-  edit.classList.toggle('hidden', isLeft || isBack)
-  toc.classList.toggle('hidden', isOn(edit) || isLeft)
-  link.classList.toggle('hidden', isOn(edit) || isLeft)
+  edit.classList.toggle('hidden', isLeft || isBack || isOn(history))
+  history.classList.toggle('hidden', isLeft || isBack || isOn(edit))
+  toc.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
+  link.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
 
   if (isLeft || isBack) {
     edit.classList.remove('on')
     toc.classList.remove('on')
+    history.classList.remove('on')
   }
 
   const classes = ['.ta-icon', '.ta-select']

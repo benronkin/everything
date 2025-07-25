@@ -101,8 +101,8 @@ function react() {
 
 function listen() {
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('#toc') && !e.target.closest('#toc-list'))
-      document.querySelector('#toc-list').classList.remove('open')
+    if (!e.target.closest('#toc') && !e.target.closest('#right-panel'))
+      document.querySelector('#right-panel').classList.remove('open')
   })
 }
 

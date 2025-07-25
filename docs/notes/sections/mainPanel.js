@@ -6,11 +6,12 @@ import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { state } from '../../assets/js/state.js'
-import { fetchNote, updateNote } from '../notes.api.js'
+import { fetchNote, fetchNoteHistories, updateNote } from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
 import { removeToasts } from '../../assets/partials/toast.js'
 import { log } from '../../assets/js/logger.js'
+import { createButton } from '../../assets/partials/button.js'
 
 const css = `
 #main-panel {
@@ -50,7 +51,7 @@ const css = `
   border-bottom: 1px solid var(--gray3);
   outline: none;
 }
-#toc-list {
+#right-panel {
   position: fixed;
   top: var(--nav-height);
   right: 0;
@@ -65,7 +66,7 @@ const css = `
   transition: all 300ms ease;
   transform: translateX(100%);
 }
-#toc-list.open {
+#right-panel.open {
   transform: translateX(0);
 }
 .toc-header {
@@ -84,7 +85,8 @@ const css = `
 .toc-item.p-left-0 {
   margin-top: 15px;
 }
-.toc-item:hover {
+.toc-item:hover,
+.toc-item.active {
   background: var(--gray2);
 }
 `
@@ -139,7 +141,7 @@ function build(el) {
 
   el.appendChild(createEditor())
 
-  el.appendChild(createDiv({ id: 'toc-list' }))
+  el.appendChild(createDiv({ id: 'right-panel' }))
 
   el.appendChild(dangerZone())
 
@@ -157,7 +159,7 @@ function react(el) {
 
     el.classList.toggle('hidden', !inMainPanel)
 
-    document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#right-panel').classList.remove('open')
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {
@@ -186,14 +188,14 @@ function react(el) {
   })
 
   state.on('right-drawer-toggle-click', 'mainPanel', () => {
-    document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#right-panel').classList.remove('open')
   })
 
   state.on('icon-click:edit', 'mainPanel', () => {
     const editorEl = el.querySelector('.editor')
     const viewerEl = el.querySelector('.viewer')
 
-    document.querySelector('#toc-list').classList.remove('open')
+    document.querySelector('#right-panel').classList.remove('open')
 
     const scrollPercent =
       window.scrollY / (document.body.scrollHeight - window.innerHeight)
@@ -209,11 +211,19 @@ function react(el) {
   })
 
   state.on('icon-click:toc', 'mainPanel', () => {
-    const tocListEl = document.getElementById('toc-list')
-    if (!tocListEl.classList.contains('open')) {
+    const rightPanelEl = document.getElementById('right-panel')
+    if (!rightPanelEl.classList.contains('open')) {
       updateTableOfContents()
     }
-    tocListEl.classList.toggle('open')
+    rightPanelEl.classList.toggle('open')
+  })
+
+  state.on('icon-click:history', 'mainPanel', () => {
+    const rightPanelEl = document.getElementById('right-panel')
+    if (!rightPanelEl.classList.contains('open')) {
+      updateHistories()
+    }
+    rightPanelEl.classList.toggle('open')
   })
 
   state.on('icon-click:back', 'toolbar', async () => {
@@ -365,11 +375,11 @@ const debouncedUpdate = debounce(executeNoteUpdate, 3000)
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')
   const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
-  const tocEl = document.querySelector('#toc-list')
+  const rightPanelEl = document.querySelector('#right-panel')
 
-  tocEl.innerHTML = ''
+  rightPanelEl.innerHTML = ''
 
-  tocEl.appendChild(
+  rightPanelEl.appendChild(
     createHeader({
       html: [document.querySelector('#note-title').value],
       type: 'h5',
@@ -382,7 +392,7 @@ function updateTableOfContents() {
     // default padding left is 10px, which is what
     // h1 has, so h2 and beyond needs 1 more
     if (indent > 0) indent++
-    tocEl.appendChild(
+    rightPanelEl.appendChild(
       createDiv({
         className: `toc-item p-left-${indent * 10}`,
         html: h.textContent,
@@ -391,7 +401,7 @@ function updateTableOfContents() {
     )
   })
 
-  tocEl.querySelectorAll('.toc-item').forEach((i) =>
+  rightPanelEl.querySelectorAll('.toc-item').forEach((i) =>
     i.addEventListener('click', (e) => {
       const target = document.getElementById(e.target.dataset.id)
       const yOffset = -180
@@ -401,4 +411,67 @@ function updateTableOfContents() {
       window.scrollTo({ top: y, behavior: 'smooth' })
     })
   )
+}
+
+async function updateHistories() {
+  const rightPanelEl = document.querySelector('#right-panel')
+
+  rightPanelEl.innerHTML = ''
+
+  rightPanelEl.appendChild(
+    createHeader({
+      html: 'History',
+      type: 'h5',
+      className: 'toc-header',
+    })
+  )
+
+  const { histories } = await fetchNoteHistories(state.get('active-doc'))
+
+  if (!histories.length) return
+
+  histories.forEach(({ id, created_at }, idx) => {
+    const date = new Date(created_at)
+    const dateString = date.toLocaleString(date, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    })
+
+    const div = createDiv({
+      className: `toc-item flex align-center`,
+      dataset: { history: id },
+      html: [createSpan({ html: dateString, className: 'smaller' })],
+    })
+
+    if (idx) {
+      div.appendChild(
+        createButton({
+          html: 'Restore',
+          className: 'history-btn secondary hidden',
+        })
+      )
+    }
+
+    rightPanelEl.appendChild(div)
+  })
+
+  const allDivs = rightPanelEl.querySelectorAll('[data-history]')
+  allDivs.forEach((div) =>
+    div.addEventListener('click', (e) => {
+      allDivs.forEach((d) => d.classList.remove('active'))
+      div.classList.toggle('active')
+
+      rightPanelEl
+        .querySelectorAll('.history-btn')
+        .forEach((btn) => btn.classList.add('hidden'))
+      div.querySelector('.history-btn')?.classList.remove('hidden')
+      console.log('button', e.target.closest('button'))
+    })
+  )
+
+  rightPanelEl.querySelector('[data-history]').click()
 }

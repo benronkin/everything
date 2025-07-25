@@ -305,6 +305,7 @@ i.primary:hover {
   color: inherit;
   background-color: var(--purple3);
 }
+.secondary,
 i.secondary {
   background-color: var(--teal2);
   padding: 5px;
