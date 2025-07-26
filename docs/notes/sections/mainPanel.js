@@ -6,7 +6,12 @@ import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { state } from '../../assets/js/state.js'
-import { fetchNote, fetchNoteHistories, updateNote } from '../notes.api.js'
+import {
+  fetchNote,
+  fetchNoteHistories,
+  fetchNoteHistory,
+  updateNote,
+} from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
 import { removeToasts } from '../../assets/partials/toast.js'
@@ -461,7 +466,7 @@ async function updateHistories() {
 
   const allDivs = rightPanelEl.querySelectorAll('[data-history]')
   allDivs.forEach((div) =>
-    div.addEventListener('click', (e) => {
+    div.addEventListener('click', async (e) => {
       allDivs.forEach((d) => d.classList.remove('active'))
       div.classList.toggle('active')
 
@@ -469,9 +474,22 @@ async function updateHistories() {
         .querySelectorAll('.history-btn')
         .forEach((btn) => btn.classList.add('hidden'))
       div.querySelector('.history-btn')?.classList.remove('hidden')
-      console.log('button', e.target.closest('button'))
+
+      const isRestore = !!('button', e.target.closest('button'))
+      if (isRestore) {
+        const note = state.get('note-body')
+        document.querySelector('.editor').value = note
+        await executeNoteUpdate()
+        updateHistories()
+        document.querySelector('#history').classList.remove('on')
+      } else {
+        const historyId = e.target.closest('[data-history]').dataset.history
+        const { history } = await fetchNoteHistory(historyId)
+        document.querySelector('.viewer').innerHTML = history.note
+        state.set('note-body', history.note)
+      }
     })
   )
 
-  rightPanelEl.querySelector('[data-history]').click()
+  rightPanelEl.querySelector('[data-history]').classList.add('active')
 }
