@@ -124,7 +124,6 @@ async function reactAddNote({ id: btnId }) {
 
   delete addBtn.disabled
   if (document.querySelector('.editor').classList.contains('hidden')) {
-    // highlight edit button, hide .viewer and show .editor
     document.querySelector('#edit').click()
   }
 }

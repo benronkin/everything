@@ -201,13 +201,13 @@ function react(el) {
     const viewerEl = el.querySelector('.viewer')
 
     document.querySelector('#right-panel').classList.remove('open')
+    editorEl.classList.toggle('hidden')
 
     const scrollPercent =
       window.scrollY / (document.body.scrollHeight - window.innerHeight)
 
     viewerEl.classList.toggle('hidden')
     document.querySelector('.editor-wrapper').setViewer(editorEl.value)
-    editorEl.classList.toggle('hidden')
     editorEl.resize()
 
     const targetY =
@@ -244,15 +244,6 @@ function react(el) {
 
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
-  })
-
-  state.on('icon-click:edit', 'toolbar', async () => {
-    const editorEl = document.querySelector('.editor')
-    if (!editorEl.classList.contains('hidden')) {
-      executeNoteUpdate()
-      editorEl.classList.add('hidden')
-      document.querySelector('.viewer').classList.remove('hidden')
-    }
   })
 }
 

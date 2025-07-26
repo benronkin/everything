@@ -193,7 +193,6 @@ function listen(el) {
 
 function toggleToolbarButtons({ appMode, i }) {
   const back = document.querySelector('#back')
-  const add = document.querySelector('#add')
   const edit = document.querySelector('#edit')
   const toc = document.querySelector('#toc')
   const link = document.querySelector('#doc-link')
