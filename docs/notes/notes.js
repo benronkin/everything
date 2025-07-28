@@ -101,8 +101,12 @@ function react() {
 
 function listen() {
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('#toc') && !e.target.closest('#right-panel'))
+    if (!e.target.closest('#right-panel')) {
       document.querySelector('#right-panel').classList.remove('open')
+      document
+        .querySelectorAll('[data-right-pannel-toggler]')
+        .forEach((i) => i.classList.remove('on'))
+    }
   })
 }
 

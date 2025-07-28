@@ -24,11 +24,16 @@ export function toolbar() {
       }),
       createIcon({
         id: 'toc',
-        classes: { primary: 'fa-book-open', other: 'primary hidden' },
+        classes: {
+          primary: 'fa-book-open',
+          other: 'primary hidden',
+        },
+        dataset: { rightPannelToggler: true },
       }),
       createIcon({
         id: 'history',
         classes: { primary: 'fa-clock-rotate-left', other: 'primary hidden' },
+        dataset: { rightPannelToggler: true },
       }),
       createDocLinkIcon({
         id: 'doc-link',
