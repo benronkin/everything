@@ -358,8 +358,6 @@ function persistNote() {
   const now = Date.now()
   const last = state.get('mainPanel:last-save') || 1
 
-  console.log('here', last && now - last >= 15000)
-
   if (last && now - last >= 15000) {
     // force update after 15 seconds of no-save
     executeNoteUpdate()
