@@ -102,7 +102,7 @@ function react(el) {
     el.querySelector('#journal-country').value = doc.country
     el.querySelector('#journal-phone').value = doc.phone
     el.querySelector('#journal-rating').selectByValue(doc.rating || '')
-    el.querySelector('#journal-notes').value = doc.notes
+    el.querySelector('#journal-notes').setValue(doc.notes)
     el.querySelector('#journal-id').insertHtml(doc.id)
   })
 }
