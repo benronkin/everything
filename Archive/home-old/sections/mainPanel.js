@@ -25,13 +25,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function mainPanel() {
   injectStyle(css)
 
@@ -46,13 +39,6 @@ export function mainPanel() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {
   el.appendChild(
     createHeader({
@@ -87,9 +73,6 @@ function build(el) {
   )
 }
 
-/**
- * Subscribe to state.
- */
 function listen(el) {
   el.addEventListener('submit', (e) => handleLogin({ e, el }))
 

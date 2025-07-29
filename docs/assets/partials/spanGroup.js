@@ -24,10 +24,6 @@ const css = `
 }  
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 /**
  * Constructor for a custom horizontal form
  */
@@ -68,10 +64,6 @@ export function createSpanGroup({ id, classes, html, className = null }) {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 /**
  * Add sub elements to the element. No need

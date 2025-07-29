@@ -18,13 +18,6 @@ import { log } from '../../assets/js/logger.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 export function photoList() {
   injectStyle(css)
 
@@ -41,9 +34,6 @@ export function photoList() {
 // Object methods
 // ----------------------
 
-/**
- *
- */
 async function showPhotos() {
   const id = state.get('active-doc')
   this.deleteChildren()

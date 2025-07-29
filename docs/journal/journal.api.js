@@ -3,17 +3,11 @@ import { getWebApp, postWebAppJson, postWebAppForm } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/journal`
 
-/**
- *
- */
 export async function createEntry(id, visit_date) {
   const { error } = await postWebAppJson(`${url}/create`, { id, visit_date })
   return { error }
 }
 
-/**
- *
- */
 export async function deleteEntry(id, password) {
   const { journal, error } = await getWebApp(
     `${url}/delete?id=${id}&password=${password}`
@@ -21,17 +15,11 @@ export async function deleteEntry(id, password) {
   return { data: journal, error }
 }
 
-/**
- *
- */
 export async function fetchDefaults() {
   const { defaults, error } = await getWebApp(`${url}/defaults/read`)
   return { defaults, error }
 }
 
-/**
- *
- */
 export async function fetchEntryPhotosMetadata(id) {
   const { photos, error } = await getWebApp(`${url}/photos/read?entry=${id}`)
   return { photos, error }
@@ -42,9 +30,6 @@ export async function fetchGeoIndex() {
   return { tree, error }
 }
 
-/**
- *
- */
 export async function fetchRecentEntries() {
   const { journal, error } = await getWebApp(`${url}/read`)
   return { data: journal, error }
@@ -60,9 +45,6 @@ export async function searchEntries(q) {
   return { data: journal, error }
 }
 
-/**
- *
- */
 export async function updateEntry({ id, section, value }) {
   const { message, error } = postWebAppJson(`${url}/update`, {
     id,
@@ -78,9 +60,6 @@ export async function updateGeoIndex({ tree }) {
   })
 }
 
-/**
- *
- */
 export async function updateJournalDefaults({ id, section, value }) {
   await postWebAppJson(`${url}/defaults/update`, {
     id,
@@ -88,9 +67,6 @@ export async function updateJournalDefaults({ id, section, value }) {
   })
 }
 
-/**
- *
- */
 export async function updatePhotoCaption({ id, value }) {
   const { error, message } = await postWebAppJson(`${url}/photos/update`, {
     id,
@@ -100,17 +76,11 @@ export async function updatePhotoCaption({ id, value }) {
   return { error, message }
 }
 
-/**
- *
- */
 export async function addEntryPhoto(formData) {
   const { message } = await postWebAppForm(`${url}/photos/create`, formData)
   return { message }
 }
 
-/**
- *
- */
 export async function deleteEntryPhoto(id) {
   const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
   return { error }

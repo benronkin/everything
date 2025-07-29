@@ -4,13 +4,6 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { setMessage } from '../../assets/js/ui.js'
 // import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 export function toolbar() {
   const el = createToolbar({
     children: [
@@ -34,13 +27,6 @@ export function toolbar() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('app-mode', 'Journal toolbar', (appMode) => {
     const mainPanelEls = ['#back', '#copy-address']

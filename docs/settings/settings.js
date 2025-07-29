@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
-    // window.location.href = `../home/index.html?message=${error.message}`
     console.trace(error)
   }
 })

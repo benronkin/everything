@@ -1,6 +1,3 @@
-/**
- *
- */
 export function debounce(cb, delay) {
   let timeoutID
   return () => {

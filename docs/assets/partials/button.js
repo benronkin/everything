@@ -18,9 +18,6 @@ button {
 // Exported functions
 // -------------------------------
 
-/**
- *
- */
 export function createButton({ id, className, disabled, html, type } = {}) {
   injectStyle(css)
 
@@ -39,13 +36,6 @@ export function createButton({ id, className, disabled, html, type } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function listen(el) {
   el.addEventListener('click', (e) => {
     const stateKey = `button-click:${el.id}`

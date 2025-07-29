@@ -15,7 +15,6 @@ export async function deleteTask(id) {
 
 export async function fetchTasks() {
   const { tasks, error } = await getWebApp(`${url}/read`)
-
   return { tasks, error }
 }
 

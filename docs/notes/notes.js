@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.trace(error)
     setMessage({ message: error.message, type: 'danger' })
-    // window.location.href = `../home/index.html?message=${error.message}`
   }
 })
 

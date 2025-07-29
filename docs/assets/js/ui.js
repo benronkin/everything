@@ -1,7 +1,6 @@
 import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createToast, removeToasts } from '../../assets/partials/toast.js'
-import { log } from './logger.js'
 
 let sharedStyleEl = null
 
@@ -75,6 +74,12 @@ export const navList = [
   },
   {
     icon: 'fa-book',
+    label: 'Books',
+    url: 'books/index.html',
+    id: 'books',
+  },
+  {
+    icon: 'fa-road',
     label: 'Journal',
     url: 'journal/index.html',
     id: 'journal',

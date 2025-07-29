@@ -17,13 +17,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createGroup({ id, className, html } = {}) {
   injectStyle(css)
 
@@ -38,25 +31,12 @@ export function createGroup({ id, className, html } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {}
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   // state.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
-/**
- *
- */
 function listen(el) {
   // el.addEventListener('click', () => {})
 }

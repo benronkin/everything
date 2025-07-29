@@ -14,13 +14,6 @@ import { log } from '../../assets/js/logger.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function suggestionItem({ item }) {
   injectStyle(css)
 
@@ -52,13 +45,6 @@ export function suggestionItem({ item }) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Set event handlers which can set state.
- */
 function listen(el) {
   el.addEventListener('click', (e) => {
     if (e.target.closest('i')) return // ignore event bubbling
@@ -81,9 +67,6 @@ function listen(el) {
 // Object methods
 // -------------------------------
 
-/**
- *
- */
 function setDraggable(isDraggable) {
   this.classList.remove('active')
   this.classList.toggle('draggable-target', isDraggable)

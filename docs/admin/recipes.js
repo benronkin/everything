@@ -67,9 +67,6 @@ document.addEventListener('change', handleChangeEvent)
 // Event handlers
 // -------------------------------
 
-/**
- *
- */
 async function handleChangeEvent(e) {
   const id = e.target.closest('tr')?.dataset.id
   const wrapper = e.target.closest('.select-wrapper')

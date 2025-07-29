@@ -32,13 +32,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function mainPanel() {
   injectStyle(css)
 
@@ -53,13 +46,6 @@ export function mainPanel() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {
   el.appendChild(createRecipeGroup())
 
@@ -70,28 +56,21 @@ function build(el) {
   el.appendChild(createSpan({ id: 'recipe-id' }))
 }
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
-      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
+
       return
     }
     reactAppMode(el)
   })
 }
 
-/**
- *
- */
 function reactAppMode(el) {
   const id = state.get('active-doc')
   const doc = { ...state.get('main-documents').find((d) => d.id === id) }
   el.classList.remove('hidden')
-  // log('mainPanel is showing itself on active-doc')
 
   el.querySelector('#recipe-title').value = doc.title
   el.querySelector('#recipe-notes').setValue(doc.notes)

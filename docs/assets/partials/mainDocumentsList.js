@@ -19,9 +19,6 @@ const css = `
 // Exported functions
 // -------------------------------
 
-/**
- *
- */
 export function createMainDocumentsList({ id, className, emptyState }) {
   injectStyle(css)
 

@@ -3,13 +3,6 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { state } from '../../assets/js/state.js'
 // import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 export function toolbar() {
   const el = createToolbar({
     children: [
@@ -26,13 +19,6 @@ export function toolbar() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('icon-click:sort-icon', 'toolbar', ({ id }) => {
     const sortEl = document.getElementById(id)
@@ -41,7 +27,4 @@ function react(el) {
   })
 }
 
-/**
- * Set event handlers which can set state.
- */
 function listen(el) {}

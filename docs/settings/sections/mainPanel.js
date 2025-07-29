@@ -49,10 +49,8 @@ function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode === 'main-panel') {
       el.classList.remove('hidden')
-      // log('mainPanel is showing itself on active-doc')
     } else {
       el.classList.add('hidden')
-      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
     }
   })
 }

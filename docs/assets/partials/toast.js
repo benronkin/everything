@@ -134,10 +134,6 @@ export function removeToasts() {
   document.querySelectorAll('.toast').forEach((el) => el.removeToast())
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 function build(el, autoClose) {
   const messageDiv = document.createElement('div')
   messageDiv.dataset.id = 'toast-message'
@@ -157,9 +153,6 @@ function build(el, autoClose) {
   }
 }
 
-/**
- *
- */
 function removeToast() {
   clearTimeout(this._closeTimeout)
   clearInterval(this._progressInterval)
@@ -173,9 +166,6 @@ function removeToast() {
   })
 }
 
-/**
- *
- */
 function updateProgress(value) {
   this.classList.toggle('progress', value)
 }

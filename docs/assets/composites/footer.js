@@ -27,7 +27,7 @@ footer span {
 
 const html = `
 <div class="container">
-  <span>Version: </span><span id="version-number">5.3.15</span>
+  <span>Version: </span><span id="version-number">5.4.0</span>
 </div>
 `
 
@@ -40,13 +40,6 @@ export function createFooter() {
   return createElement({})
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function createElement({}) {
   const el = document.createElement('footer')
   el.innerHTML = html

@@ -83,14 +83,13 @@ function react(el) {
   state.on('app-mode', 'mainPanel', (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
-      // log(`mainPanel is hiding itself on app-mode: ${appMode}`)
+
       return
     }
 
     const id = state.get('active-doc')
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     el.classList.remove('hidden')
-    // log('mainPanel is showing itself on active-doc')
 
     document.querySelector('#photo-list').showPhotos()
 

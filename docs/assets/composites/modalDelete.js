@@ -138,9 +138,6 @@ export function react({ el, password }) {
   })
 }
 
-/**
- *
- */
 function listen({ el, password }) {
   el.addEventListener('click', (e) => {
     const dialogDimensions = el.getBoundingClientRect()
@@ -160,23 +157,14 @@ function listen({ el, password }) {
 // Object methods
 // -------------------------------
 
-/**
- *
- */
 function message(text = '') {
   this.querySelector('.modal-message').insertHtml(text)
 }
 
-/**
- *
- */
 function getPassword() {
   return this.querySelector('#modal-delete-input').value
 }
 
-/**
- *
- */
 function setPassword(value) {
   return (this.querySelector('#modal-delete-input').value = value)
 }

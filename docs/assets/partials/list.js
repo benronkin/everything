@@ -19,9 +19,6 @@ const css = `
 // Exported functions
 // -------------------------------
 
-/**
- *
- */
 export function createList({ id, emptyState, className, enableDrag = false }) {
   injectStyle(css)
 
@@ -54,10 +51,6 @@ export function createList({ id, emptyState, className, enableDrag = false }) {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 function build({ el, emptyState, enableDrag } = {}) {
   if (enableDrag) {
@@ -194,9 +187,6 @@ function has(text) {
   return texts.includes(text)
 }
 
-/**
- *
- */
 function reset() {
   this.querySelectorAll('[data-list-item]').forEach((child) =>
     child.classList.remove('active')

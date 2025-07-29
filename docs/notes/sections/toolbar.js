@@ -4,8 +4,6 @@ import { createDocLinkIcon } from '../../assets/partials/docLinkIcon.js'
 import { createSelect } from '../../assets/partials/select.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
-import { executeNoteUpdate } from './mainPanel.js'
 
 export function toolbar() {
   const el = createToolbar({

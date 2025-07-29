@@ -80,10 +80,6 @@ export function createSwitch({ id, iconOff, iconOn, className }) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
  * Create the HTML element
  */

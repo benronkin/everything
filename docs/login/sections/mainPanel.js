@@ -77,9 +77,6 @@ function build(el) {
   )
 }
 
-/**
- * Subscribe to state.
- */
 function listen(el) {
   el.addEventListener('submit', (e) => handleLogin({ e, el }))
 

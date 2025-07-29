@@ -46,10 +46,6 @@ form .message {
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 /**
  * Constructor for a custom form
  */
@@ -74,10 +70,6 @@ export function createForm({ id, className, children = [] }) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
  * Add sub elements to the element.
  */
@@ -87,9 +79,6 @@ function build({ el, children }) {
   }
 }
 
-/**
- *
- */
 function listen(el) {
   if (el.querySelector('button')) {
     el.addEventListener('submit', () => handleFormSubmit(el.id))
@@ -118,9 +107,6 @@ function listen(el) {
   })
 }
 
-/**
- *
- */
 function handleFormSubmit(id) {
   const stateKey = `form-submit:${id}`
   state.set(stateKey, { id })
@@ -142,9 +128,6 @@ function clear() {
   disableButton()
 }
 
-/**
- *
- */
 function disableButton() {
   const button = this.querySelector('button')
   if (!button) {

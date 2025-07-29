@@ -13,10 +13,6 @@ span {
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 /**
  * Constructor for custom span element
  */

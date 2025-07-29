@@ -57,17 +57,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
-    // window.location.href = `../home/index.html?message=${error.message}`
   }
 })
 
-// ------------------------
-// Helper functions
-// ------------------------
-
-/**
- *
- */
 async function build() {
   document.head.title = 'Recipes | Everything App'
   const body = document.body
@@ -89,9 +81,6 @@ async function build() {
   wrapperEl.appendChild(createFooter())
 }
 
-/**
- *
- */
 function react() {
   state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
 
@@ -159,9 +148,6 @@ async function reactRecipeAdd() {
   delete addBtn.disabled
 }
 
-/**
- *
- */
 async function reactRecipeDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
@@ -185,9 +171,6 @@ async function reactRecipeDelete() {
   state.set('app-mode', 'left-panel')
 }
 
-/**
- *
- */
 async function reactRecipeSearch() {
   let resp
 
@@ -271,9 +254,6 @@ function populateRelatedRecipes() {
   }
 }
 
-/**
- *
- */
 function shopIngredients() {
   setMessage({ message: 'To be implemented...' })
 }

@@ -4,13 +4,6 @@ import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function mainDocumentsList() {
   const el = createMainDocumentsList({
     id: 'left-panel-list',
@@ -21,10 +14,6 @@ export function mainDocumentsList() {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 /**
  * Subscribe to state

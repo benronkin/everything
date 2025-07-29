@@ -67,12 +67,8 @@ export async function getWebApp(path) {
     return { ...data, message }
   } catch (error) {
     if (path.includes('http://')) {
-      console.warn('Is cloudflare running?')
-      return { warn: 'Is CloudFlare running locally?' }
+      return { error: 'Fetch failed. Is CloudFlare running locally?' }
     }
-
-    console.log('For path:', path)
-    console.log('getWebapp', error)
 
     return {
       error,

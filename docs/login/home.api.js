@@ -5,9 +5,6 @@ import { log } from '../assets/js/logger.js'
 
 const url = state.const('APP_URL')
 
-/**
- *
- */
 export async function login(userEmail) {
   const resp = await postWebAppJson(`${url}/email-submit`, {
     email: userEmail,

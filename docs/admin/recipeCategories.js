@@ -121,9 +121,6 @@ function handleCategoryInputKeyUp(e) {
   }
 }
 
-/**
- *
- */
 function handleCategoryFormSubmit(e) {
   e.preventDefault()
 
@@ -158,9 +155,6 @@ function handleCategorySelectionChange(e) {
   }
 }
 
-/**
- *
- */
 async function handleCategoriesListChange() {
   const categories = categoriesEl.getData()
   const { status, message } = await postWebAppJson(

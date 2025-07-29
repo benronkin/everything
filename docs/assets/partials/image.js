@@ -8,13 +8,6 @@ import { state } from '../js/state.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createImage({ id, className, src } = {}) {
   injectStyle(css)
 
@@ -34,25 +27,12 @@ export function createImage({ id, className, src } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {}
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   // state.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
-/**
- *
- */
 function listen(el) {
   // el.addEventListener('click', () => {})
 }

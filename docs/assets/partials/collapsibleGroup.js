@@ -35,13 +35,6 @@ const css = `
 } 
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createCollapsibleGroup({
   id,
   className,
@@ -66,13 +59,6 @@ export function createCollapsibleGroup({
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build({ el, html }) {
   const toggler = createIcon({
     classes: {
@@ -87,14 +73,8 @@ function build({ el, html }) {
   }
 }
 
-/**
- * Subscribe to state.
- */
 function react(el) {}
 
-/**
- *
- */
 function listen(el) {
   el.querySelector('.toggler').addEventListener('click', () => {
     el.classList.toggle('collapsed')

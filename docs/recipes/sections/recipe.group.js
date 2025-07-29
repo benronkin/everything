@@ -9,13 +9,6 @@ import { createList } from '../../assets/partials/list.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createRecipeGroup() {
   const el = createDiv({ id: 'entry-group' })
 
@@ -24,13 +17,6 @@ export function createRecipeGroup() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 async function build(el) {
   el.appendChild(
     createInputGroup({

@@ -165,9 +165,6 @@ export function createTable({
 // Event handlers
 // -------------------------------
 
-/**
- *
- */
 function handleHeaderClick(e) {
   e.target.closest('table').hideHeaderSorters(e)
   return
@@ -177,9 +174,6 @@ function handleHeaderClick(e) {
 // Object methods
 // -------------------------------
 
-/**
- *
- */
 function addRow({ id, fields }) {
   const tr = document.createElement('tr')
   tr.dataset.id = id
@@ -208,9 +202,6 @@ function clearRows() {
   return this // for chaining
 }
 
-/**
- *
- */
 function getHeaderByName(name) {
   const headers = this.headers
   const header = headers.find((h) => h.dataset.name === name)
@@ -228,17 +219,10 @@ function getSorter() {
   return sorter
 }
 
-/**
- *
- */
 function hideHeaderSorters(e) {
   const otherHeaders = this.headers.filter((h) => h.label !== e.detail.label)
   otherHeaders.forEach((h) => (h.order = null))
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 /**
  * Add the various event handlers for the element

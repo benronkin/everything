@@ -35,10 +35,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 export function bookmarksSubPanel() {
   injectStyle(css)
 
@@ -54,10 +50,6 @@ export function bookmarksSubPanel() {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 function build(el) {
   for (const section of bookmarks) {

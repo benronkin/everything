@@ -3,13 +3,6 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { state } from '../../assets/js/state.js'
 // import { log } from '../../assets/js/logger.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 export function toolbar() {
   const el = createToolbar({
     children: [
@@ -30,13 +23,6 @@ export function toolbar() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('app-mode', 'Notes toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
@@ -44,12 +30,6 @@ function react(el) {
   })
 }
 
-/**
- * Set event handlers which can set state.
- */
-/**
- * Set event handlers which can set state.
- */
 function listen(el) {
   el.querySelector('#back').addEventListener('click', () => {
     state.set('active-doc', null)

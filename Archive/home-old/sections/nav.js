@@ -1,12 +1,5 @@
 import { createNav } from '../../../docs/assets/composites/nav.js'
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function nav() {
   const el = createNav({
     title: '<i class="fa-solid fa-home"></i> The Everything App',

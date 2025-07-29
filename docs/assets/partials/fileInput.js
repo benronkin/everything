@@ -52,10 +52,6 @@ export function createFileInput({ iconClass, className, label, accept = '' }) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
  * Add sub elements to the element.
  */
@@ -87,9 +83,6 @@ function build({ el, iconClass, label, accept }) {
 // Object methods
 // -------------------------------
 
-/**
- *
- */
 function clear() {
   this.querySelector('input').value = ''
   this.querySelector('.file-name').value = ''

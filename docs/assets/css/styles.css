@@ -267,6 +267,9 @@ ul {
 .fw-200 {
   font-weight: 200 !important;
 }
+.gap-20 {
+  gap: 20px !important;
+}
 .hidden {
   display: none !important;
 }

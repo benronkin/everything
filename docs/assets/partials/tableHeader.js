@@ -136,10 +136,6 @@ function handleHeaderClick(e) {
   )
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
 /**
  * Add sub elements to the element. No need
  * to return the element.

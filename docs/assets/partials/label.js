@@ -15,9 +15,6 @@ label {
 // Exported functions
 // -------------------------------
 
-/**
- *
- */
 export function createLabel({ id, html, className } = {}) {
   injectStyle(css)
 

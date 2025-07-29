@@ -15,43 +15,50 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createFooter } from '../assets/composites/footer.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    build()
+  build()
 
-    handleTokenQueryParam()
+  handleTokenQueryParam()
 
-    const token = localStorage.getItem('authToken')
-    if (!token) {
-      setMessage({
-        type: 'danger',
-        message: 'Authentication failed',
-        position: 'BOTTOM_RIGHT',
-      })
-      window.location.href = '../login/index.html?message=Authentication+failed'
-      return
-    }
-
-    const urlParams = new URLSearchParams(window.location.search)
-
-    let message = ''
-
-    if (urlParams.get('message')) {
-      message = urlParams.get('message')
-    } else if (urlParams.get('setup')) {
-      message = 'Upgrading the app. We need your email again'
-    }
-
-    if (message) {
-      setMessage({ message, type: 'danger' })
-    }
-
-    const [{ tasks }, { user }] = await Promise.all([fetchTasks(), getMe()])
-
-    state.set('main-documents', tasks.slice(0, 2))
-    state.set('user', user)
-  } catch (error) {
-    console.trace(error)
+  const token = localStorage.getItem('authToken')
+  if (!token) {
+    setMessage({
+      type: 'danger',
+      message: 'Authentication failed',
+      position: 'BOTTOM_RIGHT',
+    })
+    window.location.href = '../login/index.html?message=Authentication+failed'
+    return
   }
+
+  const urlParams = new URLSearchParams(window.location.search)
+
+  let message = ''
+
+  if (urlParams.get('message')) {
+    message = urlParams.get('message')
+  } else if (urlParams.get('setup')) {
+    message = 'Upgrading the app. We need your email again'
+  }
+
+  if (message) {
+    setMessage({ message, type: 'danger' })
+  }
+
+  const [{ tasks, error }, { user }] = await Promise.all([
+    fetchTasks(),
+    getMe(),
+  ])
+
+  if (error) {
+    setMessage({
+      message: error,
+      type: 'danger',
+    })
+    return
+  }
+
+  state.set('main-documents', tasks.slice(0, 2))
+  state.set('user', user)
 })
 
 export function build() {

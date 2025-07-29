@@ -10,13 +10,6 @@ import { createEntryTitle } from '../journal.utils.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function dangerZone() {
   injectStyle(css)
 

@@ -4,9 +4,6 @@ import { state } from './state.js'
 // Exported functions
 // -------------------------------
 
-/**
- *
- */
 export function enableDragging(containerEl) {
   // clear prior event handlers
   enableClicking(containerEl)
@@ -20,9 +17,6 @@ export function enableDragging(containerEl) {
   containerEl.addEventListener('touchmove', enableDragContainer)
 }
 
-/**
- *
- */
 export function enableClicking(containerEl) {
   containerEl.classList.remove('dragging-container')
   containerEl
@@ -36,16 +30,10 @@ export function enableClicking(containerEl) {
 // Event handler functions
 // -------------------------------
 
-/**
- *
- */
 function handleDragStart(e) {
   e.target.closest('.draggable-target').classList.add('dragging')
 }
 
-/**
- *
- */
 function handleDragEnd(e) {
   const el = e.target.closest('.draggable-target')
   el.classList.remove('dragging')
@@ -94,9 +82,6 @@ function breakElementDraggable(elem) {
   elem.removeEventListener('touchend', handleDragEnd)
 }
 
-/**
- *
- */
 function getAfterElement(container, y) {
   const draggableElements = [
     ...container.querySelectorAll('.draggable-target:not(.dragging)'),

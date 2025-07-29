@@ -22,13 +22,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function addItemForm() {
   injectStyle(css)
 
@@ -53,10 +46,6 @@ export function addItemForm() {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 function build(el) {
   const addToBothEl = createButton({

@@ -27,9 +27,6 @@ export function createAnchor({ className, id, html, url } = {}) {
 // Constructor
 // -------------------------------
 
-/**
- *
- */
 function createElement({ className, id, html, url }) {
   const el = document.createElement('a')
 

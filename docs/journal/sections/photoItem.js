@@ -37,10 +37,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 /**
  * Constructor for the custom item
  * @param {String} id The id of the image
@@ -59,13 +55,6 @@ export function createPhotoItem({ id, imgSrc, caption }) {
   return el
 }
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- *
- */
 function build(el) {
   const cgEl = createCollapsibleGroup({
     collapsed: true,
@@ -86,9 +75,6 @@ function build(el) {
   )
 }
 
-/**
- *
- */
 function listen(el) {
   el.querySelector('.fa-trash').addEventListener('click', async (e) => {
     const parent = e.target.closest('.photo-item')

@@ -9,13 +9,6 @@ import { state } from '../js/state.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function search({
   id = 'left-panel-search',
   name,

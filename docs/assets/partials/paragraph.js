@@ -9,13 +9,6 @@ import { state } from '../js/state.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function createParagraph({ id, className, html } = {}) {
   injectStyle(css)
 
@@ -42,25 +35,12 @@ export function createParagraph({ id, className, html } = {}) {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {}
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   // state.on('stateVar', 'subscriberName', (stateValue) => {})
 }
 
-/**
- *
- */
 function listen({ el, id }) {
   // el.addEventListener('click', () => {})
 }

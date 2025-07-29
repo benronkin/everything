@@ -23,10 +23,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
 /**
  * Constructor for a custom horizontal form
  */
@@ -78,10 +74,6 @@ export function createSelectGroup({
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 /**
  * Add sub elements to the element. No need

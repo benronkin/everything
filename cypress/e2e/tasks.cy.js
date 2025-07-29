@@ -118,13 +118,6 @@ describe('Interacting with tasks', () => {
   })
 })
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function getTaskByTitleFromListEl(listEl, title) {
   return listEl.getChildren().find((child) => child.title === title)
 }

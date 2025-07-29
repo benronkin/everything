@@ -14,13 +14,6 @@ import { log } from '../../assets/js/logger.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function shoppingItem({ item }) {
   injectStyle(css)
 
@@ -59,10 +52,6 @@ export function shoppingItem({ item }) {
 
   return el
 }
-
-// -------------------------------
-// Helpers
-// -------------------------------
 
 function react(el) {
   state.on('icon-click:sort-icon', 'shoppingItem', () =>

@@ -15,13 +15,6 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function leftPanel() {
   injectStyle(css)
 
@@ -37,13 +30,6 @@ export function leftPanel() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- * Add sub elements to the element
- */
 function build(el) {
   el.appendChild(
     search({
@@ -56,9 +42,6 @@ function build(el) {
   el.appendChild(mainDocumentsList())
 }
 
-/**
- * Subscribe to state.
- */
 function react(el) {
   state.on('app-mode', 'leftPanel', (appMode) => {
     if (appMode !== 'left-panel') {
@@ -88,9 +71,6 @@ function react(el) {
   })
 }
 
-/**
- *
- */
 function listen({ el, id }) {
   // el.addEventListener('click', () => {})
 }

@@ -9,13 +9,6 @@ import { createDangerZone } from '../../assets/composites/dangerZone.js'
 const css = `
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function dangerZone() {
   injectStyle(css)
 
@@ -32,13 +25,6 @@ export function dangerZone() {
   return el
 }
 
-// -------------------------------
-// Helpers
-// -------------------------------
-
-/**
- *
- */
 function react(el) {
   state.on('icon-click:show-delete-modal-icon', 'dangerZone', () => {
     const id = state.get('active-doc')

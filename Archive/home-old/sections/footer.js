@@ -14,13 +14,6 @@ right: 0;
 }
 `
 
-// -------------------------------
-// Exports
-// -------------------------------
-
-/**
- * Constuctor of a custom element
- */
 export function footer() {
   injectStyle(css)
 
