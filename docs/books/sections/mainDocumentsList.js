@@ -84,7 +84,16 @@ function makeBrowseResults(docs) {
       html: [creteToggler(k), createSpan({ html: `${k} (${v.length})` })],
     })
 
-    html.style.width = '80px'
+    html.style.width = '100px'
+    html.style.cursor = 'pointer'
+
+    // i.click has stopPropagation hence mouseup
+    html.addEventListener('mouseup', (e) => {
+      const lis = document.querySelectorAll(`[data-read="${k}"]`)
+      lis.forEach((li) => li.classList.toggle('hidden'))
+
+      if (!e.target.closest('i')) html.querySelector('i').click()
+    })
 
     children.push(
       createHeader({
@@ -144,14 +153,6 @@ function creteToggler(k) {
   const secondary = k !== thisYear ? 'fa-chevron-down' : 'fa-chevron-right'
 
   const el = createIcon({ classes: { primary, secondary } })
-
-  el.addEventListener('click', () => {
-    document
-      .querySelectorAll(`[data-read="${k}"]`)
-      .forEach((li) =>
-        li.classList.toggle('hidden', el.classList.contains('fa-chevron-right'))
-      )
-  })
 
   return el
 }
