@@ -62,12 +62,12 @@ async function build(el) {
       id: 'book-rating',
       classes: {
         group: 'mb-40 w-fc',
-        wrapper: 'primary',
+        wrapper: '',
         select: 'field',
         icon: 'fa-star',
       },
       options: [
-        { value: '', label: '' },
+        { value: '', label: 'Rate' },
         { value: 'great', label: '🔥' },
         { value: 'medium', label: '🆗' },
         { value: 'bad', label: '🤮' },

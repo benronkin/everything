@@ -89,9 +89,9 @@ function getOptionByLabel(label) {
 
 function getOptionByValue(value) {
   value = value?.trim()
-  if (!value) {
-    return null
-  }
+  // if (!value) {
+  //   return null
+  // }
   return [...this.querySelectorAll('option')].find((opt) => opt.value === value)
 }
 
