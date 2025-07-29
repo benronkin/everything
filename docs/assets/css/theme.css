@@ -427,7 +427,7 @@ main {
 .md-item:hover,
 .md-item.active {
   border: 1px solid var(--purple3);
-  color: var(--purple3);
+  color: var(--purple3) !important;
 }
 .outer-wrapper {
   background-color: color-mix(in srgb, var(--gray6) 2%, transparent);

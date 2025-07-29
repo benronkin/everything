@@ -8,6 +8,7 @@ import {
   createMainDocumentItem,
   handleMainDocumentClick,
 } from '../../assets/partials/mainDocumentItem.js'
+import { createIcon } from '../../assets/partials/icon.js'
 
 export function mainDocumentsList() {
   const el = createMainDocumentsList({
@@ -51,9 +52,7 @@ function makeSearchResults(exact, related) {
         className: 'list-header',
       })
     )
-    children.push(
-      ...exact.map((doc) => createItem(doc, `${doc.title} by ${doc.author}`))
-    )
+    children.push(...exact.map(createItem))
   }
 
   if (related.length) {
@@ -64,9 +63,7 @@ function makeSearchResults(exact, related) {
         className: 'list-header',
       })
     )
-    children.push(
-      ...related.map((doc) => createItem(doc, `${doc.title} by ${doc.author}`))
-    )
+    children.push(...related.map(createItem))
   }
 
   return children
@@ -78,35 +75,83 @@ function makeBrowseResults(docs) {
 
   docs.forEach((doc) => {
     if (!map.has(doc.read_year)) map.set(doc.read_year, [])
-    map
-      .get(doc.read_year)
-      .push({ id: doc.id, html: `${doc.title} by ${doc.author}` })
+    map.get(doc.read_year).push(doc)
   })
 
   for (const [k, v] of map) {
+    const html = createDiv({
+      className: 'flex justify-between align-center',
+      html: [creteToggler(k), createSpan({ html: `${k} (${v.length})` })],
+    })
+
+    html.style.width = '80px'
+
     children.push(
       createHeader({
-        html: `${k} (${v.length})`,
+        html,
         type: 'h5',
         className: 'list-header',
       })
     )
-    children.push(...v.map(({ id, html }) => createItem({ id }, html)))
+
+    const items = v.map(createItem)
+    const date = new Date()
+    const thisYear = date.getFullYear()
+    for (let i = 0; i < v.length; i++) {
+      const item = items[i]
+      const doc = v[i]
+      item.dataset.read = doc.read_year
+      if (thisYear !== doc.read_year) item.classList.add('hidden')
+    }
+
+    children.push(...items)
   }
 
   return children
 }
 
-function createItem(doc, h) {
+function createItem(doc) {
   const html = createDiv({
     className: 'flex justify-between w-100',
-    html: [createSpan({ html: h })],
+    html: [
+      createSpan({ html: doc.title }),
+      createSpan({ html: doc.author, className: 'c-gray3' }),
+    ],
   })
+
   const li = createMainDocumentItem({ id: doc.id, html })
   li.removeEventListener('click', handleMainDocumentClick)
   li.addEventListener('click', () => {
+    state.set('window.scrollY', window.scrollY)
+
+    // console.log(
+    //   'setting',
+    //   window.scrollY / (document.body.scrollHeight - window.innerHeight)
+    // )
     state.set('active-doc', doc.id)
     state.set('app-mode', 'main-panel')
   })
   return li
+}
+
+function creteToggler(k) {
+  const date = new Date()
+  const thisYear = date.getFullYear()
+
+  k = parseInt(k)
+
+  const primary = k === thisYear ? 'fa-chevron-down' : 'fa-chevron-right'
+  const secondary = k !== thisYear ? 'fa-chevron-down' : 'fa-chevron-right'
+
+  const el = createIcon({ classes: { primary, secondary } })
+
+  el.addEventListener('click', () => {
+    document
+      .querySelectorAll(`[data-read="${k}"]`)
+      .forEach((li) =>
+        li.classList.toggle('hidden', el.classList.contains('fa-chevron-right'))
+      )
+  })
+
+  return el
 }

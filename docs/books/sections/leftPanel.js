@@ -46,6 +46,9 @@ function react(el) {
 
     el.classList.remove('hidden')
 
+    const scrollY = state.get('window.scrollY') || 0
+    window.scroll({ top: scrollY, behavior: 'auto' })
+
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
     const currentId = state.get('active-doc')
