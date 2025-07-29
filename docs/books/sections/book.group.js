@@ -1,5 +1,6 @@
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
+import { createInput } from '../../assets/partials/input.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSelectGroup } from '../../assets/partials/selectGroup.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -78,23 +79,37 @@ async function build(el) {
     createDiv({
       className: 'flex align-center gap-20',
       html: [
-        createInputGroup({
-          id: 'book-read-year',
-          name: 'read_year',
-          placeholder: 'Year read',
-          autocomplete: 'off',
-          classes: { group: '', input: 'field w-100', icon: 'fa-calendar' },
+        createDiv({
+          className: 'flex flex-column',
+          html: [
+            createSpanGroup({
+              classes: { group: 'mt-30 mb-20', icon: 'fa-calendar' },
+              html: 'Year read',
+            }),
+            createInput({
+              id: 'book-read-year',
+              name: 'read_year',
+              placeholder: 'Year read',
+              autocomplete: 'off',
+              className: 'field w-100',
+            }),
+          ],
         }),
-        createInputGroup({
-          id: 'book-published-year',
-          name: 'published_year',
-          placeholder: 'Year published',
-          autocomplete: 'off',
-          classes: {
-            group: '',
-            input: 'field w-100',
-            icon: 'fa-calendar',
-          },
+        createDiv({
+          className: 'flex flex-column',
+          html: [
+            createSpanGroup({
+              classes: { group: 'mt-30 mb-20', icon: 'fa-calendar' },
+              html: 'Year published',
+            }),
+            createInput({
+              id: 'book-published-year',
+              name: 'published_year',
+              placeholder: 'Year published',
+              autocomplete: 'off',
+              className: 'field w-100',
+            }),
+          ],
         }),
       ],
     })
@@ -117,25 +132,26 @@ async function build(el) {
 
 function react(el) {
   state.on('app-mode', 'mainPanel', async (appMode) => {
-    if (appMode !== 'main-panel') {
-      return
-    }
+    if (appMode !== 'main-panel') return
 
     const id = state.get('active-doc')
     const doc = state.get('main-documents').find((d) => d.id === id)
 
     if (!doc.note?.length) {
       const { book } = await fetchBook(id)
-      console.log('book', book)
-      doc.note = book.note
+      doc.note = book.note || ''
     }
 
-    el.querySelector('#book-title').value = doc.title
-    el.querySelector('#book-author').value = doc.author || ''
-    el.querySelector('#book-note').setValue(doc.note)
-    el.querySelector('#book-rating').selectByValue(doc.rating || '')
-    el.querySelector('#book-read-year').value = doc.read_year || ''
-    el.querySelector('#book-published-year').value = doc.published_year || ''
-    el.querySelector('#book-id').insertHtml(doc.id)
+    // animation frame needed to paint the form
+    // so textarea can be resized
+    requestAnimationFrame(() => {
+      el.querySelector('#book-title').value = doc.title
+      el.querySelector('#book-author').value = doc.author || ''
+      el.querySelector('#book-note').setValue(doc.note)
+      el.querySelector('#book-rating').selectByValue(doc.rating || '')
+      el.querySelector('#book-read-year').value = doc.read_year || ''
+      el.querySelector('#book-published-year').value = doc.published_year || ''
+      el.querySelector('#book-id').insertHtml(doc.id)
+    })
   })
 }

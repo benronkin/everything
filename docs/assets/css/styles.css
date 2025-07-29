@@ -261,6 +261,9 @@ ul {
   justify-content: space-between;
   gap: 10px;
 }
+.flex-column {
+  flex-direction: column !important;
+}
 .f-italic {
   font-style: italic !important;
 }

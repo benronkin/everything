@@ -10,6 +10,7 @@ export function dangerZone() {
 
   const el = createDangerZone({
     modalId: 'modal-delete',
+    password: false,
   })
 
   react(el)

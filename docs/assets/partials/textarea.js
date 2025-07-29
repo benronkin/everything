@@ -56,6 +56,7 @@ function listen(el) {
 
 function resize() {
   const { scrollTop } = document.documentElement // or window.pageYOffset
+
   this.style.height = 'auto'
   this.style.height = 25 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop

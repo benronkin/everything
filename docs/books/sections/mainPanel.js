@@ -47,7 +47,7 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('app-mode', 'mainPanel', (appMode) => {
+  state.on('app-mode', 'mainPanel', async (appMode) => {
     el.classList.toggle('hidden', appMode !== 'main-panel')
   })
 }
