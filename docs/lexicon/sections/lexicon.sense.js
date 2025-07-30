@@ -2,7 +2,7 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createSelectGroup } from '../../assets/partials/selectGroup.js'
+import { createSelect } from '../../assets/partials/select.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -25,17 +25,22 @@ export function createLexiconGroup({ sense, noFaMinus = false }) {
 }
 
 async function build(el, sense, noFaMinus) {
-  const posWrapper = createDiv({ className: 'flex align-center mb-20 ' })
+  el.appendChild(
+    createSpanGroup({
+      classes: {
+        group: 'mt-20 mb-10',
+        icon: 'fa-layer-group',
+      },
+      html: 'Part of speech',
+    })
+  )
+
+  const posWrapper = createDiv({ className: 'flex align-center' })
   el.appendChild(posWrapper)
 
-  const partSelect = createSelectGroup({
+  const partSelect = createSelect({
     name: 'pos',
-    classes: {
-      group: 'w-fc',
-      wrapper: 'pos primary',
-      select: 'field',
-      icon: 'fa-layer-group',
-    },
+    className: 'w-fc pos primary field mb-20',
     options: [
       { value: '', label: '' },
       { value: 'noun', label: 'Noun' },
@@ -47,7 +52,7 @@ async function build(el, sense, noFaMinus) {
   })
   posWrapper.appendChild(partSelect)
 
-  partSelect.querySelector('.pos').selectByValue(sense.partOfSpeech)
+  partSelect.selectByValue(sense.partOfSpeech)
 
   if (!noFaMinus) {
     posWrapper.appendChild(
@@ -58,7 +63,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createSpanGroup({
       classes: {
-        group: 'ml-20',
+        group: 'mt-20 mb-10',
         icon: 'fa-magnifying-glass-arrow-right',
       },
       html: 'Definition',
@@ -68,7 +73,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'definition',
-      className: 'ml-20 field w-100',
+      className: 'field w-100',
       placeholder: 'Add definition',
       value: sense.definition,
     })
@@ -77,7 +82,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createSpanGroup({
       classes: {
-        group: 'ml-20',
+        group: 'mt-20 mb-10',
         icon: 'fa-feather-pointed',
       },
       html: 'Example',
@@ -87,7 +92,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'example',
-      className: 'ml-20 field w-100',
+      className: 'field w-100',
       placeholder: 'Add example',
       value: sense.example,
     })
@@ -96,7 +101,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createSpanGroup({
       classes: {
-        group: 'mb-10 ml-20',
+        group: 'mb-10 mt-20',
         icon: 'fa-water',
       },
       html: 'Synonyms',
@@ -106,7 +111,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'synonyms',
-      className: 'ml-20 field w-100',
+      className: 'field w-100',
       placeholder: 'Add synonyms',
       value: sense.synonyms,
     })
@@ -115,7 +120,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createSpanGroup({
       classes: {
-        group: 'ml-20',
+        group: 'mt-20 mb-10',
         icon: 'fa-user',
       },
       html: 'Added by',
@@ -123,7 +128,7 @@ async function build(el, sense, noFaMinus) {
   )
 
   el.appendChild(
-    createSpan({ html: sense.submitterName, className: 'submitter ml-20' })
+    createSpan({ html: sense.submitterName, className: 'submitter' })
   )
 
   el.querySelectorAll('.field').forEach((f) => {
