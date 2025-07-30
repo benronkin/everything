@@ -127,9 +127,13 @@ async function build(el, sense, noFaMinus) {
     })
   )
 
-  el.appendChild(
-    createSpan({ html: sense.submitterName, className: 'submitter' })
-  )
+  const date = new Date(sense.created_at)
+  const html = `${sense.submitterName} (${date.toLocaleDateString('en-us', {
+    month: 'short',
+    year: '2-digit',
+  })})`
+
+  el.appendChild(createSpan({ html, className: 'submitter' }))
 
   el.querySelectorAll('.field').forEach((f) => {
     f.addEventListener('change', (e) => state.set('field-change', e))
