@@ -227,6 +227,9 @@ ul {
   backdrop-filter: blur(6px);
   border-radius: 12px;
 }
+.caret-wrapper {
+  cursor: pointer;
+}
 .column-start {
   align-items: flex-start !important;
 }
