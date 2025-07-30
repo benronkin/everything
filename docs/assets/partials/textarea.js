@@ -47,10 +47,16 @@ function listen(el) {
     }
   })
   el.addEventListener('change', () => {
-    el.resize()
+    requestAnimationFrame(() => {
+      // let value be set, then:
+      el.resize()
+    })
   })
   el.addEventListener('paste', () => {
-    el.resize()
+    requestAnimationFrame(() => {
+      // let value be set, then:
+      el.resize()
+    })
   })
 }
 
