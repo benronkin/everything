@@ -33,7 +33,7 @@ export function createTextarea({
     el.dataset.id = id
   }
   className && (el.className = className)
-  value && (el.value = value)
+  value && el.setValue(value)
   name && (el.name = name)
   placeholder && (el.placeholder = placeholder)
 
@@ -66,7 +66,7 @@ function resize() {
   this.style.height = 'auto'
   this.style.height = 25 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop
-  // console.log('resized to', this.style.height)
+  console.log('resized to', this.style.height)
 }
 
 function setValue(value = '') {
