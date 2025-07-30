@@ -130,7 +130,7 @@ async function build(el, sense, noFaMinus) {
   const date = new Date(sense.created_at)
   const html = `${sense.submitterName} (${date.toLocaleDateString('en-us', {
     month: 'short',
-    year: '4-digit',
+    year: 'numeric',
   })})`
 
   el.appendChild(createSpan({ html, className: 'submitter' }))
