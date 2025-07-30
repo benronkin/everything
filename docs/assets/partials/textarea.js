@@ -71,5 +71,8 @@ function resize() {
 
 function setValue(value = '') {
   this.value = value
-  this.resize()
+  requestAnimationFrame(() => {
+    // let value be set, then:
+    this.resize()
+  })
 }
