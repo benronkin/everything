@@ -101,12 +101,15 @@ async function reactBookAdd() {
     return
   }
 
-  const dateString = new Date().toISOString()
+  const date = new Date()
+  const created_at = date.toISOString()
+  const read_year = date.getFullYear()
 
   const doc = {
     id,
     title: 'new Book',
-    created_at: dateString,
+    created_at,
+    read_year,
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
