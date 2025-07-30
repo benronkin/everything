@@ -43,12 +43,13 @@ export async function handleEntryAdd() {
     state.get('lexicon-search').q || state.get('active-doc') || 'new entry'
 
   const id = `ev${crypto.randomUUID()}`
+  const submitter = state.get('user').id
 
   const sense = {
     id,
     title: title.trim().toLowerCase(),
     created_at: new Date().toISOString(),
-    submitter: state.get('user').id,
+    submitter,
   }
 
   const { error } = await createEntry(sense)
@@ -56,6 +57,8 @@ export async function handleEntryAdd() {
     setMessage({ message: `Lexicon server error: ${error}` })
     return
   }
+
+  sense.submitterName = state.get('user').first_name
 
   const docs = state.get('main-documents')
   let doc = docs.find((d) => d.title === title)
