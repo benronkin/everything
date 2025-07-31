@@ -71,7 +71,6 @@ function build(el) {
   const titleEl = createTextarea({
     name: 'title',
     placeholder: 'Task...',
-    className: 'field',
   })
   titleEl.dataset.target = 'title'
   gridEl.appendChild(titleEl)
@@ -97,7 +96,6 @@ function build(el) {
 
   const detailsEl = createTextarea({
     name: 'details',
-    className: 'field',
     placeholder: 'Add details...',
   })
   detailsEl.dataset.target = 'details'
@@ -134,16 +132,6 @@ function listen(el) {
     )
     document.querySelector('[name="details"]').resize()
   })
-
-  el.querySelectorAll('.field').forEach((field) =>
-    field.addEventListener('change', () => {
-      state.set('field-change:tasks-list', {
-        id: el.id,
-        section: field.name,
-        value: field.value,
-      })
-    })
-  )
 }
 
 function setDraggable(isDraggable) {

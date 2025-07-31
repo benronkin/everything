@@ -164,6 +164,8 @@ function listen(el) {
   el.querySelector('.custom-select').addEventListener('change', (e) => {
     el.selectByValue(e.target.value)
     state.set(`select-click:${el.id || el.name}`, e.target.value)
+
+    state.set('field-changed', e.target)
   })
 
   const selectEl = el.querySelector('.custom-select')

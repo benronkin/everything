@@ -69,7 +69,7 @@ function build() {
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
 
-  state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
+  state.on('field-changed', 'tasks', handleTaskUpdate)
 
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 
@@ -112,12 +112,18 @@ async function handleAddTask() {
   }
 }
 
-async function handleTaskUpdate({ id, section, value }) {
+async function handleTaskUpdate(el) {
   try {
+    const section = el.name
+    const value = el.value
+    const parent = el.closest('.td-item')
+    const id = parent.id
+
     const { error } = await updateTask({ id, section, value })
     if (error) {
       throw new Error(error)
     }
+    setMessage({ message: 'Saved', type: 'quiet' })
   } catch (err) {
     log(err)
   }

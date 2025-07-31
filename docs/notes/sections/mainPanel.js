@@ -15,7 +15,6 @@ import {
 import { setMessage } from '../../assets/js/ui.js'
 import { debounce } from '../../assets/js/utils.js'
 import { removeToasts } from '../../assets/partials/toast.js'
-import { log } from '../../assets/js/logger.js'
 import { createButton } from '../../assets/partials/button.js'
 
 const css = `
@@ -125,9 +124,8 @@ export function executeNoteUpdate() {
   doc.note = note
   state.set('main-documents', docs)
 
-  updateNote({ id, title, note }).then(() =>
-    setMessage({ message: 'saved', type: 'quiet' })
-  )
+  updateNote({ id, title, note })
+  setMessage({ message: 'saved', type: 'quiet' })
 
   // used to force save after 15 seconds of no-save
   state.set('mainPanel:last-save', Date.now())

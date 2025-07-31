@@ -34,7 +34,7 @@ function react(el) {
     el.appendChild(tasksBody(tasks))
   })
 
-  state.on('field-change:tasks-list', 'tasks', handleTaskUpdate)
+  state.on('field-changed', 'tasks', handleTaskUpdate)
 
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 
@@ -77,14 +77,24 @@ function tasksBody(tasks) {
   return list
 }
 
-async function handleTaskUpdate({ id, section, value }) {
+async function handleTaskUpdate(el) {
   try {
-    const { error } = await updateTask({ id, section, value })
+    const section = el.name
+    const value = el.value
+    const parent = el.closest('.td-item')
+    const id = parent.id
+
+    const { error } = await updateTask({
+      id,
+      section,
+      value,
+    })
     if (error) {
       throw new Error(error)
     }
+    setMessage({ message: 'Saved', type: 'quiet' })
   } catch (err) {
-    log(err)
+    console.log(err)
   }
 }
 

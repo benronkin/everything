@@ -1,9 +1,6 @@
 import { injectStyle } from '../js/ui.js'
-// import { log } from '../js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
+import { debounce } from '../js/utils.js'
+import { state } from '../js/state.js'
 
 const css = `
 input {
@@ -12,13 +9,6 @@ input {
 }
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Constructor for a custom input element
- */
 export function createInput({
   id,
   className,
@@ -52,5 +42,38 @@ export function createInput({
 
   el.autocomplete = autocomplete
 
+  listen(el)
+
   return el
 }
+
+function listen(el) {
+  el.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.key === 's') {
+      e.preventDefault()
+      state.set('field-changed', e.target)
+    }
+  })
+
+  el.addEventListener('keyup', (e) => {
+    e.preventDefault()
+    if (e.key === 'Enter') {
+      el.resize()
+      state.set('field-changed', e.target)
+    } else {
+      debouncedUpdate(e.target)
+    }
+  })
+
+  el.addEventListener('change', (e) => {
+    state.set('field-changed', e.target)
+  })
+
+  el.addEventListener('paste', (e) => {
+    state.set('field-changed', e.target)
+  })
+}
+
+const debouncedUpdate = debounce((el) => {
+  state.set('field-changed', el)
+}, 1500)

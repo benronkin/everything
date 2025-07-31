@@ -88,9 +88,8 @@ function executeNoteUpdate() {
   docs[idx][section] = value
   state.set('main-documents', docs)
 
-  updateBook({ id, section, value }).then(() =>
-    setMessage({ message: 'saved', type: 'quiet' })
-  )
+  updateBook({ id, section, value })
+  setMessage({ message: 'saved', type: 'quiet' })
 
   // used to force save after 15 seconds of no-save
   state.set('mainPanel:last-save', Date.now())

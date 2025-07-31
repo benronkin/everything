@@ -1,5 +1,6 @@
-import { injectStyle, isMobile } from '../js/ui.js'
-import { log } from '../js/logger.js'
+import { injectStyle } from '../js/ui.js'
+import { state } from '../js/state.js'
+import { debounce } from '../js/utils.js'
 
 const css = `
 textarea {
@@ -12,13 +13,7 @@ textarea {
 }
 `
 
-export function createTextarea({
-  id,
-  name,
-  value,
-  className,
-  placeholder,
-} = {}) {
+export function createTextarea({ id, name, value, className, placeholder }) {
   injectStyle(css)
 
   const el = document.createElement('textarea')
@@ -41,21 +36,36 @@ export function createTextarea({
 }
 
 function listen(el) {
-  el.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') {
-      el.resize()
+  el.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.key === 's') {
+      e.preventDefault()
+      state.set('field-changed', e.target)
     }
   })
-  el.addEventListener('change', () => {
+
+  el.addEventListener('keyup', (e) => {
+    e.preventDefault()
+    if (e.key === 'Enter') {
+      el.resize()
+      state.set('field-changed', e.target)
+    } else {
+      debouncedUpdate(e.target)
+    }
+  })
+
+  el.addEventListener('change', (e) => {
     requestAnimationFrame(() => {
       // let value be set, then:
       el.resize()
+      state.set('field-changed', e.target)
     })
   })
-  el.addEventListener('paste', () => {
+
+  el.addEventListener('paste', (e) => {
     requestAnimationFrame(() => {
       // let value be set, then:
       el.resize()
+      state.set('field-changed', e.target)
     })
   })
 }
@@ -66,7 +76,7 @@ function resize() {
   this.style.height = 'auto'
   this.style.height = 25 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop
-  console.log('resized to', this.style.height)
+  // console.log('resized to', this.style.height)
 }
 
 function setValue(value = '') {
@@ -76,3 +86,7 @@ function setValue(value = '') {
     this.resize()
   })
 }
+
+const debouncedUpdate = debounce((el) => {
+  state.set('field-changed', el)
+}, 1500)
