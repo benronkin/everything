@@ -84,7 +84,7 @@ async function build() {
   body.prepend(wrapperEl)
   wrapperEl.appendChild(nav())
 
-  const div = createDiv()
+  const div = createDiv({ className: 'container' })
   wrapperEl.appendChild(div)
 
   const searchEl = search({
