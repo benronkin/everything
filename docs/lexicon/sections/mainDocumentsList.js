@@ -31,14 +31,22 @@ function react(el) {
         .join(', ')
     })
 
-    const exact = docs.filter((d) => d.matchType !== 'related')
+    const recent = docs.filter((d) => d.matchType === 'recent')
+    const exact = docs.filter((d) => d.matchType === 'exact')
     const related = docs.filter((d) => d.matchType === 'related')
 
     const children = []
 
-    // if (all.length) {
-    //   children.push(...all.map(createItem))
-    // }
+    if (recent.length) {
+      children.push(
+        createHeader({
+          html: 'Recently viewed',
+          type: 'h5',
+          className: 'list-header',
+        })
+      )
+      children.push(...recent.map(createItem))
+    }
 
     if (exact.length) {
       children.push(

@@ -11,6 +11,7 @@ import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { fetchEntry } from './lexicon.api.js'
 import { search } from '../assets/composites/search.js'
+import { fetchRecentEntries, updateEntryAccess } from './lexicon.api.js'
 import {
   handleSearch,
   handleFieldChange,
@@ -34,7 +35,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    let [{ user }, { users }] = await Promise.all([getMe(), fetchUsers()])
+    let [{ entries }, { user }, { users }] = await Promise.all([
+      fetchRecentEntries(),
+      getMe(),
+      fetchUsers(),
+    ])
 
     if (user.prefs) user.prefs = JSON.parse(user.prefs)
 
@@ -52,6 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       state.set('active-doc', t)
       state.set('app-mode', 'main-panel')
     } else {
+      entries.forEach((e) => {
+        e.senses = JSON.parse(e.senses)
+      })
+      state.set('main-documents', entries)
       state.set('app-mode', 'left-panel')
     }
 
@@ -105,6 +114,11 @@ async function build() {
 }
 
 function react() {
+  state.on('active-doc', 'lexicon', (e) => {
+    if (!e) return
+    updateEntryAccess({ title: e })
+  })
+
   state.on('icon-click:add', 'lexicon', handleEntryAdd)
 
   state.on('button-click:add-entry', 'lexicon', handleEntryAdd)

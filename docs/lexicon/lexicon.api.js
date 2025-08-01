@@ -45,6 +45,13 @@ export async function updateEntry({ id, section, value }) {
   return { message, error }
 }
 
+export async function updateEntryAccess({ title }) {
+  const { message, error } = await getWebApp(
+    `${url}/update-access?title=${title}`
+  )
+  return { message, error }
+}
+
 export async function updateEntries(doc) {
   return await postWebAppJson(`${url}/update`, doc)
 }
