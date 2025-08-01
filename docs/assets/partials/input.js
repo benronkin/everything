@@ -58,7 +58,6 @@ function listen(el) {
   el.addEventListener('keyup', (e) => {
     e.preventDefault()
     if (e.key === 'Enter') {
-      el.resize()
       state.set('field-changed', e.target)
     } else {
       debouncedUpdate(e.target)
