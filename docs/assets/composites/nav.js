@@ -2,9 +2,7 @@ import { injectStyle } from '../js/ui.js'
 import { createAvatar } from '../partials/avatar.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
-import { createIcon } from '../partials/icon.js'
 import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 
@@ -60,6 +58,12 @@ export function createNav({ title } = {}) {
   return el
 }
 
+export function handleBrandClick() {
+  if (!document.querySelector('#left-panel')) return
+  state.set('app-mode', 'left-panel')
+  state.set('active-doc', null)
+}
+
 function build(el) {
   const containerEl = createDiv({ className: 'container' })
   el.appendChild(containerEl)
@@ -85,9 +89,5 @@ function react(el) {
 }
 
 function listen(el) {
-  el.querySelector('.brand').addEventListener('click', () => {
-    if (!document.querySelector('#left-panel')) return
-    state.set('app-mode', 'left-panel')
-    state.set('active-doc', null)
-  })
+  el.querySelector('.brand').addEventListener('click', handleBrandClick)
 }
