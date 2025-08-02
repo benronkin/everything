@@ -106,14 +106,11 @@ function react() {
   state.on('app-mode', 'recipes', (appMode) => {
     if (appMode === 'main-panel') populateRelatedRecipes()
   })
+
+  state.on('field-changed', 'recipes', handleFieldChange)
 }
 
 function listen() {
-  // When recipe field loses focus
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
-  })
-
   // When recipe category switch is toggled
   document.getElementById('related-switch').addEventListener('click', () => {
     document.getElementById('recipe-related').classList.toggle('hidden')
@@ -195,10 +192,9 @@ async function reactRecipeSearch() {
  * Handle Recipe field change
  */
 
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
+async function handleFieldChange(el) {
+  const section = el.name
+  let value = el.value
 
   const id = state.get('active-doc')
   const docs = state.get('main-documents')
@@ -211,7 +207,7 @@ async function handleFieldChange(e) {
     if (error) {
       throw new Error(error)
     }
-    // log(message)
+    setMessage({ message: 'Saved', type: 'quiet' })
   } catch (error) {
     setMessage({ message: error, type: 'danger' })
   }

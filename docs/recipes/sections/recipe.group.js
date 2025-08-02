@@ -24,7 +24,7 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'field w-100', icon: 'fa-utensils' },
+      classes: { group: '', input: 'w-100', icon: 'fa-utensils' },
     })
   )
 
@@ -39,7 +39,7 @@ async function build(el) {
     createTextarea({
       name: 'notes',
       id: 'recipe-notes',
-      className: 'mb-20 field w-100',
+      className: 'mb-20 w-100',
       placeholder: 'Add notes...',
     })
   )
@@ -55,7 +55,7 @@ async function build(el) {
     createTextarea({
       name: 'ingredients',
       id: 'recipe-ingredients',
-      className: 'mb-20 field w-100',
+      className: 'mb-20 w-100',
       placeholder: 'Ingredients',
     })
   )
@@ -71,7 +71,7 @@ async function build(el) {
     createTextarea({
       name: 'method',
       id: 'recipe-method',
-      className: 'mb-20 field w-100',
+      className: 'mb-20 w-100',
       placeholder: 'Method',
     })
   )
@@ -83,7 +83,6 @@ async function build(el) {
       classes: {
         group: 'mb-40 w-fc',
         wrapper: 'primary',
-        select: 'field',
         icon: 'fa-layer-group',
       },
     })
@@ -95,7 +94,7 @@ async function build(el) {
       name: 'tags',
       placeholder: 'Tags',
       autocomplete: 'off',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-tag' },
+      classes: { group: 'mb-40', icon: 'fa-tag' },
     })
   )
 
@@ -113,7 +112,7 @@ async function build(el) {
     createTextarea({
       name: 'related',
       id: 'recipe-related',
-      className: 'field hidden w-100 bg-blue0 p-10',
+      className: 'hidden w-100 bg-blue0 p-10',
     })
   )
   el.appendChild(createList({ id: 'related-list' }))
