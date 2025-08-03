@@ -26,14 +26,6 @@ export function leftPanel() {
 }
 
 function build(el) {
-  // el.appendChild(
-  //   search({
-  //     id: 'left-panel-search',
-  //     placeholder: 'Search lexicon...',
-  //     name: 'search-lexicon',
-  //   })
-  // )
-
   el.appendChild(newEntry())
 
   el.appendChild(mainDocumentsList())

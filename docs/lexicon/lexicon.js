@@ -35,11 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    let [{ entries }, { user }, { users }] = await Promise.all([
-      fetchRecentEntries(),
-      getMe(),
-      fetchUsers(),
-    ])
+    let [{ user }, { users }] = await Promise.all([getMe(), fetchUsers()])
 
     if (user.prefs) user.prefs = JSON.parse(user.prefs)
 
@@ -57,11 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       state.set('active-doc', t)
       state.set('app-mode', 'main-panel')
     } else {
-      entries.forEach((e) => {
-        e.senses = JSON.parse(e.senses)
-      })
-      state.set('main-documents', entries)
-      state.set('app-mode', 'left-panel')
+      state.set('default-left-pane', true)
     }
 
     state.set('user', user)
@@ -114,6 +106,19 @@ async function build() {
 }
 
 function react() {
+  state.on('default-left-pane', 'lexicon', async () => {
+    document.querySelector('[name="search-lexicon"').value = ''
+
+    const { entries } = await fetchRecentEntries()
+
+    entries.forEach((e) => {
+      e.senses = JSON.parse(e.senses)
+    })
+    state.set('main-documents', entries)
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
+  })
+
   state.on('active-doc', 'lexicon', (e) => {
     if (!e) return
     updateEntryAccess({ title: e })

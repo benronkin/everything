@@ -44,4 +44,6 @@ function react(el) {
       '#add-entry'
     ).innerHTML = `<i class="fa-solid fa-plus"></i> Add "${q}"`
   })
+
+  state.on('main-documents', 'newEntry', () => el.classList.add('hidden'))
 }
