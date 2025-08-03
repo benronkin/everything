@@ -21,6 +21,7 @@ function listen(el) {
   brand.removeEventListener('click', handleBrandClick)
 
   brand.addEventListener('click', async () => {
+    document.querySelector('#new-entry-wrapper').classList.add('hidden')
     document.querySelector('[name="search-lexicon"').value = ''
 
     const { entries } = await fetchRecentEntries()
