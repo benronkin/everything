@@ -12,6 +12,7 @@ import { setMessage } from '../assets/js/ui.js'
 import {
   createBook,
   deleteBook,
+  fetchBook,
   fetchRecentBooks,
   searchBooks,
   updateBook,
@@ -43,12 +44,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       return
     }
 
-    setMessage()
-    state.set('main-documents', books)
-    state.set('app-mode', 'left-panel')
+    const urlParams = new URLSearchParams(window.location.search)
+    const id = urlParams.get('id')
+    if (id) {
+      const docExists = books.find((book) => book.id === id)
+      if (!docExists) {
+        const newDoc = await fetchBook(id)
+        books.unshift(newDoc)
+      }
+      state.set('main-documents', books)
+      state.set('active-doc', id)
+      state.set('app-mode', 'main-panel')
+    } else {
+      state.set('main-documents', books)
+      state.set('app-mode', 'left-panel')
+    }
+
     state.set('user', user)
     state.set('default-page', 'books')
     window.state = state // avail to browser console
+    setMessage()
   } catch (error) {
     setMessage({ message: error.message, type: 'danger' })
     console.trace(error)
