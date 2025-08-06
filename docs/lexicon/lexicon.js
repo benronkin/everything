@@ -136,7 +136,7 @@ function react() {
 
   state.on('form-submit:left-panel-search', 'lexicon', handleSearch)
 
-  state.on('field-change', 'lexicon', handleFieldChange)
+  state.on('field-changed', 'lexicon', handleFieldChange)
 
   state.on('name-change', 'lexicon', handleNameChange)
 }

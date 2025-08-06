@@ -78,33 +78,25 @@ export async function handleEntryAdd() {
   state.set('app-mode', 'main-panel') // if added from left-panel
 }
 
-export async function handleFieldChange(e) {
+export async function handleFieldChange(el) {
   const title = state.get('active-doc')
-  const elem = e.target
-  const id = elem.closest('.lexicon-sense').id
-  const sec = elem.name
-  const value = elem.value
+  const id = el.closest('.lexicon-sense').id
+  const sec = el.name
+  const value = el.value
 
   // 1. update main-documents
   const docs = state.get('main-documents')
   const idx1 = docs.findIndex((d) => d.title === title)
   const doc = docs[idx1]
-  const section = sec === 'pos' ? 'partOfSpeech' : elem.name
+  let section = sec === 'pos' ? 'partOfSpeech' : el.name
   const sense = doc.senses.find((s) => s.id === id)
   sense[section] = value
 
   state.set('main-documents', docs)
 
-  // 2. update server
-  try {
-    const section = sec === 'pos' ? 'part_of_speech' : elem.name
-    const { error } = await updateEntry({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
-  } catch (error) {
-    setMessage({ message: error, type: 'danger' })
-  }
+  section = sec === 'pos' ? 'part_of_speech' : el.name
+  updateEntry({ id, section, value })
+  setMessage({ message: 'Saved', type: 'quiet' })
 }
 
 export async function handleNameChange(e) {

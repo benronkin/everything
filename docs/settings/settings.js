@@ -94,9 +94,11 @@ function react() {
     }
   })
 
-  state.on('profile-field', 'settings', async ({ name, value }) => {
-    const { message } = await updateUserField({ field: name, value })
-    // console.log(message)
-    setMessage({ message: 'Change saved' })
+  state.on('field-updated', 'settings', (el) => {
+    const field = el.name
+    const value = el.value
+
+    updateUserField({ field, value })
+    setMessage({ message: 'Saved', type: 'quiet' })
   })
 }

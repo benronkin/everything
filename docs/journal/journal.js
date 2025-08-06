@@ -17,7 +17,6 @@ import {
   fetchRecentEntries,
   searchEntries,
   updateEntry,
-  updateGeoIndex,
   updateJournalDefaults,
 } from './journal.api.js'
 import { log } from '../assets/js/logger.js'
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     react()
-    listen()
 
     const [{ data }, { tree }, { defaults }, { user }] = await Promise.all([
       fetchRecentEntries(),
@@ -86,12 +84,8 @@ function react() {
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)
 
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
-}
 
-function listen() {
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
-  })
+  state.on('field-changed', 'journal', handleFieldChange)
 }
 
 async function reactEntryAdd({ id: btnId }) {
@@ -178,10 +172,9 @@ async function reactSearch() {
   state.set('main-documents', data)
 }
 
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
+async function handleFieldChange(el) {
+  const section = el.name
+  let value = el.value
 
   const id = state.get('active-doc')
   const docs = [...state.get('main-documents')]
@@ -189,20 +182,14 @@ async function handleFieldChange(e) {
   docs[idx][section] = value
   state.set('main-documents', docs)
 
-  try {
-    const { error } = await updateEntry({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
+  updateEntry({ id, section, value })
+  setMessage({ message: 'Saved', type: 'quiet' })
 
-    if (['city', 'state', 'country'].includes(section)) {
-      await updateJournalDefaults({ id, section, value })
+  if (['city', 'state', 'country'].includes(section)) {
+    await updateJournalDefaults({ id, section, value })
 
-      const defaults = state.get('journal-defaults')
-      defaults[section] = value
-      state.set('journal-defaults', defaults)
-    }
-  } catch (err) {
-    log(err)
+    const defaults = state.get('journal-defaults')
+    defaults[section] = value
+    state.set('journal-defaults', defaults)
   }
 }

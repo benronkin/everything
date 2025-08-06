@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     react()
-    listen()
 
     let [{ books, error }, { user }] = await Promise.all([
       fetchRecentBooks(),
@@ -97,15 +96,9 @@ function react() {
   state.on('button-click:modal-delete-btn', 'books', reactBookDelete)
 
   state.on('form-submit:left-panel-search', 'books', reactBookSearch)
-}
 
-function listen() {
-  // When book field loses focus
-  document.querySelectorAll('.field').forEach((field) => {
-    field.addEventListener('change', handleFieldChange)
-  })
+  state.on('field-changed', 'books', handleFieldChange)
 }
-
 async function reactBookAdd() {
   const addBtn = document.getElementById('add-book')
   addBtn.disabled = true
@@ -174,10 +167,9 @@ async function reactBookSearch() {
   state.set('main-documents', data)
 }
 
-async function handleFieldChange(e) {
-  const elem = e.target
-  const section = elem.name
-  let value = elem.value
+async function handleFieldChange(el) {
+  const section = el.name
+  let value = el.value
 
   const id = state.get('active-doc')
   const docs = state.get('main-documents')
@@ -185,13 +177,6 @@ async function handleFieldChange(e) {
   docs[idx][section] = value
   state.set('main-documents', docs)
 
-  try {
-    const { error } = await updateBook({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
-    // log(message)
-  } catch (error) {
-    setMessage({ message: error, type: 'danger' })
-  }
+  updateBook({ id, section, value })
+  setMessage({ message: 'Saved', type: 'quiet' })
 }

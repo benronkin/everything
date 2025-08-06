@@ -40,7 +40,7 @@ async function build(el, sense, noFaMinus) {
 
   const partSelect = createSelect({
     name: 'pos',
-    className: 'w-fc pos primary field mb-20',
+    className: 'w-fc pos primary mb-20',
     options: [
       { value: '', label: '' },
       { value: 'noun', label: 'Noun' },
@@ -73,7 +73,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'definition',
-      className: 'field w-100',
+      className: 'w-100',
       placeholder: 'Add definition',
       value: sense.definition,
     })
@@ -92,7 +92,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'example',
-      className: 'field w-100',
+      className: 'w-100',
       placeholder: 'Add example',
       value: sense.example,
     })
@@ -111,7 +111,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'synonyms',
-      className: 'field w-100',
+      className: 'w-100',
       placeholder: 'Add synonyms',
       value: sense.synonyms,
     })
@@ -134,18 +134,6 @@ async function build(el, sense, noFaMinus) {
   })})`
 
   el.appendChild(createSpan({ html, className: 'submitter' }))
-
-  el.querySelectorAll('.field').forEach((f) => {
-    f.addEventListener('change', (e) => state.set('field-change', e))
-
-    f.addEventListener('keydown', (e) => {
-      if (e.metaKey && e.key === 's') {
-        e.preventDefault()
-        state.set('field-change', e)
-        return
-      }
-    })
-  })
 
   el.querySelectorAll('.fa-minus').forEach((i) =>
     i.addEventListener('click', (e) => {

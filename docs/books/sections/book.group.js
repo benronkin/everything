@@ -26,7 +26,7 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'field w-100', icon: 'fa-book' },
+      classes: { group: '', input: 'w-100', icon: 'fa-book' },
     })
   )
 
@@ -36,7 +36,7 @@ async function build(el) {
       name: 'author',
       placeholder: 'Author',
       autocomplete: 'off',
-      classes: { group: 'mt-30', input: 'field w-100', icon: 'fa-user' },
+      classes: { group: 'mt-30', input: 'w-100', icon: 'fa-user' },
     })
   )
 
@@ -51,7 +51,7 @@ async function build(el) {
     createTextarea({
       name: 'note',
       id: 'book-note',
-      className: 'mb-20 field w-100',
+      className: 'mb-20 w-100',
       placeholder: 'Add note...',
     })
   )
@@ -63,7 +63,6 @@ async function build(el) {
       classes: {
         group: 'mb-40 w-fc',
         wrapper: '',
-        select: 'field',
         icon: 'fa-star',
       },
       options: [
@@ -91,7 +90,7 @@ async function build(el) {
               name: 'read_year',
               placeholder: 'Year read',
               autocomplete: 'off',
-              className: 'field w-100',
+              className: 'w-100',
             }),
           ],
         }),
@@ -107,21 +106,13 @@ async function build(el) {
               name: 'published_year',
               placeholder: 'Year published',
               autocomplete: 'off',
-              className: 'field w-100',
+              className: 'w-100',
             }),
           ],
         }),
       ],
     })
   )
-
-  // el.appendChild(
-
-  // )
-
-  // el.appendChild(
-  //   )
-  // )
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-40' }))
 

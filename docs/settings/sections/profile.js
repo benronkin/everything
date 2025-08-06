@@ -19,8 +19,7 @@ export function profile() {
   const el = createDiv({ id: 'profile-wrapper' })
 
   build(el)
-  react(el)
-  listen(el)
+  react()
 
   return el
 }
@@ -85,21 +84,13 @@ function build(el) {
   }
 }
 
-function react(el) {
+function react() {
   state.on('button-click:delete-avatar-btn', 'profile', async () => {
     await deleteAvatar()
     const user = state.get('user')
     delete user.avatar
     state.set('user', user)
   })
-}
-
-function listen(el) {
-  el.querySelectorAll('.field').forEach((f) =>
-    f.addEventListener('change', (e) => {
-      state.set('profile-field', { name: e.target.name, value: e.target.value })
-    })
-  )
 }
 
 function insertImage(url, el) {

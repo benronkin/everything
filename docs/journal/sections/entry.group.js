@@ -28,7 +28,7 @@ function build(el) {
       name: 'location',
       placeholder: 'Attraction',
       autocomplete: 'off',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-utensils' },
+      classes: { group: 'mb-40', icon: 'fa-utensils' },
     })
   )
 
@@ -37,7 +37,7 @@ function build(el) {
       name: 'visit_date',
       id: 'journal-visit_date',
       type: 'date',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-calendar' },
+      classes: { group: 'mb-40', icon: 'fa-calendar' },
       value: new Date().toISOString().split('T')[0],
     })
   )
@@ -47,7 +47,7 @@ function build(el) {
       name: 'street',
       id: 'journal-street',
       placeholder: 'Street address',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-road' },
+      classes: { group: 'mb-40', icon: 'fa-road' },
     })
   )
 
@@ -56,7 +56,7 @@ function build(el) {
       name: 'city',
       id: 'journal-city',
       placeholder: 'City',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-city' },
+      classes: { group: 'mb-40', icon: 'fa-city' },
     })
   )
 
@@ -65,7 +65,7 @@ function build(el) {
       name: 'state',
       id: 'journal-state',
       placeholder: 'State',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-map' },
+      classes: { group: 'mb-40', icon: 'fa-map' },
     })
   )
 
@@ -74,7 +74,7 @@ function build(el) {
       name: 'country',
       id: 'journal-country',
       placeholder: 'Country',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-flag' },
+      classes: { group: 'mb-40', icon: 'fa-flag' },
     })
   )
 
@@ -83,7 +83,7 @@ function build(el) {
       name: 'phone',
       id: 'journal-phone',
       placeholder: 'Phone',
-      classes: { group: 'mb-40', input: 'field', icon: 'fa-phone' },
+      classes: { group: 'mb-40', icon: 'fa-phone' },
     })
   )
 
@@ -116,7 +116,7 @@ function build(el) {
     createTextarea({
       name: 'notes',
       id: 'journal-notes',
-      className: 'field w-100',
+      className: 'w-100',
       placeholder: 'Add details...',
     })
   )
