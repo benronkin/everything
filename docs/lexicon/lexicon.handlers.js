@@ -22,7 +22,7 @@ export async function handleSearch() {
   let { entries, message } = await searchEntries(q)
 
   if (message) {
-    setMessage({ message: `Lexicon server error: ${message}` })
+    setMessage(`Lexicon server error: ${message}`)
     return
   }
 
@@ -54,7 +54,7 @@ export async function handleEntryAdd() {
 
   const { error } = await createEntry(sense)
   if (error) {
-    setMessage({ message: `Lexicon server error: ${error}` })
+    setMessage(`Lexicon server error: ${error}`)
     return
   }
 
@@ -96,7 +96,7 @@ export async function handleFieldChange(el) {
 
   section = sec === 'pos' ? 'part_of_speech' : el.name
   updateEntry({ id, section, value })
-  setMessage({ message: 'Saved', type: 'quiet' })
+  setMessage('Saved', { type: 'quiet' })
 }
 
 export async function handleNameChange(e) {
@@ -120,7 +120,7 @@ export async function handleNameChange(e) {
       throw new Error(error)
     }
   } catch (error) {
-    setMessage({ message: error, type: 'danger' })
+    setMessage(error, { type: 'danger' })
   }
 }
 

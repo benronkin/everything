@@ -22,7 +22,7 @@ import {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     build()
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     handleTokenQueryParam()
 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ])
 
     if (error) {
-      setMessage({ message: error, type: 'danger' })
+      setMessage(error, { type: 'danger' })
       return
     }
 
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
     setMessage()
   } catch (error) {
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })
@@ -178,5 +178,5 @@ async function handleFieldChange(el) {
   state.set('main-documents', docs)
 
   updateBook({ id, section, value })
-  setMessage({ message: 'Saved', type: 'quiet' })
+  setMessage('Saved', { type: 'quiet' })
 }

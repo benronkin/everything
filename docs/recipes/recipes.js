@@ -19,12 +19,11 @@ import {
   updateRecipe,
   updateRecipeAccess,
 } from './recipes.api.js'
-import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     build()
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     handleTokenQueryParam()
 
@@ -55,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'recipes')
     window.state = state // avail to browser console
   } catch (error) {
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })
@@ -207,9 +206,9 @@ async function handleFieldChange(el) {
     if (error) {
       throw new Error(error)
     }
-    setMessage({ message: 'Saved', type: 'quiet' })
+    setMessage('Saved', { type: 'quiet' })
   } catch (error) {
-    setMessage({ message: error, type: 'danger' })
+    setMessage(error, { type: 'danger' })
   }
 
   if (section === 'related') {
@@ -251,5 +250,5 @@ function populateRelatedRecipes() {
 }
 
 function shopIngredients() {
-  setMessage({ message: 'To be implemented...' })
+  setMessage('To be implemented...')
 }

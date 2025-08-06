@@ -97,7 +97,7 @@ export async function handleLogin({ e, el }) {
 
   btn.disabled = true
   input.disabled = true
-  setMessage({ message: '' })
+  setMessage()
   msg.classList.remove('c-red3')
   msg.insertHtml('Checking. Please wait...')
 

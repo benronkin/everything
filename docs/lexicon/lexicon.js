@@ -24,7 +24,7 @@ import {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     build()
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     handleTokenQueryParam()
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (t) {
       const { entry } = await fetchEntry(t)
       if (!entry) {
-        setMessage({ message: `"${t}" does not exist` })
+        setMessage(`"${t}" does not exist`)
         return
       }
       entry.senses = JSON.parse(entry.senses)
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
     setMessage()
   } catch (error) {
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })

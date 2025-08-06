@@ -92,14 +92,16 @@ export const navList = [
   },
 ]
 
-export function setMessage({
-  message,
-  className,
-  type = 'message',
-  showProgress = true,
-  autoClose = 3000,
-  position = 'BOTTOM_RIGHT',
-} = {}) {
+export function setMessage(
+  message = '',
+  {
+    className,
+    type = 'message',
+    showProgress = true,
+    autoClose = 3000,
+    position = 'BOTTOM_RIGHT',
+  } = {}
+) {
   if (!message) {
     // user wishes to clear all toasts
     removeToasts()

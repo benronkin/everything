@@ -15,7 +15,7 @@ import { createFooter } from '../../docs/assets/composites/footer.js'
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     build()
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     const urlParams = new URLSearchParams(window.location.search)
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (message) {
-      setMessage({ message, type: 'danger' })
+      setMessage(message, { type: 'danger' })
       document.querySelector('#main-panel').classList.remove('hidden')
       return
     }
@@ -55,10 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.trace(error)
   }
 })
-
-// ------------------------
-// Helpers
-// ------------------------
 
 export function getSiteMap() {
   const _dict = {

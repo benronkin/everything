@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   react()
 
   try {
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     handleTokenQueryParam()
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.trace(error)
     window.location.href = `../home/index.html?message=${error.message}`
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
   }
 })
 
@@ -108,7 +108,7 @@ async function handleAddTask() {
     inputEl.value = title
     docs.shift()
     state.set('main-documents', docs)
-    setMessage({ message: error, type: 'warn' })
+    setMessage(error, { type: 'warn' })
   }
 }
 
@@ -123,7 +123,7 @@ async function handleTaskUpdate(el) {
     if (error) {
       throw new Error(error)
     }
-    setMessage({ message: 'Saved', type: 'quiet' })
+    setMessage('Saved', { type: 'quiet' })
   } catch (err) {
     log(err)
   }
@@ -145,7 +145,7 @@ async function handleTaskDelete({ id }) {
   if (error) {
     tasks.splice(idx, 0, deleted) // restore
     state.set('main-documents', [...tasks])
-    setMessage({ message: error, type: 'warn' })
+    setMessage(error, { type: 'warn' })
   }
 }
 
@@ -155,7 +155,7 @@ async function handleTaskDragged() {
   const ids = tdItems.map((tdItem, i) => ({ id: tdItem.id, sort_order: i }))
   const { error } = await update(ids)
   if (error) {
-    setMessage({ message: error })
+    setMessage(error)
     return
   }
 }

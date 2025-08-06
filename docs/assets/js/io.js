@@ -53,7 +53,7 @@ export async function getWebApp(path) {
     const { status, message, data, unauthorized } = resp
 
     if (unauthorized) {
-      setMessage({ message, type: 'danger' })
+      setMessage(message, { type: 'danger' })
       return
     }
 
@@ -133,7 +133,7 @@ export async function postWebAppJson(path, clientData) {
     const { status, message, unauthorized } = resp
 
     if (unauthorized) {
-      setMessage({ message, type: 'danger' })
+      setMessage(message, { type: 'danger' })
       return
     }
 

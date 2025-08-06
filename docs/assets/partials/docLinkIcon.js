@@ -25,6 +25,6 @@ function react(el) {
 
     const url = `${window.location.origin}${window.location.pathname}?id=${id}`
     navigator.clipboard.writeText(url)
-    setMessage({ message: `URL copied` })
+    setMessage(`URL copied`)
   })
 }

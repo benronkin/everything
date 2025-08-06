@@ -8,7 +8,6 @@ import { setMessage } from '../assets/js/ui.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { state } from '../assets/js/state.js'
-import { fetchTasks } from '../tasks/tasks.api.js'
 import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
@@ -17,7 +16,6 @@ import { getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // setMessage({ message: 'Loading...' })
     build()
 
     handleTokenQueryParam()
@@ -31,13 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (error) {
     console.trace(error)
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
   }
 })
-
-// ------------------------
-// Helpers
-// ------------------------
 
 function build() {
   document.head.title = 'Bookmarks | Everything App'

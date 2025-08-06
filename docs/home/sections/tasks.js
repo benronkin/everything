@@ -92,7 +92,7 @@ async function handleTaskUpdate(el) {
     if (error) {
       throw new Error(error)
     }
-    setMessage({ message: 'Saved', type: 'quiet' })
+    setMessage('Saved', { type: 'quiet' })
   } catch (err) {
     console.log(err)
   }
@@ -114,6 +114,6 @@ async function handleTaskDelete({ id }) {
   if (error) {
     tasks.splice(idx, 0, deleted) // restore
     state.set('main-documents', [...tasks])
-    setMessage({ message: error, type: 'warn' })
+    setMessage(error, { type: 'warn' })
   }
 }

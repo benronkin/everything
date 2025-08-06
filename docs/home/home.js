@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (message) {
-    setMessage({ message, type: 'danger' })
+    setMessage(message, { type: 'danger' })
   }
 
   const [{ tasks, error }, { user }] = await Promise.all([
@@ -50,8 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   ])
 
   if (error) {
-    setMessage({
-      message: error,
+    setMessage(error, {
       type: 'danger',
     })
     return

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
   } catch (error) {
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })
@@ -99,6 +99,6 @@ function react() {
     const value = el.value
 
     updateUserField({ field, value })
-    setMessage({ message: 'Saved', type: 'quiet' })
+    setMessage('Saved', { type: 'quiet' })
   })
 }

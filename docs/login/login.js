@@ -1,7 +1,5 @@
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { setMessage } from '../assets/js/ui.js'
-import { state } from '../assets/js/state.js'
-import { fetchTasks } from '../tasks/tasks.api.js'
 import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
 import { mainPanel } from './sections/mainPanel.js'
@@ -22,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (message) {
-      setMessage({ message, type: 'danger' })
+      setMessage(message, { type: 'danger' })
       return
     }
 

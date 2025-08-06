@@ -21,7 +21,7 @@ import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     build()
 
@@ -57,10 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'notes')
 
     window.state = state // avail to browser console
-    setMessage({ message: '' })
+    setMessage()
   } catch (error) {
     console.trace(error)
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
   }
 })
 
@@ -138,7 +138,7 @@ async function reactNoteDelete() {
   const id = state.get('active-doc')
   const { message } = await deleteNote(id)
 
-  setMessage({ message })
+  setMessage(message)
 
   modalEl.close()
 

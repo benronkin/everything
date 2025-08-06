@@ -23,7 +23,7 @@ import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     build()
 
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'journal')
     window.state = state // avail to browser console
   } catch (error) {
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })
@@ -183,7 +183,7 @@ async function handleFieldChange(el) {
   state.set('main-documents', docs)
 
   updateEntry({ id, section, value })
-  setMessage({ message: 'Saved', type: 'quiet' })
+  setMessage('Saved', { type: 'quiet' })
 
   if (['city', 'state', 'country'].includes(section)) {
     await updateJournalDefaults({ id, section, value })

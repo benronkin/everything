@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   react()
 
   try {
-    setMessage({ message: 'Loading...' })
+    setMessage('Loading...')
 
     handleTokenQueryParam()
 
@@ -51,10 +51,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('user', user)
     state.set('default-page', 'shopping')
     window.state = state // avail to browser console
-    setMessage({ message: '' })
+    setMessage()
   } catch (error) {
     console.trace(error)
-    setMessage({ message: error.message, type: 'danger' })
+    setMessage(error.message, { type: 'danger' })
   }
 })
 
@@ -97,9 +97,9 @@ function react() {
     const resp = addShoppingItem(item)
 
     if (resp.message) {
-      setMessage({ message: resp.message })
+      setMessage(resp.message)
     } else if (resp.error) {
-      setMessage({ message: resp.error, type: 'warn' })
+      setMessage(resp.error, { type: 'warn' })
       addInput.value = item
     }
   })
