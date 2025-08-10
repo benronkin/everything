@@ -15,27 +15,26 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
       createIcon({
-        id: 'shop-ingredients',
-        classes: { primary: 'fa-shopping-cart', other: ['primary'] },
+        id: 'shop',
+        classes: { primary: 'fa-shopping-cart', other: ['primary', 'hidden'] },
       }),
     ],
   })
 
   react(el)
-  listen(el)
 
   return el
 }
 
 function react(el) {
-  state.on('app-mode', 'Recipes toolbar', (appMode) => {
+  state.on('app-mode', 'toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
+    const shopEl = el.querySelector('#shop')
     backEl.classList.toggle('hidden', appMode !== 'main-panel')
+    shopEl.classList.toggle('hidden', appMode !== 'main-panel')
   })
-}
 
-function listen(el) {
-  el.querySelector('#back').addEventListener('click', () => {
+  state.on('icon-click:back', 'toolbar', () => {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })

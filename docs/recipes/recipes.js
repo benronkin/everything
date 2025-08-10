@@ -11,6 +11,10 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
+  fetchCartAndSuggestions,
+  upodateShoppingList,
+} from '../shopping/shopping.api.js'
+import {
   createRecipe,
   deleteRecipe,
   fetchCategoriesAndRecipes,
@@ -83,7 +87,7 @@ async function build() {
 function react() {
   state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
 
-  state.on('icon-click:shop-ingredients', 'recipes', shopIngredients)
+  state.on('icon-click:shop', 'recipes', shopIngredients)
 
   state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
 
@@ -249,6 +253,22 @@ function populateRelatedRecipes() {
   }
 }
 
-function shopIngredients() {
-  setMessage('To be implemented...')
+async function shopIngredients() {
+  const id = state.get('active-doc')
+  if (!id) return
+
+  const docs = state.get('main-documents')
+  if (!docs.length) return
+
+  const doc = docs.find((d) => d.id === id)
+  if (!doc) return
+
+  const ingredients = doc.ingredients.length ? doc.ingredients.split('\n') : []
+  if (!ingredients.length) return
+
+  const { shoppingList } = await fetchCartAndSuggestions()
+  const cart = [...new Set([...ingredients, ...shoppingList.split(',')])]
+
+  upodateShoppingList(cart.join(','))
+  setMessage('Ingredients added to shopping list')
 }
