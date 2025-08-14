@@ -5,11 +5,6 @@ import { createHeader } from '../../assets/partials/header.js'
 import { createRecipeGroup } from './recipe.group.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { dangerZone } from './dangerZone.js'
-import { log } from '../../assets/js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 #main-panel {

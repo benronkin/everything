@@ -86,7 +86,7 @@ export function getNextPage(tasks, defaultPage) {
 }
 
 export function build() {
-  document.head.title = 'The Evereything App | Everything App'
+  document.title = 'The Evereything App | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 

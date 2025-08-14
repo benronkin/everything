@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 function build() {
-  document.head.title = 'Bookmarks | Everything App'
+  document.title = 'Bookmarks | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 

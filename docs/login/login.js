@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 export function build() {
-  document.head.title = 'Login | Everything App'
+  document.title = 'Login | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 
