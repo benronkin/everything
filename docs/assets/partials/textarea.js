@@ -45,6 +45,10 @@ function listen(el) {
 
   el.addEventListener('keyup', (e) => {
     e.preventDefault()
+
+    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key))
+      return
+
     if (e.key === 'Enter') {
       el.resize()
       state.set('field-changed', e.target)
