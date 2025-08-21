@@ -13,8 +13,7 @@ import {
   updateNote,
 } from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
-import { debounce } from '../../assets/js/utils.js'
-import { removeToasts } from '../../assets/partials/toast.js'
+
 import { createButton } from '../../assets/partials/button.js'
 
 const css = `
@@ -247,10 +246,6 @@ function react(el) {
 
 function listen(el) {
   const titleEl = el.querySelector('#note-title')
-  titleEl.addEventListener('keyup', () => {
-    removeToasts()
-    persistNote()
-  })
 
   titleEl.addEventListener('change', () => {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
@@ -315,12 +310,6 @@ function listen(el) {
       return
     }
 
-    if (e.metaKey && e.key === 's') {
-      e.preventDefault()
-      persistNote()
-      return
-    }
-
     if (e.metaKey && e.key === 'Enter') {
       e.preventDefault() // prevent the default Enter behavior
 
@@ -345,26 +334,7 @@ function listen(el) {
       return
     }
   })
-
-  editorEl.addEventListener('keyup', () => {
-    removeToasts()
-    persistNote()
-  })
 }
-
-function persistNote() {
-  const now = Date.now()
-  const last = state.get('mainPanel:last-save') || 1
-
-  if (last && now - last >= 15000) {
-    // force update after 15 seconds of no-save
-    executeNoteUpdate()
-  } else {
-    debouncedUpdate()
-  }
-}
-
-const debouncedUpdate = debounce(executeNoteUpdate, 3000)
 
 function updateTableOfContents() {
   const viewerEl = document.querySelector('.viewer')

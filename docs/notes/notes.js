@@ -14,10 +14,10 @@ import {
   fetchNotes,
   fetchNote,
   searchNotes,
+  updateNote,
 } from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
-import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -86,6 +86,8 @@ function build() {
 }
 
 function react() {
+  state.on('field-changed', 'books', handleFieldChange)
+
   state.on('form-submit:left-panel-search', 'notes', reactSearch)
 
   state.on('icon-click:add-note', 'notes', reactAddNote)
@@ -168,4 +170,13 @@ async function reactSearch() {
     return
   }
   state.set('main-documents', data)
+}
+
+async function handleFieldChange(el) {
+  const id = state.get('active-doc')
+  const title = document.querySelector('#note-title').value
+  const note = document.querySelector('.editor').value
+
+  updateNote({ id, title, note })
+  setMessage('Saved', { type: 'quiet' })
 }
