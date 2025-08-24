@@ -79,7 +79,7 @@ const css = `
   color: black;
   font-weight: 700;
   padding: 10px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;;
 }
 .toc-item {
   cursor: pointer;

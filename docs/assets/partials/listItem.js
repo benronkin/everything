@@ -11,7 +11,7 @@ const css = `
   font-weight: 500;
   justify-content: space-between;
   padding: 8px 14px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;;
   }
   .list-item:not(:last-child) {
     margin-bottom: 10px;

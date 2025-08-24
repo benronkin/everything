@@ -23,7 +23,7 @@ const css = `
   font-weight: 500;
   margin-bottom: 4px;
   padding: 4px 14px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;;
 }
 .md-item .icons {
   display: flex;

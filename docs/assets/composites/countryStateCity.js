@@ -26,7 +26,7 @@ const css = `
 }
 .combo-group .combo-option .fa-close {
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease-in-out;;
 }
 .combo-group .combo-option:hover .fa-close {
   opacity: 1;

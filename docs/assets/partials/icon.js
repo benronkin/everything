@@ -6,7 +6,7 @@ const css = `
 i {
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;;
 
 }
 i.shake {

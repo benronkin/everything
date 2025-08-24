@@ -23,7 +23,7 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 padding: 10px;
-transition: all 0.2s ease-in-out;
+transition: all 0.3s ease-in-out;;
 }
 .combo-group .combo-options,
 .combo-group .combo-option:last-child {

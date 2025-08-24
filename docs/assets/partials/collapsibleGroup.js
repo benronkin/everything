@@ -17,7 +17,7 @@ const css = `
   border: 1px solid var(--gray2);
   border-radius: var(--border-radius);
   width: fit-content;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;;
   padding: 6px 10px;
   box-sizing: content-box;
 }
