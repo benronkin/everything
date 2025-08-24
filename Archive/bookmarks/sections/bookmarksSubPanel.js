@@ -2,16 +2,8 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { insertHtml } from '../../assets/js/format.js'
 import { createAnchor } from '../../assets/partials/anchor.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
-import { createIcon } from '../../assets/partials/icon.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createHeader } from '../../assets/partials/header.js'
 import { bookmarks } from '../bookmarks.data.js'
-import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 .bookmarks-section .bookmarks-holder:not(.hidden) {
@@ -71,7 +63,9 @@ function build(el) {
 
     groupDiv.appendChild(
       createDiv({
-        className: `bookmarks-holder ${section.collapsed && 'hidden'}`.trim(),
+        className: `bookmarks-holder ${
+          section?.collapsed ? 'hidden' : ''
+        }`.trim(),
         html: section.items.map((item) =>
           createAnchor({
             className: `bookmark ${item.className}`.trim(),

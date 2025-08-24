@@ -26,7 +26,6 @@ const css = `
 #home-bookmarks .bookmark {
   padding: 5px;
   border-radius: var(--border-radius);
-  color: var(--gray6);
 }
 #home-bookmarks .expander {
   cursor: pointer;
@@ -129,7 +128,9 @@ function buildBookmarks(bookmarks, el) {
 
     groupDiv.appendChild(
       createDiv({
-        className: `bookmarks-holder ${section.collapsed && 'hidden'}`.trim(),
+        className: `bookmarks-holder ${
+          section?.collapsed ? 'hidden' : ''
+        }`.trim(),
         html: section.items.map((item) =>
           createAnchor({
             className: `bookmark`.trim(),

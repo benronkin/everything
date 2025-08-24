@@ -5,64 +5,28 @@ import { injectStyle } from '../js/ui.js'
 // -------------------------------
 
 const css = `
+a {
+  color: var(--grey6);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+a:hover {
+  color: var(--purple3);
+}
 `
 
-// const html = `
-// `
-
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Create a custom anchor element
- * (Params for VS Code:)
- */
 export function createAnchor({ className, id, html, url } = {}) {
   injectStyle(css)
   return createElement({ className, id, html, url })
 }
 
-// -------------------------------
-// Constructor
-// -------------------------------
-
 function createElement({ className, id, html, url }) {
   const el = document.createElement('a')
 
-  Object.defineProperties(el, {
-    dataId: {
-      get() {
-        return el.dataset.id
-      },
-      set(newValue = '') {
-        el.id = newValue
-        el.dataset.id = newValue
-        el.dataset.testId = id
-      },
-    },
-    url: {
-      get() {
-        return el.href
-      },
-      set(newUrl) {
-        el.href = newUrl
-      },
-    },
-    value: {
-      get() {
-        return el.innerHTML
-      },
-      set(newValue) {
-        el.innerHTML = newValue
-      },
-    },
-  })
-
-  el.value = html
+  el.innerHTML = html
   el.url = url
   className && (el.className = className)
-  id && (el.dataId = id)
+  id && (el.id = id)
 
   return el
 }
