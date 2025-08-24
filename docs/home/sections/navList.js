@@ -32,6 +32,10 @@ const css = `
 .nav-list-item a:hover {
   color: var(--purple3);
 }
+.nav-list-item a  i {
+  transition: none; /* or unset */
+  color: inherit;   /* ensures it follows the link’s color */
+}
 `
 
 export function navList() {

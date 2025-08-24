@@ -38,7 +38,7 @@ const css = `
 
   box-sizing: content-box;
   font-size: 1.1rem;
-  transition: all 200ms ease;
+  transition: all 0.3 ease-in-out;
 }
 #toolbar i {
   width: 30px;
