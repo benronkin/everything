@@ -27,6 +27,7 @@ const css = `
   gap: 10px;
   margin: auto;
   color: var(--gray6);
+  transition: all 0.3s ease-in-out;
 }
 .nav-list-item a:hover {
   color: var(--purple3);
