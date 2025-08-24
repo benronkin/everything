@@ -24,7 +24,7 @@ function createElement({ className, id, html, url }) {
   const el = document.createElement('a')
 
   el.innerHTML = html
-  el.url = url
+  el.href = url
   className && (el.className = className)
   id && (el.id = id)
 
