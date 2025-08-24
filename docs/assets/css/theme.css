@@ -241,7 +241,7 @@ button.primary,
 label.primary {
   border: 1px solid var(--purple2);
   background-color: var(--purple2);
-  transition: background-color 200ms ease;
+  transition: background-color 0.3s ease-in-out;
 }
 button.primary:hover,
 label.primary:hover {
@@ -309,7 +309,7 @@ i.primary:hover {
 i.secondary {
   background-color: var(--teal2);
   padding: 5px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 i.secondary:hover {
   color: var(--gray6);
@@ -322,7 +322,7 @@ textarea {
   border-bottom: 1px solid var(--gray3);
   border-radius: 0;
   color: var(--gray6);
-  transition: border-color 200ms ease;
+  transition: border-color 0.3s ease-in-out;
 }
 input:focus,
 textarea:focus,
@@ -356,7 +356,7 @@ main {
 .bookmarks-section .bookmark {
   background: var(--gray0);
   color: var(--gray5);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .bookmarks-section .bookmark:hover {
   color: var(--purple2);
@@ -412,17 +412,17 @@ main {
 .list-item.active:hover {
   color: var(--purple3);
   border: 1px solid var(--purple2);
-  transition: background-color 200ms ease;
+  transition: background-color 0.3s ease-in-out;
 }
 .list-item:hover {
   color: var(--purple3);
   border: 1px solid var(--purple2);
   background-color: transparent;
-  transition: background-color 200ms ease;
+  transition: background-color 0.3s ease-in-out;
 }
 .md-item {
   border: 1px dotted var(--gray1);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .md-item:hover,
 .md-item.active {
@@ -451,7 +451,7 @@ main {
 }
 .span-group span {
   color: inherit;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .suggestion-item:hover {
   color: var(--teal3);

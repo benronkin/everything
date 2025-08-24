@@ -1,5 +1,5 @@
 :root {
-  --transition-duration: 300ms;
+  --transition-duration: 0.3s;
   --maxWidth: 500px;
   --nav-height: 75px;
   --sidebar-width: 220px;
@@ -281,7 +281,7 @@ ul {
 .invisible {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 .justify-between {
   justify-content: space-between !important;
