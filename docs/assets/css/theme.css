@@ -353,19 +353,22 @@ main {
 .bookmarks-section .span-group i {
   color: inherit;
 }
-.bookmarks-section .bookmark {
+.bookmark {
   background: var(--gray0);
-  color: var(--gray5);
+  color: var(--gray5) !important;
   transition: all 0.3s ease-in-out;
 }
-.bookmarks-section .bookmark:hover {
-  color: var(--purple2);
+.bookmark:hover {
+  color: var(--purple3) !important;
 }
 .c-gray2 {
   color: var(--gray2) !important;
 }
 .c-gray3 {
   color: var(--gray3) !important;
+}
+.c-gray6 {
+  color: var(--gray6) !important;
 }
 .c-purple3 {
   color: var(--purple3) !important;

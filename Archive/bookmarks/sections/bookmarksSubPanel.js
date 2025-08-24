@@ -68,7 +68,7 @@ function build(el) {
         }`.trim(),
         html: section.items.map((item) =>
           createAnchor({
-            className: `bookmark ${item.className}`.trim(),
+            className: `bookmark c-gray6 ${item.className}`.trim(),
             url: item.url,
             html: item.html,
           })
