@@ -39,19 +39,18 @@ function listen(el) {
   el.addEventListener('keydown', (e) => {
     if (e.metaKey && e.key === 's') {
       e.preventDefault()
-      state.set('field-changed', e.target)
+      handleChange(el)
+      // state.set('field-changed', e.target)
     }
   })
 
   el.addEventListener('keyup', (e) => {
     e.preventDefault()
 
-    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key))
-      return
-
     if (e.key === 'Enter') {
       el.resize()
-      state.set('field-changed', e.target)
+      handleChange(el)
+      // state.set('field-changed', e.target)
     } else {
       debouncedUpdate(e.target)
     }
@@ -61,7 +60,8 @@ function listen(el) {
     requestAnimationFrame(() => {
       // let value be set, then:
       el.resize()
-      state.set('field-changed', e.target)
+      handleChange(el)
+      // state.set('field-changed', e.target)
     })
   })
 
@@ -69,7 +69,8 @@ function listen(el) {
     requestAnimationFrame(() => {
       // let value be set, then:
       el.resize()
-      state.set('field-changed', e.target)
+      handleChange(el)
+      // state.set('field-changed', e.target)
     })
   })
 }
@@ -92,5 +93,13 @@ function setValue(value = '') {
 }
 
 const debouncedUpdate = debounce((el) => {
-  state.set('field-changed', el)
+  handleChange(el)
+  // state.set('field-changed', el)
 }, 1500)
+
+function handleChange(el) {
+  if (el.value.trim() === el.dataset.oldValue) return
+
+  el.dataset.oldValue = el.value.trim()
+  state.set('field-changed', el)
+}
