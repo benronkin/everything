@@ -79,6 +79,8 @@ export async function handleEntryAdd() {
 }
 
 export async function handleFieldChange(el) {
+  if (!el.closest('.lexicon-sense')) return // search inputbox or like that
+
   const title = state.get('active-doc')
   const id = el.closest('.lexicon-sense').id
   const sec = el.name
