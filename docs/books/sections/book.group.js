@@ -57,19 +57,37 @@ async function build(el) {
   )
 
   el.appendChild(
-    createSelectGroup({
-      name: 'rating',
-      id: 'book-rating',
-      classes: {
-        group: 'mb-40 w-fc',
-        wrapper: '',
-        icon: 'fa-star',
-      },
-      options: [
-        { value: '', label: 'Rate' },
-        { value: 'great', label: '🔥' },
-        { value: 'medium', label: '🆗' },
-        { value: 'bad', label: '🤮' },
+    createDiv({
+      className: 'flex align-center gap-20',
+      html: [
+        createSelectGroup({
+          name: 'rating',
+          id: 'book-rating',
+          classes: {
+            group: 'mb-40 w-fc',
+            wrapper: '',
+            icon: 'fa-star',
+          },
+          options: [
+            { value: '', label: 'Rate' },
+            { value: 'great', label: '🔥' },
+            { value: 'medium', label: '🆗' },
+            { value: 'bad', label: '🤮' },
+          ],
+        }),
+        createSelectGroup({
+          name: 'completed',
+          id: 'book-completed',
+          classes: {
+            group: 'mb-40 w-fc',
+            wrapper: '',
+          },
+          label: 'Completed',
+          options: [
+            { value: '0', label: '❌' },
+            { value: '1', label: '✅' },
+          ],
+        }),
       ],
     })
   )
@@ -139,7 +157,7 @@ function react(el) {
       el.querySelector('#book-title').value = doc.title
       el.querySelector('#book-author').value = doc.author || ''
       el.querySelector('#book-note').setValue(doc.note)
-      el.querySelector('#book-rating').selectByValue(doc.rating || '')
+      el.querySelector('#book-completed').selectByValue(doc.completed || '0')
       el.querySelector('#book-read-year').value = doc.read_year || ''
       el.querySelector('#book-published-year').value = doc.published_year || ''
       el.querySelector('#book-id').insertHtml(doc.id)

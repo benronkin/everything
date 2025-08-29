@@ -1,6 +1,7 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
+import { createSpan } from './span.js'
 import { createSelect } from './select.js'
 
 // -------------------------------
@@ -33,6 +34,7 @@ export function createSelectGroup({
   value,
   options,
   className = null,
+  label,
 }) {
   injectStyle(css)
 
@@ -50,6 +52,7 @@ export function createSelectGroup({
     name,
     value,
     options,
+    label,
   })
 
   classes?.group && (el.className = classes.group)
@@ -79,8 +82,12 @@ export function createSelectGroup({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, id, name, value, options }) {
-  el.appendChild(createIcon())
+function build({ el, id, name, value, options, label }) {
+  if (label) {
+    el.appendChild(createSpan({ html: label }))
+  } else {
+    el.appendChild(createIcon())
+  }
 
   el.appendChild(
     createSelect({

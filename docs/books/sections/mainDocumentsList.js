@@ -79,9 +79,10 @@ function makeBrowseResults(docs) {
   })
 
   for (const [k, v] of map) {
+    const completed = v.filter((b) => b.completed === '1').length
     const html = createDiv({
       className: 'flex justify-between align-center',
-      html: [creteToggler(k), createSpan({ html: `${k} (${v.length})` })],
+      html: [creteToggler(k), createSpan({ html: `${k} (${completed})` })],
     })
 
     html.style.width = '100px'
@@ -120,10 +121,15 @@ function makeBrowseResults(docs) {
 }
 
 function createItem(doc) {
+  const titleObj = { html: doc.title }
+  if (doc.completed === '0') {
+    titleObj.className = 'c-gray3'
+  }
+
   const html = createDiv({
     className: 'flex justify-between w-100',
     html: [
-      createSpan({ html: doc.title }),
+      createSpan(titleObj),
       createSpan({ html: doc.author, className: 'c-gray3' }),
     ],
   })
