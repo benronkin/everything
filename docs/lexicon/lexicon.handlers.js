@@ -30,11 +30,20 @@ export async function handleSearch() {
     e.senses = JSON.parse(e.senses)
   })
 
-  state.set('app-mode', 'left-panel')
+  const exact = entries.filter((e) => e.title === q)
+
   state.set('main-documents', entries)
+
+  if (exact.length) {
+    state.set('app-mode', 'main-panel')
+    state.set('active-doc', exact[0].title)
+  } else {
+    state.set('app-mode', 'left-panel')
+  }
+
   state.set('lexicon-search', {
     q,
-    exact: entries.filter((e) => e.title === q),
+    exact,
   })
 }
 
