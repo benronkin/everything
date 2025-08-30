@@ -51,7 +51,7 @@ function react(el) {
     if (exact.length) {
       children.push(
         createHeader({
-          html: 'Entry matches',
+          html: 'Title matches',
           type: 'h5',
           className: 'list-header',
         })
