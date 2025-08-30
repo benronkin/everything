@@ -23,7 +23,6 @@ export function mainPanel() {
   const el = createDiv({ className: 'mt-20' })
 
   build(el)
-  react(el)
 
   el.id = 'main-panel'
   el.dataset.id = 'main-panel'
@@ -41,5 +40,3 @@ async function build(el) {
 
   el.appendChild(bookmarks())
 }
-
-function react(el) {}

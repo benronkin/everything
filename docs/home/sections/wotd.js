@@ -4,7 +4,6 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { fetchLatestWotd } from '../../lexicon/lexicon.api.js'
-import { setMessage } from '../../assets/js/ui.js'
 
 const css = `
 `
@@ -13,7 +12,6 @@ export async function wotd() {
   injectStyle(css)
 
   const { entry } = await fetchLatestWotd()
-  console.log('entry', entry)
 
   const el = createDiv({ className: 'wotd-wrapper' })
 
