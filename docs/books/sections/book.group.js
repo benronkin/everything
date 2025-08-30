@@ -5,6 +5,7 @@ import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSelectGroup } from '../../assets/partials/selectGroup.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
+import { createSwitch } from '../../assets/partials/switch.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { state } from '../../assets/js/state.js'
 import { fetchBook } from '../books.api.js'
@@ -75,19 +76,29 @@ async function build(el) {
             { value: 'bad', label: '🤮' },
           ],
         }),
-        createSelectGroup({
-          name: 'completed',
-          id: 'book-completed',
-          classes: {
-            group: 'mb-40 w-fc',
-            wrapper: '',
-          },
-          label: 'Completed',
-          options: [
-            { value: '0', label: '❌' },
-            { value: '1', label: '✅' },
+        createDiv({
+          className: 'flex align-center',
+          html: [
+            createSpan({ html: 'Completed' }),
+            createSwitch({
+              name: 'completed',
+              id: 'book-completed',
+            }),
           ],
         }),
+        // createSelectGroup({
+        //   name: 'completed',
+        //   id: 'book-completed',
+        //   classes: {
+        //     group: 'mb-40 w-fc',
+        //     wrapper: '',
+        //   },
+        //   label: 'Completed',
+        //   options: [
+        //     { value: '0', label: '❌' },
+        //     { value: '1', label: '✅' },
+        //   ],
+        // }),
       ],
     })
   )
@@ -157,7 +168,7 @@ function react(el) {
       el.querySelector('#book-title').value = doc.title
       el.querySelector('#book-author').value = doc.author || ''
       el.querySelector('#book-note').setValue(doc.note)
-      el.querySelector('#book-completed').selectByValue(doc.completed || '0')
+      el.querySelector('#book-completed').value = doc.completed === '1'
       el.querySelector('#book-read-year').value = doc.read_year || ''
       el.querySelector('#book-published-year').value = doc.published_year || ''
       el.querySelector('#book-id').insertHtml(doc.id)

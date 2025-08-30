@@ -172,6 +172,10 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
+  if (section === 'completed') {
+    value = value ? '1' : '0'
+  }
+
   const id = state.get('active-doc')
   const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)

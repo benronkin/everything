@@ -1,7 +1,7 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
-import { log } from '../js/logger.js'
+import { state } from '../js/state.js'
 
 // -------------------------------
 // Globals
@@ -53,19 +53,13 @@ const css = `
 }
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
-/**
- * Constructor for the custom switch element
- */
-export function createSwitch({ id, iconOff, iconOn, className }) {
+export function createSwitch({ id, name, iconOff, iconOn, className }) {
   injectStyle(css)
 
   const el = document.createElement('div')
 
   id && (el.id = id)
+  name && (el.name = name)
   el.className = 'switch'
   if (className) {
     className.split(' ').forEach((c) => el.classList.add(c))
@@ -77,12 +71,20 @@ export function createSwitch({ id, iconOff, iconOn, className }) {
   build({ el, iconOff })
   listen(el)
 
+  Object.defineProperties(el, {
+    value: {
+      get() {
+        return el.classList.contains('on')
+      },
+      set(v) {
+        el.classList.toggle('on', v)
+      },
+    },
+  })
+
   return el
 }
 
-/**
- * Create the HTML element
- */
 function build({ el, iconOff }) {
   const divEl = createDiv({ className: 'thumb' })
   el.appendChild(divEl)
@@ -95,9 +97,6 @@ function build({ el, iconOff }) {
   }
 }
 
-/**
- * Respond to switch clicks
- */
 function listen(el) {
   el.addEventListener('click', () => {
     if (el._iconOff) {
@@ -105,5 +104,6 @@ function listen(el) {
       el.querySelector('i').classList.toggle(el._iconOn)
     }
     el.classList.toggle('on')
+    state.set('field-changed', el)
   })
 }
