@@ -118,6 +118,7 @@ async function reactBookAdd() {
     title: 'new Book',
     created_at,
     read_year,
+    completed: '0',
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
