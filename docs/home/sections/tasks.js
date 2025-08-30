@@ -10,11 +10,6 @@ import { deleteTask, updateTask } from '../../tasks/tasks.api.js'
 import { state } from '../../assets/js/state.js'
 
 const css = `
-.tasks-wrapper {
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--gray2);
-  border-radius: 0;
-}
 `
 
 export function tasks() {

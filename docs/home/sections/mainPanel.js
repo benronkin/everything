@@ -1,9 +1,9 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { tasks } from './tasks.js'
+import { wotd } from './wotd.js'
 import { navList } from './navList.js'
 import { bookmarks } from './bookmarks.js'
-import { state } from '../../assets/js/state.js'
 
 const css = `
 #main-panel {
@@ -31,8 +31,11 @@ export function mainPanel() {
   return el
 }
 
-function build(el) {
+async function build(el) {
   el.appendChild(tasks())
+
+  const wotdEl = await wotd()
+  el.appendChild(wotdEl)
 
   el.appendChild(navList())
 

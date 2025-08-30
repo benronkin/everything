@@ -283,6 +283,9 @@ ul {
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
+.italic {
+  font-style: italic;
+}
 .justify-between {
   justify-content: space-between !important;
 }

@@ -24,6 +24,12 @@ export async function fetchEntry(t) {
   return { entry, error }
 }
 
+export async function fetchLatestWotd() {
+  const resp = await getWebApp(`${url}/wotd`)
+  const { entry, error } = resp
+  return { entry, error }
+}
+
 export async function fetchRecentEntries() {
   const { entries, error } = await getWebApp(`${url}/latest`)
   return { entries, error }

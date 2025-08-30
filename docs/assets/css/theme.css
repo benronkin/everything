@@ -376,6 +376,9 @@ main {
 .c-red3 {
   color: var(--red3) !important;
 }
+.c-teal3 {
+  color: var(--teal3) !important;
+}
 .danger,
 .toast.danger {
   background-color: var(--red2) !important;
