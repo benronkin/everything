@@ -24,7 +24,7 @@ export async function wotd() {
 
 function build(el, wotd) {
   const div = createDiv({
-    className: 'flex align-center mt-20',
+    className: 'flex align-center mt-30',
     id: 'wotd-header',
   })
 
