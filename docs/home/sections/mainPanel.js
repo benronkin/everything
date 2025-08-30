@@ -30,11 +30,10 @@ export function mainPanel() {
   return el
 }
 
-async function build(el) {
+function build(el) {
   el.appendChild(tasks())
 
-  const wotdEl = await wotd()
-  el.appendChild(wotdEl)
+  el.appendChild(wotd())
 
   el.appendChild(navList())
 

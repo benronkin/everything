@@ -8,6 +8,7 @@ import { setMessage } from '../assets/js/ui.js'
 import { state } from '../assets/js/state.js'
 import { getMe } from '../users/users.api.js'
 import { fetchTasks } from '../tasks/tasks.api.js'
+import { fetchLatestWotd } from '../lexicon/lexicon.api.js'
 import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
 import { rightDrawer } from './sections/rightDrawer.js'
@@ -44,8 +45,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setMessage(message, { type: 'danger' })
   }
 
-  const [{ tasks, error }, { user }] = await Promise.all([
+  const [{ tasks, error }, { entry }, { user }] = await Promise.all([
     fetchTasks(),
+    fetchLatestWotd(),
     getMe(),
   ])
 
@@ -58,6 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   state.set('main-documents', tasks.slice(0, 2))
   state.set('user', user)
+  state.set('wotd', entry)
 })
 
 export function build() {
