@@ -59,13 +59,13 @@ async function build(el) {
 
   el.appendChild(
     createDiv({
-      className: 'flex align-center gap-20',
+      className: 'flex align-center gap-20 mb-40',
       html: [
         createSelectGroup({
           name: 'rating',
           id: 'book-rating',
           classes: {
-            group: 'mb-40 w-fc',
+            group: 'w-fc',
             wrapper: '',
             icon: 'fa-star',
           },
@@ -86,19 +86,6 @@ async function build(el) {
             }),
           ],
         }),
-        // createSelectGroup({
-        //   name: 'completed',
-        //   id: 'book-completed',
-        //   classes: {
-        //     group: 'mb-40 w-fc',
-        //     wrapper: '',
-        //   },
-        //   label: 'Completed',
-        //   options: [
-        //     { value: '0', label: '❌' },
-        //     { value: '1', label: '✅' },
-        //   ],
-        // }),
       ],
     })
   )
