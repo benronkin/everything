@@ -85,6 +85,7 @@ function createItem(doc) {
     ],
   })
   const li = createMainDocumentItem({ id: doc.id, html })
+  li.title = doc.senses[0]?.definition || ''
   li.removeEventListener('click', handleMainDocumentClick)
   li.addEventListener('click', () => {
     state.set('active-doc', doc.title)
