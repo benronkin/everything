@@ -41,7 +41,7 @@ export async function updateUserField({ field, value }) {
 }
 
 export async function updateUserPrefs(doc) {
-  const { message } = await postWebAppJson(`${url}/update-prefs`, { doc })
+  const { message } = await postWebAppJson(`${url}/update-prefs`, doc)
 
   return { message }
 }
