@@ -1,10 +1,18 @@
 import { state } from '../../assets/js/state.js'
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createSelect } from '../../assets/partials/select.js'
 
 export function toolbar() {
   const el = createToolbar({
     children: [
+      createSelect({
+        id: 'view-by',
+        options: [
+          { value: 'recent', label: 'Recently viewed' },
+          { value: 'wotd', label: 'Recent WOTD' },
+        ],
+      }),
       createIcon({
         id: 'back',
         classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
@@ -14,7 +22,6 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary', 'hidden'] },
       }),
     ],
-    classes: { primary: 'b-none' },
   })
 
   react(el)
@@ -24,16 +31,21 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
-    el.querySelector('.icons').classList.toggle(
-      'b-none',
-      appMode !== 'main-panel'
-    )
-
     const sels = ['#back', '#add']
 
     sels.forEach((sel) =>
       el.querySelector(sel).classList.toggle('hidden', appMode !== 'main-panel')
     )
+
+    document
+      .querySelector('#view-by')
+      .classList.toggle('hidden', appMode === 'main-panel')
+  })
+
+  state.on('user', 'toolbar', (user) => {
+    document
+      .querySelector('#view-by')
+      .selectByValue(user?.prefs?.lexicon?.viewBy || 'recent')
   })
 
   state.on('icon-click:back', 'toolbar', () => {

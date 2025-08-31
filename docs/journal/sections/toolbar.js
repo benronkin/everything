@@ -6,6 +6,7 @@ import { setMessage } from '../../assets/js/ui.js'
 
 export function toolbar() {
   const el = createToolbar({
+    className: 'container',
     children: [
       createIcon({
         id: 'back',

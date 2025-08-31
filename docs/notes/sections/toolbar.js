@@ -7,6 +7,7 @@ import { state } from '../../assets/js/state.js'
 
 export function toolbar() {
   const el = createToolbar({
+    className: 'container',
     children: [
       createIcon({
         id: 'back',

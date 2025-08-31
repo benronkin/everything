@@ -7,7 +7,9 @@ import {
   deleteSense,
   updateEntry,
   updateEntries,
+  fetchRecentEntries,
 } from './lexicon.api.js'
+import { updateUserPrefs } from '../users/users.api.js'
 
 export async function handleSearch() {
   const search = document.querySelector('[name="search-lexicon"]')
@@ -88,6 +90,11 @@ export async function handleEntryAdd() {
 }
 
 export async function handleFieldChange(el) {
+  if (el.closest('div')?.id === 'view-by') {
+    updateViewBy(el.value)
+    return
+  }
+
   if (!el.closest('.lexicon-sense')) return // search inputbox or like that
 
   const title = state.get('active-doc')
@@ -177,4 +184,13 @@ export async function handleSenseDelete() {
 
   state.set('main-documents', docs)
   state.set('active-doc', title) // reactivate mainPanel
+}
+
+async function updateViewBy(value) {
+  await updateUserPrefs({ lexiconViewBy: value })
+  const { entries } = await fetchRecentEntries()
+  entries.forEach((e) => {
+    e.senses = JSON.parse(e.senses)
+  })
+  state.set('main-documents', entries)
 }

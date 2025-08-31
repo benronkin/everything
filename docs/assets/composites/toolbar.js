@@ -10,10 +10,10 @@ const css = `
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin: 20px 0;
+  margin: 20px auto;
   gap: 20px;
   align-items: center;
-  width: 100%;
+
 }
 #toolbar.sticky {
   position: fixed;
@@ -26,7 +26,7 @@ const css = `
   margin-top: 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional */
 }
-#toolbar .container .icons {
+#toolbar .icons {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -54,7 +54,7 @@ const css = `
 // Exported functions
 // -------------------------------
 
-export function createToolbar({ children = [], classes = {} } = {}) {
+export function createToolbar({ children = [], classes = {}, className } = {}) {
   injectStyle(css)
 
   const el = document.createElement('div')
@@ -63,9 +63,7 @@ export function createToolbar({ children = [], classes = {} } = {}) {
   listen(el)
 
   el.id = 'toolbar'
-  el.dataset.id = 'toolbar'
-  el.dataset.testId = 'toolbar'
-
+  className && (el.className = className)
   return el
 }
 
@@ -77,12 +75,8 @@ export function createToolbar({ children = [], classes = {} } = {}) {
  * Create the HTML element.
  */
 function build({ el, children, classes }) {
-  const containerEl = createDiv()
-  containerEl.className = 'container'
-  el.appendChild(containerEl)
-
   const divEl = createDiv()
-  containerEl.appendChild(divEl)
+  el.appendChild(divEl)
 
   for (const child of children) {
     divEl.appendChild(child)

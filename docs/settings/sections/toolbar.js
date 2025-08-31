@@ -6,6 +6,7 @@ import { log } from '../../assets/js/logger.js'
 
 export function toolbar() {
   const el = createToolbar({
+    className: 'container',
     children: [
       createIcon({
         id: 'back',

@@ -5,6 +5,7 @@ import { createIcon } from '../../assets/partials/icon.js'
 
 export function toolbar() {
   const el = createToolbar({
+    className: 'container',
     children: [
       createIcon({
         id: 'back',

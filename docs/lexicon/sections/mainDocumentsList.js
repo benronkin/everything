@@ -31,13 +31,14 @@ function react(el) {
         .join(', ')
     })
 
-    const recent = docs.filter((d) => d.matchType === 'recent')
+    const recentView = docs.filter((d) => d.matchType === 'recent-view')
+    const recentWotd = docs.filter((d) => d.matchType === 'recent-wotd')
     const exact = docs.filter((d) => d.matchType === 'exact')
     const related = docs.filter((d) => d.matchType === 'related')
 
     const children = []
 
-    if (recent.length) {
+    if (recentView.length) {
       children.push(
         createHeader({
           html: 'Recently viewed',
@@ -45,7 +46,18 @@ function react(el) {
           className: 'list-header',
         })
       )
-      children.push(...recent.map(createItem))
+      children.push(...recentView.map(createItem))
+    }
+
+    if (recentWotd.length) {
+      children.push(
+        createHeader({
+          html: 'Recent Word of the Day',
+          type: 'h5',
+          className: 'list-header',
+        })
+      )
+      children.push(...recentWotd.map(createItem))
     }
 
     if (exact.length) {
