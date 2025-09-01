@@ -123,11 +123,15 @@ function react() {
     if (!e) return
     updateEntryAccess({ title: e })
 
-    const entries = state.get('main-documents')
-    const idx = entries.findIndex((entry) => entry.title === e)
-    const entry = entries.splice(idx, 1)[0]
-    entries.unshift(entry)
-    state.set('main-documents', entries)
+    const user = state.get('user')
+    const viewBy = user?.prefs?.lexicon?.viewBy
+    if (viewBy === 'recent') {
+      const entries = state.get('main-documents')
+      const idx = entries.findIndex((entry) => entry.title === e)
+      const entry = entries.splice(idx, 1)[0]
+      entries.unshift(entry)
+      state.set('main-documents', entries)
+    }
   })
 
   state.on('icon-click:add', 'lexicon', handleEntryAdd)

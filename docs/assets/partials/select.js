@@ -9,6 +9,7 @@ const css = `
   border-radius: var(--border-radius);
   padding: 5px 10px;
   height: 20px;
+  cursor: pointer;
 }
 
 .custom-select {
@@ -168,17 +169,24 @@ function listen(el) {
     state.set('field-changed', e.target)
   })
 
-  const selectEl = el.querySelector('.custom-select')
+  el.querySelector('.caret-wrapper i').addEventListener(
+    'click',
+    handleSelectClick
+  )
+  el.addEventListener('click', handleSelectClick)
+}
 
-  el.querySelector('.caret-wrapper i').addEventListener('click', () => {
-    if (typeof selectEl.showPicker === 'function') {
-      // Chrome 118+ opens native dropdown
-      selectEl.showPicker()
-    } else {
-      // fallback for Safari / Firefox / older Chromium
-      selectEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
-      selectEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-      selectEl.focus() // keeps keyboard / VoiceOver happy
-    }
-  })
+function handleSelectClick(e) {
+  const parent = e.target.closest('.select-wrapper')
+  const selectEl = parent.querySelector('.custom-select')
+
+  if (typeof selectEl.showPicker === 'function') {
+    // Chrome 118+ opens native dropdown
+    selectEl.showPicker()
+  } else {
+    // fallback for Safari / Firefox / older Chromium
+    selectEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    selectEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    selectEl.focus() // keeps keyboard / VoiceOver happy
+  }
 }

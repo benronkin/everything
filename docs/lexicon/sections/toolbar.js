@@ -8,6 +8,7 @@ export function toolbar() {
     children: [
       createSelect({
         id: 'view-by',
+        className: 'primary',
         options: [
           { value: 'recent', label: 'Recently viewed' },
           { value: 'wotd', label: 'Recent WOTD' },
