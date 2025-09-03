@@ -10,6 +10,7 @@ textarea {
   min-height: 1.2em;
   line-height: 1.2em;
   resize: none;
+  padding-left: 1px;
 }
 `
 
