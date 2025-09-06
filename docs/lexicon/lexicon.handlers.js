@@ -17,7 +17,14 @@ export async function handleSearch() {
   const q = search.value.trim().toLowerCase()
 
   if (!q) {
-    state.set('main-documents', null)
+    const { entries } = await fetchRecentEntries()
+
+    entries.forEach((e) => {
+      e.senses = JSON.parse(e.senses)
+    })
+    state.set('main-documents', entries)
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
     return
   }
 
