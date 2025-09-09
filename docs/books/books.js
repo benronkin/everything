@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    let [{ books, error }, { user }] = await Promise.all([
+    let [{ data, error }, { user }] = await Promise.all([
       fetchRecentBooks(),
       getMe(),
     ])
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return
     }
 
+    const books = data
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
     if (id) {
@@ -153,22 +154,27 @@ async function reactBookSearch() {
 
   const query = document.querySelector('[name="search-book"]').value?.trim()
 
-  if (query.length) {
+  if (query?.length) {
     resp = await searchBooks(query)
   } else {
     // get most recent entries instead
     resp = await fetchRecentBooks()
   }
 
-  const { data, message } = resp
-  if (message) {
-    console.error(`Book server error: ${message}`)
-    return
+  const { data, error } = resp
+
+  if (error) {
+    console.log('Server error:', error)
   }
+
   state.set('main-documents', data)
+  state.set('app-mode', 'left-panel')
 }
 
 async function handleFieldChange(el) {
+  const id = state.get('active-doc')
+  if (!id) return
+
   const section = el.name
   let value = el.value
 
@@ -176,7 +182,6 @@ async function handleFieldChange(el) {
     value = value ? '1' : '0'
   }
 
-  const id = state.get('active-doc')
   const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
   docs[idx][section] = value

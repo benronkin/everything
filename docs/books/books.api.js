@@ -16,7 +16,7 @@ export async function deleteBook(id) {
 export async function fetchRecentBooks() {
   const resp = await getWebApp(`${url}/read`)
   const { books, error } = resp
-  return { books, error }
+  return { data: books, error }
 }
 
 export async function fetchBook(id) {
