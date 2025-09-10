@@ -94,15 +94,6 @@ function react() {
 
   state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
 
-  state.on('active-doc', 'recipes', async (id) => {
-    if (id) {
-      updateRecipeAccess(id)
-      // fore list to update itself
-      const { recipes } = await fetchRecentRecipes()
-      state.set('main-documents', recipes)
-    }
-  })
-
   state.on('recipe-categories', 'recipes', (options) =>
     document.getElementById('recipe-category').setOptions(options)
   )
@@ -197,6 +188,8 @@ async function handleFieldChange(el) {
   let value = el.value
   const name = el.name
 
+  if (name === 'search-recipe') return
+
   if (name === 'category-filter') {
     handleCategoryChange(value)
     return
@@ -205,6 +198,7 @@ async function handleFieldChange(el) {
   const id = state.get('active-doc')
   const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
+
   docs[idx][section] = value
   state.set('main-documents', docs)
 
