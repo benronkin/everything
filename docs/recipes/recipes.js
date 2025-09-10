@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     categories.unshift({ value: '', label: 'Category' })
 
     setMessage()
-    state.set('main-documents', recipes)
     state.set('recipe-categories', categories)
+    state.set('main-documents', recipes)
     state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'recipes')
@@ -197,7 +197,7 @@ async function handleFieldChange(el) {
   let value = el.value
   const name = el.name
 
-  if (name === 'category') {
+  if (name === 'category-filter') {
     handleCategoryChange(value)
     return
   }

@@ -20,8 +20,8 @@ export function toolbar() {
         classes: { primary: 'fa-shopping-cart', other: ['primary', 'hidden'] },
       }),
       createSelect({
-        id: 'category',
-        name: 'category',
+        id: 'category-filter',
+        name: 'category-filter',
         className: 'primary',
       }),
     ],
@@ -36,7 +36,7 @@ function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
     const backEl = el.querySelector('#back')
     const shopEl = el.querySelector('#shop')
-    const categoryEl = el.querySelector('#category')
+    const categoryEl = el.querySelector('#category-filter')
     backEl.classList.toggle('hidden', appMode !== 'main-panel')
     shopEl.classList.toggle('hidden', appMode !== 'main-panel')
     categoryEl.classList.toggle('hidden', appMode === 'main-panel')
@@ -51,6 +51,6 @@ function react(el) {
     cats.shift()
     cats.sort((a, b) => a.label.localeCompare(b.label))
     cats.unshift({ value: '', label: 'Recently viewed' })
-    document.querySelector('#category').closest('div').setOptions(cats)
+    document.querySelector('#category-filter').closest('div').setOptions(cats)
   })
 }

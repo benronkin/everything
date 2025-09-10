@@ -16,17 +16,19 @@ export function mainDocumentsList() {
   return el
 }
 
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    // populate children
+    const cats = state.get('recipe-categories')
+    docs.forEach((doc) => {
+      const cat = cats.find((cat) => cat.value === doc.category)
+      doc.categoryLabel = cat?.label || 'bobo'
+    })
+
     const children = docs.map((doc) => {
       const htmlArr = [createSpan({ html: doc.title })]
       if (doc.category)
         htmlArr.push(
-          createSpan({ html: `(${doc.category})`, className: 'c-gray3' })
+          createSpan({ html: `(${doc.categoryLabel})`, className: 'c-gray3' })
         )
 
       const html = createDiv({
