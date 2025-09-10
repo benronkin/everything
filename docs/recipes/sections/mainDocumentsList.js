@@ -21,7 +21,7 @@ function react(el) {
     const cats = state.get('recipe-categories')
     docs.forEach((doc) => {
       const cat = cats.find((cat) => cat.value === doc.category)
-      doc.categoryLabel = cat?.label || 'bobo'
+      doc.categoryLabel = cat?.label || ''
     })
 
     const children = docs.map((doc) => {
