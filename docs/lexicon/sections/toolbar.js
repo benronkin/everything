@@ -5,6 +5,7 @@ import { createSelect } from '../../assets/partials/select.js'
 
 export function toolbar() {
   const el = createToolbar({
+    className: 'container',
     children: [
       createSelect({
         id: 'view-by',
