@@ -173,6 +173,8 @@ async function reactSearch() {
 }
 
 async function handleFieldChange(el) {
+  if (el?.name === 'search-note') return
+
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
   const note = document.querySelector('.editor').value
