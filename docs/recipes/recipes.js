@@ -19,6 +19,7 @@ import {
   deleteRecipe,
   fetchCategoriesAndRecipes,
   fetchRecentRecipes,
+  fetchRecipesByCategory,
   searchRecipes,
   updateRecipe,
   updateRecipeAccess,
@@ -191,13 +192,15 @@ async function reactRecipeSearch() {
   state.set('main-documents', data)
 }
 
-/**
- * Handle Recipe field change
- */
-
 async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
+  const name = el.name
+
+  if (name === 'category') {
+    handleCategoryChange(value)
+    return
+  }
 
   const id = state.get('active-doc')
   const docs = state.get('main-documents')
@@ -271,4 +274,18 @@ async function shopIngredients() {
 
   upodateShoppingList(cart.join(','))
   setMessage('Ingredients added to shopping list')
+}
+
+async function handleCategoryChange(id) {
+  let resp
+  if (!id) {
+    resp = await fetchRecentRecipes()
+  } else {
+    resp = await fetchRecipesByCategory(id)
+  }
+
+  const { recipes } = resp
+
+  state.set('main-documents', recipes)
+  state.set('app-mode', 'left-panel')
 }

@@ -130,6 +130,7 @@ function selectByValue(value) {
 }
 
 function setOptions(options) {
+  this.querySelector('select').innerHTML = ''
   options.forEach((opt) => {
     const optEl = document.createElement('option')
     optEl.value = opt.value

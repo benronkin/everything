@@ -1,6 +1,5 @@
 import { state } from '../assets/js/state.js'
 import { getWebApp, postWebAppJson } from '../assets/js/io.js'
-import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/recipes`
 
@@ -32,7 +31,12 @@ export async function fetchCategoriesAndRecipes() {
 
 export async function fetchRecentRecipes() {
   const resp = await getWebApp(`${url}/latest`)
-  // log(resp)
+  const { recipes, error } = resp
+  return { recipes, error }
+}
+
+export async function fetchRecipesByCategory(id) {
+  const resp = await getWebApp(`${url}/by-category?id=${id}`)
   const { recipes, error } = resp
   return { recipes, error }
 }
