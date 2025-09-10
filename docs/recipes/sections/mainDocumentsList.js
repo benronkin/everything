@@ -26,7 +26,7 @@ function react(el) {
 
     const children = docs.map((doc) => {
       const htmlArr = [createSpan({ html: doc.title })]
-      if (doc.category)
+      if (doc.categoryLabel)
         htmlArr.push(
           createSpan({ html: `(${doc.categoryLabel})`, className: 'c-gray3' })
         )
