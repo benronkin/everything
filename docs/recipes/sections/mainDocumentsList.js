@@ -18,6 +18,9 @@ export function mainDocumentsList() {
 
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
+    el.deleteChildren()
+    if (!docs) return
+
     const cats = state.get('recipe-categories')
     docs.forEach((doc) => {
       const cat = cats.find((cat) => cat.value === doc.category)
@@ -38,7 +41,7 @@ function react(el) {
 
       return createMainDocumentItem({ id: doc.id, html })
     })
-    el.deleteChildren().addChildren(children)
+    el.addChildren(children)
   })
 
   setMessage()

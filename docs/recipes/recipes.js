@@ -175,12 +175,12 @@ async function reactRecipeSearch() {
     resp = await fetchRecentRecipes()
   }
 
-  const { data, message } = resp
+  const { recipes, message } = resp
   if (message) {
     console.error(`Recipe server error: ${message}`)
     return
   }
-  state.set('main-documents', data)
+  state.set('main-documents', recipes)
 }
 
 async function handleFieldChange(el) {

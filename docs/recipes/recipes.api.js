@@ -45,7 +45,7 @@ export async function searchRecipes(q) {
   const { recipes, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`
   )
-  return { data: recipes, error }
+  return { recipes, error }
 }
 
 export async function updateRecipe({ id, section, value }) {

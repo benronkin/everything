@@ -1,9 +1,9 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { log } from '../../assets/js/logger.js'
 import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
 import { search } from '../../assets/composites/search.js'
+import { countMessage } from '../../recipes/sections/count-message.js'
 
 // -------------------------------
 // Globals
@@ -38,6 +38,8 @@ function build(el) {
       name: 'search-recipe',
     })
   )
+
+  el.appendChild(countMessage())
 
   el.appendChild(mainDocumentsList())
 }
