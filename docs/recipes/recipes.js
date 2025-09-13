@@ -169,6 +169,7 @@ async function reactRecipeSearch() {
   const query = document.querySelector('[name="search-recipe"]').value?.trim()
 
   if (query.length) {
+    state.set('search-action', true)
     resp = await searchRecipes(query)
   } else {
     // get most recent entries instead
