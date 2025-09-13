@@ -42,16 +42,24 @@ function react(el) {
     )
     el.appendChild(div)
 
+    const year =
+      "'" + new Date(wotd.created_at).getFullYear().toString().slice(2)
+
     const body1 = createDiv({
+      className: 'flex align-center',
       html: [
-        createAnchor({
-          url: `../lexicon/index.html?title=${wotd.title}`,
-          html: `${wotd.title}`,
+        createDiv({
+          html: [
+            createAnchor({
+              url: `../lexicon/index.html?title=${wotd.title}`,
+              html: `${wotd.title}`,
+            }),
+            createSpan({ html: ` (${wotd.part_of_speech})` }),
+          ],
         }),
-        createSpan({ html: ` (${wotd.part_of_speech})` }),
+        createSpan({ html: `(${wotd.first_name}, ${year})` }),
       ],
     })
-    const year = new Date(wotd.created_at).getFullYear()
 
     const body2 = createDiv({
       className: 'mt-10',
@@ -60,10 +68,7 @@ function react(el) {
 
     const body3 = createDiv({
       className: 'flex align-center',
-      html: [
-        createSpan({ html: wotd.example, className: 'c-teal3 italic' }),
-        createSpan({ html: `(${wotd.first_name}, ${year})` }),
-      ],
+      html: [createSpan({ html: wotd.example, className: 'c-teal3 italic' })],
     })
 
     const body = createDiv({
