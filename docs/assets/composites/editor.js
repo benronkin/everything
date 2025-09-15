@@ -29,6 +29,10 @@ const css = `
 .editor-wrapper .viewer h3 {
   margin: 20px 0 10px;
 }
+.editor-wrapper .viewer h1 {
+  font-family: Georgia;
+  line-height: 2.5rem;
+}
 .editor-wrapper .viewer hr {
   border: 1px dotted var(--gray1);
   margin: 30px 0;
