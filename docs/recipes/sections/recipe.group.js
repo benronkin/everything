@@ -6,8 +6,6 @@ import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createSwitch } from '../../assets/partials/switch.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { createList } from '../../assets/partials/list.js'
-import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
 
 export function createRecipeGroup() {
   const el = createDiv({ id: 'entry-group' })
@@ -103,7 +101,7 @@ async function build(el) {
       className: 'flex mb-20',
       html: [
         createHeader({ type: 'h5', html: 'Related' }),
-        createSwitch({ id: 'related-switch' }),
+        createSwitch({ id: 'related-switch', name: 'related-switch' }),
       ],
     })
   )

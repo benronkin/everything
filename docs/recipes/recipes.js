@@ -102,7 +102,18 @@ function react() {
     if (appMode === 'main-panel') {
       populateRelatedRecipes()
       const id = state.get('active-doc')
-      if (id) updateRecipeAccess(id)
+      if (id) {
+        updateRecipeAccess(id)
+        const docs = state.get('main-documents')
+        const idx = docs.findIndex((d) => d.id === id)
+        if (idx !== -1) {
+          const [doc] = docs.splice(idx, 1)
+          const date = new Date()
+          doc.last_accessed_at = date.toISOString()
+          docs.unshift(doc)
+          state.set('main-documents', docs)
+        }
+      }
     }
   })
 
@@ -189,11 +200,10 @@ async function reactRecipeSearch() {
 }
 
 async function handleFieldChange(el) {
-  const section = el.name
   let value = el.value
   const name = el.name
 
-  if (name === 'search-recipe') return
+  if (name === 'search-recipe' || name === 'related-switch') return
 
   if (name === 'category-filter') {
     handleCategoryChange(value)
@@ -204,11 +214,11 @@ async function handleFieldChange(el) {
   const docs = state.get('main-documents')
   const idx = docs.findIndex((d) => d.id === id)
 
-  docs[idx][section] = value
+  docs[idx][name] = value
   state.set('main-documents', docs)
 
   try {
-    const { error } = await updateRecipe({ id, section, value })
+    const { error } = await updateRecipe({ id, section: name, value })
     if (error) {
       throw new Error(error)
     }
@@ -217,7 +227,7 @@ async function handleFieldChange(el) {
     setMessage(error, { type: 'danger' })
   }
 
-  if (section === 'related') {
+  if (name === 'related') {
     populateRelatedRecipes()
   }
 }
@@ -245,7 +255,12 @@ function populateRelatedRecipes() {
       continue
     }
 
-    const title = state.get('main-documents').find((doc) => doc.id === id).title
+    const docs = state.get('main-documents')
+    const relatedDoc = docs.find((doc) => doc.id === id)
+    if (!relatedDoc) {
+      console.warn(`Related recipe with id "${id}" not found in main documents`)
+    }
+    const title = relatedDoc.title
     relatedListEl.addChild(
       createMainDocumentItem({
         id,
