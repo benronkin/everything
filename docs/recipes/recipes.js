@@ -99,7 +99,11 @@ function react() {
   )
 
   state.on('app-mode', 'recipes', (appMode) => {
-    if (appMode === 'main-panel') populateRelatedRecipes()
+    if (appMode === 'main-panel') {
+      populateRelatedRecipes()
+      const id = state.get('active-doc')
+      if (id) updateRecipeAccess(id)
+    }
   })
 
   state.on('field-changed', 'recipes', handleFieldChange)
