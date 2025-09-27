@@ -1,9 +1,8 @@
 import { state } from '../../assets/js/state.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { createList } from '../../assets/partials/list.js'
-import { createTitleDetailsItem } from '../../assets/partials/titleDetailsItem.js'
+import { createTask } from './task.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
-import { log } from '../../assets/js/logger.js'
 
 export function titleDetailsList() {
   const el = createList({
@@ -25,7 +24,7 @@ function react(el) {
     }
 
     const children = docs.map((doc) =>
-      createTitleDetailsItem({
+      createTask({
         id: doc.id,
         title: doc.title,
         details: doc.details,

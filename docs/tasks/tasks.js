@@ -119,6 +119,10 @@ async function handleTaskUpdate(el) {
     const parent = el.closest('.td-item')
     const id = parent.id
 
+    console.log('section', section)
+    console.log('value', value)
+    return
+
     const { error } = await updateTask({ id, section, value })
     if (error) {
       throw new Error(error)
