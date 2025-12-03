@@ -128,39 +128,39 @@ function build(el) {
   })
   iconsEl.appendChild(trashEl)
 
-  detailsWrapperEl.appendChild(
-    createDiv({
-      className: 'date-time-wrapper',
-      html: [
-        createSpan({ html: 'Starts' }),
-        createInput({
-          name: 'start_date',
-          type: 'date',
-        }),
-        createInput({
-          name: 'start_time',
-          type: 'time',
-        }),
-      ],
-    })
-  )
+  // detailsWrapperEl.appendChild(
+  //   createDiv({
+  //     className: 'date-time-wrapper',
+  //     html: [
+  //       createSpan({ html: 'Starts' }),
+  //       createInput({
+  //         name: 'start_date',
+  //         type: 'date',
+  //       }),
+  //       createInput({
+  //         name: 'start_time',
+  //         type: 'time',
+  //       }),
+  //     ],
+  //   })
+  // )
 
-  detailsWrapperEl.appendChild(
-    createDiv({
-      className: 'date-time-wrapper',
-      html: [
-        createSpan({ html: 'Ends' }),
-        createInput({
-          name: 'end_date',
-          type: 'date',
-        }),
-        createInput({
-          name: 'end_time',
-          type: 'time',
-        }),
-      ],
-    })
-  )
+  // detailsWrapperEl.appendChild(
+  //   createDiv({
+  //     className: 'date-time-wrapper',
+  //     html: [
+  //       createSpan({ html: 'Ends' }),
+  //       createInput({
+  //         name: 'end_date',
+  //         type: 'date',
+  //       }),
+  //       createInput({
+  //         name: 'end_time',
+  //         type: 'time',
+  //       }),
+  //     ],
+  //   })
+  // )
 
   trashEl.addEventListener('click', () => {
     state.set('task-deleted:tasks-list', { id: el.id })
