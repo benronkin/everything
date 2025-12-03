@@ -6,7 +6,6 @@
 import fs from 'fs'
 import readlineSync from 'readline-sync'
 import { execSync } from 'child_process'
-import { checkStyles } from './checkStyles.js'
 
 // -------------------------------
 // Init
