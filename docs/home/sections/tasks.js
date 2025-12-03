@@ -2,8 +2,8 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createHeader } from '../../assets/partials/header.js'
-import { titleDetailsList } from '../../tasks/sections/titleDetailsList.js'
-import { createTitleDetailsItem } from '../../assets/partials/titleDetailsItem.js'
+import { tasksList } from '../../tasks/sections/tasksList.js'
+import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { deleteTask, updateTask } from '../../tasks/tasks.api.js'
 
@@ -55,17 +55,12 @@ function tasksHeader(hasTasks) {
   return div
 }
 
-/**
- * titleDetailsList populates all tasks from state,
- * but here we delete them and load only the first two
- */
 function tasksBody(tasks) {
-  const list = titleDetailsList()
+  const list = tasksList()
   const children = tasks.map((doc) =>
-    createTitleDetailsItem({
+    createMainDocumentItem({
       id: doc.id,
-      title: doc.title,
-      details: doc.details,
+      html: doc.title,
     })
   )
   list.deleteChildren().addChildren(children)

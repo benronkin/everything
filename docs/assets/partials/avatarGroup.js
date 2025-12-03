@@ -2,8 +2,6 @@ import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createAvatar } from './avatar.js'
 import { createIcon } from './icon.js'
-import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 .avatar-group {

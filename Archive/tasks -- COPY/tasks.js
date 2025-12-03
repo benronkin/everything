@@ -1,23 +1,21 @@
-import { state } from '../assets/js/state.js'
-import { handleTokenQueryParam } from '../assets/js/io.js'
+import { state } from '../../docs/assets/js/state.js'
+import { handleTokenQueryParam } from '../../docs/assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
-import { leftPanel } from './sections/leftPanel.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { mainPanel } from './sections/mainPanel.js'
-import { createDiv } from '../assets/partials/div.js'
-import { createFooter } from '../assets/composites/footer.js'
-import { getMe } from '../users/users.api.js'
-import { setMessage } from '../assets/js/ui.js'
+import { createDiv } from '../../docs/assets/partials/div.js'
+import { createFooter } from '../../docs/assets/composites/footer.js'
+import { getMe } from '../../docs/users/users.api.js'
+import { setMessage } from '../../docs/assets/js/ui.js'
 import {
   createTask,
   deleteTask,
-  fetchTask,
   fetchTasks,
   update,
   updateTask,
 } from './tasks.api.js'
-import { log } from '../assets/js/logger.js'
+import { log } from '../../docs/assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   build()
@@ -35,28 +33,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
 
-    const urlParams = new URLSearchParams(window.location.search)
-    const id = urlParams.get('id')
-    if (id) {
-      const docExists = tasks.find((task) => task.id === id)
-      if (!docExists) {
-        const newDoc = await fetchTask(id)
-        tasks.unshift(newDoc)
-      }
-      state.set('main-documents', tasks)
-      state.set('active-doc', id)
-      state.set('app-mode', 'main-panel')
-    } else {
-      state.set('main-documents', tasks)
-      state.set('app-mode', 'left-panel')
-    }
-
+    state.set('main-documents', tasks)
+    state.set('app-mode', 'main-panel')
     state.set('user', user)
     state.set('default-page', 'tasks')
     setMessage()
     window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)
+    window.location.href = `../home/index.html?message=${error.message}`
     setMessage(error.message, { type: 'danger' })
   }
 })
@@ -75,7 +60,6 @@ function build() {
     className: 'columns-wrapper',
   })
   wrapperEl.appendChild(columnsWrapperEl)
-  columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
 

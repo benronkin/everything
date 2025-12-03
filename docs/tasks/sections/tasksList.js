@@ -1,10 +1,10 @@
 import { state } from '../../assets/js/state.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { createList } from '../../assets/partials/list.js'
-import { createTask } from './task.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
+import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 
-export function titleDetailsList() {
+export function tasksList() {
   const el = createList({
     id: 'tasks-list',
     className: 'mt-20',
@@ -17,24 +17,25 @@ export function titleDetailsList() {
 }
 
 function react(el) {
-  state.on('main-documents', 'titleDetailsList', (docs) => {
+  state.on('main-documents', 'tasksList', (docs) => {
     el.deleteChildren()
     if (!docs.length) {
       return
     }
 
-    const children = docs.map((doc) =>
-      createTask({
+    const children = docs.map((doc) => {
+      const li = createMainDocumentItem({
         id: doc.id,
-        title: doc.title,
-        details: doc.details,
+        html: doc.title,
       })
-    )
+
+      return li
+    })
     el.addChildren(children)
     setMessage()
   })
 
-  state.on('icon-click:sort-icon', 'titleDetailsList', () => {
+  state.on('icon-click:sort-icon', 'tasksList', () => {
     if (document.querySelector('#sort-icon').classList.contains('primary')) {
       enableDragging(el)
     } else {
@@ -42,7 +43,7 @@ function react(el) {
     }
   })
 
-  state.on('drag-end', 'titleDetailsList', ({ id }) => {
+  state.on('drag-end', 'tasksList', ({ id }) => {
     state.set('list-dragged:tasks-list', { id: 'tasks-list', targetId: id })
   })
 }

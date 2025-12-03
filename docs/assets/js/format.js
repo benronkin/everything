@@ -49,3 +49,24 @@ export function formatDateParts(isoDateString) {
   }
   return obj
 }
+
+/**
+ * Export an iso date/time to strings that
+ * can be fed into input elements
+ */
+export function toLocalDateTimeStrings(iso) {
+  const d = new Date(iso)
+  const pad = (n) => n.toString().padStart(2, '0')
+
+  const year = d.getFullYear()
+  const month = pad(d.getMonth() + 1)
+  const day = pad(d.getDate())
+
+  const hours = pad(d.getHours())
+  const minutes = pad(d.getMinutes())
+
+  return {
+    date: `${year}-${month}-${day}`, // for <input type="date">
+    time: `${hours}:${minutes}`, // for <input type="time">
+  }
+}

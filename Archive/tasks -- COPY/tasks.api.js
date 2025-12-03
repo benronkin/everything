@@ -1,5 +1,5 @@
-import { state } from '../assets/js/state.js'
-import { getWebApp, postWebAppJson } from '../assets/js/io.js'
+import { state } from '../../docs/assets/js/state.js'
+import { getWebApp, postWebAppJson } from '../../docs/assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/tasks`
 
@@ -11,12 +11,6 @@ export async function createTask(title, id) {
 export async function deleteTask(id) {
   const { error } = await getWebApp(`${url}/delete?id=${id}`)
   return { error }
-}
-
-export async function fetchTask(id) {
-  const resp = await getWebApp(`${url}/read-one?id=${id}`)
-  const { task, error } = resp
-  return { task, error }
 }
 
 export async function fetchTasks() {

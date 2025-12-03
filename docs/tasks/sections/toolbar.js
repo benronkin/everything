@@ -8,6 +8,10 @@ export function toolbar() {
     className: 'container',
     children: [
       createIcon({
+        id: 'back',
+        classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
+      }),
+      createIcon({
         id: 'sort-icon',
         classes: { primary: 'fa-sort', other: 'bordered' },
       }),
@@ -21,6 +25,17 @@ export function toolbar() {
 }
 
 function react(el) {
+  state.on('app-mode', 'toolbar', (appMode) => {
+    el.querySelector('#back').classList.toggle(
+      'hidden',
+      appMode !== 'main-panel'
+    )
+    el.querySelector('#sort-icon').classList.toggle(
+      'hidden',
+      appMode === 'main-panel'
+    )
+  })
+
   state.on('icon-click:sort-icon', 'toolbar', ({ id }) => {
     const sortEl = document.getElementById(id)
     sortEl.classList.toggle('primary')
@@ -28,4 +43,9 @@ function react(el) {
   })
 }
 
-function listen(el) {}
+function listen(el) {
+  el.querySelector('#back').addEventListener('click', () => {
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
+  })
+}

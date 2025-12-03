@@ -1,39 +1,50 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { mainDocumentsList } from './mainDocumentsList.js'
-import { search } from '../../assets/composites/search.js'
+import { tasksList } from './tasksList.js'
+import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
+import { state } from '../../assets/js/state.js'
 
 const css = `
-#left-panel {
+#main-panel {
   width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+#main-panel.hidden {
+  display: none;
 }
 `
 
 export function leftPanel() {
   injectStyle(css)
 
-  const el = createDiv()
+  const el = createDiv({ className: 'mt-20' })
 
   build(el)
   react(el)
 
-  el.id = 'left-panel'
-  el.dataset.id = 'left-panel'
+  el.id = 'main-panel'
 
   return el
 }
 
 function build(el) {
   el.appendChild(
-    search({
-      id: 'left-panel-search',
-      placeholder: 'Search books...',
-      name: 'search-book',
+    createFormHorizontal({
+      id: 'tasks-form',
+      type: 'text',
+      name: 'task',
+      placeholder: 'Add task',
+      autocomplete: 'off',
+      classes: { icon: 'fa-thumbtack' },
+      disabled: true,
     })
   )
 
-  el.appendChild(mainDocumentsList())
+  el.appendChild(tasksList({ className: 'mt-20' }))
 }
 
 function react(el) {
@@ -45,14 +56,11 @@ function react(el) {
 
     el.classList.remove('hidden')
 
-    const scrollY = state.get('window.scrollY') || 0
-    window.scroll({ top: scrollY, behavior: 'auto' })
-
     // If there is an active-doc and it does not appear
     // in main-documents then delete active-doc
     const currentId = state.get('active-doc')
     if (!currentId) {
-      el.querySelector('#left-panel-list').reset()
+      el.querySelector('#tasks-list').reset()
       return
     }
 

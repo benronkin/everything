@@ -1,6 +1,5 @@
 import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 i {
