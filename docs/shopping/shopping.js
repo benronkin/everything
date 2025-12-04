@@ -9,9 +9,11 @@ import { createFooter } from '../assets/composites/footer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import {
+  addItem,
+  deleteItem,
   fetchCartAndSuggestions,
-  upodateShoppingList,
-  upodateSuggestionsList,
+  updateShoppingList,
+  updateSuggestionsList,
 } from './shopping.api.js'
 import { log } from '../assets/js/logger.js'
 
@@ -113,14 +115,14 @@ function react() {
     let sItems = state.get('shopping-list')
     sItems = sItems.filter((sItem) => sItem !== item)
     state.set('shopping-list', sItems)
-    upodateShoppingList(sItems.join(','))
+    deleteShoppingItem(item)
   })
 
   state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
     let sItems = state.get('suggestions-list')
     sItems = sItems.filter((sItem) => sItem !== item)
     state.set('suggestions-list', sItems)
-    upodateSuggestionsList(sItems.join(','))
+    updateSuggestionsList(sItems.join(','))
   })
 
   state.on('button-click:add-to-both-lists-button', 'shopping', ({ e }) => {
@@ -134,7 +136,7 @@ function react() {
   state.on('list-dragged:shopping-list', 'tasks', async () => {
     const items = [...cartEl.querySelectorAll('.list-item')]
     const values = items.map((item) => item.querySelector('span').textContent)
-    upodateShoppingList(values.join(','))
+    updateShoppingList(values.join(','))
   })
 }
 
@@ -150,7 +152,7 @@ async function addShoppingItem(item) {
   sItems.unshift(item)
   state.set('shopping-list', sItems)
 
-  const resp = await upodateShoppingList(sItems.join(','))
+  const resp = await addItem(item)
 
   if (resp?.error) {
     // revert operation
@@ -159,6 +161,20 @@ async function addShoppingItem(item) {
     return { error: resp.error }
   }
   return
+}
+
+function deleteShoppingItem(item) {
+  item = item.trim().toLowerCase()
+  if (!item.length) return
+
+  const sItems = state.get('shopping-list')
+
+  const idx = sItems.indexOf(item)
+  if (!idx === -1) {
+    return { message: `${item} is not on the list` }
+  }
+
+  deleteItem(item)
 }
 
 async function handleAddToBothLists(item) {
@@ -175,7 +191,7 @@ async function handleAddToBothLists(item) {
   arr.sort()
   state.set('suggestions-list', [...arr])
 
-  const resp = await upodateSuggestionsList(arr.join(','))
+  const resp = await updateSuggestionsList(arr.join(','))
 
   if (resp?.error) {
     // revert operation

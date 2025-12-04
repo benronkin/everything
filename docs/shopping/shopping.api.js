@@ -1,6 +1,5 @@
 import { state } from '../assets/js/state.js'
 import { getWebApp, postWebAppJson } from '../assets/js/io.js'
-import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/shopping`
 
@@ -10,13 +9,25 @@ export async function fetchCartAndSuggestions() {
   return { shoppingList, shoppingSuggestions }
 }
 
-export async function upodateShoppingList(text) {
+export async function addItem(text) {
+  postWebAppJson(`${url}/add`, {
+    value: text,
+  })
+}
+
+export async function deleteItem(text) {
+  postWebAppJson(`${url}/delete`, {
+    value: text,
+  })
+}
+
+export async function updateShoppingList(text) {
   postWebAppJson(`${url}/update`, {
     value: text,
   })
 }
 
-export async function upodateSuggestionsList(text) {
+export async function updateSuggestionsList(text) {
   postWebAppJson(`${url}/suggestions/update`, {
     value: text,
   })
