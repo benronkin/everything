@@ -12,7 +12,7 @@ import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   fetchCartAndSuggestions,
-  upodateShoppingList,
+  updateShoppingList,
 } from '../shopping/shopping.api.js'
 import {
   createRecipe,
@@ -286,7 +286,7 @@ async function shopIngredients() {
   const { shoppingList } = await fetchCartAndSuggestions()
   const cart = [...new Set([...ingredients, ...shoppingList.split(',')])]
 
-  upodateShoppingList(cart.join(','))
+  updateShoppingList(cart.join(','))
   setMessage('Ingredients added to shopping list')
 }
 
