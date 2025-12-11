@@ -28,6 +28,8 @@ export function toolbar() {
 
   react(el)
 
+  el.style.marginLeft = 0
+
   return el
 }
 
