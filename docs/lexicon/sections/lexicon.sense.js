@@ -73,7 +73,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'definition',
-      className: 'w-100',
+      className: 'w-100 definition',
       placeholder: 'Add definition',
       value: sense.definition,
     })
@@ -92,7 +92,7 @@ async function build(el, sense, noFaMinus) {
   el.appendChild(
     createTextarea({
       name: 'example',
-      className: 'w-100',
+      className: 'w-100 example',
       placeholder: 'Add example',
       value: sense.example,
     })

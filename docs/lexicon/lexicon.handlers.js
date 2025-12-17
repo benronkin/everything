@@ -1,6 +1,7 @@
 import { setMessage } from '../assets/js/ui.js'
 import { state } from '../assets/js/state.js'
 import {
+  aiEntry,
   searchEntries,
   createEntry,
   deleteEntry,
@@ -43,29 +44,38 @@ export async function handleSearch() {
 
   state.set('main-documents', entries)
 
+  state.set('lexicon-search', {
+    q,
+    exact,
+  })
+
   if (exact.length) {
     state.set('app-mode', 'main-panel')
     state.set('active-doc', exact[0].title)
   } else {
     state.set('app-mode', 'left-panel')
+    const { newEntry, error } = await aiEntry({ title: q })
+    if (error) {
+      console.error(error)
+      return
+    }
+    state.set('ai-entry', newEntry)
   }
-
-  state.set('lexicon-search', {
-    q,
-    exact,
-  })
 }
 
 export async function handleEntryAdd() {
-  const title =
-    state.get('lexicon-search').q || state.get('active-doc') || 'new entry'
-
+  const newEntry = state.get('ai-entry')
+  const title = newEntry.term.trim().toLowerCase()
   const id = `ev${crypto.randomUUID()}`
   const submitter = state.get('user').id
 
   const sense = {
     id,
-    title: title.trim().toLowerCase(),
+    title,
+    part_of_speech: newEntry.part_of_speech,
+    definition: newEntry.definition,
+    synonyms: newEntry.synonyms,
+    example: newEntry.example,
     created_at: new Date().toISOString(),
     submitter,
   }

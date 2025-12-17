@@ -1,11 +1,15 @@
 import { state } from '../assets/js/state.js'
 import { getWebApp, postWebAppJson } from '../assets/js/io.js'
-import { log } from '../assets/js/logger.js'
 
 const url = `${state.const('APP_URL')}/lexicon`
 
-export async function createEntry({ id, title }) {
-  const { error } = await postWebAppJson(`${url}/create`, { id, title })
+export async function aiEntry({ title }) {
+  const newEntry = await getWebApp(`${url}/ai?title=${title}`)
+  return { newEntry }
+}
+
+export async function createEntry(payload) {
+  const { error } = await postWebAppJson(`${url}/create`, payload)
   return { error }
 }
 
@@ -36,10 +40,10 @@ export async function fetchRecentEntries() {
 }
 
 export async function searchEntries(q) {
-  const { entries, error } = await getWebApp(
+  const { entries, newEntry, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`
   )
-  return { entries, error }
+  return { entries, newEntry, error }
 }
 
 export async function updateEntry({ id, section, value }) {
