@@ -73,6 +73,7 @@ export async function handleEntryAdd() {
     id,
     title,
     part_of_speech: newEntry.part_of_speech,
+    partOfSpeech: newEntry.part_of_speech,
     definition: newEntry.definition,
     synonyms: newEntry.synonyms,
     example: newEntry.example,
