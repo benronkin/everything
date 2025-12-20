@@ -6,8 +6,16 @@ import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
 
 const css = `
+.markdown-editor {
+  width: 100%;
+}
 .markdown-icons {
   display: flex;
+}
+.markdown-viewer h1,
+.markdown-viewer h2
+ {
+  margin: 30px 0 15px;
 }
 `
 
@@ -18,6 +26,7 @@ export function createMarkdown({ name, iconsVisible = true }) {
   el.className = 'markdown-wrapper'
 
   el.updateViewer = updateViewer.bind(el)
+  el.updateEditor = updateEditor.bind(el)
   el.resetIcons = resetIcons.bind(el)
   el.toggle = toggle.bind(el)
 
@@ -80,6 +89,7 @@ function listen({ el, iconsVisible }) {
       el.toggle()
       const editor = el.querySelector('.markdown-editor')
       editor.value = editor.dataset.old || ''
+      editor.resize()
       el.resetIcons()
     })
   }
@@ -94,8 +104,19 @@ function toggle() {
   } else {
     viewer.classList.add('hidden')
     editor.classList.remove('hidden')
-    editor.focus()
+    requestAnimationFrame(() => {
+      editor.resize()
+      editor.focus()
+    })
   }
+}
+
+function updateEditor(content) {
+  const editor = this.querySelector('.markdown-editor')
+  editor.value = content
+  requestAnimationFrame(() => {
+    editor.resize()
+  })
 }
 
 function updateViewer() {
@@ -111,11 +132,6 @@ function updateViewer() {
     viewer.innerHTML = errorMsg
     return
   }
-
-  // function updateEditor(content) {
-  //   const editor = this.querySelector('.markdown-editor')
-  //   editor.value = content
-  // }
 
   const markdown = this.querySelector('.markdown-editor').value
 

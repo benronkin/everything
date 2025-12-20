@@ -175,7 +175,8 @@ function react(el) {
     }
 
     el.querySelector('#note-title').value = doc.title
-    el.querySelector('.markdown-editor').value = doc.note
+    el.querySelector('.markdown-wrapper').updateEditor(doc.note)
+
     document.querySelector('.markdown-wrapper').updateViewer()
 
     el.querySelector('#note-id').insertHtml(doc.id)
@@ -343,7 +344,8 @@ async function updateHistories() {
       const isRestore = !!('button', e.target.closest('button'))
       if (isRestore) {
         const note = state.get('note-body')
-        document.querySelector('.editor').value = note
+        document.querySelector('.markdown-editor').value = note
+        document.querySelector('.markdown-editor').resize()
         await executeNoteUpdate()
         updateHistories()
         document.querySelector('#history').classList.remove('on')
