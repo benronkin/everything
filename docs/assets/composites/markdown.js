@@ -6,6 +6,10 @@ import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
 
 const css = `
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
 .markdown-editor {
   width: 100%;
 }
