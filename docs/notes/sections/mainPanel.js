@@ -218,16 +218,6 @@ function react(el) {
   })
 
   state.on('icon-click:back', 'toolbar', async () => {
-    const editorEl = document.querySelector('.editor')
-    if (!editorEl.classList.contains('hidden')) {
-      executeNoteUpdate()
-      editorEl.classList.add('hidden')
-      document.querySelector('.viewer').classList.remove('hidden')
-    }
-
-    editorEl.value = ''
-    document.querySelector('.viewer').innerHTML = ''
-
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })

@@ -71,6 +71,15 @@ function react(el) {
     }
   })
 
+  state.on('icon-click:back', 'toolbar', () => {
+    const editEl = document.querySelector('#edit')
+    if (editEl.classList.contains('fa-close')) {
+      editEl.classList.toggle(editEl._classes.primary)
+      editEl.classList.toggle(editEl._classes.secondary)
+      document.querySelector('.markdown-wrapper').toggle()
+    }
+  })
+
   state.on('icon-click:toc', 'toolbar', () => {
     document.querySelector('#toc').classList.toggle('on')
   })
