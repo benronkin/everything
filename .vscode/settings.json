@@ -1,5 +1,6 @@
 {
   "cSpell.words": ["gacp", "resizer"],
   "liveServer.settings.host": "0.0.0.0",
-  "liveServer.settings.useLocalIp": true
+  "liveServer.settings.useLocalIp": true,
+  "liveServer.settings.root": "/client"
 }

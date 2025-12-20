@@ -37,108 +37,23 @@
     </style>
   </head>
   <body class="dark-mode">
+    <script src="../assets/js/markdown-it.js"></script>
+
     <script type="module">
-      import { Cache } from '../assets/js/cache.js'
       import { state } from '../assets/js/state.js'
-      import { createDiv } from '../assets/partials/div.js'
-      import { createFileInput } from '../assets/partials/fileInput.js'
-      import { createFormHorizontal } from '../assets/partials/formHorizontal.js'
-      import { createFormField } from '../assets/partials/formField.js'
-      import { createIcon } from '../assets/partials/icon.js'
-      import { createTextarea } from '../assets/partials/textarea.js'
-      import { createList } from '../assets/partials/list.js'
-      import { createListItem } from '../assets/partials/listItem.js'
-      import { createMenuItem } from '../assets/partials/menuItem.js'
-      import { createSelect } from '../assets/partials/select.js'
-      import { createSelectGroup } from '../assets/partials/selectGroup.js'
-      import { createModalDelete } from '../assets/composites/modalDelete.js'
-      import { createCollapsibleGroup } from '../assets/partials/collapsibleGroup.js'
-      import { setMessage } from '../assets/js/ui.js'
-      import { removeToasts } from '../assets/partials/toast.js'
-      import { createNav } from '../assets/composites/nav.js'
-      import { createRightDrawer } from '../assets/composites/rightDrawer.js'
-      import { createCountryStateCity } from '../assets/composites/countryStateCity.js'
-      import { createComboGroup } from '../assets/partials/comboGroup.js'
-      import { fetchGeoIndex, updateGeoIndex } from '../journal/journal.api.js'
-      import { createModalShare } from '../assets/composites/modalShare.js'
-      import { createPill } from '../assets/partials/pill.js'
-      import { log } from '../assets/js/logger.js'
+      import { createMarkdown } from '../assets/composites/markdown.js'
 
-      // caching
-      ;(async () => {
-        const cache = new Cache()
-        console.log('cache', await cache.exists())
-      })()
+      const markDownWrapper = createMarkdown({ name: 'design-markdown' })
 
-      // const mainPanelEl = createMainPanel()
-      // mainPanelEl.appendChild(
-      //   createSelect({
-      //     options: [{ label: 'hello', value: 'hello', selected: true }],
-      //   })
-      // )
-      // ;(function modalShare() {
-      //   const modalShareEl = createModalShare()
-      //   mainPanelEl.appendChild(modalShareEl)
+      document.body.appendChild(markDownWrapper)
 
-      //   const doc = {
-      //     accessed_at: '2025-06-19T01:13:01.149Z',
-      //     created_at: '2025-06-04T16:12:42.175Z',
-      //     id: 'df570e9a-a54e-48d8-ab4c-55e3576d0707',
-      //     owner_first_name: 'Ben',
-      //     peers: [
-      //       { id: '2', name: 'Noa' },
-      //       { id: '3', name: 'Shelley' },
-      //     ],
-      //     role: 'owner',
-      //     title: 'Smarty pants!',
-      //     updated_at: '2025-06-18T17:06:17.941Z',
-      //     user_id: '1',
-      //   }
+      markDownWrapper.querySelector('.markdown-editor').value = `
+<style>a {color: red;}</style>
+# Hello, world!
 
-      //   state.set('active-doc', doc.id)
-
-      //   modalShareEl.setHeader(`Share Smarty pants!`)
-      //   modalShareEl.showModal()
-      // })()
-
-      // mainPanelEl.appendChild(
-      //   createPill({
-      //     classes: { icon: 'fa-check' },
-      //     isSelected: true,
-      //     html: 'Ben',
-      //   })
-      // )
-
-      function countryStateCity() {
-        /* Design components: */
-        mainPanelEl.appendChild(createCountryStateCity())
-        //
-        ;(async function () {
-          const { tree } = await fetchGeoIndex()
-          state.set('country-state-city-tree', JSON.parse(tree))
-          state.set('country-state-city-page', 0)
-        })()
-      }
-
-      function createMainPanel() {
-        const wrapperEl = createDiv({ className: 'wrapper' })
-        document.body.prepend(wrapperEl)
-        wrapperEl.appendChild(
-          createNav({ title: '<i class="fa-solid fa-lock"></i> Admin Design' })
-        )
-        const columnsWrapperEl = createDiv({
-          className: 'columns-wrapper',
-        })
-        wrapperEl.appendChild(columnsWrapperEl)
-        const mainPanelEl = createDiv({
-          id: 'main-panel',
-          className: 'mt-20 w-100',
-        })
-        columnsWrapperEl.appendChild(mainPanelEl)
-        columnsWrapperEl.appendChild(createRightDrawer())
-
-        return mainPanelEl
-      }
+<a href="https://wnba.com">Click here</a>
+`
+      markDownWrapper.updateViewer()
     </script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import { createMarkdown } from '../../assets/composites/markdown.js'
+import { createEditor } from '../../assets/composites/editor.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
@@ -109,7 +109,7 @@ export function mainPanel() {
 }
 
 export function executeNoteUpdate() {
-  const note = document.querySelector('.markdown-editor').value
+  const note = document.querySelector('.editor').value
   const id = state.get('active-doc')
 
   if (!id) return // timed-out call after active-doc became null
@@ -141,7 +141,7 @@ function build(el) {
     })
   )
 
-  el.appendChild(createMarkdown({ name: 'note', iconsVisible: false }))
+  el.appendChild(createEditor())
 
   el.appendChild(createDiv({ id: 'right-panel' }))
 
@@ -152,7 +152,7 @@ function build(el) {
   el.appendChild(createSpan({ id: 'note-id', className: 'smaller' }))
 
   el.querySelector('#note-title').taxIndex = '0'
-  el.querySelector('.markdown-viewer').taxIndex = '1'
+  el.querySelector('.editor').taxIndex = '1'
 }
 
 function react(el) {
@@ -165,7 +165,7 @@ function react(el) {
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {
-    el.querySelector('.markdown-viewer').innerHTML = 'Loading...'
+    el.querySelector('.editor-wrapper').setEditor('Loading...')
     if (!id) return
 
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
@@ -175,12 +175,18 @@ function react(el) {
     }
 
     el.querySelector('#note-title').value = doc.title
-    el.querySelector('.markdown-editor').value = doc.note
-    document.querySelector('.markdown-wrapper').updateViewer()
+    el.querySelector('.editor-wrapper').setEditor(doc.note)
+    el.querySelector('.editor-wrapper').setViewer(doc.note)
 
     el.querySelector('#note-id').insertHtml(doc.id)
 
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
+  })
+
+  state.on('select-click:ta-header-select', 'mainPanel', (value) => {
+    document.querySelector('.editor-wrapper').insertBlock(value)
+    document.querySelector('#ta-header-select').selectByLabel('H')
+    document.querySelector('.editor').focus()
   })
 
   state.on('right-drawer-toggle-click', 'mainPanel', () => {
@@ -188,12 +194,18 @@ function react(el) {
   })
 
   state.on('icon-click:edit', 'mainPanel', () => {
-    document.querySelector('.markdown-wrapper').toggle()
+    const editorEl = el.querySelector('.editor')
+    const viewerEl = el.querySelector('.viewer')
 
     document.querySelector('#right-panel').classList.remove('open')
+    editorEl.classList.toggle('hidden')
 
     const scrollPercent =
       window.scrollY / (document.body.scrollHeight - window.innerHeight)
+
+    viewerEl.classList.toggle('hidden')
+    document.querySelector('.editor-wrapper').setViewer(editorEl.value)
+    editorEl.resize()
 
     const targetY =
       (document.body.scrollHeight - window.innerHeight) * scrollPercent
@@ -238,11 +250,93 @@ function listen(el) {
   titleEl.addEventListener('change', () => {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
+
+  const editorEl = el.querySelector('.editor')
+
+  document.querySelectorAll('i.ta-icon').forEach((i) => {
+    i.addEventListener('mousedown', () => {
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+    })
+
+    i.addEventListener('mouseup', (e) => {
+      const snippet = e.currentTarget.dataset.snippet || '--snippet missing--'
+      document.querySelector('.editor-wrapper').insertBlock(snippet)
+      editorEl.focus()
+    })
+  })
+
+  document
+    .querySelector('#ta-header-select')
+    .addEventListener('mousedown', () => {
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+    })
+
+  editorEl.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.shiftKey) {
+      const iconMap = {
+        a: '.fa-anchor',
+        c: '.fa-code',
+        i: '.fa-minus',
+        b: '.fa-quote-left',
+        o: '.fa-list-ol',
+        u: '.fa-list-ul',
+      }
+
+      const optionMap = {
+        h: 'H1',
+        d: 'Normal',
+      }
+
+      let block
+      let selector = iconMap[e.key]
+      let el = document.querySelector(selector)
+      if (el) {
+        block = el.dataset.snippet
+      } else {
+        selector = optionMap[e.key]
+        el = [...document.querySelectorAll('#ta-header-select option')].find(
+          (opt) => opt.label === selector
+        )
+        if (el) {
+          block = el.value
+        }
+      }
+
+      if (!block) return
+      e.preventDefault()
+      document.querySelector('.editor-wrapper').saveSelectedRange()
+      document.querySelector('.editor-wrapper').insertBlock(block)
+      editorEl.focus()
+      return
+    }
+
+    if (e.metaKey && e.key === 'Enter') {
+      e.preventDefault() // prevent the default Enter behavior
+
+      const editor = e.currentTarget
+      const { selectionEnd, value } = editor
+
+      // find the index of the next newline after the caret
+      const lineEnd = value.indexOf('\n', selectionEnd)
+
+      // if no newline is found, we’re at the last line → insert at end
+      // otherwise, insert just after the current line
+      const insertPos = lineEnd === -1 ? value.length : lineEnd + 1
+
+      const before = value.slice(0, insertPos) // content before the insertion point
+      const after = value.slice(insertPos) // content after the insertion point
+
+      // insert a new line at insertPos
+      editor.value = before + '\n' + after
+
+      // move the caret to the beginning of the new empty line
+      editor.setSelectionRange(insertPos + 1, insertPos)
+      return
+    }
+  })
 }
 
 function updateTableOfContents() {
-  console.log('need to refactor updateTableOfContents')
-  return
   const viewerEl = document.querySelector('.viewer')
   const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
   const rightPanelEl = document.querySelector('#right-panel')

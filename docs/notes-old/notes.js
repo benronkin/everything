@@ -177,9 +177,7 @@ async function handleFieldChange(el) {
 
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
-  const note = document.querySelector('.markdown-editor').value
-
-  document.querySelector('.markdown-wrapper').updateViewer()
+  const note = document.querySelector('.editor').value
 
   updateNote({ id, title, note })
   setMessage('Saved', { type: 'quiet' })
