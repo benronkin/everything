@@ -13,7 +13,6 @@ const css = `
   width: 100%;
   flex-grow: 1;
   justify-content: flex-start;
-  padding-top: 20px;
 }
 `
 
@@ -31,11 +30,11 @@ export function mainPanel() {
 }
 
 function build(el) {
+  el.appendChild(navList())
+
   el.appendChild(tasks())
 
   el.appendChild(wotd())
-
-  el.appendChild(navList())
 
   el.appendChild(bookmarks())
 }

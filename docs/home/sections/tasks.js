@@ -10,6 +10,9 @@ import { deleteTask, updateTask } from '../../tasks/tasks.api.js'
 import { state } from '../../assets/js/state.js'
 
 const css = `
+.tasks-wrapper {
+  margin-top: 30px;
+}
 `
 
 export function tasks() {

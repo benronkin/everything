@@ -1,7 +1,6 @@
 import { injectStyle, navList as navListArr } from '../../assets/js/ui.js'
 import { createList } from '../../assets/partials/list.js'
 import { createMenuItem } from '../../assets/partials/menuItem.js'
-import { state } from '../../assets/js/state.js'
 
 const css = `
 #home-nav-list {
@@ -10,6 +9,7 @@ const css = `
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 20px;
 }
 .nav-list-item {
   display: flex;
