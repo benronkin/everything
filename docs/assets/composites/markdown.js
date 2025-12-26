@@ -15,11 +15,22 @@ ul {
 }
 .markdown-icons {
   display: flex;
+  margin-top: 5px;
 }
 .markdown-viewer h1,
 .markdown-viewer h2
- {
+{
   margin: 30px 0 15px;
+}
+.markdown-icons {
+  opacity: 0;
+  pointer-events: auto;
+  transition: opacity 0.3s ease-in-out 0.3s; 
+}
+.markdown-icons.show {
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out 0.3s;
 }
 `
 
@@ -38,22 +49,25 @@ export function createMarkdown({ name, iconsVisible = true }) {
   listen({ el, iconsVisible })
 
   if (iconsVisible) el.resetIcons()
+
   return el
 }
 
-function build({ el, name, iconsVsible }) {
+function build({ el, name, iconsVisible }) {
   el.appendChild(createDiv({ className: 'markdown-viewer' }))
   el.appendChild(
     createTextarea({ className: 'markdown-editor field hidden', name })
   )
 
-  if (iconsVsible) {
+  if (iconsVisible) {
     const icons = createDiv({
       className: 'markdown-icons',
       html: [
         createIcon({ classes: { primary: 'fa-pencil primary' } }),
         createIcon({ classes: { primary: 'fa-check primary' } }),
-        createIcon({ classes: { primary: 'fa-close primary' } }),
+        createIcon({
+          classes: { primary: 'fa-close primary', other: 'ml-5' },
+        }),
       ],
     })
 
@@ -64,14 +78,14 @@ function build({ el, name, iconsVsible }) {
 function listen({ el, iconsVisible }) {
   if (iconsVisible) {
     el.addEventListener('mouseover', () => {
-      el.querySelector('.markdown-icons').classList.remove('hidden')
+      el.querySelector('.markdown-icons').classList.add('show')
     })
 
     el.addEventListener('mouseout', () => {
       if (!el.querySelector('.markdown-editor').classList.contains('hidden'))
         return
 
-      el.querySelector('.markdown-icons').classList.add('hidden')
+      el.querySelector('.markdown-icons').classList.remove('show')
     })
 
     el.querySelector('.fa-pencil').addEventListener('click', () => {
@@ -87,6 +101,9 @@ function listen({ el, iconsVisible }) {
     el.querySelector('.fa-check').addEventListener('click', () => {
       el.toggle()
       el.resetIcons()
+      const editor = el.querySelector('.markdown-editor')
+      editor.dataset.old = editor.value
+      el.updateViewer()
     })
 
     el.querySelector('.fa-close').addEventListener('click', () => {
@@ -144,7 +161,6 @@ function updateViewer() {
     linkify: true,
   })
   const content = md.render(markdown)
-
   viewer.innerHTML = content
 }
 
@@ -153,5 +169,5 @@ function resetIcons() {
   icons.querySelector('.fa-pencil').classList.remove('hidden')
   icons.querySelector('.fa-check').classList.add('hidden')
   icons.querySelector('.fa-close').classList.add('hidden')
-  icons.classList.add('hidden')
+  icons.classList.add('invisible')
 }

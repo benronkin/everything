@@ -2,7 +2,6 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createSelect } from '../../assets/partials/select.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
@@ -71,14 +70,14 @@ async function build(el, sense, noFaMinus) {
     })
   )
 
-  let markdown = createMarkdown({ name: 'definition' })
-  let markdownEditor = markdown.querySelector('.markdown-editor')
-  markdown.classList.add('w-100')
-  markdownEditor.palceholder = 'Add definition'
-  markdownEditor.classList.add('definition')
-  markdown.updateEditor(sense.definition)
-  markdown.updateViewer()
-  el.appendChild(markdown)
+  el.appendChild(
+    createTextarea({
+      name: 'definition',
+      className: 'w-100 definition',
+      placeholder: 'Add definition',
+      value: sense.definition,
+    })
+  )
 
   el.appendChild(
     createSpanGroup({
@@ -90,14 +89,14 @@ async function build(el, sense, noFaMinus) {
     })
   )
 
-  markdown = createMarkdown({ name: 'example' })
-  markdownEditor = markdown.querySelector('.markdown-editor')
-  markdown.classList.add('w-100')
-  markdownEditor.palceholder = 'Add example'
-  markdownEditor.classList.add('example')
-  markdown.updateEditor(sense.example)
-  markdown.updateViewer()
-  el.appendChild(markdown)
+  el.appendChild(
+    createTextarea({
+      name: 'example',
+      className: 'w-100 example',
+      placeholder: 'Add example',
+      value: sense.example,
+    })
+  )
 
   el.appendChild(
     createSpanGroup({
@@ -109,14 +108,14 @@ async function build(el, sense, noFaMinus) {
     })
   )
 
-  markdown = createMarkdown({ name: 'synonyms' })
-  markdownEditor = markdown.querySelector('.markdown-editor')
-  markdown.classList.add('w-100')
-  markdownEditor.palceholder = 'Add synonyms'
-  markdownEditor.classList.add('synonyms')
-  markdown.updateEditor(sense.synonyms)
-  markdown.updateViewer()
-  el.appendChild(markdown)
+  el.appendChild(
+    createTextarea({
+      name: 'synonyms',
+      className: 'w-100',
+      placeholder: 'Add synonyms',
+      value: sense.synonyms,
+    })
+  )
 
   el.appendChild(
     createSpanGroup({

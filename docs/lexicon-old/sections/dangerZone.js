@@ -2,10 +2,6 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDangerZone } from '../../assets/composites/dangerZone.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 `
 
@@ -19,21 +15,20 @@ export function dangerZone() {
 
   react(el)
 
-  el.classList.add('mt-20')
-  el.querySelector('#danger-zone-header').insertHtml('Delete note')
+  el.classList.add('mt-40')
+  el.querySelector('#danger-zone-header').insertHtml('Delete entry')
 
   return el
 }
 
 function react(el) {
   state.on('icon-click:show-delete-modal-icon', 'dangerZone', () => {
-    const id = state.get('active-doc')
-    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
-    const modalBody = doc.title
+    const title = state.get('active-doc')
+    state.set('modal-delete-payload', { title })
 
-    const modal = el.querySelector('#modal-delete')
-    modal.querySelector('.modal-header').insertHtml('Delete note:')
-    modal.querySelector('.modal-body').insertHtml(modalBody)
+    const modal = document.querySelector('#modal-delete')
+    modal.querySelector('.modal-header').insertHtml('Delete entry:')
+    modal.querySelector('.modal-body').insertHtml(title)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
   })
