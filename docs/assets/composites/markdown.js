@@ -6,6 +6,13 @@ import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
 
 const css = `
+ a,
+ a:visited {
+  color: var(--purple3) !important;
+}
+ a:hover {
+  color: var(--purple5) !important;
+}
 ul {
   list-style-type: disc;
   margin-left: 20px;
