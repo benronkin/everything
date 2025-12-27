@@ -1,5 +1,11 @@
 /* global markdownit */
 
+/*
+You can pass a renderer function into the constructor that can manipulate
+the viewer's content inside updateViewer. For instance, if the lexicon
+needs to generate a list of urls for the terms in definition or synonyms.
+*/
+
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from '../partials/div.js'
 import { createIcon } from '../partials/icon.js'
@@ -29,28 +35,28 @@ ul {
 {
   margin: 30px 0 15px;
 }
-.markdown-icons {
-  opacity: 0;
-  pointer-events: auto;
-  transition: opacity 0.3s ease-in-out 0.3s; 
-}
-.markdown-icons.show {
-  opacity: 1;
-  pointer-events: none;
-  transition: opacity 0.3s ease-in-out 0.3s;
-}
+
 `
 
-export function createMarkdown({ name, iconsVisible = true }) {
+export function createMarkdown({
+  name,
+  iconsVisible = true,
+  renderer = (content) => content,
+}) {
   injectStyle(css)
 
   const el = document.createElement('div')
   el.className = 'markdown-wrapper'
 
+  el.renderer = renderer
   el.updateViewer = updateViewer.bind(el)
   el.updateEditor = updateEditor.bind(el)
   el.resetIcons = resetIcons.bind(el)
   el.toggle = toggle.bind(el)
+  el.md = markdownit({
+    html: true,
+    linkify: true,
+  })
 
   build({ el, name, iconsVisible })
   listen({ el, iconsVisible })
@@ -85,17 +91,18 @@ function build({ el, name, iconsVisible }) {
 function listen({ el, iconsVisible }) {
   if (iconsVisible) {
     el.addEventListener('mouseover', () => {
-      el.querySelector('.markdown-icons').classList.add('show')
+      el.querySelector('.markdown-icons').classList.remove('invisible')
     })
 
     el.addEventListener('mouseout', () => {
       if (!el.querySelector('.markdown-editor').classList.contains('hidden'))
         return
 
-      el.querySelector('.markdown-icons').classList.remove('show')
+      el.querySelector('.markdown-icons').classList.add('invisible')
     })
 
     el.querySelector('.fa-pencil').addEventListener('click', () => {
+      console.log('here')
       el.querySelector('.fa-pencil').classList.add('hidden')
       el.querySelector('.fa-check').classList.remove('hidden')
       el.querySelector('.fa-close').classList.remove('hidden')
@@ -163,12 +170,8 @@ function updateViewer() {
 
   const markdown = this.querySelector('.markdown-editor').value
 
-  const md = markdownit({
-    html: true,
-    linkify: true,
-  })
-  const content = md.render(markdown)
-  viewer.innerHTML = content
+  const content = this.md.render(markdown)
+  viewer.innerHTML = this.renderer(content)
 }
 
 function resetIcons() {
