@@ -26,9 +26,11 @@ blockquote {
  a:hover {
   color: var(--purple5) !important;
 }
+ol, ul {
+  margin-left: 20px;
+}
 ul {
   list-style-type: disc;
-  margin-left: 20px;
 }
 .markdown-editor {
   width: 100%;
