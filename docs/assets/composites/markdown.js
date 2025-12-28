@@ -37,9 +37,7 @@ ul {
   display: flex;
   margin-top: 5px;
 }
-.markdown-viewer h1,
-.markdown-viewer h2
-{
+h1, h2, h3, h4, h5, h6 {
   margin: 30px 0 15px;
 }
 
