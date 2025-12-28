@@ -16,6 +16,9 @@ const css = `
  a:visited {
   color: var(--purple3) !important;
 }
+a:hover {
+  color: var(--purple5) !important;
+}
 blockquote {
   margin: 20px 0;
   padding: 5px;
@@ -23,8 +26,8 @@ blockquote {
   background-color: var(--gray2);
   border-radius: 6px;
 }
- a:hover {
-  color: var(--purple5) !important;
+h1, h2, h3, h4, h5, h6 {
+  margin: 30px 0 15px;
 }
 ol, ul {
   margin-left: 20px;
@@ -43,10 +46,6 @@ ul {
   display: flex;
   margin-top: 5px;
 }
-h1, h2, h3, h4, h5, h6 {
-  margin: 30px 0 15px;
-}
-
 `
 
 export function createMarkdown({
