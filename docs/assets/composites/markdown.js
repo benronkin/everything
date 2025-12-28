@@ -29,6 +29,9 @@ blockquote {
 ol, ul {
   margin-left: 20px;
 }
+p {
+  margin: 10px 0;
+}
 ul {
   list-style-type: disc;
 }
