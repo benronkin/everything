@@ -16,6 +16,13 @@ const css = `
  a:visited {
   color: var(--purple3) !important;
 }
+blockquote {
+  margin: 20px 0;
+  padding: 5px;
+  border-left: 3px solid var(--gray3);
+  background-color: var(--gray2);
+  border-radius: 6px;
+}
  a:hover {
   color: var(--purple5) !important;
 }
