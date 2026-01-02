@@ -43,16 +43,16 @@ export const navList = [
     id: 'home',
   },
   {
-    icon: 'fa-cake-candles',
-    label: 'Recipes',
-    url: 'recipes/index.html',
-    id: 'recipes',
-  },
-  {
     icon: 'fa-cart-shopping',
     label: 'Shop',
     url: 'shopping/index.html',
     id: 'shopping',
+  },
+  {
+    icon: 'fa-cake-candles',
+    label: 'Recipes',
+    url: 'recipes/index.html',
+    id: 'recipes',
   },
   {
     icon: 'fa-list-check',
