@@ -43,12 +43,6 @@ export const navList = [
     id: 'home',
   },
   {
-    icon: 'fa-list-check',
-    label: 'Tasks',
-    url: 'tasks/index.html',
-    id: 'tasks',
-  },
-  {
     icon: 'fa-cake-candles',
     label: 'Recipes',
     url: 'recipes/index.html',
@@ -59,6 +53,12 @@ export const navList = [
     label: 'Shop',
     url: 'shopping/index.html',
     id: 'shopping',
+  },
+  {
+    icon: 'fa-list-check',
+    label: 'Tasks',
+    url: 'tasks/index.html',
+    id: 'tasks',
   },
   {
     icon: 'fa-note-sticky',
