@@ -45,7 +45,7 @@ async function build(el) {
   el.appendChild(
     createSpanGroup({
       classes: { group: 'mb-20', icon: 'fa-utensils' },
-      html: 'Ingredients',
+      html: 'Items to buy',
     })
   )
 
