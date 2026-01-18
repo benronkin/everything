@@ -12,8 +12,8 @@ import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
 
 const css = `
- a,
- a:visited {
+ .viewer a,
+ .viewer a:visited {
   color: var(--purple3) !important;
 }
 a:hover {
