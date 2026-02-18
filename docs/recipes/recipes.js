@@ -19,6 +19,7 @@ import {
   createRecipe,
   deleteRecipe,
   fetchCategoriesAndRecipes,
+  fetchEntryPhotosMetadata,
   fetchRecentRecipes,
   fetchRecipesByCategory,
   searchRecipes,
@@ -107,11 +108,14 @@ function react() {
     document.getElementById('recipe-category').setOptions(options),
   )
 
-  state.on('app-mode', 'recipes', (appMode) => {
+  state.on('app-mode', 'recipes', async (appMode) => {
     if (appMode === 'main-panel') {
       populateRelatedRecipes()
       const id = state.get('active-doc')
       if (id) {
+        const photosMetadata = await fetchEntryPhotosMetadata(id)
+        state.set('photos-metadata', photosMetadata)
+
         updateRecipeAccess(id)
         const docs = state.get('main-documents')
         const idx = docs.findIndex((d) => d.id === id)
@@ -138,14 +142,17 @@ function react() {
 
     const file = formData.get('file')
     const compressed = await imageCompression(file, compressionOptions)
+    const id = state.get('active-doc')
 
     formData.set('file', compressed)
-    formData.set('entry', state.get('active-doc'))
-    state.set('photo-form-submit', formData)
+    formData.set('entry', id)
 
     const { message } = await addEntryPhoto(formData)
 
     state.set('photo-upload-response', message)
+    // refresh photo list
+    const photosMetadata = await fetchEntryPhotosMetadata(id)
+    state.set('photos-metadata', photosMetadata)
   })
 
   state.on('photo-delete-request', 'recipes.js', async (id) => {
@@ -242,7 +249,10 @@ async function handleFieldChange(el) {
   let value = el.value
   const name = el.name
 
-  if (name === 'search-recipe' || name === 'related-switch') return
+  const isFileUpload = name === 'file' || name === 'caption'
+
+  if (name === 'search-recipe' || name === 'related-switch' || isFileUpload)
+    return
 
   if (name === 'category-filter') {
     handleCategoryChange(value)

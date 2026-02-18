@@ -71,6 +71,7 @@ function react(el) {
 
     el.querySelector('button').disabled = true
     formMessage.insertHtml('Uploading...')
+    state.set('photo-form-submit', formData)
   })
 
   state.on('photo-upload-response', 'photo.form.js', (message) => {
@@ -88,6 +89,7 @@ function react(el) {
     } else {
       console.error(message)
       formMessage.insertHtml(message)
+      el.querySelector('button').removeAttribute('disabled')
     }
   })
 }

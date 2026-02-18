@@ -29,6 +29,11 @@ export async function fetchCategoriesAndRecipes() {
   return { categories, recipes }
 }
 
+export async function fetchEntryPhotosMetadata(id) {
+  const { photos, error } = await getWebApp(`${url}/photos/read?entry=${id}`)
+  return { photos, error }
+}
+
 export async function fetchRecentRecipes() {
   const resp = await getWebApp(`${url}/latest`)
   const { recipes, error } = resp

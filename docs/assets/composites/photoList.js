@@ -19,10 +19,10 @@ export function photoList() {
 }
 
 function listen(el) {
-  state.on('photos-metadata', 'photoList', (docs) => {
+  state.on('photos-metadata', 'photoList', ({ error, photos }) => {
     el.deleteChildren()
 
-    const children = docs.map((photo) =>
+    const children = photos.map((photo) =>
       createPhotoItem({
         id: photo.id,
         imgSrc: photo.url,
