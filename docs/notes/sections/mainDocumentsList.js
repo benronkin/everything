@@ -5,7 +5,6 @@ import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
-import { log } from '../../assets/js/logger.js'
 
 const css = `
 .md-item .title {

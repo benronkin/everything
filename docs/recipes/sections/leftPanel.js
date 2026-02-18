@@ -1,7 +1,7 @@
 import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
+import { createList } from '../../assets/partials/list.js'
 import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { search } from '../../assets/composites/search.js'
@@ -50,7 +50,7 @@ function build(el) {
   el.appendChild(counterMessage({ single: 'recipe', plural: 'recipes' }))
 
   el.appendChild(
-    createMainDocumentsList({
+    createList({
       id: 'left-panel-list',
       className: 'mt-20',
     }),
@@ -72,7 +72,7 @@ function react(el) {
 
       const docs = state.get('main-documents')
       const docExists = docs.findIndex((el) => el.id === currentId)
-      if (!docExists) {
+      if (docExists < 0) {
         state.set('active-doc', null)
         return
       }
