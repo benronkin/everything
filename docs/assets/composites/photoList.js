@@ -1,0 +1,35 @@
+import { injectStyle } from '../../assets/js/ui.js'
+import { createList } from '../../assets/partials/list.js'
+import { state } from '../../assets/js/state.js'
+import { createPhotoItem } from './photoItem.js'
+
+const css = `
+`
+
+export function photoList() {
+  injectStyle(css)
+
+  const el = createList({
+    id: 'photo-list',
+  })
+
+  listen(el)
+
+  return el
+}
+
+function listen(el) {
+  state.on('photos-metadata', 'photoList', (docs) => {
+    el.deleteChildren()
+
+    const children = docs.map((photo) =>
+      createPhotoItem({
+        id: photo.id,
+        imgSrc: photo.url,
+        caption: photo.caption,
+      }),
+    )
+
+    el.addChildren(children)
+  })
+}

@@ -8,8 +8,6 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createList } from '../../assets/partials/list.js'
 import { state } from '../../assets/js/state.js'
 import { createPhotoItem } from './photoItem.js'
-import { fetchEntryPhotosMetadata } from '../journal.api.js'
-import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Globals
@@ -50,7 +48,7 @@ async function showPhotos() {
       id: photo.id,
       imgSrc: photo.url,
       caption: photo.caption,
-    })
+    }),
   )
 
   this.addChildren(children)

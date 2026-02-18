@@ -8,7 +8,6 @@ import { createPhotoForm } from './photo.form.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { dangerZone } from './dangerZone.js'
 import { photoList } from './photoList.js'
-import { log } from '../../assets/js/logger.js'
 
 const css = `
 #main-panel {
@@ -60,7 +59,7 @@ function build(el) {
     createIcon({
       id: 'add-photo-toggle',
       classes: { primary: 'fa-camera', other: 'primary btn' },
-    })
+    }),
   )
 
   const upw = createDiv({

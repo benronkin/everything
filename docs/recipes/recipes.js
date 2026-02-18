@@ -1,12 +1,13 @@
+/* global imageCompression */
 import { state } from '../assets/js/state.js'
-import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
-import { rightDrawer } from './sections/rightDrawer.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createMainDocumentItem } from '../assets/partials/mainDocumentItem.js'
+import { createNav } from '../assets/composites/nav.js'
+import { createRightDrawer } from '../assets/composites/rightDrawer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
@@ -23,6 +24,9 @@ import {
   searchRecipes,
   updateRecipe,
   updateRecipeAccess,
+  addEntryPhoto,
+  deleteEntryPhoto,
+  updatePhotoCaption,
 } from './recipes.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -69,9 +73,14 @@ async function build() {
   const body = document.body
   body.classList.add('dark-mode')
 
-  const wrapperEl = createDiv({ className: 'wrapper' })
+  const wrapperEl = createDiv({ className: 'wraphper' })
   body.prepend(wrapperEl)
-  wrapperEl.appendChild(nav())
+
+  wrapperEl.appendChild(
+    createNav({
+      title: '<i class="fa-solid fa-cake-candles"></i> Recipes',
+    }),
+  )
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
@@ -80,7 +89,7 @@ async function build() {
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer({ active: 'recipes' }))
 
   wrapperEl.appendChild(createFooter())
 }
@@ -95,7 +104,7 @@ function react() {
   state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
 
   state.on('recipe-categories', 'recipes', (options) =>
-    document.getElementById('recipe-category').setOptions(options)
+    document.getElementById('recipe-category').setOptions(options),
   )
 
   state.on('app-mode', 'recipes', (appMode) => {
@@ -118,6 +127,36 @@ function react() {
   })
 
   state.on('field-changed', 'recipes', handleFieldChange)
+
+  state.on('photo-form-submit', 'mainPanel', async (formData) => {
+    const compressionOptions = {
+      maxWidthOrHeight: 600,
+      useWebWorker: true,
+      fileType: 'image/jpeg',
+      exifOrientation: null,
+    }
+
+    const file = formData.get('file')
+    const compressed = await imageCompression(file, compressionOptions)
+
+    formData.set('file', compressed)
+    formData.set('entry', state.get('active-doc'))
+    state.set('photo-form-submit', formData)
+
+    const { message } = await addEntryPhoto(formData)
+
+    state.set('photo-upload-response', message)
+  })
+
+  state.on('photo-delete-request', 'recipes.js', async (id) => {
+    const { error, message } = await deleteEntryPhoto(id)
+    state.set('photo-delete-response', error ? error : message)
+  })
+
+  state.on('photo-caption-change', 'recipes.js', async ({ id, value }) => {
+    const { error, message } = await updatePhotoCaption({ id, value })
+    state.set('photo-caption-response', error ? error : message)
+  })
 }
 
 function listen() {
@@ -259,13 +298,14 @@ function populateRelatedRecipes() {
     const relatedDoc = docs.find((doc) => doc.id === id)
     if (!relatedDoc) {
       console.warn(`Related recipe with id "${id}" not found in main documents`)
+      return
     }
     const title = relatedDoc.title
     relatedListEl.addChild(
       createMainDocumentItem({
         id,
         html: title,
-      })
+      }),
     )
   }
 }

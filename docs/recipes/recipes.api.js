@@ -1,5 +1,5 @@
 import { state } from '../assets/js/state.js'
-import { getWebApp, postWebAppJson } from '../assets/js/io.js'
+import { getWebApp, postWebAppJson, postWebAppForm } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/recipes`
 
@@ -10,7 +10,7 @@ export async function createRecipe() {
 
 export async function deleteRecipe(id, password) {
   const { recipe, error } = await getWebApp(
-    `${url}/delete?id=${id}&password=${password}`
+    `${url}/delete?id=${id}&password=${password}`,
   )
   return { data: recipe, error }
 }
@@ -43,7 +43,7 @@ export async function fetchRecipesByCategory(id) {
 
 export async function searchRecipes(q) {
   const { recipes, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`
+    `${url}/search?q=${q.trim().toLowerCase()}`,
   )
   return { recipes, error }
 }
@@ -60,4 +60,23 @@ export async function updateRecipe({ id, section, value }) {
 export async function updateRecipeAccess(id) {
   const { message } = await getWebApp(`${url}/update-access?id=${id}`)
   return { message }
+}
+
+export async function updatePhotoCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(`${url}/photos/update`, {
+    id,
+    value: value,
+    section: 'caption',
+  })
+  return { error, message }
+}
+
+export async function addEntryPhoto(formData) {
+  const { message } = await postWebAppForm(`${url}/photos/create`, formData)
+  return { message }
+}
+
+export async function deleteEntryPhoto(id) {
+  const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
+  return { error }
 }
