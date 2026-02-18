@@ -84,13 +84,11 @@ function react(el) {
       el.querySelector('#photo-caption-input').value = ''
       el.querySelector('span.file-name').innerHTML = ''
       el.querySelector('input[type="file"]').value = ''
-      // refresh photos to show added photo
-      document.querySelector('#photo-list').showPhotos()
     } else {
       console.error(message)
       formMessage.insertHtml(message)
-      el.querySelector('button').removeAttribute('disabled')
     }
+    el.querySelector('button').removeAttribute('disabled')
   })
 }
 
