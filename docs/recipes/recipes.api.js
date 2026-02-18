@@ -81,6 +81,7 @@ export async function addEntryPhoto(formData) {
   return { message }
 }
 
+/* delete the photo */
 export async function deleteEntryPhoto(id) {
   const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
   return { error }
