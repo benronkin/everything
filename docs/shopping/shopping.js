@@ -1,11 +1,11 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
-import { nav } from './sections/nav.js'
-import { rightDrawer } from './sections/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
+import { createNav } from '../assets/composites/nav.js'
+import { createRightDrawer } from '../assets/composites/rightDrawer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const [{ shoppingList, shoppingSuggestions }, { user }] = await Promise.all(
-      [fetchCartAndSuggestions(), getMe()]
+      [fetchCartAndSuggestions(), getMe()],
     )
 
     state.set(
@@ -40,14 +40,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       shoppingList
         .split(',')
         .map((x) => x.trim())
-        .filter(Boolean)
+        .filter(Boolean),
     )
     state.set(
       'suggestions-list',
       shoppingSuggestions
         .split(',')
         .map((x) => x.trim())
-        .filter(Boolean)
+        .filter(Boolean),
     )
     state.set('app-mode', 'main-panel')
     state.set('user', user)
@@ -67,7 +67,11 @@ function build() {
 
   const wrapperEl = createDiv({ className: 'wrapper' })
   body.prepend(wrapperEl)
-  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(
+    createNav({
+      title: '<i class="fa-solid fa-shopping-cart"></i> Shopping',
+    }),
+  )
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
@@ -75,7 +79,7 @@ function build() {
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer({ active: 'shopping' }))
 
   wrapperEl.appendChild(createFooter())
 }
@@ -85,7 +89,7 @@ function react() {
   const cartEl = document.getElementById('shopping-list')
 
   state.on('form-keyup:shopping-form', 'suggestionsList', () =>
-    state.set('suggestions-list', [...state.get('suggestions-list')])
+    state.set('suggestions-list', [...state.get('suggestions-list')]),
   )
 
   state.on('icon-click:suggest-icon', 'shopping', () => {
@@ -185,6 +189,8 @@ async function handleAddToBothLists(item) {
   let arr = state.get('shopping-list')
   arr.unshift(item)
   state.set('shopping-list', [...arr])
+
+  addItem(item)
 
   arr = state.get('suggestions-list')
   arr.unshift(item)
