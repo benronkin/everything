@@ -13,13 +13,13 @@ import {
   createEntry,
   deleteEntry,
   fetchDefaults,
+  fetchEntryPhotosMetadata,
   fetchGeoIndex,
   fetchRecentEntries,
   searchEntries,
   updateEntry,
   updateJournalDefaults,
 } from './journal.api.js'
-import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -79,6 +79,16 @@ async function build() {
 }
 
 function react() {
+  state.on('app-mode', 'mainPanel', async (appMode) => {
+    if (appMode === 'main-panel') {
+      const id = state.get('active-doc')
+      if (id) {
+        const photosMetadata = await fetchEntryPhotosMetadata(id)
+        state.set('photos-metadata', photosMetadata)
+      }
+    }
+  })
+
   state.on('form-submit:left-panel-search', 'journal', reactSearch)
 
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)

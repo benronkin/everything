@@ -79,7 +79,7 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('app-mode', 'mainPanel', (appMode) => {
+  state.on('app-mode', 'mainPanel', async (appMode) => {
     if (appMode !== 'main-panel') {
       el.classList.add('hidden')
 
@@ -89,8 +89,6 @@ function react(el) {
     const id = state.get('active-doc')
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     el.classList.remove('hidden')
-
-    document.querySelector('#photo-list').showPhotos()
 
     el.querySelector('#journal-location').value = doc.location
     el.querySelector('#journal-visit_date').value =

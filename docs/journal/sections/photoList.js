@@ -23,33 +23,22 @@ export function photoList() {
     id: 'photo-list',
   })
 
-  el.showPhotos = showPhotos.bind(el)
-
+  react(el)
   return el
 }
 
-// ----------------------
-// Object methods
-// ----------------------
+function react(el) {
+  state.on('photos-metadata', 'photoList', ({ error, photos }) => {
+    el.deleteChildren()
 
-async function showPhotos() {
-  const id = state.get('active-doc')
-  this.deleteChildren()
+    const children = photos.map((photo) =>
+      createPhotoItem({
+        id: photo.id,
+        imgSrc: photo.url,
+        caption: photo.caption,
+      }),
+    )
 
-  const { photos = [], error } = await fetchEntryPhotosMetadata(id)
-
-  if (error) {
-    console.error(error)
-    return
-  }
-
-  const children = photos.map((photo) =>
-    createPhotoItem({
-      id: photo.id,
-      imgSrc: photo.url,
-      caption: photo.caption,
-    }),
-  )
-
-  this.addChildren(children)
+    el.addChildren(children)
+  })
 }

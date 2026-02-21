@@ -91,7 +91,6 @@ async function react(el) {
       return
     }
     const id = state.get('active-doc')
-    console.log('id', id)
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     el.classList.remove('hidden')
 
