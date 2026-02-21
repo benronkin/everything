@@ -137,8 +137,6 @@ async function reactAddPhoto(el) {
       el.querySelector('span.file-name').innerHTML = ''
       el.querySelector('input[type="file"]').value = ''
     }
-    // refresh photos to show added photo
-    document.querySelector('#photo-list').showPhotos()
   } catch (error) {
     console.error(error)
     formMessage.insertHtml(error.message)
