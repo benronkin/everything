@@ -1,5 +1,3 @@
-/* global imageCompression */
-
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'

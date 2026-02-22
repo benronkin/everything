@@ -132,7 +132,7 @@ function react() {
 
   state.on('field-changed', 'recipes', handleFieldChange)
 
-  state.on('photo-form-submit', 'mainPanel', async (formData) => {
+  state.on('photo-form-submit', 'recipes.js', async (formData) => {
     const compressionOptions = {
       maxWidthOrHeight: 600,
       useWebWorker: true,

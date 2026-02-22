@@ -4,10 +4,10 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createEntryGroup } from './entry.group.js'
-import { createPhotoForm } from './photo.form.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { dangerZone } from './dangerZone.js'
-import { photoList } from './photoList.js'
+import { createPhotoForm } from '../../assets/composites/photo.form.js'
+import { photoList } from '../../assets/composites/photoList.js'
 
 const css = `
 #main-panel {

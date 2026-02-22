@@ -1,3 +1,4 @@
+/* global imageCompression */
 import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
@@ -10,6 +11,7 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
+  addEntryPhoto,
   createEntry,
   deleteEntry,
   fetchDefaults,
@@ -96,6 +98,29 @@ function react() {
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 
   state.on('field-changed', 'journal', handleFieldChange)
+
+  state.on('photo-form-submit', 'recipes.js', async (formData) => {
+    const compressionOptions = {
+      maxWidthOrHeight: 600,
+      useWebWorker: true,
+      fileType: 'image/jpeg',
+      exifOrientation: null,
+    }
+
+    const file = formData.get('file')
+    const compressed = await imageCompression(file, compressionOptions)
+    const id = state.get('active-doc')
+
+    formData.set('file', compressed)
+    formData.set('entry', id)
+
+    const { message } = await addEntryPhoto(formData)
+
+    state.set('photo-upload-response', message)
+    // refresh photo list
+    const photosMetadata = await fetchEntryPhotosMetadata(id)
+    state.set('photos-metadata', photosMetadata)
+  })
 }
 
 async function reactEntryAdd({ id: btnId }) {
