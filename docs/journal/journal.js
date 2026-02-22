@@ -126,12 +126,12 @@ function react() {
 
   state.on('photo-delete-request', 'recipes.js', async (id) => {
     const { error, message } = await deleteEntryPhoto(id)
-    state.set('photo-delete-response', error ? error : message)
+    state.set('photo-delete-response', { error, message })
   })
 
   state.on('photo-caption-change', 'recipes.js', async ({ id, value }) => {
     const { error, message } = await updatePhotoCaption({ id, value })
-    state.set('photo-caption-response', error ? error : message)
+    state.set('photo-caption-response', { error, message })
   })
 }
 

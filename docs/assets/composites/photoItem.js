@@ -77,18 +77,18 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('photo-delete-response', 'photoItem', (message) => {
-    if (message) {
+  state.on('photo-delete-response', 'photoItem', ({ error }) => {
+    if (error) {
       el.querySelector('.fa-trash').removeAttribute('disabled')
-      el.querySelector('.photo-message').insertHtml(message)
+      el.querySelector('.photo-message').insertHtml(error)
       return
     } else {
       el.remove()
     }
   })
 
-  state.on('photo-caption-response', 'photoItem', (message) => {
-    el.querySelector('.photo-message').insertHtml(message)
+  state.on('photo-caption-response', 'photoItem', ({ error, message }) => {
+    el.querySelector('.photo-message').insertHtml(error || message)
   })
 }
 
