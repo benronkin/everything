@@ -14,6 +14,7 @@ import {
   addEntryPhoto,
   createEntry,
   deleteEntry,
+  deleteEntryPhoto,
   fetchDefaults,
   fetchEntryPhotosMetadata,
   fetchGeoIndex,
@@ -21,6 +22,7 @@ import {
   searchEntries,
   updateEntry,
   updateJournalDefaults,
+  updatePhotoCaption,
 } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -120,6 +122,16 @@ function react() {
     // refresh photo list
     const photosMetadata = await fetchEntryPhotosMetadata(id)
     state.set('photos-metadata', photosMetadata)
+  })
+
+  state.on('photo-delete-request', 'recipes.js', async (id) => {
+    const { error, message } = await deleteEntryPhoto(id)
+    state.set('photo-delete-response', error ? error : message)
+  })
+
+  state.on('photo-caption-change', 'recipes.js', async ({ id, value }) => {
+    const { error, message } = await updatePhotoCaption({ id, value })
+    state.set('photo-caption-response', error ? error : message)
   })
 }
 
