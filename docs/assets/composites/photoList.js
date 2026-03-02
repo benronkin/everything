@@ -20,10 +20,6 @@ export function photoList() {
 
 function listen(el) {
   state.on('photos-metadata', 'photoList', (resp) => {
-    console.log(
-      'trying to figure out why children and photos are zero when there are photos',
-    )
-    console.log('resp', resp)
     const { error, photos } = resp
 
     if (error) {

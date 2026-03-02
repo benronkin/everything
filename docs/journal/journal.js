@@ -128,8 +128,9 @@ function react() {
     const { error, message } = await deleteEntryPhoto(id)
     state.set('photo-delete-response', { error, message })
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    console.log('getting photos metadata for id', id)
+    const entryId = state.get('active-doc')
+    const photosMetadata = await fetchEntryPhotosMetadata(entryId)
+    console.log('getting metadaa for entry', entryId)
     console.log('photosMetadata', photosMetadata)
     state.set('photos-metadata', photosMetadata)
   })
