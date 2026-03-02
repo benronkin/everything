@@ -229,6 +229,8 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
+  if (section === 'file' || section === 'comment') return
+
   const id = state.get('active-doc')
   const docs = [...state.get('main-documents')]
   const idx = docs.findIndex((d) => d.id === id)
