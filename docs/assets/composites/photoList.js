@@ -38,6 +38,5 @@ function listen(el) {
     )
 
     el.addChildren(children)
-    console.log('children.length', children.length)
   })
 }
