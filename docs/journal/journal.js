@@ -129,6 +129,8 @@ function react() {
     state.set('photo-delete-response', { error, message })
     // refresh photo list
     const photosMetadata = await fetchEntryPhotosMetadata(id)
+    console.log('getting photos metadata for id', id)
+    console.log('photosMetadata', photosMetadata)
     state.set('photos-metadata', photosMetadata)
   })
 
@@ -229,7 +231,6 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  console.log('suppressing file and caption')
   if (section === 'file' || section === 'caption') return
 
   const id = state.get('active-doc')

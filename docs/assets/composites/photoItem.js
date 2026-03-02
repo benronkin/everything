@@ -7,10 +7,6 @@ import { createImage } from '../../assets/partials/image.js'
 import { createInput } from '../../assets/partials/input.js'
 import { state } from '../js/state.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .photo-item {
   margin-top: 20px;
