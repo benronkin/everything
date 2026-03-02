@@ -229,7 +229,8 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (section === 'file' || section === 'comment') return
+  console.log('suppressing file and caption')
+  if (section === 'file' || section === 'caption') return
 
   const id = state.get('active-doc')
   const docs = [...state.get('main-documents')]
