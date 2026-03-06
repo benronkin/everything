@@ -96,15 +96,15 @@ function handleTrashClick(el) {
   })
 }
 
-function handleAddToSuggestionsClick(el) {
-  const item = el.querySelector('.title').innerHTML
-  const suggestions = state.get('suggestions-list')
-  if (suggestions.includes(item)) return
-  suggestions.push(item)
-  suggestions.sort()
-  state.set('suggestions-list', [...suggestions])
-  el.querySelector('.fa-lightbulb').classList.add('hidden')
-}
+// function handleAddToSuggestionsClick(el) {
+//   const item = el.querySelector('.title').innerHTML
+//   const suggestions = state.get('suggestions-list')
+//   if (suggestions.includes(item)) return
+//   suggestions.push(item)
+//   suggestions.sort()
+//   state.set('suggestions-list', [...suggestions])
+//   el.querySelector('.fa-lightbulb').classList.add('hidden')
+// }
 
 function setDraggable(isDraggable) {
   this.draggable = isDraggable
@@ -113,5 +113,5 @@ function setDraggable(isDraggable) {
   this.classList.toggle('draggable-target', isDraggable)
   this.querySelector('.fa-sort').classList.toggle('hidden', !isDraggable)
   this.querySelector('.fa-trash').classList.add('hidden')
-  this.querySelector('.fa-lightbulb').classList.add('hidden')
+  // this.querySelector('.fa-lightbulb').classList.add('hidden')
 }
