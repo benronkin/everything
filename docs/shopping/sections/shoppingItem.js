@@ -31,9 +31,9 @@ export function shoppingItem({ item }) {
               createIcon({
                 classes: { primary: 'fa-sort', other: ['hidden'] },
               }),
-              createIcon({
-                classes: { primary: 'fa-lightbulb', other: ['hidden'] },
-              }),
+              // createIcon({
+              //   classes: { primary: 'fa-lightbulb', other: ['hidden'] },
+              // }),
               createIcon({
                 classes: { primary: 'fa-trash', other: ['hidden'] },
               }),
@@ -55,19 +55,19 @@ export function shoppingItem({ item }) {
 
 function react(el) {
   state.on('icon-click:sort-icon', 'shoppingItem', () =>
-    handleToolbarSortClick(el)
+    handleToolbarSortClick(el),
   )
 }
 
 function listen(el) {
   el.addEventListener('click', () => handleShoppingItemClick(el))
   el.querySelector('.fa-trash').addEventListener('click', () =>
-    handleTrashClick(el)
+    handleTrashClick(el),
   )
-  el.querySelector('.fa-lightbulb').addEventListener('click', (e) => {
-    e.stopPropagation()
-    handleAddToSuggestionsClick(el)
-  })
+  // el.querySelector('.fa-lightbulb').addEventListener('click', (e) => {
+  //   e.stopPropagation()
+  //   handleAddToSuggestionsClick(el)
+  // })
 }
 
 // -------------------------------
