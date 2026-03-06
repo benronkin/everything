@@ -84,9 +84,9 @@ function handleToolbarSortClick(el) {
 function handleShoppingItemClick(el) {
   if (!el.classList.contains('active')) return
 
-  const item = el.querySelector('span').textContent
-  const isIncluded = state.get('suggestions-list').includes(item)
-  el.querySelector('.fa-lightbulb').classList.toggle('hidden', isIncluded)
+  // const item = el.querySelector('span').textContent
+  // const isIncluded = state.get('suggestions-list').includes(item)
+  // el.querySelector('.fa-lightbulb').classList.toggle('hidden', isIncluded)
 }
 
 function handleTrashClick(el) {

@@ -38,13 +38,13 @@ function react(el) {
         child
           .querySelector('.fa-trash')
           .classList.toggle('hidden', !child.classList.contains('active'))
-        child
-          .querySelector('.fa-lightbulb')
-          .classList.toggle('hidden', !child.classList.contains('active'))
+        // child
+        //   .querySelector('.fa-lightbulb')
+        //   .classList.toggle('hidden', !child.classList.contains('active'))
       } else {
         child.classList.remove('active')
         child.querySelector('.fa-trash').classList.add('hidden')
-        child.querySelector('.fa-lightbulb').classList.add('hidden')
+        // child.querySelector('.fa-lightbulb').classList.add('hidden')
       }
     })
   })
