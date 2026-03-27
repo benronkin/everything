@@ -138,7 +138,7 @@ function build(el) {
       placeholder: 'Title',
       autocomplete: 'off',
       classes: { group: 'mb-20', input: 'field', icon: 'fa-note-sticky' },
-    })
+    }),
   )
 
   el.appendChild(createMarkdown({ name: 'note', iconsVisible: false }))
@@ -167,6 +167,10 @@ function react(el) {
   state.on('active-doc', 'mainPanel', async (id) => {
     el.querySelector('.markdown-viewer').innerHTML = 'Loading...'
     if (!id) return
+
+    // update browser history
+    const newUrl = `${window.location.pathname}?id=${id}`
+    window.history.pushState({ id: id }, '', newUrl)
 
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     if (!doc.note) {
@@ -229,6 +233,22 @@ function listen(el) {
   titleEl.addEventListener('change', () => {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
+
+  // handle browser back button clicks
+  window.addEventListener('popstate', () => {
+    // 1. Get the ID from the URL the user just "went back" to
+    const params = new URLSearchParams(window.location.search)
+    const idFromUrl = params.get('id')
+
+    // 2. Update your state manager
+    // This will trigger your state.on('active-doc', ...) listener!
+    state.set('active-doc', idFromUrl)
+
+    // 3. Handle the UI mode if necessary
+    if (!idFromUrl) {
+      state.set('app-mode', 'left-panel') // Switch back to the list view if ID is gone
+    }
+  })
 }
 
 function updateTableOfContents() {
@@ -245,7 +265,7 @@ function updateTableOfContents() {
       html: [document.querySelector('#note-title').value],
       type: 'h5',
       className: 'toc-header flex align-center',
-    })
+    }),
   )
 
   headerEls.forEach((h) => {
@@ -258,7 +278,7 @@ function updateTableOfContents() {
         className: `toc-item p-left-${indent * 10}`,
         html: h.textContent,
         dataset: { id: h.id },
-      })
+      }),
     )
   })
 
@@ -270,7 +290,7 @@ function updateTableOfContents() {
         target.getBoundingClientRect().top + window.pageYOffset + yOffset
 
       window.scrollTo({ top: y, behavior: 'smooth' })
-    })
+    }),
   )
 }
 
@@ -284,7 +304,7 @@ async function updateHistories() {
       html: 'History',
       type: 'h5',
       className: 'toc-header',
-    })
+    }),
   )
 
   const { histories } = await fetchNoteHistories(state.get('active-doc'))
@@ -313,7 +333,7 @@ async function updateHistories() {
         createButton({
           html: 'Restore',
           className: 'history-btn secondary hidden',
-        })
+        }),
       )
     }
 
@@ -345,7 +365,7 @@ async function updateHistories() {
         document.querySelector('.viewer').innerHTML = history.note
         state.set('note-body', history.note)
       }
-    })
+    }),
   )
 
   rightPanelEl.querySelector('[data-history]').classList.add('active')
