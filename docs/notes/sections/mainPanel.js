@@ -224,6 +224,9 @@ function react(el) {
   state.on('icon-click:back', 'toolbar', async () => {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
+    // Manually push the "clean" URL to history
+    // (Since popstate only fires on browser buttons, not script changes)
+    window.history.pushState({}, '', window.location.pathname)
   })
 }
 
