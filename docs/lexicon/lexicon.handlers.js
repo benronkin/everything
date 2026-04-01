@@ -64,19 +64,19 @@ export async function handleSearch() {
 }
 
 export async function handleEntryAdd() {
-  const newEntry = state.get('ai-entry')
-  const title = newEntry.term.trim().toLowerCase()
+  const newEntry = state.get('ai-entry') || {}
+  const title = newEntry.term?.trim().toLowerCase() || state.get('active-doc')
   const id = `ev${crypto.randomUUID()}`
   const submitter = state.get('user').id
 
   const sense = {
     id,
     title,
-    part_of_speech: newEntry.part_of_speech,
-    partOfSpeech: newEntry.part_of_speech,
-    definition: newEntry.definition,
-    synonyms: newEntry.synonyms,
-    example: newEntry.example,
+    part_of_speech: newEntry.part_of_speech || '',
+    partOfSpeech: newEntry.part_of_speech || '',
+    definition: newEntry.definition || '',
+    synonyms: newEntry.synonyms || '',
+    example: newEntry.example || '',
     created_at: new Date().toISOString(),
     submitter,
   }
