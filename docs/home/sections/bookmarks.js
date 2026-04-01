@@ -82,7 +82,6 @@ function react(el) {
         return
       }
 
-      console.log('metadata', metadata)
       localStorage.setItem('bookmarks-updated-at', metadata.updated_at)
       localStorage.setItem('bookmarks', noteDoc.note)
     }
