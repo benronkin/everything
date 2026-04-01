@@ -2,7 +2,7 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createAnchor } from '../../assets/partials/anchor.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
-import { fetchNote } from '../../notes/notes.api.js'
+import { fetchNote, fetchNoteMetadata } from '../../notes/notes.api.js'
 import { state } from '../../assets/js/state.js'
 
 const css = `
@@ -44,25 +44,47 @@ export function bookmarks() {
 }
 
 function react(el) {
-  state.on('user', 'bookmarks', async ({ bookmarks }) => {
-    if (!bookmarks) {
+  state.on('user', 'bookmarks', async ({ bookmarks: bookmarksNoteId }) => {
+    if (!bookmarksNoteId) {
       el.insertHtml(
-        'Create a note with bookmark data and set its id in Settings/Profile/Bookmarks'
+        'Create a note with bookmark data and set its id in Settings/Profile/Bookmarks',
       )
       return
     }
 
-    let { note: noteDoc, error } = await fetchNote(bookmarks)
-    if (error) {
-      el.insertHtml(
-        'The note ID you set in Settings/Profile/Bookmarks is invalid.'
-      )
-      return
-    }
+    // compare the bookmarks note update date to local storage
+    // fetch bookmark note only if different
+    const resp = await fetchNoteMetadata(bookmarksNoteId)
+    const metadata = resp.note
+    const bookmarksUpdatedAt = localStorage.getItem('bookmarks-updated-at')
+    const bookmarks = localStorage.getItem('bookmarks') || ''
 
-    if (!noteDoc.note?.trim().length) {
-      el.insertHtml('Your bookmarks note is empty. Add bookmarks data.')
-      return
+    // console.log('bookmarksUpdatedAt', bookmarksUpdatedAt)
+    // console.log('bookmarks', bookmarks)
+    let noteDoc = {}
+
+    if (bookmarks.length && bookmarksUpdatedAt === metadata.updated_at) {
+      // console.log('Using bookmarks from local storage')
+      noteDoc.note = bookmarks
+    } else {
+      // console.log('Fetching bookmarks from remote note')
+      const { note, error } = await fetchNote(bookmarksNoteId)
+      if (error) {
+        el.insertHtml(
+          'The note ID you set in Settings/Profile/Bookmarks is invalid.',
+        )
+        return
+      }
+
+      noteDoc = note
+      if (!noteDoc.note?.trim().length) {
+        el.insertHtml('Your bookmarks note is empty. Add bookmarks data.')
+        return
+      }
+
+      console.log('metadata', metadata)
+      localStorage.setItem('bookmarks-updated-at', metadata.updated_at)
+      localStorage.setItem('bookmarks', noteDoc.note)
     }
 
     const arr = []
@@ -123,7 +145,7 @@ function buildBookmarks(bookmarks, el) {
           }`.trim(),
         },
         html: section.header.label,
-      })
+      }),
     )
 
     groupDiv.appendChild(
@@ -136,9 +158,9 @@ function buildBookmarks(bookmarks, el) {
             className: `bookmark`.trim(),
             url: item.url,
             html: item.label,
-          })
+          }),
         ),
-      })
+      }),
     )
   }
 
@@ -149,6 +171,6 @@ function buildBookmarks(bookmarks, el) {
       i.closest('.bookmarks-group')
         .querySelector('.bookmarks-holder')
         .classList.toggle('hidden', i.classList.contains('fa-chevron-right'))
-    })
+    }),
   )
 }

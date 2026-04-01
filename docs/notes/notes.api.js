@@ -18,6 +18,11 @@ export async function fetchNote(id) {
   return { note, error }
 }
 
+export async function fetchNoteMetadata(id) {
+  const { note, error } = await getWebApp(`${url}/read-metadata?id=${id}`)
+  return { note, error }
+}
+
 export async function fetchNotes() {
   const { notes, error } = await getWebApp(`${url}/read`)
   return { notes, error }
@@ -38,7 +43,7 @@ export async function fetchNoteHistory(id) {
  */
 export async function searchNotes(q) {
   const { notes, error } = await getWebApp(
-    `${url}/search?q=${encodeURIComponent(q.trim().toLowerCase())}`
+    `${url}/search?q=${encodeURIComponent(q.trim().toLowerCase())}`,
   )
   return { data: notes, error }
 }
