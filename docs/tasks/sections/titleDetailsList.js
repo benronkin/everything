@@ -28,7 +28,8 @@ function react(el) {
         id: doc.id,
         title: doc.title,
         details: doc.details,
-      })
+        steps: doc.steps,
+      }),
     )
     el.addChildren(children)
     setMessage()

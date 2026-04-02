@@ -2,9 +2,9 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createInput } from '../../assets/partials/input.js'
-import { createSpan } from '../../assets/partials/span.js'
+import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
+import { createStep } from './step.js'
 
 const css = `
 .td-item {
@@ -47,11 +47,29 @@ const css = `
 .date-time-wrapper input:last-child {
   margin-left: 20px;
 }
+.add-step {
+  width: 90%;
+  margin-left: -5px !important;
+  border: none;
+}
+.add-step-wrapper {
+  margin-left: 10px;
+}
+.add-step-wrapper .fa-plus {
+  margin-left: 5px;
+}
+.fa-trash {
+  margin: 10px;
+}
+.list-item:hover {
+  color: inherit;
+}
 `
 
 export function createTask({
   title,
   details,
+  steps,
   starts_at,
   ends_at,
   id,
@@ -72,6 +90,15 @@ export function createTask({
   ta.value = (title || '').toString().trim()
 
   el.querySelector('[name="details"]').value = (details || '').toString().trim()
+
+  for (const step of steps) {
+    const stepDiv = createStep(step)
+    el.querySelector('.steps-wrapper').appendChild(stepDiv)
+  }
+
+  el.querySelector('.add-step').placeholder = steps?.length
+    ? 'Next step'
+    : 'Add step'
 
   el.classList.add('draggable-target')
   el.setDraggable = setDraggable.bind(el)
@@ -100,33 +127,42 @@ function build(el) {
         secondary: 'fa-chevron-down',
         other: ['expander'],
       },
-    })
+    }),
   )
   iconsEl.appendChild(
-    createIcon({ classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] } })
+    createIcon({
+      classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] },
+    }),
   )
 
   const detailsWrapperEl = createDiv({ className: 'details-wrapper hidden' })
   el.appendChild(detailsWrapperEl)
 
-  const detailsHeader = createDiv({ className: 'flex align-center' })
-  detailsWrapperEl.appendChild(detailsHeader)
+  detailsWrapperEl.appendChild(createDiv({ className: 'steps-wrapper' }))
+
+  detailsWrapperEl.appendChild(
+    createInputGroup({
+      classes: {
+        group: 'add-step-wrapper',
+        input: 'add-step',
+        icon: 'fa-plus',
+      },
+    }),
+  )
 
   const detailsEl = createTextarea({
     name: 'details',
-    placeholder: 'Add details...',
+    placeholder: 'Additional information...',
   })
   detailsEl.dataset.target = 'details'
-  detailsHeader.appendChild(detailsEl)
-  iconsEl = createDiv({ className: 'icons' })
-  detailsHeader.appendChild(iconsEl)
+  detailsWrapperEl.appendChild(detailsEl)
 
   const trashEl = createIcon({
     classes: {
       primary: 'fa-trash',
     },
   })
-  iconsEl.appendChild(trashEl)
+  detailsWrapperEl.appendChild(trashEl)
 
   // detailsWrapperEl.appendChild(
   //   createDiv({
@@ -181,9 +217,19 @@ function listen(el) {
   el.querySelector('.expander').addEventListener('click', (e) => {
     el.querySelector('.details-wrapper').classList.toggle(
       'hidden',
-      e.target.classList.contains('fa-chevron-left')
+      e.target.classList.contains('fa-chevron-left'),
     )
     document.querySelector('[name="details"]').resize()
+  })
+
+  el.querySelector('.add-step').addEventListener('change', (e) => {
+    e.preventDefault()
+    const caption = e.target.value.trim()
+    if (!caption.length) return
+
+    const parent = e.target.closest('.td-item')
+
+    state.set('step-added', { taskId: parent.id, caption })
   })
 }
 

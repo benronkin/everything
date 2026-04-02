@@ -4,15 +4,20 @@ import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { rightDrawer } from './sections/rightDrawer.js'
 import { mainPanel } from './sections/mainPanel.js'
+import { createStep as createStepElement } from './sections/step.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
+  createStep,
   createTask,
+  deleteStep,
   deleteTask,
   fetchTasks,
+  fetchStepsOfMultipleTasks,
   update,
+  updateStep,
   updateTask,
 } from './tasks.api.js'
 import { log } from '../assets/js/logger.js'
@@ -31,7 +36,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    const [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
+    let [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
+
+    const taskIds = tasks.slice(0, 100).map((t) => t.id)
+    const { steps } = await fetchStepsOfMultipleTasks(taskIds)
+    // group steps by task_id
+    const stepsMap = steps.reduce((acc, step) => {
+      const { task_id, ...stepData } = step
+      if (!acc[task_id]) acc[task_id] = []
+      acc[task_id].push(stepData)
+      return acc
+    }, {})
+    // map steps using the map object
+    tasks = tasks.map((t) => {
+      t.steps = stepsMap[t.id] || []
+      return t
+    })
 
     state.set('main-documents', tasks)
     state.set('app-mode', 'main-panel')
@@ -41,7 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)
-    window.location.href = `../home/index.html?message=${error.message}`
     setMessage(error.message, { type: 'danger' })
   }
 })
@@ -74,6 +93,27 @@ function react() {
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 
   state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
+
+  state.on('step-added', 'tasks', handleAddStep)
+
+  state.on('step-deleted', 'tasks', handleDeleteStep)
+
+  state.on('step-updated', 'tasks', handleStepUpdate)
+}
+
+async function handleAddStep({ caption, taskId }) {
+  const task = document.getElementById(taskId)
+  const addStepEl = task.querySelector('.add-step')
+  addStepEl.value = ''
+  addStepEl.placeholder = 'Next step'
+  addStepEl.focus()
+
+  const stepEl = createStepElement({ caption })
+  task.querySelector('.steps-wrapper').appendChild(stepEl)
+
+  const { data, message, error } = await createStep(caption, taskId)
+
+  stepEl.setAttribute('id', data.id)
 }
 
 async function handleAddTask() {
@@ -112,12 +152,41 @@ async function handleAddTask() {
   }
 }
 
+async function handleDeleteStep({ id }) {
+  const step = document.getElementById(id)
+  const stepsWrapper = step.closest('.steps-wrapper')
+  const task = step.closest('.td-item')
+
+  step.remove()
+  if (!stepsWrapper.childElementCount) {
+    task.querySelector('.add-step').placeholder = 'Add step'
+  }
+
+  const { error } = await deleteStep(id)
+  if (error) {
+    throw new Error(error)
+  }
+}
+
+async function handleStepUpdate({ id, completed }) {
+  const { error } = await updateStep({
+    id,
+    section: 'completed',
+    value: completed,
+  })
+  if (error) {
+    throw new Error(error)
+  }
+}
+
 async function handleTaskUpdate(el) {
   try {
     const section = el.name
     const value = el.value
     const parent = el.closest('.td-item')
     const id = parent.id
+
+    if (!section) return
 
     const { error } = await updateTask({ id, section, value })
     if (error) {

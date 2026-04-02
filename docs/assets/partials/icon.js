@@ -1,6 +1,8 @@
+// icon accepts a "classes" object with attributes: "primary" (required, string),
+// "secondary" (string), and "other" (array).
+
 import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 i {
@@ -32,6 +34,7 @@ export function createIcon({
   const el = document.createElement('i')
 
   el.shake = shake.bind(el)
+  el.toggleClasses = toggleClasses.bind(el)
 
   el.id = id
   role && (el.role = role)
@@ -83,7 +86,7 @@ function handleClasses({ el, classes }) {
 
   if (!classes.primary) {
     throw new Error(
-      `Oops, button accepts a "classes" object with "primary" (required), "secondary", and "other" attributes`
+      `Oops, icon accepts a "classes" object with attributes: "primary" (required, string), "secondary" (string), and "other" (array)`,
     )
   }
 
@@ -106,4 +109,12 @@ function shake() {
   this.classList.add('shake')
   setTimeout(() => this.classList.remove('shake'), 300)
   return
+}
+
+function toggleClasses() {
+  const classes = { ...this._classes }
+  const temp = classes.secondary
+  classes.secondary = classes.primary
+  classes.primary = temp
+  handleClasses({ el: this, classes })
 }
