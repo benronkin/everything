@@ -44,12 +44,14 @@ export function createStep({ caption, completed = false, id } = {}) {
 
   build(el)
   listen(el, id)
-  react(el, id)
 
   el.querySelector('.step-caption').innerHTML = caption
 
   state.set(`step-${id}`, completed)
-  if (completed) el.querySelector('.mark-complete').toggleClasses()
+  if (completed) {
+    el.querySelector('.mark-complete').toggleClasses()
+    el.querySelector('.step-caption').classList.add('completed')
+  }
 
   return el
 }
@@ -72,10 +74,17 @@ function build(el) {
 }
 
 function listen(el, id) {
-  el.querySelector('.mark-complete').addEventListener('click', () => {
+  el.querySelector('.mark-complete').addEventListener('click', (e) => {
+    if (!id) {
+      // delete step that was added to the DOM
+      // before getting an id from the server
+      const stepEl = e.target.closest('.task-step')
+      id = stepEl.id
+    }
     const completed = !state.get(`step-${id}`)
     state.set(`step-${id}`, completed)
     state.set('step-updated', { id, completed })
+    el.querySelector('.step-caption').classList.toggle('completed', completed)
   })
 
   el.querySelector('.fa-close').addEventListener('click', (e) => {
@@ -86,11 +95,5 @@ function listen(el, id) {
       id = stepEl.id
     }
     state.set('step-deleted', { id })
-  })
-}
-
-function react(el, id) {
-  state.on(`step-${id}`, 'step', (completed) => {
-    el.querySelector('.step-caption').classList.toggle('completed', completed)
   })
 }
