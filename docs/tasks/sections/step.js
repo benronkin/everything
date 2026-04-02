@@ -62,6 +62,7 @@ function build(el) {
         secondary: 'fa-circle-check',
         other: ['mark-complete'],
       },
+      useFaRegular: true,
     }),
   )
 

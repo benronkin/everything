@@ -28,6 +28,7 @@ export function createIcon({
   classes,
   dataset = {},
   role,
+  useFaRegular = false,
 } = {}) {
   injectStyle(css)
 
@@ -41,6 +42,8 @@ export function createIcon({
   for (const [k, v] of Object.entries(dataset)) {
     el.dataset[k] = v
   }
+
+  el.useFaRegular = useFaRegular
 
   handleClasses({ el, classes })
 
@@ -97,9 +100,11 @@ function handleClasses({ el, classes }) {
     classes.other = classes.other.split(' ')
   }
 
-  const arr = [
-    ...new Set(['fa-solid', classes.primary, ...classes.other]),
-  ].join(' ')
+  const baseFa = el.useFaRegular ? 'fa-regular' : 'fa-solid'
+
+  const arr = [...new Set([baseFa, classes.primary, ...classes.other])].join(
+    ' ',
+  )
 
   el.className = arr
   el._classes = classes
