@@ -78,7 +78,13 @@ function listen(el, id) {
     state.set('step-updated', { id, completed })
   })
 
-  el.querySelector('.fa-close').addEventListener('click', () => {
+  el.querySelector('.fa-close').addEventListener('click', (e) => {
+    if (!id) {
+      // delete step that was added to the DOM
+      // before getting an id from the server
+      const stepEl = e.target.closest('.task-step')
+      id = stepEl.id
+    }
     state.set('step-deleted', { id })
   })
 }

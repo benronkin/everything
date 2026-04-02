@@ -152,7 +152,13 @@ async function handleAddTask() {
   }
 }
 
-async function handleDeleteStep({ id }) {
+async function handleDeleteStep(data) {
+  if (!data.id) {
+    throw new Error(
+      `handleDeleteStep did not receive an id. Received: ${JSON.stringify(data)}`,
+    )
+  }
+  const id = data.id
   const step = document.getElementById(id)
   const stepsWrapper = step.closest('.steps-wrapper')
   const task = step.closest('.td-item')
