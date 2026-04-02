@@ -91,9 +91,11 @@ export function createTask({
 
   el.querySelector('[name="details"]').value = (details || '').toString().trim()
 
-  for (const step of steps) {
-    const stepDiv = createStep(step)
-    el.querySelector('.steps-wrapper').appendChild(stepDiv)
+  if (steps?.length) {
+    for (const step of steps) {
+      const stepDiv = createStep(step)
+      el.querySelector('.steps-wrapper').appendChild(stepDiv)
+    }
   }
 
   el.querySelector('.add-step').placeholder = steps?.length
