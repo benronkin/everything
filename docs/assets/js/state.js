@@ -38,6 +38,7 @@ export const state = {
 
   on(key, subscriber, callback) {
     if (typeof callback !== 'function') {
+      console.log(`For key: ${key}, you forgot to set a subscriber name`)
       throw new Error('Pass only functions to .on')
     }
 

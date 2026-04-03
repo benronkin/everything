@@ -10,7 +10,6 @@
 
 import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
@@ -110,7 +109,6 @@ function listen(el) {
 function handleFormSubmit(id) {
   const stateKey = `form-submit:${id}`
   state.set(stateKey, { id })
-  log(stateKey)
 }
 
 // -------------------------------

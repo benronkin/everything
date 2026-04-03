@@ -20,7 +20,7 @@ import {
   updateStep,
   updateTask,
 } from './tasks.api.js'
-import { log } from '../assets/js/logger.js'
+import { createModalDelete } from '../assets/composites/modalDelete.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   build()
@@ -82,6 +82,8 @@ function build() {
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
 
+  wrapperEl.appendChild(createModalDelete({ password: false }))
+
   wrapperEl.appendChild(createFooter())
 }
 
@@ -91,6 +93,8 @@ function react() {
   state.on('field-changed', 'tasks', handleTaskUpdate)
 
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
+
+  state.on('button-click:modal-delete-btn', 'tasks', handleTaskDeleteConfirm)
 
   state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
 
@@ -190,9 +194,8 @@ async function handleTaskUpdate(el) {
     const section = el.name
     const value = el.value
     const parent = el.closest('.td-item')
+    if (!parent) return
     const id = parent.id
-
-    if (!section) return
 
     const { error } = await updateTask({ id, section, value })
     if (error) {
@@ -200,28 +203,57 @@ async function handleTaskUpdate(el) {
     }
     setMessage('Saved', { type: 'quiet' })
   } catch (err) {
-    log(err)
+    console.error(err)
   }
 }
 
-async function handleTaskDelete({ id }) {
-  // 1 ▸ optimistic local update
+function handleTaskDelete({ id }) {
   const tasks = state.get('main-documents')
   const idx = tasks.findIndex((t) => t.id === id)
-  if (idx === -1) return // not found
+  if (idx === -1) return
 
-  const deleted = tasks.splice(idx, 1)[0] // remove 1 item
+  // get steps from the dom not from state
+  // for newly created tasks
+  const steps = [
+    ...document.getElementById(id).querySelector('.steps-wrapper').children,
+  ]
+  const hasOpenSteps = steps.filter((s) => s.querySelector('.fa-circle')).length
+
+  if (!hasOpenSteps) {
+    handleTaskDeleteConfirm(id)
+    return
+  }
+
+  const modalDelete =
+    document.getElementById('modal-delete') ||
+    createModalDelete({ password: false })
+  modalDelete.querySelector('.modal-header').innerHTML =
+    `Delete ${tasks[idx].title}`
+  modalDelete.querySelector('.modal-body').innerHTML =
+    'This task contains outstanding steps. Delete task?'
+
+  document.getElementById('modal-delete-btn').dataset.taskId = id
+
+  modalDelete.showModal()
+}
+
+function handleTaskDeleteConfirm(x) {
+  // fn runs either from handleTaskDelete when there are no open steps
+  // in which case it receives the id as string
+  // or from the Delete btn of the ModalDelete whose dataset has the task id
+  // in which case the function receives an object from the state.on function
+  const id =
+    typeof x === 'string'
+      ? x
+      : document.getElementById('modal-delete-btn').dataset.taskId
+  const tasks = state.get('main-documents')
+  const idx = tasks.findIndex((t) => t.id === id)
+  tasks.splice(idx, 1)[0] // remove 1 item
   state.set('main-documents', [...tasks]) // triggers list re-render
 
-  // 2 ▸ server delete
-  const { error } = await deleteTask(id)
+  document.getElementById('modal-delete').close()
 
-  // 3 ▸ rollback if server failed
-  if (error) {
-    tasks.splice(idx, 0, deleted) // restore
-    state.set('main-documents', [...tasks])
-    setMessage(error, { type: 'warn' })
-  }
+  deleteTask(id)
 }
 
 async function handleTaskDragged() {
