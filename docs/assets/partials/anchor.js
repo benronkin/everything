@@ -1,9 +1,5 @@
 import { injectStyle } from '../js/ui.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 a {
   color: var(--grey6);
@@ -17,6 +13,7 @@ a:hover {
 
 export function createAnchor({ className, id, html, url } = {}) {
   injectStyle(css)
+
   return createElement({ className, id, html, url })
 }
 

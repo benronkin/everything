@@ -103,6 +103,8 @@ function react() {
   state.on('step-deleted', 'tasks', handleDeleteStep)
 
   state.on('step-updated', 'tasks', handleStepUpdate)
+
+  state.on('icon-click:cancel-due-date', 'tasks', handleDueDateCancel)
 }
 
 async function handleAddStep({ caption, taskId }) {
@@ -178,6 +180,12 @@ async function handleDeleteStep(data) {
   }
 }
 
+function handleDueDateCancel() {
+  const parent = document.getElementById('cancel-due-date').closest('.td-item')
+  const id = parent.id
+  updateTask({ id, section: 'starts_at', value: '' })
+}
+
 async function handleStepUpdate({ id, completed }) {
   const { error } = await updateStep({
     id,
@@ -191,11 +199,28 @@ async function handleStepUpdate({ id, completed }) {
 
 async function handleTaskUpdate(el) {
   try {
-    const section = el.name
-    const value = el.value
+    let section = el.name
+    let value = el.value
+
     const parent = el.closest('.td-item')
     if (!parent) return
     const id = parent.id
+
+    if (section === 'due-date' || section === 'due-time') {
+      const dateString = parent.querySelector('.due-date').value
+      const timeString = parent.querySelector('.due-time').value
+
+      if (section === 'due-time' && !dateString) return
+
+      if (timeString) {
+        value = new Date(`${dateString}T${timeString}Z`)
+      } else {
+        value = new Date(`${dateString}T00:00:00Z`)
+      }
+      value = value.toISOString()
+      console.log('value', value)
+      section = 'starts_at'
+    }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {
@@ -220,7 +245,8 @@ function handleTaskDelete({ id }) {
   const hasOpenSteps = steps.filter((s) => s.querySelector('.fa-circle')).length
 
   if (!hasOpenSteps) {
-    handleTaskDeleteConfirm(id)
+    // pass id inside object to match the payload that state.on sends
+    handleTaskDeleteConfirm({ id })
     return
   }
 
@@ -237,15 +263,13 @@ function handleTaskDelete({ id }) {
   modalDelete.showModal()
 }
 
-function handleTaskDeleteConfirm(x) {
-  // fn runs either from handleTaskDelete when there are no open steps
-  // in which case it receives the id as string
-  // or from the Delete btn of the ModalDelete whose dataset has the task id
-  // in which case the function receives an object from the state.on function
-  const id =
-    typeof x === 'string'
-      ? x
-      : document.getElementById('modal-delete-btn').dataset.taskId
+// must accept id inside obj to match what state.on sends
+function handleTaskDeleteConfirm({ id }) {
+  if (id === 'modal-delete-btn') {
+    // call came from state.on so get id
+    // from the modal delete btn
+    id = document.getElementById('modal-delete-btn').dataset.taskId
+  }
   const tasks = state.get('main-documents')
   const idx = tasks.findIndex((t) => t.id === id)
   tasks.splice(idx, 1)[0] // remove 1 item

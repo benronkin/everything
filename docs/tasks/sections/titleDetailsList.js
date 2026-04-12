@@ -29,6 +29,7 @@ function react(el) {
         title: doc.title,
         details: doc.details,
         steps: doc.steps,
+        startAt: doc.starts_at,
       }),
     )
     el.addChildren(children)

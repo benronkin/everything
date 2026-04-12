@@ -6,7 +6,7 @@ import { createIcon } from '../../assets/partials/icon.js'
 const css = `
 .task-step {
   display: flex;
-  margin: 10px;
+  margin: 10px 5px;
   align-items: center;
   padding: 5px;
 }
@@ -26,7 +26,7 @@ const css = `
 }
 .task-step .mark-complete {
   width: 9px;
-  margin-right: 10px;
+  margin-right: 15px;
   color: var(--gray6);
 }
 .task-step .fa-circle-check {

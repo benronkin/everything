@@ -1,6 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createSelectGroup } from '../../assets/partials/selectGroup.js'
+import { createRating } from '../../assets/partials/rating.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
@@ -26,7 +26,7 @@ function build(el) {
       placeholder: 'Attraction',
       autocomplete: 'off',
       classes: { group: 'mb-40', icon: 'fa-utensils' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -36,7 +36,7 @@ function build(el) {
       type: 'date',
       classes: { group: 'mb-40', icon: 'fa-calendar' },
       value: new Date().toISOString().split('T')[0],
-    })
+    }),
   )
 
   el.appendChild(
@@ -45,7 +45,7 @@ function build(el) {
       id: 'journal-street',
       placeholder: 'Street address',
       classes: { group: 'mb-40', icon: 'fa-road' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -54,7 +54,7 @@ function build(el) {
       id: 'journal-city',
       placeholder: 'City',
       classes: { group: 'mb-40', icon: 'fa-city' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -63,7 +63,7 @@ function build(el) {
       id: 'journal-state',
       placeholder: 'State',
       classes: { group: 'mb-40', icon: 'fa-map' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -72,7 +72,7 @@ function build(el) {
       id: 'journal-country',
       placeholder: 'Country',
       classes: { group: 'mb-40', icon: 'fa-flag' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -81,32 +81,16 @@ function build(el) {
       id: 'journal-phone',
       placeholder: 'Phone',
       classes: { group: 'mb-40', icon: 'fa-phone' },
-    })
+    }),
   )
 
-  el.appendChild(
-    createSelectGroup({
-      name: 'rating',
-      id: 'journal-rating',
-      classes: {
-        group: 'mb-40 w-fc p-5-0',
-        select: 'field',
-        icon: 'fa-face-smile',
-      },
-      options: [
-        { value: '', label: '' },
-        { value: 'great', label: '🔥' },
-        { value: 'medium', label: '🆗' },
-        { value: 'bad', label: '🤮' },
-      ],
-    })
-  )
+  el.appendChild(createRating({ id: 'journal-rating' }))
 
   el.appendChild(
     createSpanGroup({
       classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
       html: 'Note:',
-    })
+    }),
   )
 
   el.appendChild(
@@ -115,6 +99,6 @@ function build(el) {
       id: 'journal-notes',
       className: 'w-100',
       placeholder: 'Add details...',
-    })
+    }),
   )
 }

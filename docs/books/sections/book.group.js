@@ -2,6 +2,7 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createRating } from '../../assets/partials/rating.js'
 import { createSelectGroup } from '../../assets/partials/selectGroup.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
@@ -9,7 +10,6 @@ import { createSwitch } from '../../assets/partials/switch.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { state } from '../../assets/js/state.js'
 import { fetchBook } from '../books.api.js'
-// import { log } from '../../assets/js/logger.js'
 
 export function createBookGroup() {
   const el = createDiv({ id: 'entry-group' })
@@ -28,7 +28,7 @@ async function build(el) {
       placeholder: 'Title',
       autocomplete: 'off',
       classes: { group: '', input: 'w-100', icon: 'fa-book' },
-    })
+    }),
   )
 
   el.appendChild(
@@ -38,14 +38,14 @@ async function build(el) {
       placeholder: 'Author',
       autocomplete: 'off',
       classes: { group: 'mt-30', input: 'w-100', icon: 'fa-user' },
-    })
+    }),
   )
 
   el.appendChild(
     createSpanGroup({
       classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
       html: 'Note',
-    })
+    }),
   )
 
   el.appendChild(
@@ -54,28 +54,14 @@ async function build(el) {
       id: 'book-note',
       className: 'mb-20 w-100',
       placeholder: 'Add note...',
-    })
+    }),
   )
 
   el.appendChild(
     createDiv({
       className: 'flex align-center gap-20 mb-40',
       html: [
-        createSelectGroup({
-          name: 'rating',
-          id: 'book-rating',
-          classes: {
-            group: 'w-fc',
-            wrapper: '',
-            icon: 'fa-star',
-          },
-          options: [
-            { value: '', label: 'Rate' },
-            { value: 'great', label: '🔥' },
-            { value: 'medium', label: '🆗' },
-            { value: 'bad', label: '🤮' },
-          ],
-        }),
+        createRating({ id: 'book-rating' }),
         createDiv({
           className: 'flex align-center',
           html: [
@@ -87,7 +73,7 @@ async function build(el) {
           ],
         }),
       ],
-    })
+    }),
   )
 
   el.appendChild(
@@ -127,7 +113,7 @@ async function build(el) {
           ],
         }),
       ],
-    })
+    }),
   )
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-40' }))

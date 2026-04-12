@@ -5,6 +5,7 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { createStep } from './step.js'
+import { createDueDate, toggleDueDateElements } from './dueDate.js'
 
 const css = `
 .td-item {
@@ -17,18 +18,22 @@ const css = `
   border: 1px solid var(--gray0);
   border-radius: var(--border-radius);
 }
-.td-item .grid {
-  display: grid;
-  grid-template-columns: 1fr auto;
+.td-item .title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 .td-item textarea {
   padding: 10px 10px 0 10px;
   margin: 1px;
+  flex-grow: 1;            /* 👈 The Magic: Tells it to take all available space */
+  width: 0;                /* 👈 The Secret: Prevents the textarea from pushing the container wide */
 }
-.td-item [data-target="details"] {
-  margin-top: 20px;
+.td-item .details-ta {
   width: 100%;
 }
+
 .td-item .icons {
   padding: 15px 10px;  
   display: flex;
@@ -36,24 +41,12 @@ const css = `
   align-items: flex-start;
   justify-content: flex-end;
 }
-.date-time-wrapper {
-  display: flex;
-  align-items: center;
-  margin: 0 10px;
-}
-.date-time-wrapper span {
-  margin-right: auto;
-}
-.date-time-wrapper input:last-child {
-  margin-left: 20px;
-}
 .add-step {
   width: 90%;
-  margin-left: -5px !important;
   border: none;
 }
 .add-step-wrapper {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .add-step-wrapper .fa-plus {
   margin-left: 5px;
@@ -64,14 +57,16 @@ const css = `
 .list-item:hover {
   color: inherit;
 }
+.due-date-badge {
+  padding: 5px;
+}
 `
 
 export function createTask({
   title,
   details,
   steps,
-  starts_at,
-  ends_at,
+  startAt,
   id,
   className = '',
 } = {}) {
@@ -82,14 +77,14 @@ export function createTask({
     className: `td-item list-item ${className}`.trim(),
   })
 
-  build(el)
+  build(el, startAt)
   react(el)
   listen(el)
 
-  let ta = el.querySelector('[data-target="title"]')
+  let ta = el.querySelector('.title-ta')
   ta.value = (title || '').toString().trim()
 
-  el.querySelector('[name="details"]').value = (details || '').toString().trim()
+  el.querySelector('.details-ta').value = (details || '').toString().trim()
 
   if (steps?.length) {
     for (const step of steps) {
@@ -102,25 +97,39 @@ export function createTask({
     ? 'Next step'
     : 'Add step'
 
+  if (startAt) {
+    const dateObj = new Date(startAt)
+    const [datePart, fullTimePart] = dateObj.toISOString().split('T')
+    const timePart = fullTimePart.substring(0, 5)
+
+    el.querySelector('.due-date').value = datePart
+    el.querySelector('.due-time').value = timePart
+    toggleDueDateElements(el)
+  }
+
   el.classList.add('draggable-target')
   el.setDraggable = setDraggable.bind(el)
 
   return el
 }
 
-function build(el) {
-  let gridEl = createDiv({ className: 'grid title-wrapper' })
-  el.appendChild(gridEl)
+function build(el, startAt) {
+  let titleWrapper = createDiv({ className: 'title-wrapper' })
+  el.appendChild(titleWrapper)
+
+  if (startAt) {
+    titleWrapper.appendChild(createDiv({ html: formatDue(startAt) }))
+  }
 
   const titleEl = createTextarea({
+    className: 'title-ta',
     name: 'title',
     placeholder: 'Task...',
   })
-  titleEl.dataset.target = 'title'
-  gridEl.appendChild(titleEl)
+  titleWrapper.appendChild(titleEl)
 
   let iconsEl = createDiv({ className: 'icons' })
-  gridEl.appendChild(iconsEl)
+  titleWrapper.appendChild(iconsEl)
 
   iconsEl.appendChild(
     createIcon({
@@ -152,11 +161,13 @@ function build(el) {
     }),
   )
 
+  detailsWrapperEl.appendChild(createDueDate())
+
   const detailsEl = createTextarea({
     name: 'details',
+    className: 'details-ta',
     placeholder: 'Additional information...',
   })
-  detailsEl.dataset.target = 'details'
   detailsWrapperEl.appendChild(detailsEl)
 
   const trashEl = createIcon({
@@ -165,40 +176,6 @@ function build(el) {
     },
   })
   detailsWrapperEl.appendChild(trashEl)
-
-  // detailsWrapperEl.appendChild(
-  //   createDiv({
-  //     className: 'date-time-wrapper',
-  //     html: [
-  //       createSpan({ html: 'Starts' }),
-  //       createInput({
-  //         name: 'start_date',
-  //         type: 'date',
-  //       }),
-  //       createInput({
-  //         name: 'start_time',
-  //         type: 'time',
-  //       }),
-  //     ],
-  //   })
-  // )
-
-  // detailsWrapperEl.appendChild(
-  //   createDiv({
-  //     className: 'date-time-wrapper',
-  //     html: [
-  //       createSpan({ html: 'Ends' }),
-  //       createInput({
-  //         name: 'end_date',
-  //         type: 'date',
-  //       }),
-  //       createInput({
-  //         name: 'end_time',
-  //         type: 'time',
-  //       }),
-  //     ],
-  //   })
-  // )
 
   trashEl.addEventListener('click', () => {
     state.set('task-deleted:tasks-list', { id: el.id })
@@ -233,6 +210,32 @@ function listen(el) {
 
     state.set('step-added', { taskId: parent.id, caption })
   })
+}
+
+function formatDue(isoString) {
+  if (!isoString) return ''
+
+  // Get the Parts
+  const [givenDatePart, givenTimePart] = isoString.split('T')
+  const hhMm = givenTimePart.slice(0, 5)
+
+  // Get "Today" and "Tomorrow" as Strings in LOCAL time
+  const now = new Date()
+  const nowDatePart = now.toLocaleDateString('en-CA') // Returns "YYYY-MM-DD"
+
+  const tomorrow = new Date()
+  tomorrow.setDate(now.getDate() + 1)
+  const tomorrowDatePart = tomorrow.toLocaleDateString('en-CA')
+
+  // 1. Overdue Check (String comparison)
+  if (givenDatePart < nowDatePart) return ['Overdue']
+
+  // 2. Exact Match Check
+  if (givenDatePart === nowDatePart) return ['Today', hhMm]
+  if (givenDatePart === tomorrowDatePart) return ['Tomorrow', hhMm]
+
+  // 3. Fallback
+  return ['Later']
 }
 
 function setDraggable(isDraggable) {
