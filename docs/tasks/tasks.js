@@ -214,6 +214,8 @@ async function handleFieldChange(el) {
     let section = el.name
     let value = el.value
 
+    if (!section) return
+
     const parent = el.closest('.td-item')
     if (!parent) return
     const id = parent.id
