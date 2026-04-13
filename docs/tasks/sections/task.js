@@ -123,7 +123,7 @@ function build(el, dueInfo) {
   el.appendChild(titleWrapper)
 
   if (dueInfo) {
-    titleWrapper.appendChild(createDiv({ html: dueInfo }))
+    titleWrapper.appendChild(dueInfo)
   }
 
   const titleEl = createTextarea({

@@ -23,6 +23,9 @@ const css = `
   letter-spacing: 1px;
   margin: 20px 0;
 }
+.due-label {
+  padding-bottom: 7px;
+}
 `
 
 export function mainPanel() {

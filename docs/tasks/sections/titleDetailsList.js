@@ -1,10 +1,9 @@
 import { state } from '../../assets/js/state.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createIcon } from '../../assets/partials/icon.js'
 import { createList } from '../../assets/partials/list.js'
-import { createTask } from './task.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
+import { createTaskHelper } from '../tasks.utils.js'
 
 export function titleDetailsList() {
   const el = createList({
@@ -24,8 +23,13 @@ function react(el) {
     if (!docs.length) {
       return
     }
+    const viewMode = localStorage.getItem('task-list-view')
+    if (viewMode === 'calendar') {
+      el.addChildren(createCalendarList())
+    } else {
+      el.addChildren(createPriorityList())
+    }
 
-    el.addChildren(createPriorityList())
     setMessage()
   })
 
@@ -85,44 +89,12 @@ function createCalendarList() {
   const children = []
 
   for (const [cat, docs] of Object.entries(dict)) {
-    children.push(createDiv({ html: cat, className: 'category' }))
-    for (const doc of docs) {
-      children.push(createTaskHelper(doc, 'calendar'))
-    }
-  }
-  return children
-}
-
-function createTaskHelper(doc, dueMode = 'priority') {
-  let dueHTML = ''
-
-  if (doc.dueInfo) {
-    if (dueMode === 'priority') {
-      if (doc.dueInfo.label === 'Overdue')
-        dueHTML = createIcon({
-          classes: { primary: 'fa-bell', other: ['danger-foreground'] },
-        })
-      if (doc.dueInfo.label === 'Today')
-        dueHTML = createIcon({
-          classes: { primary: 'fa-bell' },
-        })
-    }
-
-    if (dueMode === 'calendar') {
-      if (
-        ['Tomorrow', 'Later'].includes(doc.dueInfo.label) &&
-        doc.dueInfo.time !== '00:00'
-      ) {
-        dueHTML = createDiv({ html: doc.dueInfo.time, className: 'due-label' })
+    if (docs.length) {
+      children.push(createDiv({ html: cat, className: 'category' }))
+      for (const doc of docs) {
+        children.push(createTaskHelper(doc, 'calendar'))
       }
     }
   }
-  return createTask({
-    id: doc.id,
-    title: doc.title,
-    details: doc.details,
-    steps: doc.steps,
-    startAt: doc.starts_at,
-    dueInfo: dueHTML,
-  })
+  return children
 }

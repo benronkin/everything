@@ -21,6 +21,7 @@ import {
   updateTask,
 } from './tasks.api.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
+import { dueInfo } from './tasks.utils.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   build()
@@ -101,7 +102,7 @@ function build() {
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
 
-  state.on('field-changed', 'tasks', handleTaskUpdate)
+  state.on('field-changed', 'tasks', handleFieldChange)
 
   state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
 
@@ -208,7 +209,7 @@ async function handleStepUpdate({ id, completed }) {
   }
 }
 
-async function handleTaskUpdate(el) {
+async function handleFieldChange(el) {
   try {
     let section = el.name
     let value = el.value
@@ -216,6 +217,9 @@ async function handleTaskUpdate(el) {
     const parent = el.closest('.td-item')
     if (!parent) return
     const id = parent.id
+
+    const docs = state.get('main-documents')
+    const idx = docs.findIndex((d) => d.id === id)
 
     if (section === 'due-date' || section === 'due-time') {
       const dateString = parent.querySelector('.due-date').value
@@ -230,12 +234,17 @@ async function handleTaskUpdate(el) {
       }
       value = value.toISOString()
       section = 'starts_at'
+      docs[idx].dueInfo = dueInfo(value)
     }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {
       throw new Error(error)
     }
+
+    docs[idx][section] = value
+    state.set('main-documents', docs)
+
     setMessage('Saved', { type: 'quiet' })
   } catch (err) {
     console.error(err)
@@ -299,40 +308,4 @@ async function handleTaskDragged() {
     setMessage(error)
     return
   }
-}
-
-function dueInfo(isoString) {
-  if (!isoString) return {}
-
-  // Get the Parts
-  const [givenDatePart, givenTimePart] = isoString.split('T')
-  const hhMm = givenTimePart.slice(0, 5)
-  const [givenYear, givenMonth, givenDay] = givenDatePart.split('-')
-  const givenFormattedDate = `${givenMonth}/${givenDay}`
-
-  // Get "Today" and "Tomorrow" as Strings in LOCAL time
-  const now = new Date()
-  const nowDatePart = now.toLocaleDateString('en-CA') // Returns "YYYY-MM-DD"
-
-  const tomorrow = new Date()
-  tomorrow.setDate(now.getDate() + 1)
-  const tomorrowDatePart = tomorrow.toLocaleDateString('en-CA')
-
-  let obj = {
-    isoString,
-    date: givenFormattedDate,
-    time: hhMm,
-  }
-
-  if (givenDatePart < nowDatePart) {
-    obj.label = 'Overdue'
-  } else if (givenDatePart === nowDatePart) {
-    obj.label = 'Today'
-  } else if (givenDatePart === tomorrowDatePart) {
-    obj.label = 'Tomorrow'
-  } else {
-    obj.label = 'Later'
-  }
-
-  return obj
 }
