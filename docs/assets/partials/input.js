@@ -51,7 +51,7 @@ function listen(el) {
   el.addEventListener('keydown', (e) => {
     if (e.metaKey && e.key === 's') {
       e.preventDefault()
-      state.set('field-changed', e.target)
+      handleChange(e.target)
     }
   })
 
@@ -62,21 +62,28 @@ function listen(el) {
       return
 
     if (e.key === 'Enter') {
-      state.set('field-changed', e.target)
+      handleChange(e.target)
     } else {
       debouncedUpdate(e.target)
     }
   })
 
   el.addEventListener('change', (e) => {
-    state.set('field-changed', e.target)
+    handleChange(e.target)
   })
 
   el.addEventListener('paste', (e) => {
-    state.set('field-changed', e.target)
+    handleChange(e.target)
   })
 }
 
 const debouncedUpdate = debounce((el) => {
-  state.set('field-changed', el)
+  handleChange(el)
 }, 1500)
+
+function handleChange(el) {
+  if (el.dataset.oldValue === el.value.trim()) return
+
+  el.dataset.oldValue = el.value.trim()
+  state.set('field-changed', el)
+}
