@@ -38,6 +38,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
 
+    tasks = tasks.map((task) => {
+      if (task.starts_at) {
+        task.dueInfo = dueInfo(task.starts_at)
+      }
+      return task
+    })
+
     const taskIds = tasks.slice(0, 100).map((t) => t.id)
     const { steps } = await fetchStepsOfMultipleTasks(taskIds)
     // group steps by task_id
@@ -59,6 +66,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'tasks')
     setMessage()
     window.state = state // avail to browser console
+
+    const viewMode = localStorage.getItem('task-list-view')
+    if (viewMode === 'calendar')
+      document.getElementById('calendar-priority').click()
   } catch (error) {
     console.trace(error)
     setMessage(error.message, { type: 'danger' })
@@ -218,7 +229,6 @@ async function handleTaskUpdate(el) {
         value = new Date(`${dateString}T00:00:00Z`)
       }
       value = value.toISOString()
-      console.log('value', value)
       section = 'starts_at'
     }
 
@@ -289,4 +299,40 @@ async function handleTaskDragged() {
     setMessage(error)
     return
   }
+}
+
+function dueInfo(isoString) {
+  if (!isoString) return {}
+
+  // Get the Parts
+  const [givenDatePart, givenTimePart] = isoString.split('T')
+  const hhMm = givenTimePart.slice(0, 5)
+  const [givenYear, givenMonth, givenDay] = givenDatePart.split('-')
+  const givenFormattedDate = `${givenMonth}/${givenDay}`
+
+  // Get "Today" and "Tomorrow" as Strings in LOCAL time
+  const now = new Date()
+  const nowDatePart = now.toLocaleDateString('en-CA') // Returns "YYYY-MM-DD"
+
+  const tomorrow = new Date()
+  tomorrow.setDate(now.getDate() + 1)
+  const tomorrowDatePart = tomorrow.toLocaleDateString('en-CA')
+
+  let obj = {
+    isoString,
+    date: givenFormattedDate,
+    time: hhMm,
+  }
+
+  if (givenDatePart < nowDatePart) {
+    obj.label = 'Overdue'
+  } else if (givenDatePart === nowDatePart) {
+    obj.label = 'Today'
+  } else if (givenDatePart === tomorrowDatePart) {
+    obj.label = 'Tomorrow'
+  } else {
+    obj.label = 'Later'
+  }
+
+  return obj
 }

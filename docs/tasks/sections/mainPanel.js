@@ -16,6 +16,13 @@ const css = `
 #main-panel.hidden {
   display: none;
 }
+.category {
+  color: var(--gray3);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 20px 0;
+}
 `
 
 export function mainPanel() {
@@ -40,8 +47,8 @@ function build(el) {
       autocomplete: 'off',
       classes: { icon: 'fa-thumbtack' },
       disabled: true,
-    })
+    }),
   )
 
-  el.appendChild(titleDetailsList({ className: 'mt-20' }))
+  el.appendChild(titleDetailsList())
 }

@@ -24,6 +24,10 @@ const css = `
   gap: 12px;
   width: 100%;
 }
+.td-item .title-wrapper i,
+.td-item .title-wrapper .due-label {
+  margin-left: 10px;
+}
 .td-item textarea {
   padding: 10px 10px 0 10px;
   margin: 1px;
@@ -68,6 +72,7 @@ export function createTask({
   steps,
   startAt,
   id,
+  dueInfo,
   className = '',
 } = {}) {
   injectStyle(css)
@@ -77,7 +82,7 @@ export function createTask({
     className: `td-item list-item ${className}`.trim(),
   })
 
-  build(el, startAt)
+  build(el, dueInfo)
   react(el)
   listen(el)
 
@@ -113,12 +118,12 @@ export function createTask({
   return el
 }
 
-function build(el, startAt) {
+function build(el, dueInfo) {
   let titleWrapper = createDiv({ className: 'title-wrapper' })
   el.appendChild(titleWrapper)
 
-  if (startAt) {
-    titleWrapper.appendChild(createDiv({ html: formatDue(startAt) }))
+  if (dueInfo) {
+    titleWrapper.appendChild(createDiv({ html: dueInfo }))
   }
 
   const titleEl = createTextarea({
@@ -210,32 +215,6 @@ function listen(el) {
 
     state.set('step-added', { taskId: parent.id, caption })
   })
-}
-
-function formatDue(isoString) {
-  if (!isoString) return ''
-
-  // Get the Parts
-  const [givenDatePart, givenTimePart] = isoString.split('T')
-  const hhMm = givenTimePart.slice(0, 5)
-
-  // Get "Today" and "Tomorrow" as Strings in LOCAL time
-  const now = new Date()
-  const nowDatePart = now.toLocaleDateString('en-CA') // Returns "YYYY-MM-DD"
-
-  const tomorrow = new Date()
-  tomorrow.setDate(now.getDate() + 1)
-  const tomorrowDatePart = tomorrow.toLocaleDateString('en-CA')
-
-  // 1. Overdue Check (String comparison)
-  if (givenDatePart < nowDatePart) return ['Overdue']
-
-  // 2. Exact Match Check
-  if (givenDatePart === nowDatePart) return ['Today', hhMm]
-  if (givenDatePart === tomorrowDatePart) return ['Tomorrow', hhMm]
-
-  // 3. Fallback
-  return ['Later']
 }
 
 function setDraggable(isDraggable) {
