@@ -41,7 +41,6 @@ function listen(el) {
     if (e.metaKey && e.key === 's') {
       e.preventDefault()
       handleChange(el)
-      // state.set('field-changed', e.target)
     }
   })
 
@@ -51,7 +50,6 @@ function listen(el) {
     if (e.key === 'Enter') {
       el.resize()
       handleChange(el)
-      // state.set('field-changed', e.target)
     } else {
       debouncedUpdate(e.target)
     }
@@ -62,7 +60,6 @@ function listen(el) {
       // let value be set, then:
       el.resize()
       handleChange(el)
-      // state.set('field-changed', e.target)
     })
   })
 
@@ -71,7 +68,6 @@ function listen(el) {
       // let value be set, then:
       el.resize()
       handleChange(el)
-      // state.set('field-changed', e.target)
     })
   })
 }

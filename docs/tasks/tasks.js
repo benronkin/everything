@@ -218,9 +218,6 @@ async function handleFieldChange(el) {
     if (!parent) return
     const id = parent.id
 
-    const docs = state.get('main-documents')
-    const idx = docs.findIndex((d) => d.id === id)
-
     if (section === 'due-date' || section === 'due-time') {
       const dateString = parent.querySelector('.due-date').value
       const timeString = parent.querySelector('.due-time').value
@@ -234,8 +231,6 @@ async function handleFieldChange(el) {
       }
       value = value.toISOString()
       section = 'starts_at'
-      docs[idx].dueInfo = dueInfo(value)
-      state.set('main-documents', docs)
     }
 
     const { error } = await updateTask({ id, section, value })
