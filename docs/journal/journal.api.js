@@ -30,13 +30,8 @@ export async function fetchGeoIndex() {
   return { tree, error }
 }
 
-export async function fetchRecentEntries() {
-  const { journal, error } = await getWebApp(`${url}/read`)
-  return { data: journal, error }
-}
-
-export async function pageEntries(page) {
-  const { journal, error } = await getWebApp(`${url}/list?page=${page}`)
+export async function pageEntries(page = 0) {
+  const { journal, error } = await getWebApp(`${url}/read?page=${page}`)
   return { data: journal, error }
 }
 

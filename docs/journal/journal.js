@@ -18,7 +18,6 @@ import {
   fetchDefaults,
   fetchEntryPhotosMetadata,
   fetchGeoIndex,
-  fetchRecentEntries,
   pageEntries,
   searchEntries,
   updateEntry,
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
 
     const [{ data }, { tree }, { defaults }, { user }] = await Promise.all([
-      fetchRecentEntries(),
+      pageEntries(),
       fetchGeoIndex(),
       fetchDefaults(),
       getMe(),
@@ -56,6 +55,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('user', user)
     state.set('default-page', 'journal')
     window.state = state // avail to browser console
+
+    document
+      .querySelector('#next-page')
+      .classList.toggle('hidden', data.length < 20)
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
     console.trace(error)
