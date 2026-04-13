@@ -11,9 +11,9 @@ export function createEntryTitle({ location, visit_date, rating }) {
 
   const ratings = [
     { value: '', label: '' },
-    { value: 'great', label: '🔥' },
-    { value: 'good', label: '👍' },
-    { value: 'medium', label: '☑️' },
+    { value: 'great', label: '😍' },
+    { value: 'good', label: '😀' },
+    { value: 'medium', label: '😐' },
     { value: 'bad', label: '🤮' },
   ]
   if (!rating) rating = ''
