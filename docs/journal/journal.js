@@ -214,7 +214,9 @@ async function reactEntryDelete() {
 }
 
 async function reactPageEntries() {
-  const page = (state.get('journal-page') || -1) + 1
+  let page = state.get('journal-page')
+  if (typeof page === 'undefined') page = 0
+  page++
   const { data, error } = await pageEntries(page)
 
   if (error) {
@@ -237,7 +239,7 @@ async function reactPageEntries() {
 }
 
 async function reactRecentEntries() {
-  state.set('journal-page', -1)
+  state.set('journal-page', 0)
   const { data, error } = await fetchRecentEntries()
   if (error) {
     setMessage(error, { type: 'danger' })
