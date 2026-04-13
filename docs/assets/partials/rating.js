@@ -1,4 +1,5 @@
 import { createSelectGroup } from '../../assets/partials/selectGroup.js'
+import { ratingOptions } from './ratingOptions.js'
 import { injectStyle } from '../js/ui.js'
 
 const css = `
@@ -21,13 +22,7 @@ export function createRating({ id } = {}) {
       select: 'field',
       icon: 'fa-face-smile',
     },
-    options: [
-      { value: '', label: '' },
-      { value: 'great', label: '😍' },
-      { value: 'good', label: '😀' },
-      { value: 'medium', label: '😐' },
-      { value: 'bad', label: '🤮' },
-    ],
+    options: ratingOptions,
   })
 
   return el
