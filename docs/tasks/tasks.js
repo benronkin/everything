@@ -235,15 +235,13 @@ async function handleFieldChange(el) {
       value = value.toISOString()
       section = 'starts_at'
       docs[idx].dueInfo = dueInfo(value)
+      state.set('main-documents', docs)
     }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {
       throw new Error(error)
     }
-
-    docs[idx][section] = value
-    state.set('main-documents', docs)
 
     setMessage('Saved', { type: 'quiet' })
   } catch (err) {
