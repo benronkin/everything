@@ -143,7 +143,8 @@ function react() {
     const { error, message } = await updatePhotoCaption({ id, value })
     state.set('photo-caption-response', { error, message })
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
+    const entryId = state.get('active-doc')
+    const photosMetadata = await fetchEntryPhotosMetadata(entryId)
     state.set('photos-metadata', photosMetadata)
   })
 }
