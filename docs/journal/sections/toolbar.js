@@ -16,14 +16,6 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
       createIcon({
-        id: 'recent-entries',
-        classes: { primary: 'fa-calendar', other: ['primary', 'hidden'] },
-      }),
-      createIcon({
-        id: 'page-entries',
-        classes: { primary: 'fa-list', other: ['primary'] },
-      }),
-      createIcon({
         id: 'copy-address',
         classes: { primary: 'fa-clipboard', other: ['primary'] },
       }),
@@ -39,7 +31,6 @@ function react(el) {
   state.on('app-mode', 'Journal toolbar', (appMode) => {
     const icons = [
       { id: 'back', hideOn: appMode === 'left-panel' },
-      { id: 'page-entries', hideOn: appMode === 'main-panel' },
       { id: 'copy-address', hideOn: appMode === 'left-panel' },
     ]
 
@@ -52,16 +43,6 @@ function react(el) {
   state.on('icon-click:back', 'Journal toolbar', () => {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
-  })
-
-  state.on('icon-click:page-entries', 'Journal toolbar', () => {
-    el.querySelector('#page-entries').classList.add('hidden')
-    el.querySelector('#recent-entries').classList.remove('hidden')
-  })
-
-  state.on('icon-click:recent-entries', 'Journal toolbar', () => {
-    el.querySelector('#page-entries').classList.remove('hidden')
-    el.querySelector('#recent-entries').classList.add('hidden')
   })
 
   state.on('icon-click:copy-address', 'Journal toolbar', () => {

@@ -98,11 +98,7 @@ function react() {
 
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)
 
-  state.on('icon-click:page-entries', 'journal', reactPageEntries)
-
   state.on('button-click:next-page', 'journal', reactPageEntries)
-
-  state.on('icon-click:recent-entries', 'journal', reactRecentEntries)
 
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 
@@ -236,16 +232,6 @@ async function reactPageEntries() {
   document
     .querySelector('#next-page')
     .classList.toggle('hidden', data.length < 20)
-}
-
-async function reactRecentEntries() {
-  state.set('journal-page', 0)
-  const { data, error } = await fetchRecentEntries()
-  if (error) {
-    setMessage(error, { type: 'danger' })
-  } else {
-    state.set('main-documents', data || [])
-  }
 }
 
 async function reactSearch() {
