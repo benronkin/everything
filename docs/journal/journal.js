@@ -19,6 +19,7 @@ import {
   fetchEntryPhotosMetadata,
   fetchGeoIndex,
   fetchRecentEntries,
+  pageEntries,
   searchEntries,
   updateEntry,
   updateJournalDefaults,
@@ -96,6 +97,12 @@ function react() {
   state.on('form-submit:left-panel-search', 'journal', reactSearch)
 
   state.on('icon-click:add-entry', 'journal', reactEntryAdd)
+
+  state.on('icon-click:page-entries', 'journal', reactPageEntries)
+
+  state.on('button-click:next-page', 'journal', reactPageEntries)
+
+  state.on('icon-click:recent-entries', 'journal', reactRecentEntries)
 
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 
@@ -204,6 +211,39 @@ async function reactEntryDelete() {
     .filter((doc) => doc.id !== id)
   state.set('main-documents', filteredDocs)
   state.set('app-mode', 'left-panel')
+}
+
+async function reactPageEntries() {
+  const page = (state.get('journal-page') || -1) + 1
+  const { data, error } = await pageEntries(page)
+
+  if (error) {
+    console.error(`Journal server error: ${error}`)
+    return
+  }
+
+  state.set('journal-page', page)
+  let entries = []
+  if (page === 0) {
+    entries = data
+  } else {
+    entries = [...state.get('main-documents'), ...data]
+  }
+  state.set('main-documents', entries)
+
+  document
+    .querySelector('#next-page')
+    .classList.toggle('hidden', data.length < 20)
+}
+
+async function reactRecentEntries() {
+  state.set('journal-page', -1)
+  const { data, error } = await fetchRecentEntries()
+  if (error) {
+    setMessage(error, { type: 'danger' })
+  } else {
+    state.set('main-documents', data || [])
+  }
 }
 
 async function reactSearch() {

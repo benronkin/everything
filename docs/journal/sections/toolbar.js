@@ -2,7 +2,6 @@ import { state } from '../../assets/js/state.js'
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { setMessage } from '../../assets/js/ui.js'
-// import { log } from '../../assets/js/logger.js'
 
 export function toolbar() {
   const el = createToolbar({
@@ -10,15 +9,23 @@ export function toolbar() {
     children: [
       createIcon({
         id: 'back',
-        classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
+        classes: { primary: 'fa-chevron-left', other: ['primary'] },
       }),
       createIcon({
         id: 'add-entry',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
       createIcon({
+        id: 'recent-entries',
+        classes: { primary: 'fa-calendar', other: ['primary', 'hidden'] },
+      }),
+      createIcon({
+        id: 'page-entries',
+        classes: { primary: 'fa-list', other: ['primary'] },
+      }),
+      createIcon({
         id: 'copy-address',
-        classes: { primary: 'fa-clipboard', other: ['primary', 'hidden'] },
+        classes: { primary: 'fa-clipboard', other: ['primary'] },
       }),
     ],
   })
@@ -30,17 +37,31 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'Journal toolbar', (appMode) => {
-    const mainPanelEls = ['#back', '#copy-address']
+    const icons = [
+      { id: 'back', hideOn: appMode === 'left-panel' },
+      { id: 'page-entries', hideOn: appMode === 'main-panel' },
+      { id: 'copy-address', hideOn: appMode === 'left-panel' },
+    ]
 
-    mainPanelEls.forEach((i) => {
-      const itemEl = el.querySelector(i)
-      itemEl.classList.toggle('hidden', appMode !== 'main-panel')
+    icons.forEach(({ id, hideOn }) => {
+      const icon = el.querySelector(`#${id}`)
+      icon.classList.toggle('hidden', hideOn)
     })
   })
 
   state.on('icon-click:back', 'Journal toolbar', () => {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
+  })
+
+  state.on('icon-click:page-entries', 'Journal toolbar', () => {
+    el.querySelector('#page-entries').classList.add('hidden')
+    el.querySelector('#recent-entries').classList.remove('hidden')
+  })
+
+  state.on('icon-click:recent-entries', 'Journal toolbar', () => {
+    el.querySelector('#page-entries').classList.remove('hidden')
+    el.querySelector('#recent-entries').classList.add('hidden')
   })
 
   state.on('icon-click:copy-address', 'Journal toolbar', () => {

@@ -10,7 +10,7 @@ export async function createEntry(id, visit_date) {
 
 export async function deleteEntry(id, password) {
   const { journal, error } = await getWebApp(
-    `${url}/delete?id=${id}&password=${password}`
+    `${url}/delete?id=${id}&password=${password}`,
   )
   return { data: journal, error }
 }
@@ -35,12 +35,17 @@ export async function fetchRecentEntries() {
   return { data: journal, error }
 }
 
+export async function pageEntries(page) {
+  const { journal, error } = await getWebApp(`${url}/list?page=${page}`)
+  return { data: journal, error }
+}
+
 /**
  * @param {String} q - The search query
  */
 export async function searchEntries(q) {
   const { journal, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`
+    `${url}/search?q=${q.trim().toLowerCase()}`,
   )
   return { data: journal, error }
 }
