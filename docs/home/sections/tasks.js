@@ -66,19 +66,19 @@ function tasksHeader(hasTasks) {
  * but here we delete them and load only the first two
  */
 function tasksBody(tasks) {
-  // sort tasks by starts_at to surface
-  // most urgent tasks. Append tasks with no due date
-  const dueTasks = tasks
+  // show overdue or today tasks followed by non-due tasks
+  const urgentTasks = tasks
     .filter((t) => t.starts_at)
-    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
     .map((t) => {
       t.dueInfo = dueInfo(t.starts_at)
       return t
     })
+    .filter((t) => ['Overdue', 'Today'].includes(t.dueInfo.label))
+    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
 
   const unDueTasks = tasks.filter((t) => !t.starts_at)
 
-  tasks = [...dueTasks, ...unDueTasks].slice(0, 3)
+  tasks = [...urgentTasks, ...unDueTasks].slice(0, 3)
 
   const list = titleDetailsList()
   const children = tasks.map((doc) => createTaskHelper(doc, 'priority', false))
