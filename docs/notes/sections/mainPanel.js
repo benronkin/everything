@@ -314,6 +314,17 @@ async function updateHistories() {
 
   if (!histories.length) return
 
+  rightPanelEl.appendChild(
+    createDiv({
+      className: 'toc-item flex align-center',
+      dataset: {
+        history: 'current',
+        current: document.querySelector('.markdown-viewer').innerHTML,
+      },
+      html: createSpan({ html: 'Current', className: 'smaller' }),
+    }),
+  )
+
   histories.forEach(({ id, created_at }, idx) => {
     const date = new Date(created_at)
     const dateString = date.toLocaleString(date, {
@@ -331,14 +342,12 @@ async function updateHistories() {
       html: [createSpan({ html: dateString, className: 'smaller' })],
     })
 
-    if (idx) {
-      div.appendChild(
-        createButton({
-          html: 'Restore',
-          className: 'history-btn secondary hidden',
-        }),
-      )
-    }
+    div.appendChild(
+      createButton({
+        html: 'Restore',
+        className: 'history-btn secondary hidden',
+      }),
+    )
 
     rightPanelEl.appendChild(div)
   })
@@ -352,6 +361,7 @@ async function updateHistories() {
       rightPanelEl
         .querySelectorAll('.history-btn')
         .forEach((btn) => btn.classList.add('hidden'))
+
       div.querySelector('.history-btn')?.classList.remove('hidden')
 
       const isRestore = !!('button', e.target.closest('button'))
@@ -364,9 +374,17 @@ async function updateHistories() {
         document.querySelector('#history').classList.remove('on')
       } else {
         const historyId = e.target.closest('[data-history]').dataset.history
-        const { history } = await fetchNoteHistory(historyId)
-        document.querySelector('.markdown-viewer').innerHTML = history.note
-        state.set('note-body', history.note)
+        let note
+
+        if (historyId === 'current') {
+          note = e.target.closest('[data-history]').dataset.current
+        } else {
+          const { history } = await fetchNoteHistory(historyId)
+          note = history.note
+        }
+
+        document.querySelector('.markdown-viewer').innerHTML = note
+        state.set('note-body', note)
       }
     }),
   )
