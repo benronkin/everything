@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return
   }
 
-  state.set('main-documents', tasks.slice(0, 2))
+  state.set('main-documents', tasks)
   state.set('user', user)
   state.set('wotd', entry)
 })

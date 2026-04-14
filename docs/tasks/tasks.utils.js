@@ -35,7 +35,7 @@ export function createDueLabel(dueInfo, viewMode) {
   return dueHTML
 }
 
-export function createTaskHelper(doc, viewMode) {
+export function createTaskHelper(doc, viewMode, expandable = true) {
   let dueHTML = createDueLabel(doc.dueInfo, viewMode)
 
   return createTask({
@@ -45,6 +45,7 @@ export function createTaskHelper(doc, viewMode) {
     steps: doc.steps,
     startAt: doc.starts_at,
     dueInfo: dueHTML,
+    expandable,
   })
 }
 

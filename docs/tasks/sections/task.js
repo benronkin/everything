@@ -74,6 +74,7 @@ export function createTask({
   id,
   dueInfo,
   className = '',
+  expandable = true,
 } = {}) {
   injectStyle(css)
 
@@ -82,9 +83,9 @@ export function createTask({
     className: `td-item list-item ${className}`.trim(),
   })
 
-  build(el, dueInfo)
+  build(el, dueInfo, expandable)
   react(el)
-  listen(el)
+  listen(el, expandable)
 
   let ta = el.querySelector('.title-ta')
   ta.value = (title || '').toString().trim()
@@ -118,7 +119,7 @@ export function createTask({
   return el
 }
 
-function build(el, dueInfo) {
+function build(el, dueInfo, expandable) {
   let titleWrapper = createDiv({ className: 'title-wrapper' })
   el.appendChild(titleWrapper)
 
@@ -133,23 +134,25 @@ function build(el, dueInfo) {
   })
   titleWrapper.appendChild(titleEl)
 
-  let iconsEl = createDiv({ className: 'icons' })
-  titleWrapper.appendChild(iconsEl)
+  if (expandable) {
+    let iconsEl = createDiv({ className: 'icons' })
+    titleWrapper.appendChild(iconsEl)
 
-  iconsEl.appendChild(
-    createIcon({
-      classes: {
-        primary: 'fa-chevron-left',
-        secondary: 'fa-chevron-down',
-        other: ['expander'],
-      },
-    }),
-  )
-  iconsEl.appendChild(
-    createIcon({
-      classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] },
-    }),
-  )
+    iconsEl.appendChild(
+      createIcon({
+        classes: {
+          primary: 'fa-chevron-left',
+          secondary: 'fa-chevron-down',
+          other: ['expander'],
+        },
+      }),
+    )
+    iconsEl.appendChild(
+      createIcon({
+        classes: { primary: 'fa-sort', other: ['sorter', 'hidden'] },
+      }),
+    )
+  }
 
   const detailsWrapperEl = createDiv({ className: 'details-wrapper hidden' })
   el.appendChild(detailsWrapperEl)
@@ -197,14 +200,16 @@ function react(el) {
   })
 }
 
-function listen(el) {
-  el.querySelector('.expander').addEventListener('click', (e) => {
-    el.querySelector('.details-wrapper').classList.toggle(
-      'hidden',
-      e.target.classList.contains('fa-chevron-left'),
-    )
-    document.querySelector('[name="details"]').resize()
-  })
+function listen(el, expandable) {
+  if (expandable) {
+    el.querySelector('.expander').addEventListener('click', (e) => {
+      el.querySelector('.details-wrapper').classList.toggle(
+        'hidden',
+        e.target.classList.contains('fa-chevron-left'),
+      )
+      document.querySelector('[name="details"]').resize()
+    })
+  }
 
   el.querySelector('.add-step').addEventListener('change', (e) => {
     e.preventDefault()

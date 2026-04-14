@@ -3,7 +3,7 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { titleDetailsList } from '../../tasks/sections/titleDetailsList.js'
-import { createTitleDetailsItem } from '../../assets/partials/titleDetailsItem.js'
+import { createTaskHelper, dueInfo } from '../../tasks/tasks.utils.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { deleteTask, updateTask } from '../../tasks/tasks.api.js'
 
@@ -39,12 +39,15 @@ function react(el) {
   state.on(
     'button-click:tasks-header-btn',
     'tasks',
-    () => (window.location.href = '../tasks/index.html')
+    () => (window.location.href = '../tasks/index.html'),
   )
 }
 
 function tasksHeader(hasTasks) {
-  const div = createDiv({ className: 'flex align-center', id: 'tasks-header' })
+  const div = createDiv({
+    className: 'flex align-center mb-10',
+    id: 'tasks-header',
+  })
   div.appendChild(createHeader({ type: 'h4', html: 'TASKS' }))
   div.appendChild(
     createButton({
@@ -53,7 +56,7 @@ function tasksHeader(hasTasks) {
       html: hasTasks
         ? `<i class="fa-solid fa-list-check"></i> VIEW ALL`
         : `<i class="fa-solid fa-plus"></i> ADD`,
-    })
+    }),
   )
   return div
 }
@@ -63,14 +66,23 @@ function tasksHeader(hasTasks) {
  * but here we delete them and load only the first two
  */
 function tasksBody(tasks) {
-  const list = titleDetailsList()
-  const children = tasks.map((doc) =>
-    createTitleDetailsItem({
-      id: doc.id,
-      title: doc.title,
-      details: doc.details,
+  // sort tasks by starts_at to surface
+  // most urgent tasks. Append tasks with no due date
+  const dueTasks = tasks
+    .filter((t) => t.starts_at)
+    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+    .map((t) => {
+      t.dueInfo = dueInfo(t.starts_at)
+      return t
     })
-  )
+
+  const unDueTasks = tasks.filter((t) => !t.starts_at)
+
+  tasks = [...dueTasks, ...unDueTasks].slice(0, 3)
+
+  const list = titleDetailsList()
+  const children = tasks.map((doc) => createTaskHelper(doc, 'priority', false))
+
   list.deleteChildren().addChildren(children)
   return list
 }

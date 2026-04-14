@@ -67,7 +67,7 @@ function react(el) {
 
 function createPriorityList() {
   const docs = state.get('main-documents')
-  const children = docs.map((doc) => createTaskHelper(doc))
+  const children = docs.map((doc) => createTaskHelper(doc, 'priority'))
   return children
 }
 
