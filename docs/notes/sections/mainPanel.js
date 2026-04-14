@@ -365,7 +365,7 @@ async function updateHistories() {
       } else {
         const historyId = e.target.closest('[data-history]').dataset.history
         const { history } = await fetchNoteHistory(historyId)
-        document.querySelector('.viewer').innerHTML = history.note
+        document.querySelector('.markdown-viewer').innerHTML = history.note
         state.set('note-body', history.note)
       }
     }),
