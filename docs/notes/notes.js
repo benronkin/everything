@@ -128,7 +128,7 @@ async function reactAddNote({ id: btnId }) {
   state.set('app-mode', 'main-panel')
 
   delete addBtn.disabled
-  if (document.querySelector('.editor').classList.contains('hidden')) {
+  if (document.querySelector('.markdown-editor').classList.contains('hidden')) {
     document.querySelector('#edit').click()
   }
 }
@@ -143,6 +143,12 @@ async function reactNoteDelete() {
   setMessage(message)
 
   modalEl.close()
+
+  // remove the id=note_id query param from the address bar
+  // and from browser history (if needed, not sure it is)
+  const url = new URL(window.location)
+  url.searchParams.delete('id')
+  window.history.replaceState({}, '', url)
 
   state.set('active-doc', null)
   const filteredDocs = state

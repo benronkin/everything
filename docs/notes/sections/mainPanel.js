@@ -255,9 +255,7 @@ function listen(el) {
 }
 
 function updateTableOfContents() {
-  console.log('need to refactor updateTableOfContents')
-  return
-  const viewerEl = document.querySelector('.viewer')
+  const viewerEl = document.querySelector('.markdown-viewer')
   const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
   const rightPanelEl = document.querySelector('#right-panel')
 
@@ -364,8 +362,8 @@ async function updateHistories() {
 
       div.querySelector('.history-btn')?.classList.remove('hidden')
 
-      const isRestore = !!('button', e.target.closest('button'))
-      if (isRestore) {
+      const clickedRestore = e.target.closest('button')
+      if (clickedRestore) {
         const note = state.get('note-body')
         document.querySelector('.markdown-editor').value = note
         document.querySelector('.markdown-editor').resize()

@@ -54,6 +54,7 @@ export async function shareNote({ id, peers }) {
 }
 
 export async function updateNote({ id, title, note }) {
-  const { message } = await postWebAppJson(`${url}/update`, { id, title, note })
+  const resp = await postWebAppJson(`${url}/update`, { id, title, note })
+  const { message } = resp
   return { message }
 }
