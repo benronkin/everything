@@ -35,7 +35,6 @@ const css = `
 #main-panel input {
   border-bottom: 1px solid var(--gray0);
 }
-/* headline style for the title input */
 .input-group #note-title, .input-group .fa-note-sticky {
   font-size: 1.8rem;      /* big, h2-ish */
   font-weight: 700;
@@ -47,8 +46,6 @@ const css = `
   width: 100%;
   padding: 4px 0 2px;
 }
-
-/* add a faint divider under the title so it still feels editable */
 #note-title:focus,
 #note-title:hover {
   border-bottom: 1px solid var(--gray3);
@@ -91,6 +88,9 @@ const css = `
 .toc-item:hover,
 .toc-item.active {
   background: var(--gray2);
+}
+.markdown-viewer h1 {
+  font-size: 2.1rem;
 }
 `
 
