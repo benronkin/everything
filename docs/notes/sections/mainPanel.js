@@ -90,7 +90,10 @@ const css = `
   background: var(--gray2);
 }
 .markdown-viewer h1 {
-  font-size: 2.1rem;
+  font-size: 2.2rem;
+}
+.markdown-viewer h2 {
+  font-size: 2rem;
 }
 `
 
