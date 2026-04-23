@@ -98,7 +98,7 @@ function build() {
 
 function react() {
   state.on('icon-click:back', 'notes', () => {
-    handleSidebarState('labels')
+    handleSidebarState('close')
   })
 
   state.on('field-changed', 'notes', handleFieldChange)
@@ -214,6 +214,13 @@ async function handleFieldChange(el) {
 
 function handleSidebarState(use) {
   const rightPanelEl = document.getElementById('right-panel')
+
+  if (use === 'close') {
+    state.set('sidebar-use', null)
+    rightPanelEl.classList.remove('open')
+    return
+  }
+
   const activeUse = state.get('sidebar-use')
 
   if (activeUse !== use) {
