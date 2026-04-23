@@ -75,8 +75,9 @@ const css = `
   background: var(--teal2);
   color: black;
   font-weight: 700;
-  padding: 10px;
-  transition: all 0.3s ease-in-out;;
+  padding: 20px 10px;
+  transition: all 0.3s ease-in-out;
+  margin: 0 0 20px 0;
 }
 .toc-item {
   cursor: pointer;
