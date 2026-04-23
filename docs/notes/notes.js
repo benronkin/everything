@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
 
     state.set('note-labels', [
-      ['123abc', 'Travel'],
-      ['345def', 'Coding'],
+      ['123abc', 'Travel', true],
+      ['345def', 'Coding', false],
     ])
-    document.querySelector('#labels').click()
+    // document.querySelector('#labels').click()
 
     setMessage()
   } catch (error) {
@@ -114,6 +114,12 @@ function listen() {
       document
         .querySelectorAll('[data-right-pannel-toggler]')
         .forEach((i) => i.classList.remove('on'))
+      state.set('sidebar-use', null)
+    } else {
+      if (!e.target.closest('.fa-ellipsis-vertical')) {
+        // not created until ellipsis is clicked for first time
+        document.querySelector('#label-menu')?.classList.add('hidden')
+      }
     }
   })
 }

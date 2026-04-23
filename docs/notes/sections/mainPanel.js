@@ -211,27 +211,24 @@ function react(el) {
   })
 
   state.on('icon-click:toc', 'mainPanel', () => {
-    const rightPanelEl = document.getElementById('right-panel')
-    if (!rightPanelEl.classList.contains('open')) {
+    handleSidebarState('toc')
+    if (state.get('sidebar-use') === 'toc') {
       updateTableOfContents()
     }
-    rightPanelEl.classList.toggle('open')
   })
 
   state.on('icon-click:labels', 'mainPanel', () => {
-    const rightPanelEl = document.getElementById('right-panel')
-    if (!rightPanelEl.classList.contains('open')) {
-      labels(rightPanelEl)
+    handleSidebarState('labels')
+    if (state.get('sidebar-use') === 'labels') {
+      labels(document.getElementById('right-panel'))
     }
-    rightPanelEl.classList.toggle('open')
   })
 
   state.on('icon-click:history', 'mainPanel', () => {
-    const rightPanelEl = document.getElementById('right-panel')
-    if (!rightPanelEl.classList.contains('open')) {
+    handleSidebarState('history')
+    if (state.get('sidebar-use') === 'history') {
       updateHistories()
     }
-    rightPanelEl.classList.toggle('open')
   })
 
   state.on('icon-click:back', 'toolbar', async () => {
@@ -401,4 +398,16 @@ async function updateHistories() {
   )
 
   rightPanelEl.querySelector('[data-history]').classList.add('active')
+}
+
+function handleSidebarState(use) {
+  const rightPanelEl = document.getElementById('right-panel')
+  const activeUse = state.get('sidebar-use')
+
+  if (activeUse !== use) {
+    state.set('sidebar-use', use)
+  } else {
+    state.set('sidebar-use', null)
+  }
+  rightPanelEl.classList.toggle('open', state.get('sidebar-use'))
 }
