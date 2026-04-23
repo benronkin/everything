@@ -57,6 +57,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'notes')
 
     window.state = state // avail to browser console
+
+    state.set('note-labels', [
+      ['123abc', 'Travel'],
+      ['345def', 'Coding'],
+    ])
+    document.querySelector('#labels').click()
+
     setMessage()
   } catch (error) {
     console.trace(error)

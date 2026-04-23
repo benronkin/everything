@@ -5,6 +5,7 @@ import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { labels } from './labels.js'
 import { state } from '../../assets/js/state.js'
 import {
   fetchNote,
@@ -213,6 +214,14 @@ function react(el) {
     const rightPanelEl = document.getElementById('right-panel')
     if (!rightPanelEl.classList.contains('open')) {
       updateTableOfContents()
+    }
+    rightPanelEl.classList.toggle('open')
+  })
+
+  state.on('icon-click:labels', 'mainPanel', () => {
+    const rightPanelEl = document.getElementById('right-panel')
+    if (!rightPanelEl.classList.contains('open')) {
+      labels(rightPanelEl)
     }
     rightPanelEl.classList.toggle('open')
   })

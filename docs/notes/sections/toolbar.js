@@ -1,8 +1,8 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createDocLinkIcon } from '../../assets/partials/docLinkIcon.js'
-import { createSelect } from '../../assets/partials/select.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
+// import { createSelect } from '../../assets/partials/select.js'
 import { state } from '../../assets/js/state.js'
 
 export function toolbar() {
@@ -31,12 +31,17 @@ export function toolbar() {
           primary: 'fa-book-open',
           other: 'primary hidden',
         },
-        dataset: { rightPannelToggler: true },
+      }),
+      createIcon({
+        id: 'labels',
+        classes: {
+          primary: 'fa-bookmark',
+          other: 'primary',
+        },
       }),
       createIcon({
         id: 'history',
         classes: { primary: 'fa-clock-rotate-left', other: 'primary hidden' },
-        dataset: { rightPannelToggler: true },
       }),
       createDocLinkIcon({
         id: 'doc-link',
@@ -53,7 +58,7 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) =>
-    toggleToolbarButtons({ appMode })
+    toggleToolbarButtons({ appMode }),
   )
 
   state.on('active-doc', 'notes', (id) => {
@@ -66,7 +71,7 @@ function react(el) {
           peers: doc.peers,
           className: 'ml-auto',
           showShare: doc.role === 'owner',
-        })
+        }),
       )
     }
   })
@@ -99,7 +104,7 @@ function toggleToolbarButtons({ appMode, i }) {
   const back = document.querySelector('#back')
   const edit = document.querySelector('#edit')
   const toc = document.querySelector('#toc')
-  const link = document.querySelector('#doc-link')
+  // const link = document.querySelector('#doc-link')
   const history = document.querySelector('#history')
 
   const isLeft = appMode === 'left-panel'
@@ -109,8 +114,8 @@ function toggleToolbarButtons({ appMode, i }) {
   back.classList.toggle('hidden', isLeft || isBack)
   edit.classList.toggle('hidden', isLeft || isBack || isOn(history))
   history.classList.toggle('hidden', isLeft || isBack || isOn(edit))
-  toc.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
-  link.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
+  // toc.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
+  // link.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
 
   if (isLeft || isBack) {
     edit.classList.remove('on')
