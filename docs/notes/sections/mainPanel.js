@@ -148,8 +148,6 @@ function build(el) {
 
   el.appendChild(createMarkdown({ name: 'note', iconsVisible: false }))
 
-  el.appendChild(createDiv({ id: 'right-panel' }))
-
   el.appendChild(dangerZone())
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
@@ -165,8 +163,6 @@ function react(el) {
     const inMainPanel = appMode === 'main-panel'
 
     el.classList.toggle('hidden', !inMainPanel)
-
-    document.querySelector('#right-panel').classList.remove('open')
   })
 
   state.on('active-doc', 'mainPanel', async (id) => {

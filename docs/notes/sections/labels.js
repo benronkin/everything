@@ -58,8 +58,10 @@ export function labels(el) {
   )
 
   const labels = state.get('note-labels')
+  const labelAssignments = state.get('note-label-assignments')
+
   for (const label of labels) {
-    el.appendChild(createLabelElement(label))
+    el.appendChild(createLabelElement(label, labelAssignments))
   }
 }
 
@@ -68,21 +70,27 @@ function react(el) {}
 /**
  * Create a label element with title and more icon
  */
-function createLabelElement([id, title, assigned]) {
+function createLabelElement([id, title], labelAssignments) {
+  const html = createSpan({ html: title })
+
+  if (state.get('app-mode') === 'main-panel') {
+    const isAssigned = labelAssignments.find((a) => a[1] === id)
+    html.appendChild(
+      createIcon({
+        classes: {
+          primary: 'fa-check',
+          other: [`ml-10 ${isAssigned ? '' : 'hidden'}`],
+        },
+      }),
+    )
+  }
+
   const labelDiv = createDiv({
     id,
     className: 'toc-item flex align-center',
     html: [
       createDiv({
-        html: [
-          createSpan({ html: title }),
-          createIcon({
-            classes: {
-              primary: 'fa-check',
-              other: [`ml-10 ${assigned ? '' : 'hidden'}`],
-            },
-          }),
-        ],
+        html,
       }),
       createIcon({
         classes: { primary: 'fa-ellipsis-vertical' },
@@ -112,26 +120,35 @@ function handleLabelClick() {
 function handleMoreClick(e) {
   e.stopPropagation()
   const labelDiv = e.target.parentElement
-  const visibleCheck = !labelDiv
-    .querySelector('.fa-check')
-    .classList.contains('hidden')
 
   let menuDiv = document.querySelector('#label-menu')
   if (!menuDiv) {
     menuDiv = createDiv({
       id: 'label-menu',
       html: [
-        createSpan({
-          id: 'assign-label',
-          html: visibleCheck ? 'Unassign' : 'Assign',
-        }),
         createSpan({ id: 'edit-label', html: 'Edit' }),
         createSpan({ id: 'delete-label', html: 'Delete' }),
-        createSpan({ id: 'cancel-label', html: 'Cancel' }),
       ],
       dataset: { labelId: labelDiv.id },
     })
     document.querySelector('#right-panel').appendChild(menuDiv)
+  }
+
+  if (state.get('app-mode') === 'main-panel') {
+    const visibleCheck = !labelDiv
+      .querySelector('.fa-check')
+      .classList.contains('hidden')
+
+    menuDiv.prepend(
+      createSpan({
+        id: 'assign-label',
+        html: visibleCheck ? 'Unassign' : 'Assign',
+      }),
+    )
+
+    menuDiv
+      .querySelector('#assign-label')
+      .addEventListener('click', handleAssignLabel)
   }
 
   const rect = e.currentTarget.getBoundingClientRect()
@@ -139,14 +156,6 @@ function handleMoreClick(e) {
   menuDiv.classList.remove('hidden')
   menuDiv.style.top = `${rect.bottom - 90}px`
   menuDiv.style.left = `165px`
-
-  menuDiv
-    .querySelector('#assign-label')
-    .addEventListener('click', handleAssignLabel)
-
-  menuDiv
-    .querySelector('#cancel-label')
-    .addEventListener('click', handleCancelLabel)
 }
 
 function handleAssignLabel(e) {
@@ -160,8 +169,4 @@ function handleAssignLabel(e) {
   checkIcon.classList.toggle('hidden')
 
   console.log('labelId', labelId)
-}
-
-function handleCancelLabel() {
-  document.getElementById('label-menu').classList.add('hidden')
 }

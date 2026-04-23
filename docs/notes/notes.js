@@ -59,8 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.state = state // avail to browser console
 
     state.set('note-labels', [
-      ['123abc', 'Travel', true],
-      ['345def', 'Coding', false],
+      ['123abc', 'Travel'],
+      ['345def', 'Coding'],
+    ])
+    state.set('note-label-assignments', [
+      ['eve31e30f1-c8b6-404f-9272-36d913db6ae6', '123abc'],
     ])
     // document.querySelector('#labels').click()
 
@@ -88,12 +91,17 @@ function build() {
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createDiv({ id: 'right-panel' }))
   wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('field-changed', 'books', handleFieldChange)
+  state.on('icon-click:back', 'notes', () => {
+    handleSidebarState('labels')
+  })
+
+  state.on('field-changed', 'notes', handleFieldChange)
 
   state.on('form-submit:left-panel-search', 'notes', reactSearch)
 
@@ -202,4 +210,16 @@ async function handleFieldChange(el) {
 
   updateNote({ id, title, note })
   setMessage('Saved', { type: 'quiet' })
+}
+
+function handleSidebarState(use) {
+  const rightPanelEl = document.getElementById('right-panel')
+  const activeUse = state.get('sidebar-use')
+
+  if (activeUse !== use) {
+    state.set('sidebar-use', use)
+  } else {
+    state.set('sidebar-use', null)
+  }
+  rightPanelEl.classList.toggle('open', state.get('sidebar-use'))
 }

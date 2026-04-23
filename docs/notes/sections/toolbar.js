@@ -102,6 +102,7 @@ function listen() {}
 
 function toggleToolbarButtons({ appMode, i }) {
   const back = document.querySelector('#back')
+  const add = document.querySelector('#add-note')
   const edit = document.querySelector('#edit')
   const toc = document.querySelector('#toc')
   // const link = document.querySelector('#doc-link')
@@ -112,6 +113,7 @@ function toggleToolbarButtons({ appMode, i }) {
   const isOn = (i) => i && i.classList.contains('on')
 
   back.classList.toggle('hidden', isLeft || isBack)
+  add.classList.toggle('hidden', !isLeft)
   edit.classList.toggle('hidden', isLeft || isBack || isOn(history))
   history.classList.toggle('hidden', isLeft || isBack || isOn(edit))
   // toc.classList.toggle('hidden', isOn(edit) || isOn(history) || isLeft)
