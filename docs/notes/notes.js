@@ -15,6 +15,12 @@ import {
   fetchNote,
   searchNotes,
   updateNote,
+  addLabel,
+  assignLabel,
+  deleteLabel,
+  getLabels,
+  unassignLabel,
+  updateLabel,
 } from './notes.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
@@ -113,6 +119,8 @@ function react() {
     const modalEl = document.querySelector('#modal-share')
     modalEl.showModal()
   })
+
+  state.on('note-label-update', 'notes', handleLabelUpdate)
 }
 
 function listen() {
@@ -238,4 +246,33 @@ function handleSidebarState(use) {
     state.set('sidebar-use', null)
   }
   rightPanelEl.classList.toggle('open', state.get('sidebar-use'))
+}
+
+async function handleLabelUpdate(payload) {
+  if (payload.action === 'assign' || payload.action === 'unassign')
+    payload.noteId = state.get('active-doc')
+
+  let resp
+
+  switch (payload.action) {
+    case 'add':
+      resp = await addLabel(payload)
+      break
+    case 'assign':
+      resp = await assignLabel(payload)
+      break
+    case 'delete':
+      resp = await deleteLabel(payload)
+      break
+    case 'unassign':
+      resp = await unassignLabel(payload)
+      break
+    case 'update':
+      resp = await updateLabel(payload)
+      break
+  }
+
+  console.log('resp', resp)
+  document.getElementById('labels-dialog').close()
+  document.getElementById('label-menu').classList.add('hidden')
 }

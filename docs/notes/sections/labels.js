@@ -1,10 +1,8 @@
-import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createInput } from '../../assets/partials/input.js'
-import { createDialog } from '../../assets/composites/dialog.js'
+import { createLabelsDialog } from './labelDialog.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 
@@ -68,8 +66,7 @@ export function labels(el) {
   }
 
   if (!document.querySelector('#dialog')) {
-    const modal = createDialog()
-    document.querySelector('body').appendChild(modal)
+    document.querySelector('body').appendChild(createLabelsDialog())
   }
 
   listen(el)
@@ -100,6 +97,7 @@ function createLabelElement([id, title], labelAssignments) {
   const labelDiv = createDiv({
     id,
     className: 'toc-item flex align-center',
+    dataset: { title },
     html: [
       createDiv({
         html,
@@ -141,7 +139,6 @@ function handleMoreClick(e) {
         createSpan({ id: 'edit-label', html: 'Edit' }),
         createSpan({ id: 'delete-label', html: 'Delete' }),
       ],
-      dataset: { labelId: labelDiv.id },
     })
     document.querySelector('#right-panel').appendChild(menuDiv)
 
@@ -163,10 +160,15 @@ function handleMoreClick(e) {
     }
 
     menuDiv
+      .querySelector('#delete-label')
+      .addEventListener('click', handleDeleteLabel)
+
+    menuDiv
       .querySelector('#edit-label')
       .addEventListener('click', handleEditLabel)
   }
 
+  menuDiv.dataset.labelId = labelDiv.id
   const rect = e.currentTarget.getBoundingClientRect()
 
   menuDiv.classList.remove('hidden')
@@ -176,52 +178,10 @@ function handleMoreClick(e) {
 
 function handleAddLabel() {
   document.querySelector('#label-menu')?.classList.add('hidden')
-  const dialog = document.querySelector('#dialog')
-  dialog.querySelector('.dialog-header').innerHTML = 'Add label'
-
-  const body = dialog.querySelector('.dialog-body')
-  body.innerHTML = ''
-  body.appendChild(
-    createSpan({
-      html: 'Enter a new label name:',
-    }),
-  )
-  body.appendChild(
-    createInput({
-      id: 'label-title',
-      name: 'label-title',
-    }),
-  )
-
-  const btnGroup = dialog.querySelector('.dialog-button-group')
-  btnGroup.innerHTML = ''
-
-  btnGroup.appendChild(
-    createButton({
-      id: 'cancel-dialog',
-      className: 'inverted transparent',
-      html: 'Cancel',
-    }),
-  )
-  btnGroup.appendChild(
-    createButton({
-      id: 'confirm-add-label',
-      className: 'primary',
-      html: 'Create',
-      disabled: true,
-    }),
-  )
-
-  dialog
-    .querySelector('#label-title')
-    .addEventListener('keyup', handleLabelTitleKeyUp)
-
-  dialog
-    .querySelector('#cancel-dialog')
-    .addEventListener('click', handleCancelDialog)
-
-  dialog.showModal()
-  dialog.querySelector('#label-title').focus()
+  document
+    .querySelector('#labels-dialog')
+    .customize({ action: 'add' })
+    .showModal()
 }
 
 /**
@@ -232,15 +192,34 @@ function handleAssignLabel(e) {
   const labelId = menuEl.dataset.labelId
   const labelEl = document.getElementById(labelId)
 
+  document.querySelector('#label-menu')?.classList.add('hidden')
+
   const checkIcon = labelEl.querySelector('.fa-check')
+  const currentAssignState = e.target.innerHTML.toLowerCase()
   const isAssgined = !checkIcon.classList.contains('hidden')
   e.target.innerHTML = isAssgined ? 'Assign' : 'Unassign'
   checkIcon.classList.toggle('hidden')
 
   state.set('note-label-update', {
     labelId,
-    action: e.target.innerHTML.toLowerCase(),
+    action: currentAssignState,
   })
+}
+
+/**
+ *
+ */
+function handleDeleteLabel(e) {
+  e.stopPropagation()
+  const menuEl = e.target.parentElement
+  const labelId = menuEl.dataset.labelId
+  const labelEl = document.getElementById(labelId)
+
+  document.querySelector('#label-menu')?.classList.add('hidden')
+  document
+    .querySelector('#labels-dialog')
+    .customize({ action: 'delete', id: labelId, title: labelEl.dataset.title })
+    .showModal()
 }
 
 /**
@@ -248,77 +227,13 @@ function handleAssignLabel(e) {
  */
 function handleEditLabel(e) {
   e.stopPropagation()
-  const dialog = document.querySelector('#dialog')
-  dialog.querySelector('.dialog-header').innerHTML = 'Edit label'
-
-  const body = dialog.querySelector('.dialog-body')
-  body.innerHTML = ''
-  body.appendChild(
-    createSpan({
-      html: 'Label name:',
-    }),
-  )
-
   const menuEl = e.target.parentElement
   const labelId = menuEl.dataset.labelId
   const labelEl = document.getElementById(labelId)
 
-  body.appendChild(
-    createInput({
-      id: 'label-title',
-      name: 'label-title',
-      value: labelEl.textContent,
-    }),
-  )
-
-  const btnGroup = dialog.querySelector('.dialog-button-group')
-  btnGroup.innerHTML = ''
-
-  btnGroup.appendChild(
-    createButton({
-      id: 'cancel-dialog',
-      className: 'inverted transparent',
-      html: 'Cancel',
-    }),
-  )
-  btnGroup.appendChild(
-    createButton({
-      id: 'confirm-update-label',
-      className: 'primary',
-      html: 'Save',
-    }),
-  )
-
-  dialog
-    .querySelector('#label-title')
-    .addEventListener('keyup', handleLabelTitleKeyUp)
-
-  dialog
-    .querySelector('#cancel-dialog')
-    .addEventListener('click', handleCancelDialog)
-
   document.querySelector('#label-menu')?.classList.add('hidden')
-
-  dialog.showModal()
-  dialog.querySelector('#label-title').focus()
-}
-
-/**
- *
- */
-function handleLabelTitleKeyUp(e) {
-  const value = e.target.value.trim()
-
-  if (document.querySelector('#confirm-add-label'))
-    document.querySelector('#confirm-add-label').disabled = value.length === 0
-
-  if (document.querySelector('#confirm-update-label'))
-    document.querySelector('#confirm-update-label').disabled =
-      value.length === 0
-}
-
-/** */
-function handleCancelDialog(e) {
-  e.stopPropagation()
-  document.querySelector('#dialog').close()
+  document
+    .querySelector('#labels-dialog')
+    .customize({ action: 'update', id: labelId, title: labelEl.dataset.title })
+    .showModal()
 }

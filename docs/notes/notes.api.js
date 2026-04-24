@@ -58,3 +58,46 @@ export async function updateNote({ id, title, note }) {
   const { message } = resp
   return { message }
 }
+
+// ------------------------
+// NOTES LABELS
+// ------------------------
+
+export async function addLabel({ title }) {
+  const resp = await postWebAppJson(`${url}/labels/add`, { title })
+  const { message } = resp
+  return { message }
+}
+
+export async function assignLabel({ labelId, noteId }) {
+  const resp = await postWebAppJson(`${url}/labels/assign`, { labelId, noteId })
+  const { message } = resp
+  return { message }
+}
+
+export async function deleteLabel({ labelId }) {
+  const resp = await postWebAppJson(`${url}/labels/delete`, { labelId })
+  const { message } = resp
+  return { message }
+}
+
+export async function getLabels() {
+  const resp = await getWebApp(`${url}/labels/get`)
+  const { data } = resp
+  return { data }
+}
+
+export async function unassignLabel({ labelId, noteId }) {
+  const resp = await postWebAppJson(`${url}/labels/unassign`, {
+    labelId,
+    noteId,
+  })
+  const { message } = resp
+  return { message }
+}
+
+export async function updateLabel({ labelId, title }) {
+  const resp = await postWebAppJson(`${url}/labels/add`, { labelId, title })
+  const { message } = resp
+  return { message }
+}
