@@ -117,7 +117,9 @@ function react() {
 
 function listen() {
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('dialog')) document.querySelector('#dialog').close()
+    const dialog = document.querySelector('#dialog')
+
+    if (dialog?.open) return
 
     if (!e.target.closest('#right-panel')) {
       document.querySelector('#right-panel').classList.remove('open')
@@ -125,11 +127,14 @@ function listen() {
         .querySelectorAll('[data-right-pannel-toggler]')
         .forEach((i) => i.classList.remove('on'))
       state.set('sidebar-use', null)
-    } else {
-      if (!e.target.closest('.fa-ellipsis-vertical')) {
-        // not created until ellipsis is clicked for first time
-        document.querySelector('#label-menu')?.classList.add('hidden')
-      }
+    }
+
+    if (
+      !e.target.closest('.fa-ellipsis-vertical') &&
+      !e.target.closest('#label-menu')
+    ) {
+      // not created until ellipsis is clicked for first time
+      document.querySelector('#label-menu')?.classList.add('hidden')
     }
   })
 }

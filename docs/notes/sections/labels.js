@@ -67,8 +67,10 @@ export function labels(el) {
     el.appendChild(createLabelElement(label, labelAssignments))
   }
 
-  const modal = createDialog()
-  document.querySelector('body').appendChild(modal)
+  if (!document.querySelector('#dialog')) {
+    const modal = createDialog()
+    document.querySelector('body').appendChild(modal)
+  }
 
   listen(el)
 }
@@ -142,29 +144,33 @@ function handleMoreClick(e) {
       dataset: { labelId: labelDiv.id },
     })
     document.querySelector('#right-panel').appendChild(menuDiv)
-  }
 
-  if (state.get('app-mode') === 'main-panel') {
-    const visibleCheck = !labelDiv
-      .querySelector('.fa-check')
-      .classList.contains('hidden')
+    if (state.get('app-mode') === 'main-panel') {
+      const visibleCheck = !labelDiv
+        .querySelector('.fa-check')
+        .classList.contains('hidden')
 
-    menuDiv.prepend(
-      createSpan({
-        id: 'assign-label',
-        html: visibleCheck ? 'Unassign' : 'Assign',
-      }),
-    )
+      menuDiv.prepend(
+        createSpan({
+          id: 'assign-label',
+          html: visibleCheck ? 'Unassign' : 'Assign',
+        }),
+      )
+
+      menuDiv
+        .querySelector('#assign-label')
+        .addEventListener('click', handleAssignLabel)
+    }
 
     menuDiv
-      .querySelector('#assign-label')
-      .addEventListener('click', handleAssignLabel)
+      .querySelector('#edit-label')
+      .addEventListener('click', handleEditLabel)
   }
 
   const rect = e.currentTarget.getBoundingClientRect()
 
   menuDiv.classList.remove('hidden')
-  menuDiv.style.top = `${rect.bottom - 90}px`
+  menuDiv.style.top = `${rect.top - 60}px`
   menuDiv.style.left = `165px`
 }
 
@@ -218,6 +224,9 @@ function handleAddLabel() {
   dialog.querySelector('#label-title').focus()
 }
 
+/**
+ *
+ */
 function handleAssignLabel(e) {
   const menuEl = e.target.parentElement
   const labelId = menuEl.dataset.labelId
@@ -237,10 +246,75 @@ function handleAssignLabel(e) {
 /**
  *
  */
+function handleEditLabel(e) {
+  e.stopPropagation()
+  const dialog = document.querySelector('#dialog')
+  dialog.querySelector('.dialog-header').innerHTML = 'Edit label'
+
+  const body = dialog.querySelector('.dialog-body')
+  body.innerHTML = ''
+  body.appendChild(
+    createSpan({
+      html: 'Label name:',
+    }),
+  )
+
+  const menuEl = e.target.parentElement
+  const labelId = menuEl.dataset.labelId
+  const labelEl = document.getElementById(labelId)
+
+  body.appendChild(
+    createInput({
+      id: 'label-title',
+      name: 'label-title',
+      value: labelEl.textContent,
+    }),
+  )
+
+  const btnGroup = dialog.querySelector('.dialog-button-group')
+  btnGroup.innerHTML = ''
+
+  btnGroup.appendChild(
+    createButton({
+      id: 'cancel-dialog',
+      className: 'inverted transparent',
+      html: 'Cancel',
+    }),
+  )
+  btnGroup.appendChild(
+    createButton({
+      id: 'confirm-update-label',
+      className: 'primary',
+      html: 'Save',
+    }),
+  )
+
+  dialog
+    .querySelector('#label-title')
+    .addEventListener('keyup', handleLabelTitleKeyUp)
+
+  dialog
+    .querySelector('#cancel-dialog')
+    .addEventListener('click', handleCancelDialog)
+
+  document.querySelector('#label-menu')?.classList.add('hidden')
+
+  dialog.showModal()
+  dialog.querySelector('#label-title').focus()
+}
+
+/**
+ *
+ */
 function handleLabelTitleKeyUp(e) {
   const value = e.target.value.trim()
 
-  document.querySelector('#confirm-add-label').disabled = value.length === 0
+  if (document.querySelector('#confirm-add-label'))
+    document.querySelector('#confirm-add-label').disabled = value.length === 0
+
+  if (document.querySelector('#confirm-update-label'))
+    document.querySelector('#confirm-update-label').disabled =
+      value.length === 0
 }
 
 /** */
