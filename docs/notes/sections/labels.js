@@ -202,6 +202,7 @@ function handleAssignLabel(e) {
 
   state.set('note-label-update', {
     labelId,
+    title: labelEl.textContent,
     action: currentAssignState,
   })
 }

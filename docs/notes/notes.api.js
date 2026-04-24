@@ -70,7 +70,11 @@ export async function addLabel({ title }) {
 }
 
 export async function assignLabel({ labelId, noteId }) {
-  const resp = await postWebAppJson(`${url}/labels/assign`, { labelId, noteId })
+  // title for server message
+  const resp = await postWebAppJson(`${url}/labels/assign`, {
+    labelId,
+    noteId,
+  })
   const { message } = resp
   return { message }
 }
@@ -97,7 +101,7 @@ export async function unassignLabel({ labelId, noteId }) {
 }
 
 export async function updateLabel({ labelId, title }) {
-  const resp = await postWebAppJson(`${url}/labels/add`, { labelId, title })
+  const resp = await postWebAppJson(`${url}/labels/update`, { labelId, title })
   const { message } = resp
   return { message }
 }

@@ -140,6 +140,7 @@ function customize({ action, id, title }) {
       headerEl.innerHTML = 'Add label'
       promptEl.innerHTML = 'Enter a new label name:'
       actionBtn.innerHTML = 'Create'
+      inputEl.value = ''
       inputEl.focus()
       actionBtn.disabled = true
       break

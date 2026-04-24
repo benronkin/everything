@@ -274,5 +274,5 @@ async function handleLabelUpdate(payload) {
 
   console.log('resp', resp)
   document.getElementById('labels-dialog').close()
-  document.getElementById('label-menu').classList.add('hidden')
+  document.getElementById('label-menu')?.classList.add('hidden')
 }
