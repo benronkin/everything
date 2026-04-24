@@ -407,6 +407,9 @@ ul {
     font-size: inherit;
     line-height: inherit;
   }
+  dialog {
+    width: 400px;
+  }
   .container,
   .columns-wrapper {
     max-width: 1028px;

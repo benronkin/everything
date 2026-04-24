@@ -249,6 +249,10 @@ label.primary:hover {
   background: var(--purple3);
   box-shadow: 0 0 10px var(--purple3);
 }
+button.inverted.transparent {
+  background: none;
+  color: var(--gray0);
+}
 dialog {
   margin: auto;
   color: var(--gray6);

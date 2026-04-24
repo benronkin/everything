@@ -1,7 +1,10 @@
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createInput } from '../../assets/partials/input.js'
+import { createDialog } from '../../assets/composites/dialog.js'
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 
@@ -63,9 +66,16 @@ export function labels(el) {
   for (const label of labels) {
     el.appendChild(createLabelElement(label, labelAssignments))
   }
+
+  const modal = createDialog()
+  document.querySelector('body').appendChild(modal)
+
+  listen(el)
 }
 
-function react(el) {}
+function listen(el) {
+  el.querySelector('#add-label').addEventListener('click', handleAddLabel)
+}
 
 /**
  * Create a label element with title and more icon
@@ -158,6 +168,56 @@ function handleMoreClick(e) {
   menuDiv.style.left = `165px`
 }
 
+function handleAddLabel() {
+  document.querySelector('#label-menu')?.classList.add('hidden')
+  const dialog = document.querySelector('#dialog')
+  dialog.querySelector('.dialog-header').innerHTML = 'Add label'
+
+  const body = dialog.querySelector('.dialog-body')
+  body.innerHTML = ''
+  body.appendChild(
+    createSpan({
+      html: 'Enter a new label name:',
+    }),
+  )
+  body.appendChild(
+    createInput({
+      id: 'label-title',
+      name: 'label-title',
+    }),
+  )
+
+  const btnGroup = dialog.querySelector('.dialog-button-group')
+  btnGroup.innerHTML = ''
+
+  btnGroup.appendChild(
+    createButton({
+      id: 'cancel-dialog',
+      className: 'inverted transparent',
+      html: 'Cancel',
+    }),
+  )
+  btnGroup.appendChild(
+    createButton({
+      id: 'confirm-add-label',
+      className: 'primary',
+      html: 'Create',
+      disabled: true,
+    }),
+  )
+
+  dialog
+    .querySelector('#label-title')
+    .addEventListener('keyup', handleLabelTitleKeyUp)
+
+  dialog
+    .querySelector('#cancel-dialog')
+    .addEventListener('click', handleCancelDialog)
+
+  dialog.showModal()
+  dialog.querySelector('#label-title').focus()
+}
+
 function handleAssignLabel(e) {
   const menuEl = e.target.parentElement
   const labelId = menuEl.dataset.labelId
@@ -168,5 +228,23 @@ function handleAssignLabel(e) {
   e.target.innerHTML = isAssgined ? 'Assign' : 'Unassign'
   checkIcon.classList.toggle('hidden')
 
-  console.log('labelId', labelId)
+  state.set('note-label-update', {
+    labelId,
+    action: e.target.innerHTML.toLowerCase(),
+  })
+}
+
+/**
+ *
+ */
+function handleLabelTitleKeyUp(e) {
+  const value = e.target.value.trim()
+
+  document.querySelector('#confirm-add-label').disabled = value.length === 0
+}
+
+/** */
+function handleCancelDialog(e) {
+  e.stopPropagation()
+  document.querySelector('#dialog').close()
 }

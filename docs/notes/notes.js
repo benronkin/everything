@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('note-label-assignments', [
       ['eve31e30f1-c8b6-404f-9272-36d913db6ae6', '123abc'],
     ])
-    // document.querySelector('#labels').click()
+    document.querySelector('#labels').click()
 
     setMessage()
   } catch (error) {
@@ -117,6 +117,8 @@ function react() {
 
 function listen() {
   document.addEventListener('click', (e) => {
+    if (!e.target.closest('dialog')) document.querySelector('#dialog').close()
+
     if (!e.target.closest('#right-panel')) {
       document.querySelector('#right-panel').classList.remove('open')
       document
@@ -200,7 +202,9 @@ async function reactSearch() {
 }
 
 async function handleFieldChange(el) {
-  if (el?.name === 'search-note') return
+  if (!el) return
+
+  if (['search-note', 'label-title'].includes(el.name)) return
 
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
