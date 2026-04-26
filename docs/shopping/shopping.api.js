@@ -10,25 +10,27 @@ export async function fetchCartAndSuggestions() {
 }
 
 export async function addItem(text) {
-  postWebAppJson(`${url}/add`, {
+  await postWebAppJson(`${url}/add`, {
     value: text,
   })
 }
 
 export async function deleteItem(text) {
-  postWebAppJson(`${url}/delete`, {
+  const resp = await postWebAppJson(`${url}/delete`, {
     value: text,
   })
+  return resp
 }
 
 export async function updateShoppingList(text) {
-  postWebAppJson(`${url}/update`, {
+  const resp = await postWebAppJson(`${url}/update`, {
     value: text,
   })
+  return resp
 }
 
 export async function updateSuggestionsList(text) {
-  postWebAppJson(`${url}/suggestions/update`, {
+  await postWebAppJson(`${url}/suggestions/update`, {
     value: text,
   })
 }

@@ -115,11 +115,12 @@ function react() {
     addInput.value = ''
   })
 
-  state.on('item-click:delete-item', 'shopping', ({ item }) => {
+  state.on('item-click:delete-item', 'shopping', async ({ item }) => {
     let sItems = state.get('shopping-list')
     sItems = sItems.filter((sItem) => sItem !== item)
     state.set('shopping-list', sItems)
-    deleteShoppingItem(item)
+    const resp = await deleteShoppingItem(item)
+    console.log('resp', resp)
   })
 
   state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
@@ -167,7 +168,7 @@ async function addShoppingItem(item) {
   return
 }
 
-function deleteShoppingItem(item) {
+async function deleteShoppingItem(item) {
   item = item.trim().toLowerCase()
   if (!item.length) return
 
@@ -178,7 +179,8 @@ function deleteShoppingItem(item) {
     return { message: `${item} is not on the list` }
   }
 
-  deleteItem(item)
+  const resp = await deleteItem(item)
+  return resp
 }
 
 async function handleAddToBothLists(item) {

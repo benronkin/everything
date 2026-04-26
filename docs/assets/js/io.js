@@ -60,7 +60,7 @@ export async function getWebApp(path) {
     if (status !== 200) {
       console.log(
         `getWebApp ${status} sent by server for path: "${path}":`,
-        message
+        message,
       )
       return { error: message }
     }
@@ -115,8 +115,8 @@ export async function postWebAppJson(path, clientData) {
 
   const token = localStorage.getItem('authToken')
   if (!token && !path.includes('/email-submit')) {
-    console.log('postWebAppJson no token. aborting')
-    return
+    console.error('postWebAppJson no token. aborting')
+    return { error: 'postWebAppJson no token. aborting' }
   }
   headers.append('Auth-Token', token)
 
@@ -134,13 +134,13 @@ export async function postWebAppJson(path, clientData) {
 
     if (unauthorized) {
       setMessage(message, { type: 'danger' })
-      return
+      return { error: 'unauthorized' }
     }
 
     if (status !== 200) {
       console.log(
         `postWebAppJson ${status} sent by server for path: "${path}":`,
-        message
+        message,
       )
       return { error: message }
     }
@@ -151,7 +151,7 @@ export async function postWebAppJson(path, clientData) {
       console.warn('Is cloudflare running?')
     }
     const errorMessage = `postWebAppJson error: ${err}\nFetch payload: ${JSON.stringify(
-      clientData
+      clientData,
     )}`
     return { error: errorMessage }
   }
