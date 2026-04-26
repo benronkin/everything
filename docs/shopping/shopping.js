@@ -120,7 +120,11 @@ function react() {
     sItems = sItems.filter((sItem) => sItem !== item)
     state.set('shopping-list', sItems)
     const resp = await deleteShoppingItem(item)
-    console.log('resp', resp)
+    const { error } = resp
+    if (error) {
+      console.error(error)
+      setMessage(error, { type: 'danger' })
+    }
   })
 
   state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
