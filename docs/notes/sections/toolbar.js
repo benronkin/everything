@@ -2,7 +2,6 @@ import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createDocLinkIcon } from '../../assets/partials/docLinkIcon.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
-// import { createSelect } from '../../assets/partials/select.js'
 import { state } from '../../assets/js/state.js'
 
 export function toolbar() {

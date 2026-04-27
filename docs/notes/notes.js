@@ -7,6 +7,7 @@ import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
+import { labels } from './sections/labels.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createNote,
@@ -73,6 +74,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       'note-label-assignments',
       assignments.map(({ label_id, note_id }) => [label_id, note_id]),
     )
+    if (state.get('app-mode') === 'left-panel') {
+      const viewByLabel = localStorage.getItem('notes-by-label')
+      if (viewByLabel?.length) {
+        document.getElementById('labels').click()
+        state.set('view-by-label', viewByLabel)
+      }
+    }
 
     state.set('user', user)
     state.set('default-page', 'notes')
@@ -127,6 +135,13 @@ function react() {
   })
 
   state.on('note-label-update', 'notes', handleLabelUpdate)
+
+  state.on('icon-click:labels', 'notes', () => {
+    handleSidebarState('labels')
+    if (state.get('sidebar-use') === 'labels') {
+      labels(document.getElementById('right-panel'))
+    }
+  })
 }
 
 function listen() {

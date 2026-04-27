@@ -72,6 +72,11 @@ export function labels(el) {
 
   react(el)
   listen(el)
+
+  const viewByLabel = localStorage.getItem('notes-by-label')
+  if (viewByLabel?.length) {
+    document.getElementById(viewByLabel).classList.add('active')
+  }
 }
 
 /**
@@ -137,8 +142,10 @@ function listen(el) {
     item.addEventListener('click', () => {
       if (state.get('app-mode' === 'main-panel')) return
       const labelId = item.id
-      const currentView = state.get('view-by-label')
-      state.set('view-by-label', currentView === labelId ? null : labelId)
+      const currentView = localStorage.getItem('notes-by-label')
+      const newView = currentView === labelId ? '' : labelId
+      localStorage.setItem('notes-by-label', newView)
+      state.set('view-by-label', newView)
 
       el.querySelectorAll('.toc-item').forEach((i) => {
         if (i.id !== labelId) i.classList.remove('active')

@@ -5,7 +5,6 @@ import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { labels } from './labels.js'
 import { state } from '../../assets/js/state.js'
 import {
   fetchNote,
@@ -210,13 +209,6 @@ function react(el) {
     handleSidebarState('toc')
     if (state.get('sidebar-use') === 'toc') {
       updateTableOfContents()
-    }
-  })
-
-  state.on('icon-click:labels', 'mainPanel', () => {
-    handleSidebarState('labels')
-    if (state.get('sidebar-use') === 'labels') {
-      labels(document.getElementById('right-panel'))
     }
   })
 
