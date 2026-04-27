@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('note-label-assignments', [
       ['eve31e30f1-c8b6-404f-9272-36d913db6ae6', '123abc'],
     ])
-    document.querySelector('#labels').click()
+    // document.querySelector('#labels').click()
 
     setMessage()
   } catch (error) {
