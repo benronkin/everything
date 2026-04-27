@@ -60,18 +60,61 @@ export function labels(el) {
 
   const labels = state.get('note-labels')
   const labelAssignments = state.get('note-label-assignments')
+  const noteId = state.get('active-doc')
 
   for (const label of labels) {
-    el.appendChild(createLabelElement(label, labelAssignments))
+    el.appendChild(createLabelElement(label, labelAssignments, noteId))
   }
 
   if (!document.querySelector('#dialog')) {
     document.querySelector('body').appendChild(createLabelsDialog())
   }
 
+  react(el)
   listen(el)
 }
 
+/**
+ *
+ */
+function react(el) {
+  state.on('note-label-response', 'labels', ({ action, labelId, title }) => {
+    if (action === 'assign' || action === 'unassign') {
+      const labelEl = document.getElementById(labelId)
+      const checkIcon = labelEl.querySelector('.fa-check')
+      checkIcon.classList.toggle('hidden')
+    }
+
+    if (action === 'add') {
+      const arr = state.get('note-labels')
+      arr.push([labelId, title])
+      arr.sort((a, b) => a[1].localeCompare(b[1]))
+      state.set('note-labels', arr)
+      labels(el)
+    }
+
+    if (action === 'delete') {
+      const arr = state.get('note-labels')
+      const idx = arr.findIndex((a) => a[0] === labelId)
+      arr.splice(idx, 1)
+      state.set('note-labels', arr)
+      labels(el)
+    }
+
+    if (action === 'update') {
+      const arr = state.get('note-labels')
+      const idx = arr.findIndex((a) => a[0] === labelId)
+      arr[idx][1] = title
+      arr.sort((a, b) => a[1].localeCompare(b[1]))
+      state.set('note-labels', arr)
+      labels(el)
+    }
+  })
+}
+
+/**
+ *
+ */
 function listen(el) {
   el.querySelector('#add-label').addEventListener('click', handleAddLabel)
 }
@@ -79,11 +122,13 @@ function listen(el) {
 /**
  * Create a label element with title and more icon
  */
-function createLabelElement([id, title], labelAssignments) {
+function createLabelElement([labelId, title], labelAssignments, noteId) {
   const html = createSpan({ html: title })
 
   if (state.get('app-mode') === 'main-panel') {
-    const isAssigned = labelAssignments.find((a) => a[1] === id)
+    const isAssigned = labelAssignments.find(
+      (a) => a[0] === labelId && a[1] === noteId,
+    )
     html.appendChild(
       createIcon({
         classes: {
@@ -95,7 +140,7 @@ function createLabelElement([id, title], labelAssignments) {
   }
 
   const labelDiv = createDiv({
-    id,
+    id: labelId,
     className: 'toc-item flex align-center',
     dataset: { title },
     html: [
@@ -143,14 +188,9 @@ function handleMoreClick(e) {
     document.querySelector('#right-panel').appendChild(menuDiv)
 
     if (state.get('app-mode') === 'main-panel') {
-      const visibleCheck = !labelDiv
-        .querySelector('.fa-check')
-        .classList.contains('hidden')
-
       menuDiv.prepend(
         createSpan({
           id: 'assign-label',
-          html: visibleCheck ? 'Unassign' : 'Assign',
         }),
       )
 
@@ -166,6 +206,15 @@ function handleMoreClick(e) {
     menuDiv
       .querySelector('#edit-label')
       .addEventListener('click', handleEditLabel)
+  }
+
+  if (menuDiv.querySelector('#assign-label')) {
+    const visibleCheck = !labelDiv
+      .querySelector('.fa-check')
+      .classList.contains('hidden')
+    menuDiv.querySelector('#assign-label').innerHTML = visibleCheck
+      ? 'Unassign'
+      : 'Assign'
   }
 
   menuDiv.dataset.labelId = labelDiv.id
@@ -192,13 +241,7 @@ function handleAssignLabel(e) {
   const labelId = menuEl.dataset.labelId
   const labelEl = document.getElementById(labelId)
 
-  document.querySelector('#label-menu')?.classList.add('hidden')
-
-  const checkIcon = labelEl.querySelector('.fa-check')
   const currentAssignState = e.target.innerHTML.toLowerCase()
-  const isAssgined = !checkIcon.classList.contains('hidden')
-  e.target.innerHTML = isAssgined ? 'Assign' : 'Unassign'
-  checkIcon.classList.toggle('hidden')
 
   state.set('note-label-update', {
     labelId,

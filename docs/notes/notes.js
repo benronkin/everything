@@ -18,7 +18,8 @@ import {
   addLabel,
   assignLabel,
   deleteLabel,
-  getLabels,
+  fetchLabels,
+  fetchLabelsAssignments,
   unassignLabel,
   updateLabel,
 } from './notes.api.js'
@@ -41,7 +42,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const [{ notes }, { user }] = await Promise.all([fetchNotes(), getMe()])
+    const [{ labels }, { assignments }, { notes }, { user }] =
+      await Promise.all([
+        fetchLabels(),
+        fetchLabelsAssignments(),
+        fetchNotes(),
+        getMe(),
+      ])
 
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
@@ -58,20 +65,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       state.set('main-documents', notes)
       state.set('app-mode', 'left-panel')
     }
+    state.set(
+      'note-labels',
+      labels.map(({ id, title }) => [id, title]),
+    )
+    state.set(
+      'note-label-assignments',
+      assignments.map(({ label_id, note_id }) => [label_id, note_id]),
+    )
 
     state.set('user', user)
     state.set('default-page', 'notes')
 
     window.state = state // avail to browser console
-
-    state.set('note-labels', [
-      ['123abc', 'Travel'],
-      ['345def', 'Coding'],
-    ])
-    state.set('note-label-assignments', [
-      ['eve31e30f1-c8b6-404f-9272-36d913db6ae6', '123abc'],
-    ])
-    // document.querySelector('#labels').click()
 
     setMessage()
   } catch (error) {
@@ -251,7 +257,6 @@ function handleSidebarState(use) {
 async function handleLabelUpdate(payload) {
   if (payload.action === 'assign' || payload.action === 'unassign')
     payload.noteId = state.get('active-doc')
-
   let resp
 
   switch (payload.action) {
@@ -272,7 +277,14 @@ async function handleLabelUpdate(payload) {
       break
   }
 
-  console.log('resp', resp)
+  const { error, data } = resp
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+  state.set('note-label-response', { ...payload, ...data })
+
+  // setMessage(message)
   document.getElementById('labels-dialog').close()
   document.getElementById('label-menu')?.classList.add('hidden')
 }

@@ -131,7 +131,6 @@ export async function postWebAppJson(path, clientData) {
     const resp = await res.json()
 
     const { status, message, unauthorized } = resp
-
     if (unauthorized) {
       setMessage(message, { type: 'danger' })
       return { error: 'unauthorized' }
