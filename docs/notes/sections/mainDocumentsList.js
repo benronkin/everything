@@ -30,19 +30,37 @@ export function mainDocumentsList() {
 
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    el.deleteChildren()
-
-    if (!docs || !docs.length) return
-
-    const children = docs.map((doc) => {
-      const html = [createSpan({ html: doc.title })]
-      if (doc?.peers?.length) {
-        html.push(createAvatarGroup({ peers: doc.peers }))
-      }
-      return createMainDocumentItem({ id: doc.id, html })
-    })
-    el.addChildren(children)
+    addChildren(el, docs)
+    setMessage()
   })
 
-  setMessage()
+  state.on('view-by-label', 'mainDocumentsList', (labelId) => {
+    const labelAssignments = state
+      .get('note-label-assignments')
+      .filter((arr) => arr[0] === labelId)
+    let docs = state.get('main-documents')
+
+    if (labelId)
+      docs = docs.filter((doc) => labelAssignments.find((a) => a[1] === doc.id))
+
+    addChildren(el, docs)
+  })
+}
+
+/**
+ *
+ */
+function addChildren(el, docs) {
+  el.deleteChildren()
+
+  if (!docs || !docs.length) return
+
+  const children = docs.map((doc) => {
+    const html = [createSpan({ html: doc.title })]
+    if (doc?.peers?.length) {
+      html.push(createAvatarGroup({ peers: doc.peers }))
+    }
+    return createMainDocumentItem({ id: doc.id, html })
+  })
+  el.addChildren(children)
 }

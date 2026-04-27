@@ -79,10 +79,14 @@ export function labels(el) {
  */
 function react(el) {
   state.on('note-label-response', 'labels', ({ action, labelId, title }) => {
-    if (action === 'assign' || action === 'unassign') {
+    if (action === 'assign') {
       const labelEl = document.getElementById(labelId)
       const checkIcon = labelEl.querySelector('.fa-check')
-      checkIcon.classList.toggle('hidden')
+      checkIcon.classList.remove('hidden')
+      const noteId = state.get('active-doc')
+      const arr = state.get('note-label-assignments')
+      arr.push([labelId, noteId])
+      state.set('note-label-assignments', arr)
     }
 
     if (action === 'add') {
@@ -101,6 +105,17 @@ function react(el) {
       labels(el)
     }
 
+    if (action === 'unassign') {
+      const labelEl = document.getElementById(labelId)
+      const checkIcon = labelEl.querySelector('.fa-check')
+      checkIcon.classList.add('hidden')
+      const noteId = state.get('active-doc')
+      const arr = state.get('note-label-assignments')
+      const idx = arr.findIndex((a) => a[0] === labelId && a[1] === noteId)
+      arr.splice(idx, 1)
+      state.set('note-label-assignments', arr)
+    }
+
     if (action === 'update') {
       const arr = state.get('note-labels')
       const idx = arr.findIndex((a) => a[0] === labelId)
@@ -117,6 +132,15 @@ function react(el) {
  */
 function listen(el) {
   el.querySelector('#add-label').addEventListener('click', handleAddLabel)
+
+  el.querySelectorAll('.toc-item').forEach((item) =>
+    item.addEventListener('click', () => {
+      if (state.get('app-mode' === 'main-panel')) return
+      const labelId = item.id
+      const currentView = state.get('view-by-label')
+      state.set('view-by-label', currentView === labelId ? null : labelId)
+    }),
+  )
 }
 
 /**
