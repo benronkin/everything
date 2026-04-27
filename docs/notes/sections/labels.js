@@ -139,6 +139,11 @@ function listen(el) {
       const labelId = item.id
       const currentView = state.get('view-by-label')
       state.set('view-by-label', currentView === labelId ? null : labelId)
+
+      el.querySelectorAll('.toc-item').forEach((i) => {
+        if (i.id !== labelId) i.classList.remove('active')
+      })
+      item.classList.toggle('active')
     }),
   )
 }
