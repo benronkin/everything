@@ -5,7 +5,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createNav } from '../assets/composites/nav.js'
-import { createRightDrawer } from '../assets/composites/rightDrawer.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import {

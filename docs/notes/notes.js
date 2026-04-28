@@ -1,7 +1,7 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { rightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from './sections/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
@@ -110,7 +110,7 @@ function build() {
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer())
   columnsWrapperEl.appendChild(createDiv({ id: 'right-drawer' }))
   wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())

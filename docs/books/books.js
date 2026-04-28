@@ -1,7 +1,8 @@
 import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
-import { rightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
@@ -86,7 +87,7 @@ async function build() {
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer())
 
   wrapperEl.appendChild(createFooter())
 }

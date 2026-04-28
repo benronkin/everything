@@ -1,13 +1,14 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+mport { createRightDrawer } from '../assets/partials/rightDrawer.js'
+
+import { handlRightDrawerState } from '../assets/js/ui.js'
 import { toolbar } from './sections/toolbar.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { labels } from './sections/labels.js'
-import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   deleteNote,

@@ -6,7 +6,7 @@
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { setMessage } from '../assets/js/ui.js'
 import { toolbar } from './sections/toolbar.js'
-import { rightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from './sections/rightDrawer.js'
 import { state } from '../assets/js/state.js'
 import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
@@ -52,7 +52,7 @@ function build() {
   wrapperEl.appendChild(columnsWrapperEl)
 
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer())
 
   wrapperEl.appendChild(createFooter())
 }

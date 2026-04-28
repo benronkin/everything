@@ -129,10 +129,6 @@ function react(el) {
     el.querySelector('.markdown-viewer').innerHTML = 'Loading...'
     if (!id) return
 
-    // update browser history
-    const newUrl = `${window.location.pathname}?id=${id}`
-    window.history.pushState({ id: id }, '', newUrl)
-
     const doc = { ...state.get('main-documents').find((d) => d.id === id) }
     if (!doc.note) {
       const { note: noteDoc } = await fetchNote(doc.id)

@@ -11,7 +11,8 @@ import { fetchTasks } from '../tasks/tasks.api.js'
 import { fetchLatestWotd } from '../lexicon/lexicon.api.js'
 import { createDiv } from '../assets/partials/div.js'
 import { nav } from './sections/nav.js'
-import { rightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+
 import { mainPanel } from './sections/mainPanel.js'
 import { createFooter } from '../assets/composites/footer.js'
 
@@ -83,7 +84,7 @@ export function build() {
   wrapperEl.appendChild(columnsWrapperEl)
 
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer())
 
   wrapperEl.appendChild(createFooter())
 }

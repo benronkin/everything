@@ -1,6 +1,6 @@
 import { createRightDrawer } from '../../assets/composites/rightDrawer.js'
 
-export function rightDrawer() {
+export function createRightDrawer() {
   const el = createRightDrawer({ active: 'notes' })
   return el
 }
