@@ -90,6 +90,12 @@ export const navList = [
     id: 'notes',
   },
   {
+    icon: 'fa-road',
+    label: 'Journal',
+    url: 'journal/index.html',
+    id: 'journal',
+  },
+  {
     icon: 'fa-spell-check',
     label: 'Lexicon',
     url: 'lexicon/index.html',
@@ -100,12 +106,6 @@ export const navList = [
     label: 'Books',
     url: 'books/index.html',
     id: 'books',
-  },
-  {
-    icon: 'fa-road',
-    label: 'Journal',
-    url: 'journal/index.html',
-    id: 'journal',
   },
   {
     icon: 'fa-gear',

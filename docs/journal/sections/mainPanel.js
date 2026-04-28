@@ -81,7 +81,6 @@ function build(el) {
 function react(el) {
   state.on('main-documents', 'mainPanel', (docs) => {
     const doc = docs[0]
-    console.log('doc', doc)
 
     el.querySelector('#journal-location').value = doc.location
     el.querySelector('#journal-visit_date').value =
