@@ -141,7 +141,7 @@ async function reactNoteDelete() {
 async function handleFieldChange(el) {
   if (!el) return
 
-  if (['search-note', 'label-title'].includes(el.name)) return
+  if (['label-title'].includes(el.name)) return
 
   const id = state.get('active-doc')
   const title = document.querySelector('#note-title').value
