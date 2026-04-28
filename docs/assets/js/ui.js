@@ -1,12 +1,13 @@
 import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createToast, removeToasts } from '../../assets/partials/toast.js'
+import { state } from './state.js'
 
 let sharedStyleEl = null
 
 export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
+    navigator.userAgent,
   )
 }
 
@@ -21,6 +22,28 @@ export function injectStyle(css) {
   if (!sharedStyleEl.textContent.includes(css.trim())) {
     sharedStyleEl.textContent += '\n' + css.trim()
   }
+}
+
+/**
+ *
+ */
+export function handlRightDrawerState(use) {
+  const rightPanelEl = document.getElementById('right-drawer')
+
+  if (use === 'close') {
+    state.set('right-drawer-use', null)
+    rightPanelEl.classList.remove('open')
+    return
+  }
+
+  const activeUse = state.get('right-drawer-use')
+
+  if (activeUse !== use) {
+    state.set('right-drawer-use', use)
+  } else {
+    state.set('right-drawer-use', null)
+  }
+  rightPanelEl.classList.toggle('open', state.get('right-drawer-use'))
 }
 
 export function isoToReadable(isoString) {
@@ -100,7 +123,7 @@ export function setMessage(
     showProgress = true,
     autoClose = 3000,
     position = 'BOTTOM_RIGHT',
-  } = {}
+  } = {},
 ) {
   if (!message) {
     // user wishes to clear all toasts

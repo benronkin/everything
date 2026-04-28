@@ -149,10 +149,6 @@ function react(el) {
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
 
-  state.on('right-drawer-toggle-click', 'mainPanel', () => {
-    document.querySelector('#right-drawer').classList.remove('open')
-  })
-
   state.on('icon-click:edit', 'mainPanel', () => {
     document.querySelector('.markdown-wrapper').toggle()
 
@@ -347,16 +343,4 @@ async function updateHistories() {
   )
 
   rightPanelEl.querySelector('[data-history]').classList.add('active')
-}
-
-function handlRightDrawerState(use) {
-  const rightPanelEl = document.getElementById('right-drawer')
-  const activeUse = state.get('right-drawer-use')
-
-  if (activeUse !== use) {
-    state.set('right-drawer-use', use)
-  } else {
-    state.set('right-drawer-use', null)
-  }
-  rightPanelEl.classList.toggle('open', state.get('right-drawer-use'))
 }

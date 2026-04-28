@@ -1,8 +1,8 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createImage } from './image.js'
-import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
+import { handlRightDrawerState } from '../js/ui.js'
+import { createNavigationMenu } from '../composites/navigationMenu.js'
 
 const css = `
 .avatar {  
@@ -32,8 +32,6 @@ export function createAvatar({ className = '', name, url, id } = {}) {
         html: name ? name[0].toUpperCase() : 'U',
       })
 
-  build(el)
-  react(el)
   listen(el)
 
   if (className.length) {
@@ -46,12 +44,12 @@ export function createAvatar({ className = '', name, url, id } = {}) {
   return el
 }
 
-function build(el) {}
-
-function react(el) {}
-
 function listen(el) {
   el.addEventListener('click', () => {
-    state.set('right-drawer-toggle-click', true)
+    handlRightDrawerState('navigation-menu')
+    createNavigationMenu({
+      container: document.getElementById('right-drawer'),
+      active: 'notes',
+    })
   })
 }

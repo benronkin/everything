@@ -1,20 +1,16 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { rightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
-import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { labels } from './sections/labels.js'
+import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
-  createNote,
   deleteNote,
-  fetchNotes,
-  fetchNote,
-  searchNotes,
   updateNote,
   addLabel,
   assignLabel,
@@ -43,29 +39,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const [{ labels }, { assignments }, { notes }, { user }] =
-      await Promise.all([
-        fetchLabels(),
-        fetchLabelsAssignments(),
-        fetchNotes(),
-        getMe(),
-      ])
-
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
-    if (id) {
-      const docExists = notes.find((note) => note.id === id)
-      if (!docExists) {
-        const newDoc = await fetchNote(id)
-        notes.unshift(newDoc)
-      }
-      state.set('main-documents', notes)
-      state.set('app-mode', 'main-panel')
-      state.set('active-doc', id)
-    } else {
-      state.set('main-documents', notes)
-      state.set('app-mode', 'left-panel')
-    }
+
+    const [{ labels }, { assignments }, { user }] = await Promise.all([
+      fetchLabels(),
+      fetchLabelsAssignments(),
+      getMe(),
+    ])
+
+    state.set('app-mode', 'main-panel')
+    state.set('active-doc', id)
     state.set(
       'note-labels',
       labels.map(({ id, title }) => [id, title]),
@@ -74,13 +58,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       'note-label-assignments',
       assignments.map(({ label_id, note_id }) => [label_id, note_id]),
     )
-    if (state.get('app-mode') === 'left-panel') {
-      const viewByLabel = localStorage.getItem('notes-by-label')
-      if (viewByLabel?.length) {
-        document.getElementById('labels').click()
-        state.set('view-by-label', viewByLabel)
-      }
-    }
 
     state.set('user', user)
     state.set('default-page', 'notes')
@@ -108,24 +85,15 @@ function build() {
     className: 'columns-wrapper',
   })
   wrapperEl.appendChild(columnsWrapperEl)
-  columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
-  columnsWrapperEl.appendChild(rightDrawer())
+  columnsWrapperEl.appendChild(createRightDrawer())
   columnsWrapperEl.appendChild(createDiv({ id: 'right-drawer' }))
   wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('icon-click:back', 'notes', () => {
-    handlRightDrawerState('close')
-  })
-
   state.on('field-changed', 'notes', handleFieldChange)
-
-  state.on('form-submit:left-panel-search', 'notes', reactSearch)
-
-  state.on('icon-click:add-note', 'notes', reactAddNote)
 
   state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
 
@@ -168,28 +136,6 @@ function listen() {
   })
 }
 
-async function reactAddNote({ id: btnId }) {
-  const addBtn = document.getElementById(btnId)
-  addBtn.disabled = true
-
-  const { id, title } = await createNote()
-
-  const doc = {
-    id,
-    title,
-    note: '',
-  }
-
-  state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', id)
-  state.set('app-mode', 'main-panel')
-
-  delete addBtn.disabled
-  if (document.querySelector('.markdown-editor').classList.contains('hidden')) {
-    document.querySelector('#edit').click()
-  }
-}
-
 async function reactNoteDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
@@ -215,26 +161,6 @@ async function reactNoteDelete() {
   state.set('app-mode', 'left-panel')
 }
 
-async function reactSearch() {
-  let resp
-
-  const query = document.querySelector('[name="search-note"]').value?.trim()
-
-  if (query.length) {
-    resp = await searchNotes(query)
-  } else {
-    // get most recent notes instead
-    resp = await fetchNotes()
-  }
-
-  const { data, message } = resp
-  if (message) {
-    console.error(`Notes server error: ${message}`)
-    return
-  }
-  state.set('main-documents', data)
-}
-
 async function handleFieldChange(el) {
   if (!el) return
 
@@ -248,25 +174,6 @@ async function handleFieldChange(el) {
 
   updateNote({ id, title, note })
   setMessage('Saved', { type: 'quiet' })
-}
-
-function handlRightDrawerState(use) {
-  const rightPanelEl = document.getElementById('right-drawer')
-
-  if (use === 'close') {
-    state.set('right-drawer-use', null)
-    rightPanelEl.classList.remove('open')
-    return
-  }
-
-  const activeUse = state.get('right-drawer-use')
-
-  if (activeUse !== use) {
-    state.set('right-drawer-use', use)
-  } else {
-    state.set('right-drawer-use', null)
-  }
-  rightPanelEl.classList.toggle('open', state.get('right-drawer-use'))
 }
 
 async function handleLabelUpdate(payload) {
