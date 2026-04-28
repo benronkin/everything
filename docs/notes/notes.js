@@ -1,7 +1,7 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { createRightDrawer } from './sections/rightDrawer.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'

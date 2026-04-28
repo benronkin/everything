@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   state.set('main-documents', tasks)
   state.set('user', user)
   state.set('wotd', entry)
+  state.set('default-page', 'home')
 })
 
 export function build() {
