@@ -132,6 +132,9 @@ function listen() {
   })
 }
 
+/**
+ *
+ */
 async function reactAddNote({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
@@ -141,6 +144,9 @@ async function reactAddNote({ id: btnId }) {
   window.location.href = `./note.html?id=${id}&mode=edit`
 }
 
+/**
+ *
+ */
 async function reactSearch() {
   let resp
 

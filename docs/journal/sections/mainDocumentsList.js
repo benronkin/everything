@@ -1,10 +1,21 @@
+import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
-import { createEntryTitle } from '../journal.utils.js'
-import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
-import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
+import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
+import { createSpan } from '../../assets/partials/span.js'
+
+const css = `
+.md-item .title {
+  flex: 1 1 auto;           /* take all leftover width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* … when it runs out */
+}
+`
 
 export function mainDocumentsList() {
+  injectStyle(css)
+
   const el = createMainDocumentsList({
     id: 'left-panel-list',
     className: 'mt-20',
@@ -15,22 +26,28 @@ export function mainDocumentsList() {
   return el
 }
 
-/**
- * Subscribe to state
- */
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
-    el.deleteChildren()
-
-    if (!docs || !docs.length) return
-
-    const children = docs.map((doc) => {
-      const html = createEntryTitle(doc)
-      return createMainDocumentItem({ id: doc.id, html })
-    })
-
-    el.addChildren(children)
+    addChildren(el, docs)
   })
+}
 
-  setMessage()
+/**
+ *
+ */
+function addChildren(el, docs) {
+  el.deleteChildren()
+
+  if (!docs || !docs.length) return
+
+  const children = docs.map((doc) => {
+    const html = [createSpan({ html: doc.location })]
+
+    return createMainDocumentLink({
+      id: doc.id,
+      html,
+      url: `./journal.html?id=${doc.id}`,
+    })
+  })
+  el.addChildren(children)
 }

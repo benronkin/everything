@@ -1,8 +1,9 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { search } from '../../assets/composites/search.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
+import { search } from '../../assets/composites/search.js'
 
 // -------------------------------
 // Globals
@@ -13,6 +14,9 @@ const css = `
   width: 100%;
 }
 
+#next-page {
+  margin: 20px 0;
+}
 `
 
 export function leftPanel() {
@@ -34,12 +38,20 @@ function build(el) {
   el.appendChild(
     search({
       id: 'left-panel-search',
-      placeholder: 'Search notes...',
-      name: 'search-note',
+      placeholder: 'Search entries...',
+      name: 'search-entry',
     }),
   )
 
   el.appendChild(mainDocumentsList())
+
+  el.appendChild(
+    createButton({
+      id: 'next-page',
+      html: 'Show more',
+      className: 'primary hidden',
+    }),
+  )
 }
 
 function react(el) {
@@ -52,26 +64,22 @@ function react(el) {
 
     el.classList.remove('hidden')
     // log(`letPanel is showing itself on app-mode: ${appMode}`)
-  })
 
-  state.on('main-documents', 'leftPanel', (docs) => {
-    const message =
-      docs?.length === 1 ? 'One note found' : `${docs.length} notes found`
-    el.querySelector('.form-message').insertHtml(message)
-  })
+    // If there is an active-doc and it does not appear
+    // in main-documents then delete active-doc
+    const currentId = state.get('active-doc')
+    if (!currentId) {
+      el.querySelector('#left-panel-list').reset()
+      return
+    }
 
-  state.on('view-by-label', 'mainDocumentsList', (labelId) => {
-    const labelAssignments = state
-      .get('note-label-assignments')
-      .filter((arr) => arr[0] === labelId)
-    let docs = state.get('main-documents')
-
-    if (labelId)
-      docs = docs.filter((doc) => labelAssignments.find((a) => a[1] === doc.id))
-
-    const message =
-      docs?.length === 1 ? 'One note found' : `${docs.length} notes found`
-    el.querySelector('.form-message').insertHtml(message)
+    const docs = state.get('main-documents')
+    const docExists = docs.findIndex((el) => el.id === currentId)
+    if (!docExists) {
+      state.set('active-doc', null)
+      // log('leftPanel is nullyfing active-doc on main-documents')
+      return
+    }
   })
 }
 

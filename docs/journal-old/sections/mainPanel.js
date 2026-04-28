@@ -32,7 +32,7 @@ const css = `
 export function mainPanel() {
   injectStyle(css)
 
-  const el = createDiv({ className: 'mt-20' })
+  const el = createDiv({ className: 'mt-20 hidden' })
 
   build(el)
   react(el)
@@ -79,8 +79,16 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('active-doc', 'mainPanel', () => {
-    const doc = state.get('main-documents')[0]
+  state.on('app-mode', 'mainPanel', async (appMode) => {
+    if (appMode !== 'main-panel') {
+      el.classList.add('hidden')
+
+      return
+    }
+
+    const id = state.get('active-doc')
+    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
+    el.classList.remove('hidden')
 
     el.querySelector('#journal-location').value = doc.location
     el.querySelector('#journal-visit_date').value =

@@ -3,6 +3,7 @@ import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
@@ -11,12 +12,14 @@ import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   addEntryPhoto,
+  createEntry,
   deleteEntry,
   deleteEntryPhoto,
-  fetchEntry,
   fetchDefaults,
   fetchEntryPhotosMetadata,
   fetchGeoIndex,
+  pageEntries,
+  searchEntries,
   updateEntry,
   updateJournalDefaults,
   updatePhotoCaption,
@@ -37,28 +40,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    const urlParams = new URLSearchParams(window.location.search)
-    const id = urlParams.get('id')
-
-    const [{ journal }, { tree }, { defaults }, { user }] = await Promise.all([
-      fetchEntry(id),
+    const [{ data }, { tree }, { defaults }, { user }] = await Promise.all([
+      pageEntries(),
       fetchGeoIndex(),
       fetchDefaults(),
       getMe(),
     ])
 
-    state.set('main-documents', [journal])
-    state.set('app-mode', 'main-panel')
-    state.set('active-doc', id)
+    state.set('main-documents', data)
+    state.set('app-mode', 'left-panel')
     state.set('country-state-city-tree', JSON.parse(tree))
     state.set('country-state-city-page', 0)
     state.set('journal-defaults', defaults)
     state.set('user', user)
     state.set('default-page', 'journal')
-
     window.state = state // avail to browser console
 
-    setMessage()
+    document
+      .querySelector('#next-page')
+      .classList.toggle('hidden', data.length < 20)
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
     console.trace(error)
@@ -79,16 +79,29 @@ async function build() {
     className: 'columns-wrapper',
   })
   wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
+
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('active-doc', 'journal', async (id) => {
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+  state.on('app-mode', 'mainPanel', async (appMode) => {
+    if (appMode === 'main-panel') {
+      const id = state.get('active-doc')
+      if (id) {
+        const photosMetadata = await fetchEntryPhotosMetadata(id)
+        state.set('photos-metadata', photosMetadata)
+      }
+    }
   })
+
+  state.on('form-submit:left-panel-search', 'journal', reactSearch)
+
+  state.on('icon-click:add-entry', 'journal', reactEntryAdd)
+
+  state.on('button-click:next-page', 'journal', reactPageEntries)
 
   state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
 
@@ -136,9 +149,47 @@ function react() {
   })
 }
 
-/**
- *
- */
+async function reactEntryAdd({ id: btnId }) {
+  const addBtn = document.getElementById(btnId)
+  addBtn.disabled = true
+
+  const id = `ev${crypto.randomUUID()}`
+  const visit_date = new Date().toISOString()
+
+  const { error } = await createEntry(id, visit_date)
+  if (error) {
+    console.error(`Journal server error: ${error}`)
+    return
+  }
+
+  const defaults = state.get('journal-defaults') || {
+    city: '',
+    state: '',
+    country: '',
+  }
+
+  const dateString = new Date().toISOString()
+
+  const doc = {
+    id,
+    location: 'New entry',
+    created_at: dateString,
+    visit_date: dateString,
+    street: '',
+    city: defaults.city,
+    state: defaults.state,
+    country: defaults.country,
+    phone: '',
+    notes: '',
+  }
+
+  state.set('main-documents', [doc, ...state.get('main-documents')])
+  state.set('active-doc', id)
+  state.set('app-mode', 'main-panel')
+
+  delete addBtn.disabled
+}
+
 async function reactEntryDelete() {
   const modalEl = document.querySelector('#modal-delete')
   modalEl.message('')
@@ -160,6 +211,51 @@ async function reactEntryDelete() {
     .filter((doc) => doc.id !== id)
   state.set('main-documents', filteredDocs)
   state.set('app-mode', 'left-panel')
+}
+
+async function reactPageEntries() {
+  let page = state.get('journal-page')
+  if (typeof page === 'undefined') page = 0
+  page++
+  const { data, error } = await pageEntries(page)
+
+  if (error) {
+    console.error(`Journal server error: ${error}`)
+    return
+  }
+
+  state.set('journal-page', page)
+  let entries = []
+  if (page === 0) {
+    entries = data
+  } else {
+    entries = [...state.get('main-documents'), ...data]
+  }
+  state.set('main-documents', entries)
+
+  document
+    .querySelector('#next-page')
+    .classList.toggle('hidden', data.length < 20)
+}
+
+async function reactSearch() {
+  let resp
+
+  const query = document.querySelector('[name="search-entry"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchEntries(query)
+  } else {
+    // get most recent entries instead
+    resp = await pageEntries()
+  }
+
+  const { data, message } = resp
+  if (message) {
+    console.error(`Journal server error: ${message}`)
+    return
+  }
+  state.set('main-documents', data)
 }
 
 async function handleFieldChange(el) {

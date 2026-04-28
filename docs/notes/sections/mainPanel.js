@@ -117,7 +117,7 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('active-doc', 'mainPanel', async () => {
+  state.on('active-doc', 'mainPanel', () => {
     const doc = state.get('main-documents')[0]
 
     el.querySelector('#note-title').value = doc.title

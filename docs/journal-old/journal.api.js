@@ -25,11 +25,6 @@ export async function fetchEntryPhotosMetadata(id) {
   return { photos, error }
 }
 
-export async function fetchEntry(id) {
-  const resp = await getWebApp(`${url}/read-one?id=${id}`)
-  return resp
-}
-
 export async function fetchGeoIndex() {
   const { tree, error } = await getWebApp(`${url}/geo-index/read`)
   return { tree, error }

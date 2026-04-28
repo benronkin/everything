@@ -8,6 +8,10 @@ export function toolbar() {
     className: 'container',
     children: [
       createIcon({
+        id: 'back',
+        classes: { primary: 'fa-chevron-left', other: ['primary'] },
+      }),
+      createIcon({
         id: 'add-entry',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
@@ -24,14 +28,27 @@ export function toolbar() {
 }
 
 function react(el) {
-  state.on('app-mode', 'toolbar', (mode) => {
-    const isLeftPanel = mode === 'left-panel'
-    el.querySelector('#add-entry').classList.toggle('hidden', !isLeftPanel)
-    el.querySelector('#copy-address').classList.toggle('hidden', isLeftPanel)
+  state.on('app-mode', 'Journal toolbar', (appMode) => {
+    const icons = [
+      { id: 'back', hideOn: appMode === 'left-panel' },
+      { id: 'copy-address', hideOn: appMode === 'left-panel' },
+    ]
+
+    icons.forEach(({ id, hideOn }) => {
+      const icon = el.querySelector(`#${id}`)
+      icon.classList.toggle('hidden', hideOn)
+    })
+  })
+
+  state.on('icon-click:back', 'Journal toolbar', () => {
+    state.set('active-doc', null)
+    state.set('app-mode', 'left-panel')
   })
 
   state.on('icon-click:copy-address', 'Journal toolbar', () => {
-    const doc = state.get('main-documents')[0]
+    const id = state.get('active-doc')
+    const docs = state.get('main-documents')
+    const doc = docs.find((d) => d.id === id)
 
     let address = doc.street.trim()
 
