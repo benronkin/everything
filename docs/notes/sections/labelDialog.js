@@ -181,7 +181,7 @@ function handleAction(e) {
 /** */
 function handleCancel(e) {
   e.stopPropagation()
-  document.querySelector('#dialog').close()
+  document.querySelector('#labels-dialog').close()
 }
 
 /**
