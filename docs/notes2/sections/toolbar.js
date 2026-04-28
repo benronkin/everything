@@ -59,10 +59,6 @@ function react(el) {
     el.querySelector('#history').classList.toggle('hidden', isLeftPanel)
   })
 
-  state.on('icon-click:edit', 'toolbar', () => {
-    document.querySelector('#edit').classList.toggle('on')
-  })
-
   state.on('icon-click:history', 'toolbar', () => {
     document.querySelector('#history').classList.toggle('on')
   })

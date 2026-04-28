@@ -79,7 +79,7 @@ export function createMarkdown({
 function build({ el, name, iconsVisible }) {
   el.appendChild(createDiv({ className: 'markdown-viewer' }))
   el.appendChild(
-    createTextarea({ className: 'markdown-editor field hidden', name })
+    createTextarea({ className: 'markdown-editor field hidden', name }),
   )
 
   if (iconsVisible) {
@@ -141,6 +141,12 @@ function listen({ el, iconsVisible }) {
 }
 
 function toggle() {
+  const scrollPercent =
+    window.scrollY / (document.body.scrollHeight - window.innerHeight)
+
+  const targetY =
+    (document.body.scrollHeight - window.innerHeight) * scrollPercent
+
   const viewer = this.querySelector('.markdown-viewer')
   const editor = this.querySelector('.markdown-editor')
   if (viewer.classList.contains('hidden')) {
@@ -154,6 +160,11 @@ function toggle() {
       editor.focus()
     })
   }
+
+  // Use requestAnimationFrame to ensure the DOM has updated and layout is recalculated
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: targetY, behavior: 'auto' })
+  })
 }
 
 function updateEditor(content) {

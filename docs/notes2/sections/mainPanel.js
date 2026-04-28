@@ -141,17 +141,9 @@ function react(el) {
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
 
-  state.on('icon-click:edit', 'mainPanel', () => {
+  state.on('icon-click:edit-note', 'mainPanel', () => {
     document.querySelector('.markdown-wrapper').toggle()
-
     document.querySelector('#right-drawer').classList.remove('open')
-
-    const scrollPercent =
-      window.scrollY / (document.body.scrollHeight - window.innerHeight)
-
-    const targetY =
-      (document.body.scrollHeight - window.innerHeight) * scrollPercent
-    window.scrollTo({ top: targetY, behavior: 'auto' })
   })
 
   state.on('icon-click:toc', 'mainPanel', () => {

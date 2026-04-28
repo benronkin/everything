@@ -1,9 +1,7 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from '../partials/div.js'
-import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
 import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 
@@ -170,7 +168,7 @@ export function createEditor({ className = '' } = {}) {
     const selection = state.get('editor-selection')
     if (!selection) {
       console.log(
-        'No editor selection was saved prior to this insertBlock. Did you save one???'
+        'No editor selection was saved prior to this insertBlock. Did you save one???',
       )
       return
     }
