@@ -111,16 +111,11 @@ function build() {
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
-  columnsWrapperEl.appendChild(createDiv({ id: 'right-drawer' }))
   wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('icon-click:back', 'notes', () => {
-    handlRightDrawerState('close')
-  })
-
   state.on('field-changed', 'notes', handleFieldChange)
 
   state.on('form-submit:left-panel-search', 'notes', reactSearch)
@@ -149,14 +144,6 @@ function listen() {
     const dialog = document.querySelector('#dialog')
 
     if (dialog?.open) return
-
-    if (!e.target.closest('#right-drawer')) {
-      document.querySelector('#right-drawer').classList.remove('open')
-      document
-        .querySelectorAll('[data-right-pannel-toggler]')
-        .forEach((i) => i.classList.remove('on'))
-      state.set('right-drawer-use', null)
-    }
 
     if (
       !e.target.closest('.fa-ellipsis-vertical') &&
