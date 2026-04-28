@@ -5,9 +5,9 @@ import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { handlRightDrawerState } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import {
-  fetchNote,
   fetchNoteHistories,
   fetchNoteHistory,
   updateNote,
@@ -129,11 +129,7 @@ function react(el) {
     el.querySelector('.markdown-viewer').innerHTML = 'Loading...'
     if (!id) return
 
-    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
-    if (!doc.note) {
-      const { note: noteDoc } = await fetchNote(doc.id)
-      doc.note = noteDoc.note
-    }
+    const doc = state.get('main-documents')[0]
 
     el.querySelector('#note-title').value = doc.title
     el.querySelector('.markdown-wrapper').updateEditor(doc.note)

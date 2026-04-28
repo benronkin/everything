@@ -1,13 +1,12 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { createRightDrawer } from '../assets/partials/rightDrawer.js'
-
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { labels } from './sections/labels.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
@@ -26,7 +25,10 @@ import { getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage('Loading...')
+    const urlParams = new URLSearchParams(window.location.search)
+    const messageParam = urlParams.get('message')
+    const message = messageParam || 'Loading...'
+    setMessage(message)
 
     build()
 
@@ -64,12 +66,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       state.set('view-by-label', viewByLabel)
     }
 
+    state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'notes')
 
-    window.state = state // avail to browser console
+    if (messageParam) {
+      const url = new URL(window.location)
+      url.searchParams.delete('message')
+      window.history.replaceState({}, '', url)
+    } else {
+      setMessage()
+    }
 
-    setMessage()
+    window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)
     setMessage(error.message, { type: 'danger' })
@@ -92,6 +101,7 @@ function build() {
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
+
   wrapperEl.appendChild(createFooter())
 }
 

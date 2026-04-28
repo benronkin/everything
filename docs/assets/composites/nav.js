@@ -59,9 +59,7 @@ export function createNav({ title } = {}) {
 }
 
 export function handleBrandClick() {
-  if (!document.querySelector('#left-panel')) return
-  state.set('app-mode', 'left-panel')
-  state.set('active-doc', null)
+  window.location = './index.html'
 }
 
 function build(el) {
@@ -83,7 +81,7 @@ function react(el) {
         name: user.first_name,
         url: user.avatar,
         id: 'toggle-right-drawer',
-      })
+      }),
     )
   })
 }

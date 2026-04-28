@@ -1,8 +1,7 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-mport { createRightDrawer } from '../assets/partials/rightDrawer.js'
-
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { handlRightDrawerState } from '../assets/js/ui.js'
 import { toolbar } from './sections/toolbar.js'
 import { mainPanel } from './sections/mainPanel.js'
@@ -12,6 +11,7 @@ import { labels } from './sections/labels.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   deleteNote,
+  fetchNote,
   updateNote,
   addLabel,
   assignLabel,
@@ -43,12 +43,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
 
-    const [{ labels }, { assignments }, { user }] = await Promise.all([
-      fetchLabels(),
-      fetchLabelsAssignments(),
-      getMe(),
-    ])
+    const [{ note }, { labels }, { assignments }, { user }] = await Promise.all(
+      [fetchNote(id), fetchLabels(), fetchLabelsAssignments(), getMe()],
+    )
 
+    state.set('main-documents', [note])
     state.set('app-mode', 'main-panel')
     state.set('active-doc', id)
     state.set(
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       'note-label-assignments',
       assignments.map(({ label_id, note_id }) => [label_id, note_id]),
     )
-
     state.set('user', user)
     state.set('default-page', 'notes')
 
@@ -73,7 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 function build() {
-  document.title = 'Notes | Everything App'
   const body = document.body
   body.classList.add('dark-mode')
 
@@ -88,24 +85,26 @@ function build() {
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
-  columnsWrapperEl.appendChild(createDiv({ id: 'right-drawer' }))
   wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('field-changed', 'notes', handleFieldChange)
+  state.on('main-documents', 'note', (docs) => {
+    document.title = `${docs[0].title} | Everything App`
+  })
+  state.on('field-changed', 'note', handleFieldChange)
 
-  state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
+  state.on('button-click:modal-delete-btn', 'note', reactNoteDelete)
 
-  state.on('sharer-click', 'notes', () => {
+  state.on('sharer-click', 'note', () => {
     const modalEl = document.querySelector('#modal-share')
     modalEl.showModal()
   })
 
-  state.on('note-label-update', 'notes', handleLabelUpdate)
+  state.on('note-label-update', 'note', handleLabelUpdate)
 
-  state.on('icon-click:labels', 'notes', () => {
+  state.on('icon-click:labels', 'note', () => {
     handlRightDrawerState('labels')
     if (state.get('right-drawer-use') === 'labels') {
       labels(document.getElementById('right-drawer'))
@@ -118,14 +117,6 @@ function listen() {
     const dialog = document.querySelector('#dialog')
 
     if (dialog?.open) return
-
-    if (!e.target.closest('#right-drawer')) {
-      document.querySelector('#right-drawer').classList.remove('open')
-      document
-        .querySelectorAll('[data-right-pannel-toggler]')
-        .forEach((i) => i.classList.remove('on'))
-      state.set('right-drawer-use', null)
-    }
 
     if (
       !e.target.closest('.fa-ellipsis-vertical') &&
@@ -144,22 +135,7 @@ async function reactNoteDelete() {
   const id = state.get('active-doc')
   const { message } = await deleteNote(id)
 
-  setMessage(message)
-
-  modalEl.close()
-
-  // remove the id=note_id query param from the address bar
-  // and from browser history (if needed, not sure it is)
-  const url = new URL(window.location)
-  url.searchParams.delete('id')
-  window.history.replaceState({}, '', url)
-
-  state.set('active-doc', null)
-  const filteredDocs = state
-    .get('main-documents')
-    .filter((doc) => doc.id !== id)
-  state.set('main-documents', filteredDocs)
-  state.set('app-mode', 'left-panel')
+  window.location = `./index.html?message=${message}`
 }
 
 async function handleFieldChange(el) {
