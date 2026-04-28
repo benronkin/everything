@@ -1,21 +1,18 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
-import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
-import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { labels } from './sections/labels.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createNote,
-  deleteNote,
   fetchNotes,
-  fetchNote,
   searchNotes,
-  updateNote,
   addLabel,
   assignLabel,
   deleteLabel,
@@ -24,12 +21,14 @@ import {
   unassignLabel,
   updateLabel,
 } from './notes.api.js'
-import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage('Loading...')
+    const urlParams = new URLSearchParams(window.location.search)
+    const messageParam = urlParams.get('message')
+    const message = messageParam || 'Loading...'
+    setMessage(message)
 
     build()
 
@@ -51,21 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         getMe(),
       ])
 
-    const urlParams = new URLSearchParams(window.location.search)
-    const id = urlParams.get('id')
-    if (id) {
-      const docExists = notes.find((note) => note.id === id)
-      if (!docExists) {
-        const newDoc = await fetchNote(id)
-        notes.unshift(newDoc)
-      }
-      state.set('main-documents', notes)
-      state.set('app-mode', 'main-panel')
-      state.set('active-doc', id)
-    } else {
-      state.set('main-documents', notes)
-      state.set('app-mode', 'left-panel')
-    }
+    state.set('main-documents', notes)
     state.set(
       'note-labels',
       labels.map(({ id, title }) => [id, title]),
@@ -74,20 +59,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       'note-label-assignments',
       assignments.map(({ label_id, note_id }) => [label_id, note_id]),
     )
-    if (state.get('app-mode') === 'left-panel') {
-      const viewByLabel = localStorage.getItem('notes-by-label')
-      if (viewByLabel?.length) {
-        document.getElementById('labels').click()
-        state.set('view-by-label', viewByLabel)
-      }
+
+    const viewByLabel = localStorage.getItem('notes-by-label')
+    if (viewByLabel?.length) {
+      document.getElementById('labels').click()
+      state.set('view-by-label', viewByLabel)
     }
 
+    state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'notes')
 
-    window.state = state // avail to browser console
+    if (messageParam) {
+      const url = new URL(window.location)
+      url.searchParams.delete('message')
+      window.history.replaceState({}, '', url)
+    } else {
+      setMessage()
+    }
 
-    setMessage()
+    window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)
     setMessage(error.message, { type: 'danger' })
@@ -109,25 +100,15 @@ function build() {
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
-  columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
-  wrapperEl.appendChild(createModalShare({}))
+
   wrapperEl.appendChild(createFooter())
 }
 
 function react() {
-  state.on('field-changed', 'notes', handleFieldChange)
-
   state.on('form-submit:left-panel-search', 'notes', reactSearch)
 
   state.on('icon-click:add-note', 'notes', reactAddNote)
-
-  state.on('button-click:modal-delete-btn', 'notes', reactNoteDelete)
-
-  state.on('sharer-click', 'notes', () => {
-    const modalEl = document.querySelector('#modal-share')
-    modalEl.showModal()
-  })
 
   state.on('note-label-update', 'notes', handleLabelUpdate)
 
@@ -141,10 +122,6 @@ function react() {
 
 function listen() {
   document.addEventListener('click', (e) => {
-    const dialog = document.querySelector('#dialog')
-
-    if (dialog?.open) return
-
     if (
       !e.target.closest('.fa-ellipsis-vertical') &&
       !e.target.closest('#label-menu')
@@ -159,47 +136,9 @@ async function reactAddNote({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
 
-  const { id, title } = await createNote()
+  const { id } = await createNote()
 
-  const doc = {
-    id,
-    title,
-    note: '',
-  }
-
-  state.set('main-documents', [doc, ...state.get('main-documents')])
-  state.set('active-doc', id)
-  state.set('app-mode', 'main-panel')
-
-  delete addBtn.disabled
-  if (document.querySelector('.markdown-editor').classList.contains('hidden')) {
-    document.querySelector('#edit').click()
-  }
-}
-
-async function reactNoteDelete() {
-  const modalEl = document.querySelector('#modal-delete')
-  modalEl.message('')
-
-  const id = state.get('active-doc')
-  const { message } = await deleteNote(id)
-
-  setMessage(message)
-
-  modalEl.close()
-
-  // remove the id=note_id query param from the address bar
-  // and from browser history (if needed, not sure it is)
-  const url = new URL(window.location)
-  url.searchParams.delete('id')
-  window.history.replaceState({}, '', url)
-
-  state.set('active-doc', null)
-  const filteredDocs = state
-    .get('main-documents')
-    .filter((doc) => doc.id !== id)
-  state.set('main-documents', filteredDocs)
-  state.set('app-mode', 'left-panel')
+  window.location.href = `./note.html?id=${id}&mode=edit`
 }
 
 async function reactSearch() {
@@ -222,40 +161,9 @@ async function reactSearch() {
   state.set('main-documents', data)
 }
 
-async function handleFieldChange(el) {
-  if (!el) return
-
-  if (['search-note', 'label-title'].includes(el.name)) return
-
-  const id = state.get('active-doc')
-  const title = document.querySelector('#note-title').value
-  const note = document.querySelector('.markdown-editor').value
-
-  document.querySelector('.markdown-wrapper').updateViewer()
-
-  updateNote({ id, title, note })
-  setMessage('Saved', { type: 'quiet' })
-}
-
-function handlRightDrawerState(use) {
-  const rightPanelEl = document.getElementById('right-drawer')
-
-  if (use === 'close') {
-    state.set('right-drawer-use', null)
-    rightPanelEl.classList.remove('open')
-    return
-  }
-
-  const activeUse = state.get('right-drawer-use')
-
-  if (activeUse !== use) {
-    state.set('right-drawer-use', use)
-  } else {
-    state.set('right-drawer-use', null)
-  }
-  rightPanelEl.classList.toggle('open', state.get('right-drawer-use'))
-}
-
+/**
+ *
+ */
 async function handleLabelUpdate(payload) {
   if (payload.action === 'assign' || payload.action === 'unassign')
     payload.noteId = state.get('active-doc')

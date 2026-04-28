@@ -1,7 +1,8 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
+import { setMessage } from '../../assets/js/ui.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
-import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
+import { createMainDocumentItem } from '../../assets/partials/mainDocumentItem.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 
@@ -30,6 +31,7 @@ export function mainDocumentsList() {
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
     addChildren(el, docs)
+    setMessage()
   })
 
   state.on('view-by-label', 'mainDocumentsList', (labelId) => {
@@ -58,12 +60,7 @@ function addChildren(el, docs) {
     if (doc?.peers?.length) {
       html.push(createAvatarGroup({ peers: doc.peers }))
     }
-
-    return createMainDocumentLink({
-      id: doc.id,
-      html,
-      url: `./note.html?id=${doc.id}`,
-    })
+    return createMainDocumentItem({ id: doc.id, html })
   })
   el.addChildren(children)
 }

@@ -5,9 +5,9 @@ import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { handlRightDrawerState } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import {
-  fetchNote,
   fetchNoteHistories,
   fetchNoteHistory,
   updateNote,
@@ -62,13 +62,11 @@ const css = `
 export function mainPanel() {
   injectStyle(css)
 
-  const el = createDiv({ className: 'mt-20 hidden' })
+  const el = createDiv({ id: 'main-panel', className: 'mt-20' })
 
   build(el)
   react(el)
   listen(el)
-
-  el.id = 'main-panel'
 
   return el
 }
@@ -119,25 +117,8 @@ function build(el) {
 }
 
 function react(el) {
-  state.on('app-mode', 'mainPanel', (appMode) => {
-    const inMainPanel = appMode === 'main-panel'
-
-    el.classList.toggle('hidden', !inMainPanel)
-  })
-
-  state.on('active-doc', 'mainPanel', async (id) => {
-    el.querySelector('.markdown-viewer').innerHTML = 'Loading...'
-    if (!id) return
-
-    // update browser history
-    const newUrl = `${window.location.pathname}?id=${id}`
-    window.history.pushState({ id: id }, '', newUrl)
-
-    const doc = { ...state.get('main-documents').find((d) => d.id === id) }
-    if (!doc.note) {
-      const { note: noteDoc } = await fetchNote(doc.id)
-      doc.note = noteDoc.note
-    }
+  state.on('active-doc', 'mainPanel', async () => {
+    const doc = state.get('main-documents')[0]
 
     el.querySelector('#note-title').value = doc.title
     el.querySelector('.markdown-wrapper').updateEditor(doc.note)
@@ -149,28 +130,9 @@ function react(el) {
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
 
-  state.on('right-drawer-toggle-click', 'mainPanel', () => {
-    document.querySelector('#right-drawer').classList.remove('open')
-  })
-
-  state.on('icon-click:edit', 'mainPanel', () => {
+  state.on('icon-click:edit-note', 'mainPanel', () => {
     document.querySelector('.markdown-wrapper').toggle()
-
-    document.querySelector('#right-drawer').classList.remove('open')
-
-    const scrollPercent =
-      window.scrollY / (document.body.scrollHeight - window.innerHeight)
-
-    const targetY =
-      (document.body.scrollHeight - window.innerHeight) * scrollPercent
-    window.scrollTo({ top: targetY, behavior: 'auto' })
-  })
-
-  state.on('icon-click:toc', 'mainPanel', () => {
-    handlRightDrawerState('toc')
-    if (state.get('right-drawer-use') === 'toc') {
-      updateTableOfContents()
-    }
+    handlRightDrawerState('close')
   })
 
   state.on('icon-click:history', 'mainPanel', () => {
@@ -178,14 +140,6 @@ function react(el) {
     if (state.get('right-drawer-use') === 'history') {
       updateHistories()
     }
-  })
-
-  state.on('icon-click:back', 'toolbar', async () => {
-    state.set('active-doc', null)
-    state.set('app-mode', 'left-panel')
-    // Manually push the "clean" URL to history
-    // (Since popstate only fires on browser buttons, not script changes)
-    window.history.pushState({}, '', window.location.pathname)
   })
 }
 
@@ -195,63 +149,6 @@ function listen(el) {
   titleEl.addEventListener('change', () => {
     if (!titleEl.value.trim().length) titleEl.value = 'Untitled'
   })
-
-  // handle browser back button clicks
-  window.addEventListener('popstate', () => {
-    // 1. Get the ID from the URL the user just "went back" to
-    const params = new URLSearchParams(window.location.search)
-    const idFromUrl = params.get('id')
-
-    // 2. Update your state manager
-    // This will trigger your state.on('active-doc', ...) listener!
-    state.set('active-doc', idFromUrl)
-
-    // 3. Handle the UI mode if necessary
-    if (!idFromUrl) {
-      state.set('app-mode', 'left-panel') // Switch back to the list view if ID is gone
-    }
-  })
-}
-
-function updateTableOfContents() {
-  const viewerEl = document.querySelector('.markdown-viewer')
-  const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
-  const rightPanelEl = document.querySelector('#right-drawer')
-
-  rightPanelEl.innerHTML = ''
-
-  rightPanelEl.appendChild(
-    createHeader({
-      html: [document.querySelector('#note-title').value],
-      type: 'h5',
-      className: 'toc-header flex align-center',
-    }),
-  )
-
-  headerEls.forEach((h) => {
-    let indent = parseInt(h.tagName[1]) - 1
-    // default padding left is 10px, which is what
-    // h1 has, so h2 and beyond needs 1 more
-    if (indent > 0) indent++
-    rightPanelEl.appendChild(
-      createDiv({
-        className: `toc-item p-left-${indent * 10}`,
-        html: h.textContent,
-        dataset: { id: h.id },
-      }),
-    )
-  })
-
-  rightPanelEl.querySelectorAll('.toc-item').forEach((i) =>
-    i.addEventListener('click', (e) => {
-      const target = document.getElementById(e.target.dataset.id)
-      const yOffset = -180
-      const y =
-        target.getBoundingClientRect().top + window.pageYOffset + yOffset
-
-      window.scrollTo({ top: y, behavior: 'smooth' })
-    }),
-  )
 }
 
 async function updateHistories() {
@@ -349,14 +246,43 @@ async function updateHistories() {
   rightPanelEl.querySelector('[data-history]').classList.add('active')
 }
 
-function handlRightDrawerState(use) {
-  const rightPanelEl = document.getElementById('right-drawer')
-  const activeUse = state.get('right-drawer-use')
+// function updateTableOfContents() {
+//   const viewerEl = document.querySelector('.markdown-viewer')
+//   const headerEls = [...viewerEl.querySelectorAll('h1,h2,h3,h4,h5')]
+//   const rightPanelEl = document.querySelector('#right-drawer')
 
-  if (activeUse !== use) {
-    state.set('right-drawer-use', use)
-  } else {
-    state.set('right-drawer-use', null)
-  }
-  rightPanelEl.classList.toggle('open', state.get('right-drawer-use'))
-}
+//   rightPanelEl.innerHTML = ''
+
+//   rightPanelEl.appendChild(
+//     createHeader({
+//       html: [document.querySelector('#note-title').value],
+//       type: 'h5',
+//       className: 'toc-header flex align-center',
+//     }),
+//   )
+
+//   headerEls.forEach((h) => {
+//     let indent = parseInt(h.tagName[1]) - 1
+//     // default padding left is 10px, which is what
+//     // h1 has, so h2 and beyond needs 1 more
+//     if (indent > 0) indent++
+//     rightPanelEl.appendChild(
+//       createDiv({
+//         className: `toc-item p-left-${indent * 10}`,
+//         html: h.textContent,
+//         dataset: { id: h.id },
+//       }),
+//     )
+//   })
+
+//   rightPanelEl.querySelectorAll('.toc-item').forEach((i) =>
+//     i.addEventListener('click', (e) => {
+//       const target = document.getElementById(e.target.dataset.id)
+//       const yOffset = -180
+//       const y =
+//         target.getBoundingClientRect().top + window.pageYOffset + yOffset
+
+//       window.scrollTo({ top: y, behavior: 'smooth' })
+//     }),
+//   )
+// }
