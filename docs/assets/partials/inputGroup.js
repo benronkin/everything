@@ -33,7 +33,7 @@ export function createInputGroup({
 
   if (className || classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createInputGroup expects a classes object: {group: '', input: '', icon: ''} `
+      `createInputGroup expects a classes object: {group: '', input: '', icon: ''} `,
     )
   }
 
@@ -75,6 +75,6 @@ function build({ el, id, type, name, placeholder, autocomplete, value }) {
       placeholder,
       autocomplete,
       value,
-    })
+    }),
   )
 }

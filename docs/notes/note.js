@@ -26,9 +26,10 @@ import { getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    setMessage('Loading...')
-
-    build()
+    const urlParams = new URLSearchParams(window.location.search)
+    const messageParam = urlParams.get('message')
+    const message = messageParam || 'Loading...'
+    setMessage(message)
 
     handleTokenQueryParam()
 
@@ -37,10 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
+    build()
     react()
-    listen()
 
-    const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
 
     const [{ note }, { labels }, { assignments }, { user }] = await Promise.all(

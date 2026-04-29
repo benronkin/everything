@@ -1,9 +1,7 @@
 import { createDiv } from '../assets/partials/div.js'
 import { createIcon } from '../assets/partials/icon.js'
+import { createTask } from './sections/task.js'
 
-/**
- *
- */
 export function createDueLabel(dueInfo, viewMode) {
   let dueHTML = ''
 
@@ -35,6 +33,20 @@ export function createDueLabel(dueInfo, viewMode) {
     }
   }
   return dueHTML
+}
+
+export function createTaskHelper(doc, viewMode, expandable = true) {
+  let dueHTML = createDueLabel(doc.dueInfo, viewMode)
+
+  return createTask({
+    id: doc.id,
+    title: doc.title,
+    details: doc.details,
+    steps: doc.steps,
+    startAt: doc.starts_at,
+    dueInfo: dueHTML,
+    expandable,
+  })
 }
 
 export function dueInfo(isoString) {

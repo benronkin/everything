@@ -6,6 +6,9 @@ import { createSpan } from '../../assets/partials/span.js'
 import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 
 const css = `
+.md-item:not(:last-child) {
+    margin-bottom: 10px;
+}
 .md-item .title {
   flex: 1 1 auto;           /* take all leftover width */
   white-space: nowrap;

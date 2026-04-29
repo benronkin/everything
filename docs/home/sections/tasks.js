@@ -2,8 +2,9 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createHeader } from '../../assets/partials/header.js'
-import { titleDetailsList } from '../../tasks/sections/titleDetailsList.js'
-import { createTaskHelper, dueInfo } from '../../tasks/tasks.utils.js'
+import { mainDocumentsList } from '../../tasks/sections/mainDocumentsList.js'
+import { dueInfo } from '../../tasks/tasks.utils.js'
+import { createTaskHeader } from '../../tasks/sections/taskHeader.js'
 import { setMessage } from '../../assets/js/ui.js'
 import { deleteTask, updateTask } from '../../tasks/tasks.api.js'
 
@@ -62,7 +63,7 @@ function tasksHeader(hasTasks) {
 }
 
 /**
- * titleDetailsList populates all tasks from state,
+ * mainDocumentsList populates all tasks from state,
  * but here we delete them and load only the first two
  */
 function tasksBody(tasks) {
@@ -80,8 +81,8 @@ function tasksBody(tasks) {
 
   tasks = [...urgentTasks, ...unDueTasks].slice(0, 3)
 
-  const list = titleDetailsList()
-  const children = tasks.map((doc) => createTaskHelper(doc, 'priority', false))
+  const list = mainDocumentsList()
+  const children = tasks.map((doc) => createTaskHeader(doc, 'priority', false))
 
   list.deleteChildren().addChildren(children)
   return list

@@ -3,10 +3,6 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createBookGroup } from './book.group.js'
 import { dangerZone } from './dangerZone.js'
-import { debounce } from '../../assets/js/utils.js'
-import { removeToasts } from '../../assets/partials/toast.js'
-import { updateBook } from '../books.api.js'
-import { setMessage } from '../../assets/js/ui.js'
 
 const css = `
 #main-panel {

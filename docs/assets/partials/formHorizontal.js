@@ -1,10 +1,7 @@
 import { injectStyle } from '../js/ui.js'
-import { state } from '../js/state.js'
 import { createForm } from './form.js'
-import { createButton } from './button.js'
 import { createInputGroup } from './inputGroup.js'
 import { createSpan } from './span.js'
-import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
@@ -26,7 +23,6 @@ const css = `
   pointer-events: none;
 }
 .form-horizontal .form-message {
-  margin-left: 12px;
   color: var(--gray3);
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -99,7 +95,7 @@ function build({ el, type, name, placeholder, autocomplete, classes, value }) {
       name,
       autocomplete,
       value,
-    })
+    }),
   )
 
   el.appendChild(createSpan({ className: 'form-message' }))

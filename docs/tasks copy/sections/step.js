@@ -6,16 +6,19 @@ import { createIcon } from '../../assets/partials/icon.js'
 const css = `
 .task-step {
   display: flex;
+  margin: 10px 5px;
   align-items: center;
+  padding: 5px;
 }
 .task-step:hover {
   background: var(--gray1);
 }
-
+.task-step div {
+  margin: 0 auto 0 10px;
+}
 .task-step .step-caption {
   color: inherit;
   text-decoration: none;
-  margin-left: 10px;
 }
 .task-step .step-caption.completed {
   color: var(--gray3);
@@ -28,10 +31,6 @@ const css = `
 }
 .task-step .fa-circle-check {
   color: var(--teal3);
-}
-.task-step .fa-close {
-  color: var(--gray6);
-  margin-left: auto;
 }
 `
 

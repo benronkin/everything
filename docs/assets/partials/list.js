@@ -25,7 +25,6 @@ export function createList({ id, emptyState, className, enableDrag = false }) {
   const el = createDiv()
 
   build({ el, emptyState, enableDrag })
-  listen(el)
 
   el.addChild = addChild.bind(el)
   el.addChildren = addChildren.bind(el)
@@ -59,7 +58,7 @@ function build({ el, emptyState, enableDrag } = {}) {
   }
 
   if (emptyState) {
-    const emptyStateDiv = createDiv({ className: 'empty-state' })
+    const emptyStateDiv = createDiv({ className: 'empty-state hidden' })
     el.appendChild(emptyStateDiv)
     emptyStateDiv.insertHtml(emptyState)
   }
@@ -69,22 +68,9 @@ function react(el) {
   state.on('list-changed', 'list', () => {
     el.querySelector('.empty-state')?.classList.toggle(
       'hidden',
-      el.getChildren().length
+      el.getChildren().length,
     )
   })
-}
-
-function listen(el) {
-  // select/unselect should be implemented inside the custom list
-  // state.on('item-click', 'list', (id) => {
-  //   el.getChildren().forEach((child) => {
-  //     if (child.id === id) {
-  //       child.classList.toggle('active')
-  //     } else {
-  //       child.classList.remove('active')
-  //     }
-  //   })
-  // })
 }
 
 // -------------------------------
@@ -131,7 +117,7 @@ function deleteChild(id) {
  */
 function deleteChildren() {
   const emptyState = [...this.children].filter((c) =>
-    c.classList.contains('empty-state')
+    c.classList.contains('empty-state'),
   )
 
   this.innerHTML = ''
@@ -189,7 +175,7 @@ function has(text) {
 
 function reset() {
   this.querySelectorAll('[data-list-item]').forEach((child) =>
-    child.classList.remove('active')
+    child.classList.remove('active'),
   )
 }
 

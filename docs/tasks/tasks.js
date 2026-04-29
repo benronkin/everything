@@ -3,32 +3,21 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
-import { mainPanel } from './sections/mainPanel.js'
-import { createStep as createStepElement } from './sections/step.js'
+import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import {
-  createStep,
-  createTask,
-  deleteStep,
-  deleteTask,
-  fetchTasks,
-  fetchStepsOfMultipleTasks,
-  update,
-  updateStep,
-  updateTask,
-} from './tasks.api.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
+import { createTask, fetchTasks, update } from './tasks.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
-  build()
-  react()
-
   try {
-    setMessage('Loading...')
+    const urlParams = new URLSearchParams(window.location.search)
+    const messageParam = urlParams.get('message')
+    const message = messageParam || 'Loading...'
+    setMessage(message)
 
     handleTokenQueryParam()
 
@@ -36,6 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!token) {
       throw new Error('Token not found locally')
     }
+
+    build()
+    react()
 
     let [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
 
@@ -46,26 +38,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       return task
     })
 
-    const taskIds = tasks.slice(0, 100).map((t) => t.id)
-    const { steps } = await fetchStepsOfMultipleTasks(taskIds)
-    // group steps by task_id
-    const stepsMap = steps.reduce((acc, step) => {
-      const { task_id, ...stepData } = step
-      if (!acc[task_id]) acc[task_id] = []
-      acc[task_id].push(stepData)
-      return acc
-    }, {})
-    // map steps using the map object
-    tasks = tasks.map((t) => {
-      t.steps = stepsMap[t.id] || []
-      return t
-    })
-
     state.set('main-documents', tasks)
-    state.set('app-mode', 'main-panel')
+    state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'tasks')
-    setMessage()
+
+    if (messageParam) {
+      const url = new URL(window.location)
+      url.searchParams.delete('message')
+      window.history.replaceState({}, '', url)
+    } else {
+      setMessage()
+    }
+
     window.state = state // avail to browser console
 
     const viewMode = localStorage.getItem('task-list-view')
@@ -91,7 +76,7 @@ function build() {
     className: 'columns-wrapper',
   })
   wrapperEl.appendChild(columnsWrapperEl)
-  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
 
   wrapperEl.appendChild(createModalDelete({ password: false }))
@@ -102,38 +87,12 @@ function build() {
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
 
-  state.on('field-changed', 'tasks', handleFieldChange)
-
-  state.on('task-deleted:tasks-list', 'tasks', handleTaskDelete)
-
-  state.on('button-click:modal-delete-btn', 'tasks', handleTaskDeleteConfirm)
-
   state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
-
-  state.on('step-added', 'tasks', handleAddStep)
-
-  state.on('step-deleted', 'tasks', handleDeleteStep)
-
-  state.on('step-updated', 'tasks', handleStepUpdate)
-
-  state.on('icon-click:cancel-due-date', 'tasks', handleDueDateCancel)
 }
 
-async function handleAddStep({ caption, taskId }) {
-  const task = document.getElementById(taskId)
-  const addStepEl = task.querySelector('.add-step')
-  addStepEl.value = ''
-  addStepEl.placeholder = 'Next step'
-  addStepEl.focus()
-
-  const stepEl = createStepElement({ caption })
-  task.querySelector('.steps-wrapper').appendChild(stepEl)
-
-  const { data, message, error } = await createStep(caption, taskId)
-
-  stepEl.setAttribute('id', data.id)
-}
-
+/**
+ *
+ */
 async function handleAddTask() {
   const inputEl = document
     .getElementById('tasks-form')
@@ -144,159 +103,14 @@ async function handleAddTask() {
 
   const id = `ev${crypto.randomUUID()}`
 
-  const doc = {
-    id,
-    title,
-    details: null,
-    created_at: new Date().toISOString(),
-    completed_at: null,
-    sort_order: 0,
-  }
+  await createTask(title, id)
 
-  const docs = state.get('main-documents')
-  docs.unshift(doc)
-  state.set('main-documents', docs)
-
-  document.querySelector('input[name="task"]').value = ''
-
-  const { error } = await createTask(title, id)
-
-  if (error) {
-    // revert operation
-    inputEl.value = title
-    docs.shift()
-    state.set('main-documents', docs)
-    setMessage(error, { type: 'warn' })
-  }
-}
-
-async function handleDeleteStep(data) {
-  if (!data.id) {
-    throw new Error(
-      `handleDeleteStep did not receive an id. Received: ${JSON.stringify(data)}`,
-    )
-  }
-  const id = data.id
-  const step = document.getElementById(id)
-  const stepsWrapper = step.closest('.steps-wrapper')
-  const task = step.closest('.td-item')
-
-  step.remove()
-  if (!stepsWrapper.childElementCount) {
-    task.querySelector('.add-step').placeholder = 'Add step'
-  }
-
-  const { error } = await deleteStep(id)
-  if (error) {
-    throw new Error(error)
-  }
-}
-
-function handleDueDateCancel() {
-  const parent = document.getElementById('cancel-due-date').closest('.td-item')
-  const id = parent.id
-  updateTask({ id, section: 'starts_at', value: '' })
-}
-
-async function handleStepUpdate({ id, completed }) {
-  const { error } = await updateStep({
-    id,
-    section: 'completed',
-    value: completed,
-  })
-  if (error) {
-    throw new Error(error)
-  }
-}
-
-async function handleFieldChange(el) {
-  try {
-    let section = el.name
-    let value = el.value
-
-    if (!section) return
-
-    const parent = el.closest('.td-item')
-    if (!parent) return
-    const id = parent.id
-
-    if (section === 'due-date' || section === 'due-time') {
-      const dateString = parent.querySelector('.due-date').value
-      const timeString = parent.querySelector('.due-time').value
-
-      if (section === 'due-time' && !dateString) return
-
-      if (timeString) {
-        value = new Date(`${dateString}T${timeString}Z`)
-      } else {
-        value = new Date(`${dateString}T00:00:00Z`)
-      }
-      value = value.toISOString()
-      section = 'starts_at'
-    }
-
-    const { error } = await updateTask({ id, section, value })
-    if (error) {
-      throw new Error(error)
-    }
-
-    setMessage('Saved', { type: 'quiet' })
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-function handleTaskDelete({ id }) {
-  const tasks = state.get('main-documents')
-  const idx = tasks.findIndex((t) => t.id === id)
-  if (idx === -1) return
-
-  // get steps from the dom not from state
-  // for newly created tasks
-  const steps = [
-    ...document.getElementById(id).querySelector('.steps-wrapper').children,
-  ]
-  const hasOpenSteps = steps.filter((s) => s.querySelector('.fa-circle')).length
-
-  if (!hasOpenSteps) {
-    // pass id inside object to match the payload that state.on sends
-    handleTaskDeleteConfirm({ id })
-    return
-  }
-
-  const modalDelete =
-    document.getElementById('modal-delete') ||
-    createModalDelete({ password: false })
-  modalDelete.querySelector('.modal-header').innerHTML =
-    `Delete ${tasks[idx].title}`
-  modalDelete.querySelector('.modal-body').innerHTML =
-    'This task contains outstanding steps. Delete task?'
-
-  document.getElementById('modal-delete-btn').dataset.taskId = id
-
-  modalDelete.showModal()
-}
-
-// must accept id inside obj to match what state.on sends
-function handleTaskDeleteConfirm({ id }) {
-  if (id === 'modal-delete-btn') {
-    // call came from state.on so get id
-    // from the modal delete btn
-    id = document.getElementById('modal-delete-btn').dataset.taskId
-  }
-  const tasks = state.get('main-documents')
-  const idx = tasks.findIndex((t) => t.id === id)
-  tasks.splice(idx, 1)[0] // remove 1 item
-  state.set('main-documents', [...tasks]) // triggers list re-render
-
-  document.getElementById('modal-delete').close()
-
-  deleteTask(id)
+  window.location.href = `./task.html?id=${id}`
 }
 
 async function handleTaskDragged() {
   const tasksListEl = document.querySelector('#tasks-list')
-  const tdItems = [...tasksListEl.querySelectorAll('.td-item')]
+  const tdItems = [...tasksListEl.querySelectorAll('.md-item')]
   const ids = tdItems.map((tdItem, i) => ({ id: tdItem.id, sort_order: i }))
   const { error } = await update(ids)
   if (error) {

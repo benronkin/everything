@@ -23,23 +23,13 @@ export async function createTask(title, id) {
 }
 
 export async function deleteTask(id) {
-  const resp = await getWebApp(`${url}/delete?id=${id}`)
-  return resp
-}
-
-export async function fetchTask(id) {
-  const { task, error } = await getWebApp(`${url}/read-one?id=${id}`)
-  return { task, error }
+  const { error } = await getWebApp(`${url}/delete?id=${id}`)
+  return { error }
 }
 
 export async function fetchTasks() {
   const { tasks, error } = await getWebApp(`${url}/read`)
   return { tasks, error }
-}
-
-export async function fetchSteps(id) {
-  const { steps, error } = await getWebApp(`${url}/steps/read?id=${id}`)
-  return { steps, error }
 }
 
 export async function fetchStepsOfMultipleTasks(task_ids) {

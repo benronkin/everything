@@ -29,20 +29,6 @@ export function toolbar() {
 }
 
 function react(el) {
-  state.on('app-mode', 'toolbar', (mode) => {
-    const isLeftPanel = mode === 'left-panel'
-    el.querySelector('#calendar-priority').classList.toggle(
-      'hidden',
-      !isLeftPanel,
-    )
-    el.querySelector('#sort-icon').classList.toggle('hidden', !isLeftPanel)
-
-    // hide the entire toolbar on mainPanel
-    // don't use display: none: it pulls up the footer due
-    // to one horizontal element missing (toolbar)
-    el.style.visibility = isLeftPanel ? 'visible' : 'hidden'
-  })
-
   state.on('icon-click:calendar-priority', 'toolbar', ({ className }) => {
     const state = className.includes('fa-calendar') ? 'calendar' : 'priority'
     localStorage.setItem('task-list-view', state)

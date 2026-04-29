@@ -1,4 +1,6 @@
+import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
@@ -7,6 +9,7 @@ import { createHeader } from '../../assets/partials/header.js'
 
 const css = `
 #due-date-wrapper {
+  margin: 20px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
