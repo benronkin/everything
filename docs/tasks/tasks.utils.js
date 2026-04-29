@@ -20,7 +20,7 @@ export function createDueLabel(dueInfo, viewMode) {
           other: ['danger-foreground', 'due-label'],
         },
       })
-    if (dueInfo.label === 'Today')
+    if (['Today', 'Tomorrow'].includes(dueInfo.label))
       dueHTML = createIcon({
         classes: { primary: 'fa-bell', other: ['due-label'] },
       })
@@ -36,10 +36,6 @@ export function createDueLabel(dueInfo, viewMode) {
     if (['Overdue', 'Later'].includes(dueInfo.label)) {
       dueHTML = createDiv({ html: dueInfo.date, className: 'due-label' })
     }
-  }
-
-  if (!dueHTML) {
-    throw new Error('createDueLabel did not generate HTML')
   }
 
   return dueHTML
