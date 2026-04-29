@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -20,5 +20,14 @@
   <body class="dark-mode">
     <script src="../assets/js/markdown-it.js"></script>
     <script src="./lexicon.js" type="module"></script>
+    <script>
+      // bust the cache
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          // Page was restored from the back/forward cache
+          window.location.reload()
+        }
+      })
+    </script>
   </body>
 </html>

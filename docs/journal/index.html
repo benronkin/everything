@@ -19,5 +19,14 @@
   </head>
   <body class="dark-mode">
     <script src="./journals.js" type="module"></script>
+    <script>
+      // bust the cache
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          // Page was restored from the back/forward cache
+          window.location.reload()
+        }
+      })
+    </script>
   </body>
 </html>
