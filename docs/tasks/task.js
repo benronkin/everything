@@ -103,6 +103,8 @@ function react() {
 
   state.on('task-deleted', 'tasks', handleTaskDelete)
 
+  state.on('button-click:modal-delete-btn', 'tasks', handleTaskDeleteConfirm)
+
   state.on('step-added', 'tasks', handleAddStep)
 
   state.on('step-deleted', 'tasks', handleDeleteStep)
