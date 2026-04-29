@@ -25,7 +25,7 @@ export function createTaskHeader(
 
   if (dueInfo) {
     const dueLabel = createDueLabel(dueInfo, viewMode)
-    console.log('dueInfo', dueInfo)
+    // console.log('dueInfo', dueInfo)
     // console.log('viewMode', viewMode)
     // console.log('dueLabel', dueLabel)
     if (dueLabel) {
