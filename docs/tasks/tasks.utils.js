@@ -24,6 +24,9 @@ export function createDueLabel(dueInfo, viewMode) {
       dueHTML = createIcon({
         classes: { primary: 'fa-bell', other: ['due-label'] },
       })
+    if (dueInfo.label === 'Later') {
+      // do nothing
+    }
   }
 
   if (viewMode === 'calendar') {
