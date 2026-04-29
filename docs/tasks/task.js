@@ -222,8 +222,7 @@ function handleTaskDelete() {
 
   modalDelete.querySelector('.modal-header').innerHTML = `Delete task`
   modalDelete.querySelector('.modal-body').innerHTML =
-    `<div>${document.getElementById('title').value}</div>` +
-    '<div>This task contains outstanding steps. Delete task?<div'
+    `<div><strong>${document.getElementById('title').value}</strong> contains outstanding steps. Delete task?<div>`
 
   document.getElementById('modal-delete-btn').dataset.taskId = id
 
