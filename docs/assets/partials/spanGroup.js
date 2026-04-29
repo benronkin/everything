@@ -32,7 +32,7 @@ export function createSpanGroup({ id, classes, html, className = null }) {
 
   if (className || classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createInputGroup Oops: pass-in optional classes object: { group: '', span: '', icon: ''} `
+      `createInputGroup Oops: pass-in optional classes object: { group: '', span: '', icon: ''} `,
     )
   }
 
@@ -76,6 +76,6 @@ function build({ el, id, html }) {
     createSpan({
       id,
       html,
-    })
+    }),
   )
 }

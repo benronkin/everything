@@ -24,53 +24,12 @@ const css = `
   margin-right: 20px;
   margin-left: 0 !important;  
 }
-.td-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  cursor: pointer;
-  padding: 0;
-  border: 1px solid var(--gray0);
-  border-radius: var(--border-radius);
-}
-.td-item .title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-.td-item .title-wrapper i,
-.td-item .title-wrapper .due-label {
-  margin-left: 10px;
-}
-.td-item textarea {
-  padding: 10px 10px 0 10px;
-  margin: 1px;
-  flex-grow: 1;            /* 👈 The Magic: Tells it to take all available space */
-  width: 0;                /* 👈 The Secret: Prevents the textarea from pushing the container wide */
-}
-.td-item .details-ta {
-  width: 100%;
-}
-
-.td-item .icons {
-  padding: 15px 10px;  
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
 .add-step {
   width: 90%;
   border: none;
 }
-
 .fa-trash {
   margin: 10px;
-}
-.list-item:hover {
-  color: inherit;
 }
 .due-date-badge {
   padding: 5px;
@@ -137,9 +96,9 @@ function build(el, doc) {
     const [datePart, fullTimePart] = dateObj.toISOString().split('T')
     const timePart = fullTimePart.substring(0, 5)
 
-    el.querySelector('.due-date').value = datePart
-    el.querySelector('.due-time').value = timePart
-    el.querySelector('.add-due-date').click()
+    el.querySelector('#due-date').value = datePart
+    el.querySelector('#due-time').value = timePart
+    el.querySelector('#add-due-date-wrapper').click()
   }
 
   el.appendChild(
@@ -163,7 +122,7 @@ function build(el, doc) {
   const trashBtn = createButton({
     id: 'trash-btn',
     className: 'transparent',
-    html: createSpan({ html: '<i class="fa-solid fa-trash"></i> Remove' }),
+    html: createSpan({ html: '<i class="fa-solid fa-trash"></i> Delete task' }),
   })
 
   el.appendChild(trashBtn)

@@ -99,19 +99,19 @@ function react() {
   state.on('main-documents', 'note', (docs) => {
     document.title = `${docs[0].title} | Everything App`
   })
-  state.on('field-changed', 'tasks', handleFieldChange)
+  state.on('field-changed', 'task', handleFieldChange)
 
-  state.on('task-deleted', 'tasks', handleTaskDelete)
+  state.on('task-deleted', 'task', handleTaskDelete)
 
-  state.on('button-click:modal-delete-btn', 'tasks', handleTaskDeleteConfirm)
+  state.on('button-click:modal-delete-btn', 'task', handleTaskDeleteConfirm)
 
-  state.on('step-added', 'tasks', handleAddStep)
+  state.on('step-added', 'task', handleAddStep)
 
-  state.on('step-deleted', 'tasks', handleDeleteStep)
+  state.on('step-deleted', 'task', handleDeleteStep)
 
-  state.on('step-updated', 'tasks', handleStepUpdate)
+  state.on('step-updated', 'task', handleStepUpdate)
 
-  state.on('icon-click:cancel-due-date', 'tasks', handleDueDateCancel)
+  state.on('icon-click:cancel-due-date', 'task', handleDueDateCancel)
 }
 
 async function handleAddStep({ caption, taskId }) {
@@ -155,8 +155,7 @@ async function handleDeleteStep(data) {
  *
  */
 function handleDueDateCancel() {
-  const parent = document.getElementById('cancel-due-date').closest('.td-item')
-  const id = parent.id
+  const id = state.get('active-doc')
   updateTask({ id, section: 'starts_at', value: '' })
 }
 
@@ -190,8 +189,8 @@ async function handleFieldChange(el) {
     const id = state.get('active-doc')
 
     if (section === 'due-date' || section === 'due-time') {
-      const dateString = parent.querySelector('.due-date').value
-      const timeString = parent.querySelector('.due-time').value
+      const dateString = document.querySelector('#due-date').value
+      const timeString = document.querySelector('#due-time').value
 
       if (section === 'due-time' && !dateString) return
 

@@ -43,6 +43,8 @@ export function createStep({ caption, completed = false, id } = {}) {
     className: 'task-step',
   })
 
+  console.log('here')
+
   build(el)
   listen(el, id)
 

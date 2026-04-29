@@ -3,7 +3,6 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createHeader } from '../../assets/partials/header.js'
 
 const css = `
 #due-date-wrapper {
@@ -11,8 +10,10 @@ const css = `
   align-items: center;
   justify-content: space-between;
 }
-
-.due-fields {
+#add-due-date-wrapper {
+  width: 100%;
+}
+#due-fields {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,65 +35,64 @@ export function createDueDate() {
   return el
 }
 
+/**
+ *
+ */
 export function toggleDueDateElements(el) {
-  const classes = [
-    'add-due-date',
-    'due-header',
-    'due-date',
-    'due-time',
-    'cancel-due-date',
-  ]
-
-  classes.forEach((c) => el.querySelector(`.${c}`).classList.toggle('hidden'))
+  el.querySelector('#add-due-date-wrapper').classList.toggle('hidden')
+  el.querySelector('#due-fields').classList.toggle('hidden')
 }
 
+/**
+ *
+ */
 function build(el) {
-  const dueDateSpan = createSpanGroup({
-    classes: { group: 'add-due-date', icon: 'fa-calendar' },
-    html: 'Add due date',
-  })
-  el.appendChild(dueDateSpan)
-
-  const dueFields = createDiv({ className: 'due-fields' })
-  el.appendChild(dueFields)
-
-  dueFields.appendChild(
-    createHeader({
-      type: 'h5',
-      html: 'Due:',
-      className: 'due-header hidden',
-    }),
-  )
-  dueFields.appendChild(
-    createInput({
-      name: 'due-date',
-      type: 'date',
-      className: 'due-date hidden',
-    }),
-  )
-  dueFields.appendChild(
-    createInput({
-      name: 'due-time',
-      type: 'time',
-      className: 'due-time hidden',
+  el.appendChild(
+    createDiv({
+      id: 'add-due-date-wrapper',
+      html: createSpanGroup({
+        classes: { icon: 'fa-calendar' },
+        html: 'Add due date',
+      }),
     }),
   )
 
   el.appendChild(
-    createIcon({
-      classes: { primary: 'fa-close', other: ['cancel-due-date', 'hidden'] },
+    createDiv({
+      id: 'due-fields',
+      className: 'hidden',
+      html: [
+        createIcon({ classes: { primary: 'fa-calendar' } }),
+        createInput({
+          id: 'due-date',
+          name: 'due-date',
+          type: 'date',
+        }),
+        createInput({
+          id: 'due-time',
+          name: 'due-time',
+          type: 'time',
+        }),
+        createIcon({
+          id: 'cancel-due-date',
+          classes: { primary: 'fa-close' },
+        }),
+      ],
     }),
   )
 }
 
+/**
+ *
+ */
 function listen(el) {
-  el.querySelector('.add-due-date').addEventListener('click', () =>
-    toggleDueDateElements(el),
-  )
+  el.querySelector('#add-due-date-wrapper').addEventListener('click', () => {
+    toggleDueDateElements(el)
+  })
 
-  el.querySelector('.cancel-due-date').addEventListener('click', () => {
-    el.querySelector('.due-date').value = ''
-    el.querySelector('.due-time').value = ''
+  el.querySelector('#cancel-due-date').addEventListener('click', () => {
+    el.querySelector('#due-date').value = ''
+    el.querySelector('#due-time').value = ''
     toggleDueDateElements(el)
   })
 }
