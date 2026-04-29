@@ -151,12 +151,18 @@ async function handleDeleteStep(data) {
   }
 }
 
+/**
+ *
+ */
 function handleDueDateCancel() {
   const parent = document.getElementById('cancel-due-date').closest('.td-item')
   const id = parent.id
   updateTask({ id, section: 'starts_at', value: '' })
 }
 
+/**
+ *
+ */
 async function handleStepUpdate({ id, completed }) {
   const { error } = await updateStep({
     id,
@@ -168,16 +174,20 @@ async function handleStepUpdate({ id, completed }) {
   }
 }
 
+/**
+ *
+ */
 async function handleFieldChange(el) {
   try {
     let section = el.name
     let value = el.value
 
-    if (!section) return
+    if (!section) {
+      console.error('element name was not provided. aborting')
+      return
+    }
 
-    const parent = el.closest('.td-item')
-    if (!parent) return
-    const id = parent.id
+    const id = state.get('active-doc')
 
     if (section === 'due-date' || section === 'due-time') {
       const dateString = parent.querySelector('.due-date').value

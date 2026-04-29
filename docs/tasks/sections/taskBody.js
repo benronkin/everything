@@ -132,13 +132,14 @@ function build(el, doc) {
 
   el.appendChild(createDueDate())
 
-  if (doc.startAt) {
-    const dateObj = new Date(doc.startAt)
+  if (doc.starts_at) {
+    const dateObj = new Date(doc.starts_at)
     const [datePart, fullTimePart] = dateObj.toISOString().split('T')
     const timePart = fullTimePart.substring(0, 5)
 
     el.querySelector('.due-date').value = datePart
     el.querySelector('.due-time').value = timePart
+    el.querySelector('.add-due-date').click()
   }
 
   el.appendChild(

@@ -8,7 +8,7 @@ export function createDueLabel(dueInfo, viewMode) {
   let dueHTML = ''
 
   if (!dueInfo) {
-    console.debug('createDueLabel did not receive dueInfo')
+    console.error('createDueLabel did not receive dueInfo')
     return dueHTML
   }
 
@@ -33,10 +33,15 @@ export function createDueLabel(dueInfo, viewMode) {
     ) {
       dueHTML = createDiv({ html: dueInfo.time, className: 'due-label' })
     }
-    if (['Later'].includes(dueInfo.label)) {
+    if (['Overdue', 'Later'].includes(dueInfo.label)) {
       dueHTML = createDiv({ html: dueInfo.date, className: 'due-label' })
     }
   }
+
+  if (!dueHTML) {
+    throw new Error('createDueLabel did not generate HTML')
+  }
+
   return dueHTML
 }
 

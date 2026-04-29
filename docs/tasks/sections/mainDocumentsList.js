@@ -4,7 +4,6 @@ import { setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createList } from '../../assets/partials/list.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
-import { createDueLabel } from '../tasks.utils.js'
 import { createTaskHeader } from './taskHeader.js'
 
 const css = `
@@ -110,7 +109,6 @@ function createCalendarList() {
     if (docs.length) {
       children.push(createDiv({ html: cat, className: 'category' }))
       for (const doc of docs) {
-        doc.dueInfo = createDueLabel(doc.dueInfo, 'calendar')
         children.push(createTaskHeader(doc, 'calendar'))
       }
     }
