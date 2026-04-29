@@ -94,7 +94,7 @@ function react() {
     }
   })
 
-  state.on('field-updated', 'settings', (el) => {
+  state.on('field-changed', 'settings', (el) => {
     const field = el.name
     const value = el.value
 
