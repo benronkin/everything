@@ -45,7 +45,7 @@ export function createTaskHeader(
     id,
     className: `md-item list-item ${className}`.trim(),
     html,
-    url: `./task.html?id=${id}`,
+    url: `${state.getBaseUrl()}tasks/task.html?id=${id}`,
   })
 
   react(el)

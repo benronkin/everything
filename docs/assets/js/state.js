@@ -79,6 +79,12 @@ export const state = {
     return url
   },
 
+  getBaseUrl() {
+    return window.location.hostname === 'localhost'
+      ? 'http://localhost:5500/docs/'
+      : 'https://benronkin.github.io/everything/'
+  },
+
   getDefaultPage() {
     return localStorage.getItem('mode') || 'recipes'
   },
