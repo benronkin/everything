@@ -2,7 +2,6 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { createDueLabel } from '../tasks.utils.js'
 import { toggleDueDateElements } from './dueDate.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 
@@ -15,20 +14,19 @@ const css = `
 }
 `
 
-export function createTaskHeader(
-  { title, startAt, id, dueInfo, className = '' } = {},
-  viewMode,
-) {
+export function createTaskHeader({
+  title,
+  startAt,
+  id,
+  dueInfo,
+  className = '',
+} = {}) {
   injectStyle(css)
 
   const div = createDiv({ className: 'title-wrapper' })
 
   if (dueInfo) {
-    console.log('dueInfo', dueInfo)
-    console.log('viewMode', viewMode)
-    const dueLabel = createDueLabel(dueInfo, viewMode)
-    console.log('dueLabel', dueLabel)
-    div.appendChild(dueLabel)
+    div.appendChild(dueInfo)
   }
 
   if (startAt) {

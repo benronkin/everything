@@ -7,7 +7,10 @@ import { createIcon } from '../assets/partials/icon.js'
 export function createDueLabel(dueInfo, viewMode) {
   let dueHTML = ''
 
-  if (!dueInfo) return dueHTML
+  if (!dueInfo) {
+    console.debug('createDueLabel did not receive dueInfo')
+    return dueHTML
+  }
 
   if (viewMode === 'priority') {
     if (dueInfo.label === 'Overdue')
