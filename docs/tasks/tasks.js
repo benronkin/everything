@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (task.starts_at) {
         task.dueInfo = dueInfo(task.starts_at)
       }
-      if (task.assignee !== user.id) {
+      if (task.assignee && task.assignee !== user.id) {
         const user = users.find((user) => user.id === task.assignee)
         if (!user) {
           console.log('users', users)
