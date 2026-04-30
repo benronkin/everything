@@ -27,6 +27,7 @@ import { getMe } from '../users/users.api.js'
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const urlParams = new URLSearchParams(window.location.search)
+    const url = new URL(window.location)
     const messageParam = urlParams.get('message')
     const message = messageParam || 'Loading...'
     setMessage(message)
@@ -47,6 +48,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       [fetchNote(id), fetchLabels(), fetchLabelsAssignments(), getMe()],
     )
 
+    if (note.user_id === user.id) note.role = 'owner'
+
     state.set('main-documents', [note])
     state.set('app-mode', 'main-panel')
     state.set('active-doc', id)
@@ -61,6 +64,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('user', user)
     state.set('default-page', 'notes')
 
+    const mode = urlParams.get('mode')
+    if (mode === 'edit') {
+      document.getElementById('edit-note').click()
+      requestAnimationFrame(() => {
+        document.getElementById('note-title').focus()
+      })
+      url.searchParams.delete('mode')
+      window.history.replaceState({}, '', url)
+    }
+    if (!messageParam) {
+      setMessage()
+    } else {
+      url.searchParams.delete('message')
+    }
     window.state = state // avail to browser console
   } catch (error) {
     console.trace(error)

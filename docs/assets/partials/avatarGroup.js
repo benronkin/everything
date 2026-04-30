@@ -2,8 +2,6 @@ import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createAvatar } from './avatar.js'
 import { createIcon } from './icon.js'
-import { state } from '../js/state.js'
-import { log } from '../js/logger.js'
 
 const css = `
 .avatar-group {
@@ -33,7 +31,7 @@ export function createAvatarGroup({
 function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
   peersToShow.forEach((p) =>
-    el.appendChild(createAvatar({ name: p.name, url: p.url }))
+    el.appendChild(createAvatar({ name: p.name, url: p.url })),
   )
 
   if (peers?.length > 3) {
@@ -41,7 +39,7 @@ function build({ el, peers = [], showShare }) {
       createDiv({
         className: 'peer more',
         html: `+${peers.length - 3}`,
-      })
+      }),
     )
   }
 
@@ -55,6 +53,6 @@ function build({ el, peers = [], showShare }) {
         dataset: {
           role: 'sharer',
         },
-      })
+      }),
     )
 }

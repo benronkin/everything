@@ -43,13 +43,14 @@ function react(el) {
     el.querySelector('.avatar-group')?.remove()
 
     const doc = state.get('main-documents')[0]
-    el.querySelector('.icons').appendChild(
-      createAvatarGroup({
-        peers: doc.peers,
-        className: 'ml-auto',
-        showShare: doc.role === 'owner',
-      }),
-    )
+
+    const avatarGroup = createAvatarGroup({
+      peers: doc.peers,
+      className: 'ml-auto',
+      showShare: doc.role === 'owner',
+    })
+
+    el.querySelector('.icons').appendChild(avatarGroup)
   })
 
   state.on('app-mode', 'toolbar', (mode) => {
