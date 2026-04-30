@@ -103,7 +103,12 @@ async function handleAddTask() {
 
   inputEl.value = ''
 
-  const starts_at = new Date().toISOString()
+  // Create a date string that follows the ISO format
+  // but uses the local time instead of server time
+  const now = new Date()
+  const offset = now.getTimezoneOffset() * 60000
+  const starts_at = new Date(now - offset).toISOString()
+
   const resp = await createTask({ title, starts_at })
   const { id } = resp
   const newDoc = { id, title, starts_at, dueInfo: dueInfo(starts_at) }
