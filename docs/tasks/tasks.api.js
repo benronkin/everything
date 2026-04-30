@@ -8,7 +8,6 @@ export async function createStep(caption, taskId) {
     caption,
     taskId,
   })
-  // const { data, message, error } = resp
   return resp
 }
 
@@ -18,8 +17,8 @@ export async function deleteStep(id) {
 }
 
 export async function createTask(title, id) {
-  const { error } = await postWebAppJson(`${url}/create`, { title, id })
-  return { error }
+  const { error, data } = await postWebAppJson(`${url}/create`, { title, id })
+  return data
 }
 
 export async function deleteTask(id) {

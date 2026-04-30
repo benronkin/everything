@@ -103,7 +103,8 @@ async function handleAddTask() {
 
   inputEl.value = ''
 
-  const { id } = await createTask(title)
+  const resp = await createTask(title)
+  const { id } = resp
   const newDoc = { id, title }
   const docs = state.get('main-documents')
   docs.unshift(newDoc)
