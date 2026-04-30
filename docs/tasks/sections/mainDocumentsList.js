@@ -1,6 +1,5 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
-import { setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createList } from '../../assets/partials/list.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
@@ -36,8 +35,6 @@ function react(el) {
     } else {
       el.addChildren(createPriorityList())
     }
-
-    setMessage()
   })
 
   state.on('icon-click:sort-icon', 'mainDocumentsList', () => {

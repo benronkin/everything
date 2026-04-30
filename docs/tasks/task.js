@@ -244,5 +244,5 @@ function handleTaskDelete() {
 async function handleTaskDeleteConfirm() {
   const id = state.get('active-doc')
   await deleteTask(id)
-  window.location = `./index.html?message=Task Deleted`
+  window.location = `./index.html?message=Task+Deleted`
 }

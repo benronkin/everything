@@ -62,8 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'notes')
 
     window.state = state // avail to browser console
-
-    setMessage()
   } catch (error) {
     console.trace(error)
     setMessage(error.message, { type: 'danger' })

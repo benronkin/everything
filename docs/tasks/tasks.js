@@ -101,11 +101,15 @@ async function handleAddTask() {
   const title = inputEl.value?.trim()
   if (!title.length) return
 
-  const id = `ev${crypto.randomUUID()}`
+  inputEl.value = ''
 
-  await createTask(title, id)
+  const { id } = await createTask(title)
+  const newDoc = { id, title }
+  const docs = state.get('main-documents')
+  docs.unshift(newDoc)
+  state.set('main-documents', docs)
 
-  window.location.href = `./task.html?id=${id}`
+  // window.location.href = `./task.html?id=${id}`
 }
 
 async function handleTaskDragged() {
