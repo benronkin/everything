@@ -1,6 +1,7 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInput } from '../../assets/partials/input.js'
+import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
 
@@ -62,7 +63,7 @@ function build(el) {
       id: 'due-fields',
       className: 'hidden',
       html: [
-        createIcon({ classes: { primary: 'fa-calendar' } }),
+        createSpan({ html: 'Due:' }),
         createInput({
           id: 'due-date',
           name: 'due-date',

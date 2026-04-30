@@ -7,7 +7,7 @@ import { mainPanel } from './sections/mainPanel.js'
 import { createStep as createStepElement } from './sections/step.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
-import { getMe } from '../users/users.api.js'
+import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createStep,
@@ -40,8 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const id = urlParams.get('id')
 
-    let [{ user }, { task }, { steps }] = await Promise.all([
+    let [{ user }, { users }, { task }, { steps }] = await Promise.all([
       getMe(),
+      fetchUsers(),
       fetchTask(id),
       fetchSteps(id),
     ])
@@ -52,10 +53,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     task.steps = steps
 
+    state.set('user', user)
+    state.set('users', users)
     state.set('main-documents', [task])
     state.set('active-doc', task.id)
     state.set('app-mode', 'main-panel')
-    state.set('user', user)
     state.set('default-page', 'tasks')
 
     if (messageParam) {

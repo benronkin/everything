@@ -172,7 +172,7 @@ function listen(el) {
 
   el.querySelector('.caret-wrapper i').addEventListener(
     'click',
-    handleSelectClick
+    handleSelectClick,
   )
   el.addEventListener('click', handleSelectClick)
 }

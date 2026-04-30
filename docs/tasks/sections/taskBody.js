@@ -9,6 +9,7 @@ import { createTextarea } from '../../assets/partials/textarea.js'
 import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { createUserSelect } from '../../assets/partials/userSelect.js'
 
 const css = `
 #due-date-wrapper {
@@ -100,6 +101,21 @@ function build(el, doc) {
     el.querySelector('#due-time').value = timePart
     el.querySelector('#add-due-date-wrapper').click()
   }
+
+  const users = state.get('users')
+  const options = users.map((user) => ({
+    value: user.id,
+    label: user.first_name,
+  }))
+  el.appendChild(
+    createUserSelect({
+      id: 'assignee',
+      name: 'assignee',
+      caption: 'Assignee:',
+      value: doc.assignee,
+      options,
+    }),
+  )
 
   el.appendChild(
     createHeaderGroup({
