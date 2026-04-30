@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (task.assignee !== user.id) {
         const user = users.find((user) => user.id === task.assignee)
+        if (!user) {
+          console.log('users', users)
+          throw new Error(
+            `Oops, tasks.js cannot locate user with id "${task.assignee}"`,
+          )
+        }
         task.assignedPeer = { name: user.first_name }
       }
 
