@@ -147,8 +147,7 @@ function listen(el) {
     const caption = e.target.value.trim()
     if (!caption.length) return
 
-    const parent = e.target.closest('.td-item')
-
-    state.set('step-added', { taskId: parent.id, caption })
+    const taskId = state.get('active-doc')
+    state.set('step-added', { taskId, caption })
   })
 }

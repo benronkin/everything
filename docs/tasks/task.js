@@ -115,16 +115,17 @@ function react() {
 }
 
 async function handleAddStep({ caption, taskId }) {
-  const task = document.getElementById(taskId)
-  const addStepEl = task.querySelector('.add-step')
+  const addStepEl = document.querySelector('.add-step')
   addStepEl.value = ''
   addStepEl.placeholder = 'Next step'
   addStepEl.focus()
 
   const stepEl = createStepElement({ caption })
-  task.querySelector('#steps-wrapper').appendChild(stepEl)
+  document.querySelector('#steps-wrapper').appendChild(stepEl)
 
-  const { data, message, error } = await createStep(caption, taskId)
+  const resp = await createStep(caption, taskId)
+
+  const { data } = resp
 
   stepEl.setAttribute('id', data.id)
 }
@@ -138,11 +139,10 @@ async function handleDeleteStep(data) {
   const id = data.id
   const step = document.getElementById(id)
   const stepsWrapper = step.closest('#steps-wrapper')
-  const task = step.closest('.td-item')
 
   step.remove()
   if (!stepsWrapper.childElementCount) {
-    task.querySelector('.add-step').placeholder = 'Add step'
+    document.querySelector('.add-step').placeholder = 'Add step'
   }
 
   const { error } = await deleteStep(id)
@@ -182,7 +182,7 @@ async function handleFieldChange(el) {
     let value = el.value
 
     if (!section) {
-      console.error('element name was not provided. aborting')
+      console.log('element name was not provided. aborting')
       return
     }
 
