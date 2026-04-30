@@ -5,6 +5,7 @@ import { createSpan } from '../../assets/partials/span.js'
 import { toggleDueDateElements } from './dueDate.js'
 import { createDueLabel } from '../tasks.utils.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
+import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 
 const css = `
 .md-item .title-wrapper {
@@ -15,11 +16,10 @@ const css = `
 }
 `
 
-export function createTaskHeader(
-  { title, startAt, id, dueInfo, className = '' } = {},
-  viewMode,
-) {
+export function createTaskHeader(doc, viewMode) {
   injectStyle(css)
+
+  const { title, startAt, id, dueInfo, assignedPeer, className = '' } = doc
 
   const div = createDiv({ className: 'title-wrapper' })
 
@@ -46,6 +46,11 @@ export function createTaskHeader(
   div.appendChild(createSpan({ html: title }))
 
   const html = [div]
+
+  if (assignedPeer) {
+    const peer = createAvatarGroup({ peers: [assignedPeer] })
+    html.push(peer)
+  }
 
   const el = createMainDocumentLink({
     id,

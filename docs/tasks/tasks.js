@@ -6,7 +6,7 @@ import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
-import { getMe } from '../users/users.api.js'
+import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
@@ -29,17 +29,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     build()
     react()
 
-    let [{ user }, { tasks }] = await Promise.all([getMe(), fetchTasks()])
+    let [{ user }, { users }, { tasks }] = await Promise.all([
+      getMe(),
+      fetchUsers(),
+      fetchTasks(),
+    ])
 
     tasks = tasks.map((task) => {
       if (task.starts_at) {
         task.dueInfo = dueInfo(task.starts_at)
       }
+      if (task.assignee !== user.id) {
+        const user = users.find((user) => user.id === task.assignee)
+        task.assignedPeer = { name: user.first_name }
+      }
+
       return task
     })
 
     state.set('main-documents', tasks)
     state.set('app-mode', 'left-panel')
+    state.set('users', users)
     state.set('user', user)
     state.set('default-page', 'tasks')
 
@@ -108,6 +118,8 @@ async function handleAddTask() {
   const now = new Date()
   const offset = now.getTimezoneOffset() * 60000
   const starts_at = new Date(now - offset).toISOString()
+
+  setMessage('Adding task...')
 
   const resp = await createTask({ title, starts_at })
   const { id } = resp

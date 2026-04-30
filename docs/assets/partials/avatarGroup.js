@@ -30,9 +30,12 @@ export function createAvatarGroup({
 
 function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
-  peersToShow.forEach((p) =>
-    el.appendChild(createAvatar({ name: p.name, url: p.url })),
-  )
+
+  for (const p of peersToShow) {
+    const avatar = createAvatar({ name: p.name, url: p.url })
+    console.log('avatar', avatar)
+    el.appendChild(avatar)
+  }
 
   if (peers?.length > 3) {
     el.appendChild(
