@@ -27,7 +27,7 @@ function react(el) {
     state.set('modal-delete-payload', { title })
 
     const modal = document.querySelector('#modal-delete')
-    modal.querySelector('.modal-header').insertHtml('Delete entry:')
+    modal.querySelector('.modal-header').insertHtml('Delete entry')
     modal.querySelector('.modal-body').insertHtml(title)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()

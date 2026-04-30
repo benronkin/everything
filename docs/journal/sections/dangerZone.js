@@ -32,7 +32,7 @@ function react(el) {
     const modalBody = createEntryTitle(doc)
 
     const modal = el.querySelector('#modal-delete')
-    modal.querySelector('.modal-header').insertHtml('Delete entry:')
+    modal.querySelector('.modal-header').insertHtml('Delete entry')
     modal.querySelector('.modal-body').insertHtml(modalBody)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
