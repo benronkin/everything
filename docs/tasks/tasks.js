@@ -103,9 +103,10 @@ async function handleAddTask() {
 
   inputEl.value = ''
 
-  const resp = await createTask(title)
+  const starts_at = new Date().toISOString()
+  const resp = await createTask({ title, starts_at })
   const { id } = resp
-  const newDoc = { id, title }
+  const newDoc = { id, title, starts_at, dueInfo: dueInfo(starts_at) }
   const docs = state.get('main-documents')
   docs.unshift(newDoc)
   state.set('main-documents', docs)

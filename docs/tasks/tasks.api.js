@@ -16,8 +16,11 @@ export async function deleteStep(id) {
   return resp
 }
 
-export async function createTask(title, id) {
-  const { error, data } = await postWebAppJson(`${url}/create`, { title, id })
+export async function createTask({ title, starts_at }) {
+  const { error, data } = await postWebAppJson(`${url}/create`, {
+    title,
+    starts_at,
+  })
   return data
 }
 
