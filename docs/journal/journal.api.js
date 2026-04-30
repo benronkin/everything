@@ -4,8 +4,9 @@ import { getWebApp, postWebAppJson, postWebAppForm } from '../assets/js/io.js'
 const url = `${state.const('APP_URL')}/journal`
 
 export async function createEntry(id, visit_date) {
-  const { error } = await postWebAppJson(`${url}/create`, { id, visit_date })
-  return { error }
+  const resp = await postWebAppJson(`${url}/create`, { id, visit_date })
+  const { data, error } = resp
+  return { id: data.id }
 }
 
 export async function deleteEntry(id, password) {

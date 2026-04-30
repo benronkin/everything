@@ -91,7 +91,9 @@ async function reactEntryAdd({ id: btnId }) {
 
   const visit_date = new Date().toISOString()
 
-  const { id, error } = await createEntry(visit_date)
+  const resp = await createEntry(visit_date)
+  console.log('resp', resp)
+  const { id, error } = resp
   if (error) {
     console.error(`Journal server error: ${error}`)
     return

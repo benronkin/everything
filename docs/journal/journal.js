@@ -152,21 +152,14 @@ async function reactEntryDelete() {
     return
   }
 
-  modalEl.setPassword('')
-  modalEl.close()
-
-  const filteredDocs = state
-    .get('main-documents')
-    .filter((doc) => doc.id !== id)
-  state.set('main-documents', filteredDocs)
-  state.set('app-mode', 'left-panel')
+  window.location = './index.html?message=Journal+entry+deleted'
 }
 
 async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (section === 'file' || section === 'caption') return
+  if (['file', 'caption', 'password'].includes(section)) return
 
   const id = state.get('active-doc')
   const docs = [...state.get('main-documents')]
