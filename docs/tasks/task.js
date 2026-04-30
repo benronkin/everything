@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchSteps(id),
     ])
 
+    if (!task) {
+      setMessage('No task info received from server', { type: 'danger' })
+      return
+    }
+
     if (task.starts_at) {
       task.dueInfo = dueInfo(task.starts_at)
     }
