@@ -14,6 +14,9 @@ const css = `
   flex-grow: 1;
   justify-content: flex-start;
 }
+a, a:visited {
+  color: var(--gray6);
+}
 `
 
 export function mainPanel() {
