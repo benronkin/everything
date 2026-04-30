@@ -140,6 +140,7 @@ function react(el) {
       el.querySelector('#book-title').value = doc.title
       el.querySelector('#book-author').value = doc.author || ''
       el.querySelector('#book-note').setValue(doc.note)
+      el.querySelector('#book-rating').selectByValue(doc.rating || '')
       el.querySelector('#book-completed').value = doc.completed === '1'
       el.querySelector('#book-read-year').value = doc.read_year || ''
       el.querySelector('#book-published-year').value = doc.published_year || ''
