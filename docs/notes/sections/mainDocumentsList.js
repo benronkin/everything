@@ -9,12 +9,6 @@ const css = `
 .md-item:not(:last-child) {
     margin-bottom: 10px;
 }
-.md-item .title {
-  flex: 1 1 auto;           /* take all leftover width */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;  /* … when it runs out */
-}
 `
 
 export function mainDocumentsList() {
