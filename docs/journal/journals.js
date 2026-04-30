@@ -89,10 +89,9 @@ async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
 
-  const id = `ev${crypto.randomUUID()}`
   const visit_date = new Date().toISOString()
 
-  const { error } = await createEntry(id, visit_date)
+  const { id, error } = await createEntry(visit_date)
   if (error) {
     console.error(`Journal server error: ${error}`)
     return
