@@ -9,10 +9,6 @@ import { mainDocumentsList } from './mainDocumentsList.js'
 // -------------------------------
 
 const css = `
-#left-panel {
-  width: 100%;
-}
-
 `
 
 export function leftPanel() {

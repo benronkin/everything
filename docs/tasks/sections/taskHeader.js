@@ -13,6 +13,15 @@ const css = `
   align-items: center;
   gap: 12px;
   width: 100%;
+  overflow: hidden;
+
+}
+.title-wrapper span {
+  flex: 1;
+  min-width: 0; /* Crucial: tells the span it can shrink to 0px */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 `
 

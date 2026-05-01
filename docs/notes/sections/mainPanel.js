@@ -17,18 +17,6 @@ import { setMessage } from '../../assets/js/ui.js'
 import { createButton } from '../../assets/partials/button.js'
 
 const css = `
-#main-panel {
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  min-height: 83vh;
-}
-#main-panel.hidden {
-  display: none;
-}
 #main-panel form {
   gap: 0 !important;
 }

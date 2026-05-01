@@ -23,6 +23,11 @@ const css = `
 .md-item i {
   color: inherit;
 }
+.md-item span {
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}  
 `
 
 export function createMainDocumentLink({ id, html, url } = {}) {

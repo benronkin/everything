@@ -9,9 +9,6 @@ import { mainDocumentsList } from './mainDocumentsList.js'
 // -------------------------------
 
 const css = `
-#left-panel {
-  width: 100%;
-}
 .category {
   color: var(--gray3);
   font-size: 0.9rem;
