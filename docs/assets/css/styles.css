@@ -425,7 +425,8 @@ ul {
   h6 {
     white-space: nowrap;
   }
-  #left-panel {
+  #left-panel,
+  #main-panel {
     width: 100%;
   }
 }
