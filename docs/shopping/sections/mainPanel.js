@@ -3,8 +3,6 @@ import { createDiv } from '../../assets/partials/div.js'
 import { shoppingList } from './shoppingList.js'
 import { suggestionsList } from './suggestionsList.js'
 import { addItemForm } from './addItemForm.js'
-// import { state } from '../../assets/js/state.js'
-// import { log } from '../../assets/js/logger.js'
 
 // -------------------------------
 // Globals

@@ -101,7 +101,8 @@ function listen(el) {
 
     state.set(`form-keyup:${el.id}`, {
       key: e.key,
-      value: el.querySelector('input').value,
+      value:
+        el.querySelector('input')?.value || el.querySelector('textarea')?.value,
     })
   })
 }

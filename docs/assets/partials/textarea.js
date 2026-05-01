@@ -76,9 +76,8 @@ function resize() {
   const { scrollTop } = document.documentElement // or window.pageYOffset
 
   this.style.height = 'auto'
-  this.style.height = 25 + this.scrollHeight + 'px'
+  this.style.height = 1 + this.scrollHeight + 'px'
   document.documentElement.scrollTop = scrollTop
-  // console.log('resized to', this.style.height)
 }
 
 function setValue(value = '') {

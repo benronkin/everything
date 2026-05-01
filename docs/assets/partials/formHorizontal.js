@@ -1,6 +1,7 @@
 import { injectStyle } from '../js/ui.js'
 import { createForm } from './form.js'
 import { createInputGroup } from './inputGroup.js'
+import { createTextareaGroup } from './textareaGroup.js'
 import { createSpan } from './span.js'
 
 // -------------------------------
@@ -34,6 +35,7 @@ const css = `
  * Constructor for a custom horizontal form
  */
 export function createFormHorizontal({
+  inputOrTextarea = 'input',
   id,
   type = 'text',
   name,
@@ -60,6 +62,7 @@ export function createFormHorizontal({
 
   build({
     el,
+    inputOrTextarea,
     classes,
     name,
     type,
@@ -86,17 +89,30 @@ export function createFormHorizontal({
  * Add sub elements to the element. No need
  * to return the element.
  */
-function build({ el, type, name, placeholder, autocomplete, classes, value }) {
-  el.appendChild(
-    createInputGroup({
-      classes: { icon: classes?.icon, group: classes?.group },
-      placeholder,
-      type,
-      name,
-      autocomplete,
-      value,
-    }),
-  )
+function build({
+  el,
+  inputOrTextarea,
+  type,
+  name,
+  placeholder,
+  autocomplete,
+  classes,
+  value,
+}) {
+  const obj = {
+    classes: { icon: classes?.icon, group: classes?.group },
+    placeholder,
+    type,
+    name,
+    autocomplete,
+    value,
+  }
+
+  if (inputOrTextarea === 'input') {
+    el.appendChild(createInputGroup(obj))
+  } else {
+    el.appendChild(createTextareaGroup(obj))
+  }
 
   el.appendChild(createSpan({ className: 'form-message' }))
 }

@@ -1,7 +1,5 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { insertHtml } from '../../assets/js/format.js'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
 import { createButton } from '../../assets/partials/button.js'
 import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
 
@@ -26,6 +24,7 @@ export function addItemForm() {
   injectStyle(css)
 
   const el = createFormHorizontal({
+    inputOrTextarea: 'textarea',
     id: 'shopping-form',
     type: 'text',
     name: 'new-item',
@@ -59,7 +58,7 @@ function build(el) {
 
 function react(el) {
   state.on('form-keyup:shopping-form', 'addItemForm', ({ value }) =>
-    handleFormKeyup({ el, value })
+    handleFormKeyup({ el, value }),
   )
 
   state.on('form-submit:shopping-form', 'addItemForm', () => {
@@ -71,7 +70,6 @@ function listen(el) {
   const addToBothEl = el.querySelector('#add-to-both-lists-button')
   addToBothEl.addEventListener('click', () => {
     addToBothEl.classList.add('hidden')
-    log('addItemForm hides #add-to-both-lists-button')
   })
 }
 
@@ -83,23 +81,23 @@ function handleFormKeyup({ el, value }) {
 
   el.querySelector('#add-to-both-lists-button').classList.toggle(
     'hidden',
-    inShoppingList || inSuggestionsList
+    inShoppingList || inSuggestionsList,
   )
 
-  el.querySelector('input').classList.toggle('c-gray3', inShoppingList)
+  el.querySelector('textarea').classList.toggle('c-gray3', inShoppingList)
 
   el.querySelector('#shopping-form-icon').classList.toggle(
     'c-gray3',
-    inShoppingList
+    inShoppingList,
   )
 
   el.querySelector('#shopping-form-icon').classList.toggle(
     'fa-cart-arrow-down',
-    inShoppingList
+    inShoppingList,
   )
 
   el.querySelector('#shopping-form-icon').classList.toggle(
     'fa-cart-shopping',
-    !inShoppingList
+    !inShoppingList,
   )
 }

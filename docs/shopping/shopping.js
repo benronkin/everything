@@ -53,6 +53,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('user', user)
     state.set('default-page', 'shopping')
     window.state = state // avail to browser console
+
+    requestAnimationFrame(() => {
+      document.querySelector('[name="new-item"]')?.focus()
+    })
     setMessage()
   } catch (error) {
     console.trace(error)
@@ -85,7 +89,7 @@ function build() {
 }
 
 function react() {
-  const addInput = document.querySelector('[name="new-item"]')
+  const addEl = document.querySelector('[name="new-item"]')
   const cartEl = document.getElementById('shopping-list')
 
   state.on('form-keyup:shopping-form', 'suggestionsList', () =>
@@ -97,22 +101,41 @@ function react() {
   })
 
   state.on('form-submit:shopping-form', 'shopping', () => {
-    const item = addInput.value
-    addInput.value = ''
+    const value = addEl.value
 
-    const resp = addShoppingItem(item)
+    const delimiter = value.includes('\n')
+      ? '\n'
+      : value.includes(',')
+        ? ','
+        : ''
 
+    const items = delimiter
+      ? value
+          .split(delimiter)
+          .map((i) => i.trim().toLowerCase())
+          .filter(Boolean)
+      : [value.trim().toLowerCase()]
+
+    let resp
+
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i]
+      resp = addShoppingItem(item)
+      if (resp.error) {
+        setMessage(resp.error, { type: 'warn' })
+        return
+      }
+    }
     if (resp.message) {
       setMessage(resp.message)
-    } else if (resp.error) {
-      setMessage(resp.error, { type: 'warn' })
-      addInput.value = item
     }
+    addEl.setValue('')
+    addEl.resize()
   })
 
   state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
     addShoppingItem(item)
-    addInput.value = ''
+    addEl.value = ''
   })
 
   state.on('item-click:delete-item', 'shopping', async ({ item }) => {
