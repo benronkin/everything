@@ -33,18 +33,17 @@ export function createSelectGroup({
   name,
   value,
   options,
-  className = null,
   label,
 }) {
   injectStyle(css)
 
-  if (className || classes & (typeof classes !== 'object')) {
+  if (classes & (typeof classes !== 'object')) {
     throw new Error(
-      `createSelectGroup Oops: pass-in optional classes object: { group: '', select: '', icon: ''} `
+      `createSelectGroup Oops: pass-in optional classes object: { group: '', select: '', icon: ''} `,
     )
   }
 
-  const el = createDiv()
+  const el = createDiv({ className: 'select-group' })
 
   build({
     el,
@@ -55,8 +54,12 @@ export function createSelectGroup({
     label,
   })
 
-  classes?.group && (el.className = classes.group)
-  el.classList.add('select-group')
+  if (classes?.group) {
+    const arr = classes.group.split(' ')
+    for (const c of arr) {
+      el.classList.add(c)
+    }
+  }
 
   if (classes?.icon) {
     const arr = classes.icon.split(' ')
@@ -95,6 +98,6 @@ function build({ el, id, name, value, options, label }) {
       name,
       value,
       options,
-    })
+    }),
   )
 }

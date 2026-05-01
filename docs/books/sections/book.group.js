@@ -58,7 +58,7 @@ async function build(el) {
 
   el.appendChild(
     createDiv({
-      className: 'flex align-center gap-20 mb-40',
+      className: 'flex align-center gap-20',
       html: [
         createRating({ id: 'book-rating' }),
         createDiv({
@@ -77,13 +77,13 @@ async function build(el) {
 
   el.appendChild(
     createDiv({
-      className: 'flex align-center gap-20',
+      className: 'flex align-center gap-20 mt-20',
       html: [
         createDiv({
           className: 'flex flex-column',
           html: [
             createSpanGroup({
-              classes: { group: 'mt-30 mb-20', icon: 'fa-calendar' },
+              classes: { group: 'mt-30 mb-10', icon: 'fa-calendar' },
               html: 'Year read',
             }),
             createInput({
@@ -99,7 +99,7 @@ async function build(el) {
           className: 'flex flex-column',
           html: [
             createSpanGroup({
-              classes: { group: 'mt-30 mb-20', icon: 'fa-calendar' },
+              classes: { group: 'mt-30 mb-10', icon: 'fa-calendar' },
               html: 'Year published',
             }),
             createInput({

@@ -18,7 +18,7 @@ const css = `
   border-radius: var(--border-radius);
   color: var(--gray5);
   border: none;
-  font-size: 0.9rem; 
+  font-size: 1rem !important;
   z-index: 2;
   width: 100%;
 }

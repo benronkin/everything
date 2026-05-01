@@ -3,12 +3,12 @@ import { ratingOptions } from './ratingOptions.js'
 import { injectStyle } from '../js/ui.js'
 
 const css = `
-.rating {
+.rating, 
+.ration select,
+.rating select option {
   font-size: 1.5rem;
 }
-.rating option {
-  font-size: 1.5rem;
-}
+
 `
 
 export function createRating({ id } = {}) {
@@ -18,7 +18,7 @@ export function createRating({ id } = {}) {
     name: 'rating',
     id,
     classes: {
-      group: 'rating mb-40 w-fc p-5-0',
+      group: 'rating w-fc p-5-0',
       select: 'field',
       icon: 'fa-face-smile',
     },
