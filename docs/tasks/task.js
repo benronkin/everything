@@ -247,9 +247,15 @@ function handleTaskDelete() {
   modalDelete.showModal()
 }
 
-// must accept id inside obj to match what state.on sends
+/**
+ *
+ */
 async function handleTaskDeleteConfirm() {
   const id = state.get('active-doc')
-  deleteTask(id)
+  const { error } = await deleteTask(id)
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
   window.location = `./index.html?message=Task+Deleted`
 }
