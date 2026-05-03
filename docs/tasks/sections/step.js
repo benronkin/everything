@@ -7,6 +7,7 @@ const css = `
 .task-step {
   display: flex;
   align-items: center;
+  padding: 5px 0;
 }
 .task-step:hover {
   background: var(--gray1);
@@ -31,6 +32,7 @@ const css = `
 }
 .task-step .fa-close {
   color: var(--gray6);
+  margin-right: 5px;
   margin-left: auto;
 }
 `
