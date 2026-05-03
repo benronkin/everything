@@ -6,6 +6,7 @@ export function nav() {
 
   const el = createNav({
     title: `<i class="fa-solid ${icon}"></i> ${label}`,
+    isHome: true,
   })
   return el
 }
