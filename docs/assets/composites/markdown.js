@@ -48,7 +48,7 @@ ul {
 }
 .markdown-viewer h1 {
   font-size: 1.6rem;
-  margin: 30px 0 10px;
+  margin: 30px 0 15px;
 }
 `
 
