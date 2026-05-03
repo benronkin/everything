@@ -46,7 +46,7 @@ function addChildren(el, docs) {
 
   const children = docs.map((doc) => {
     const obj = formatDateParts(doc.visit_date)
-    const visited = `${obj.month}/${obj.day}/${obj.year}`
+    const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
       createSpan({ html: visited }),

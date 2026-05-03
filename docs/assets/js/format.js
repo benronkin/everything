@@ -44,6 +44,7 @@ export function formatDateParts(isoDateString) {
     const [datePart, _] = isoDateString.split('T')
     const [year, month, day] = datePart.split('-')
     obj.year = year
+    obj.shortYear = year.slice(2, 5)
     obj.month = month
     obj.day = day
   }
