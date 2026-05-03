@@ -53,6 +53,9 @@ nav #breadcrumbs, nav #breadcrumbs #bc-root {
 nav #breadcrumbs .fa-chevron-right {
   color: var(--gray2);
 }
+nav #breadcrumbs #bc-root {
+  margin: 0;
+}
 `
 
 export function createNav({ title, isHome = false } = {}) {
