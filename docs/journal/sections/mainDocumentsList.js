@@ -1,5 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
+import { formatDateParts } from '../../assets/js/format.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -44,7 +45,12 @@ function addChildren(el, docs) {
   if (!docs || !docs.length) return
 
   const children = docs.map((doc) => {
-    const html = [createSpan({ html: doc.location })]
+    const obj = formatDateParts(doc.visit_date)
+    const visited = `${obj.month}/${obj.day}/${obj.year}`
+    const html = [
+      createSpan({ html: `${doc.location} (${doc.city})` }),
+      createSpan({ html: visited }),
+    ]
 
     return createMainDocumentLink({
       id: doc.id,
