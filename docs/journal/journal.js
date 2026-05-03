@@ -159,7 +159,10 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (['file', 'caption', 'password'].includes(section)) return
+  if (['file', 'caption', 'password'].includes(section)) {
+    console.log('Ignoring non-field')
+    return
+  }
 
   const id = state.get('active-doc')
   const docs = [...state.get('main-documents')]

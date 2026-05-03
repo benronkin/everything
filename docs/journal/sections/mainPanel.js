@@ -92,6 +92,8 @@ function react(el) {
     el.querySelector('#journal-phone').value = doc.phone
     el.querySelector('#journal-rating').selectByValue(doc.rating || '')
     el.querySelector('#journal-notes').setValue(doc.notes)
+    el.querySelector('.markdown-wrapper').updateEditor(doc.notes)
+    el.querySelector('.markdown-wrapper').updateViewer()
     el.querySelector('#journal-id').insertHtml(doc.id)
   })
 }

@@ -50,6 +50,7 @@ ul {
 
 export function createMarkdown({
   name,
+  id,
   iconsVisible = true,
   renderer = (content) => content,
 }) {
@@ -68,7 +69,7 @@ export function createMarkdown({
     linkify: true,
   })
 
-  build({ el, name, iconsVisible })
+  build({ el, id, name, iconsVisible })
   listen({ el, iconsVisible })
 
   if (iconsVisible) el.resetIcons()
@@ -76,10 +77,10 @@ export function createMarkdown({
   return el
 }
 
-function build({ el, name, iconsVisible }) {
+function build({ el, id, name, iconsVisible }) {
   el.appendChild(createDiv({ className: 'markdown-viewer' }))
   el.appendChild(
-    createTextarea({ className: 'markdown-editor field hidden', name }),
+    createTextarea({ id, className: 'markdown-editor field hidden', name }),
   )
 
   if (iconsVisible) {

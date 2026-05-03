@@ -27,7 +27,7 @@ footer span {
 
 const html = `
 <div class="container">
-  <span>Version: </span><span id="version-number">5.15.9</span>
+  <span>Version: </span><span id="version-number">5.15.10</span>
 </div>
 `
 

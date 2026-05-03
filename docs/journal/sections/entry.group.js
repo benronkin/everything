@@ -1,11 +1,28 @@
+import { state } from '../../assets/js/state.js'
+import { createMarkdown } from '../../assets/composites/markdown.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createHeader } from '../../assets/partials/header.js'
+import { createIcon } from '../../assets/partials/icon.js'
 import { createRating } from '../../assets/partials/rating.js'
-import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
-import { createTextarea } from '../../assets/partials/textarea.js'
 
 const css = `
+#edit-note-toggle {
+  width: 25px;
+  text-align: center;
+}
+#note-header {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
+#note-header h5 {
+  margin: 0;
+}
 `
 
 export function createEntryGroup() {
@@ -14,6 +31,7 @@ export function createEntryGroup() {
   const el = createDiv({ id: 'entry-group' })
 
   build(el)
+  react(el)
 
   return el
 }
@@ -87,18 +105,38 @@ function build(el) {
   el.appendChild(createRating({ id: 'journal-rating' }))
 
   el.appendChild(
-    createSpanGroup({
-      classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
-      html: 'Note:',
+    createDiv({
+      id: 'note-header',
+      html: [
+        createHeader({ html: 'NOTE', type: 'h5' }),
+        createIcon({
+          id: 'edit-note-toggle',
+          classes: {
+            primary: 'fa-pencil',
+            secondary: 'fa-close',
+            other: ['primary'],
+          },
+        }),
+      ],
     }),
   )
 
   el.appendChild(
-    createTextarea({
-      name: 'notes',
-      id: 'journal-notes',
-      className: 'w-100',
-      placeholder: 'Add details...',
-    }),
+    createMarkdown({ id: 'journal-notes', name: 'notes', iconsVisible: false }),
+    // createTextarea({
+    //   name: 'notes',
+    //   id: 'journal-notes',
+    //   className: 'w-100',
+    //   placeholder: 'Add details...',
+    // }),
   )
+}
+
+/**
+ *
+ */
+function react(el) {
+  state.on('icon-click:edit-note-toggle', 'entry.group', () => {
+    document.querySelector('.markdown-wrapper').toggle()
+  })
 }
