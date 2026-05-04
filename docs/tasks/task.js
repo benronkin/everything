@@ -195,20 +195,20 @@ async function handleFieldChange(el) {
 
     const id = state.get('active-doc')
 
-    if (section === 'due-date' || section === 'due-time') {
-      const dateString = document.querySelector('#due-date').value
-      const timeString = document.querySelector('#due-time').value
+    // if (section === 'due-date' || section === 'due-time') {
+    //   const dateString = document.querySelector('#due-date').value
+    //   const timeString = document.querySelector('#due-time').value
 
-      if (section === 'due-time' && !dateString) return
+    //   if (section === 'due-time' && !dateString) return
 
-      if (timeString) {
-        value = new Date(`${dateString}T${timeString}Z`)
-      } else {
-        value = new Date(`${dateString}T00:00:00Z`)
-      }
-      value = value.toISOString()
-      section = 'starts_at'
-    }
+    //   if (timeString) {
+    //     value = new Date(`${dateString}T${timeString}Z`)
+    //   } else {
+    //     value = new Date(`${dateString}T00:00:00Z`)
+    //   }
+    //   value = value.toISOString()
+    //   section = 'starts_at'
+    // }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {

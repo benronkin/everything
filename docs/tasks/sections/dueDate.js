@@ -1,5 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createDateTime } from '../../assets/partials/dateTime.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
@@ -64,16 +65,17 @@ function build(el) {
       className: 'hidden',
       html: [
         createSpan({ html: 'Due:' }),
-        createInput({
-          id: 'due-date',
-          name: 'due-date',
-          type: 'date',
-        }),
-        createInput({
-          id: 'due-time',
-          name: 'due-time',
-          type: 'time',
-        }),
+        createDateTime({ name: 'starts_at' }),
+        // createInput({
+        //   id: 'due-date',
+        //   name: 'due-date',
+        //   type: 'date',
+        // }),
+        // createInput({
+        //   id: 'due-time',
+        //   name: 'due-time',
+        //   type: 'time',
+        // }),
         createIcon({
           id: 'cancel-due-date',
           classes: { primary: 'fa-close' },
@@ -92,8 +94,7 @@ function listen(el) {
   })
 
   el.querySelector('#cancel-due-date').addEventListener('click', () => {
-    el.querySelector('#due-date').value = ''
-    el.querySelector('#due-time').value = ''
+    el.querySelector('.starts_at').value = ''
     toggleDueDateElements(el)
   })
 }

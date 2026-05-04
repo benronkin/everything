@@ -1,6 +1,7 @@
 import { state } from '../../assets/js/state.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { injectStyle } from '../../assets/js/ui.js'
+import { createDateTimeGroup } from '../../assets/partials/dateTimeGroup.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
@@ -48,12 +49,17 @@ function build(el) {
   )
 
   el.appendChild(
-    createInputGroup({
+    // createInputGroup({
+    //   name: 'visit_date',
+    //   id: 'journal-visit_date',
+    //   type: 'date',
+    //   classes: { group: 'mb-40', icon: 'fa-calendar' },
+    //   value: new Date().toISOString().split('T')[0],
+    // }),
+    createDateTimeGroup({
       name: 'visit_date',
       id: 'journal-visit_date',
-      type: 'date',
       classes: { group: 'mb-40', icon: 'fa-calendar' },
-      value: new Date().toISOString().split('T')[0],
     }),
   )
 
