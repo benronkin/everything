@@ -1,3 +1,5 @@
+/* global markdownit */
+
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
@@ -225,7 +227,12 @@ async function updateHistories() {
           note = history.note
         }
 
-        document.querySelector('.markdown-viewer').innerHTML = note
+        const md = markdownit({
+          html: true,
+          linkify: true,
+        })
+        const html = md.render(note)
+        document.querySelector('.markdown-viewer').innerHTML = html
         state.set('note-body', note)
       }
     }),
