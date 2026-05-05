@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     build()
+    listen()
     react()
 
     const id = urlParams.get('id')
@@ -153,18 +154,33 @@ async function reactNoteDelete() {
   window.location = `./index.html?message=${message}`
 }
 
+/**
+ *
+ */
 async function handleFieldChange(el) {
   if (!el) return
 
   if (['label-title'].includes(el.name)) return
 
   const id = state.get('active-doc')
+  const doc = state.get('main-documents')[0]
   const title = document.querySelector('#note-title').value
   const note = document.querySelector('.markdown-editor').value
 
-  document.querySelector('.markdown-wrapper').updateViewer()
+  let updated_at = doc.updated_at
 
-  updateNote({ id, title, note })
+  const { error, data } = await updateNote({ id, title, note, updated_at })
+
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    document.querySelector('.markdown-editor').disabled = true
+    return
+  }
+
+  doc.updated_at = data.updated_at
+  state.set('main-documents', [doc])
+
+  document.querySelector('.markdown-wrapper').updateViewer()
   setMessage('Saved', { type: 'quiet' })
 }
 
