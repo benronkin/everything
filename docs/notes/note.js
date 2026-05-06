@@ -169,7 +169,10 @@ async function handleFieldChange(el) {
 
   let updated_at = doc.updated_at
 
-  if (state.get('update-in-process')) return
+  if (state.get('update-in-process')) {
+    console.log('update in process')
+    return
+  }
 
   state.set('update-in-process', true)
 
