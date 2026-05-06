@@ -182,18 +182,12 @@ async function handleFieldChange(el) {
       console.log(debug)
     }
     document.querySelector('.markdown-editor').disabled = true
+    state.set('update-in-process', false)
     return
   }
 
-  // there might be multiple saves and given async the last
-  // to arrive might not be the last to be sent, hence
-  // the check:
-  if (
-    new Date(data.updated_at).getTime() > new Date(doc.updated_at).getTime()
-  ) {
-    doc.updated_at = data.updated_at
-    state.set('main-documents', [doc])
-  }
+  doc.updated_at = data.updated_at
+  state.set('main-documents', [doc])
 
   document.querySelector('.markdown-wrapper').updateViewer()
   state.set('update-in-process', false)
