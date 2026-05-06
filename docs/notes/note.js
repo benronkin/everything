@@ -173,6 +173,10 @@ async function handleFieldChange(el) {
 
   if (error) {
     setMessage(error, { type: 'danger' })
+    if (data) {
+      const { debug } = data
+      console.log(debug)
+    }
     document.querySelector('.markdown-editor').disabled = true
     return
   }
