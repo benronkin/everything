@@ -169,6 +169,10 @@ async function handleFieldChange(el) {
 
   let updated_at = doc.updated_at
 
+  if (state.get('update-in-process')) return
+
+  state.set('update-in-process', true)
+
   const { error, data } = await updateNote({ id, title, note, updated_at })
 
   if (error) {
@@ -192,6 +196,7 @@ async function handleFieldChange(el) {
   }
 
   document.querySelector('.markdown-wrapper').updateViewer()
+  state.set('update-in-process', false)
   setMessage('Saved', { type: 'quiet' })
 }
 
