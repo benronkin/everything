@@ -130,7 +130,7 @@ export async function postWebAppJson(path, clientData) {
     res = await fetch(req)
     const resp = await res.json()
 
-    const { status, message, unauthorized } = resp
+    const { status, message, unauthorized, data } = resp
     if (unauthorized) {
       setMessage(message, { type: 'danger' })
       return { error: 'unauthorized' }
@@ -141,7 +141,7 @@ export async function postWebAppJson(path, clientData) {
         `postWebAppJson ${status} sent by server for path: "${path}":`,
         message,
       )
-      return { error: message }
+      return { error: message, data }
     }
 
     return resp
