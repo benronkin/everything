@@ -37,20 +37,20 @@ function react(el) {
       !isLeftPanel,
     )
     el.querySelector('#sort-icon').classList.toggle('hidden', !isLeftPanel)
+  })
 
-    if (!isLeftPanel) {
-      el.querySelector('.avatar-group')?.remove()
+  state.on('active-doc', 'toolbar', () => {
+    el.querySelector('.avatar-group')?.remove()
 
-      const doc = state.get('main-documents')[0]
+    const doc = state.get('main-documents')[0]
 
-      const avatarGroup = createAvatarGroup({
-        peers: doc.peers,
-        className: 'ml-auto',
-        showShare: true,
-      })
+    const avatarGroup = createAvatarGroup({
+      peers: doc.peers,
+      className: 'ml-auto',
+      showShare: true,
+    })
 
-      el.querySelector('.icons').appendChild(avatarGroup)
-    }
+    el.querySelector('.icons').appendChild(avatarGroup)
   })
 
   state.on('icon-click:calendar-priority', 'toolbar', ({ className }) => {
