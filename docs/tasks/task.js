@@ -180,11 +180,12 @@ function handleDueDateCancel() {
 /**
  *
  */
-async function handleStepUpdate({ id, completed }) {
+async function handleStepUpdate(doc) {
+  const { id, section, value } = doc
   const { error } = await updateStep({
     id,
-    section: 'completed',
-    value: completed,
+    section,
+    value,
   })
   if (error) {
     throw new Error(error)
@@ -204,22 +205,14 @@ async function handleFieldChange(el) {
       return
     }
 
+    if (['assignee'].includes(section)) {
+      console.log(
+        `Task handleFieldChange: A non-task field ("${section}") changed. Ignoring`,
+      )
+      return
+    }
+
     const id = state.get('active-doc')
-
-    // if (section === 'due-date' || section === 'due-time') {
-    //   const dateString = document.querySelector('#due-date').value
-    //   const timeString = document.querySelector('#due-time').value
-
-    //   if (section === 'due-time' && !dateString) return
-
-    //   if (timeString) {
-    //     value = new Date(`${dateString}T${timeString}Z`)
-    //   } else {
-    //     value = new Date(`${dateString}T00:00:00Z`)
-    //   }
-    //   value = value.toISOString()
-    //   section = 'starts_at'
-    // }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {

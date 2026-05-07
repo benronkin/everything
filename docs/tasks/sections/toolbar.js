@@ -47,7 +47,7 @@ function react(el) {
     const avatarGroup = createAvatarGroup({
       peers: doc.peers,
       className: 'ml-auto',
-      showShare: true,
+      showShare: doc.role === 'owner',
     })
 
     el.querySelector('.icons').appendChild(avatarGroup)

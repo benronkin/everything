@@ -2,6 +2,7 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createSelect } from '../../assets/partials/select.js'
 
 const css = `
 .task-step {
@@ -35,9 +36,13 @@ const css = `
   margin-right: 5px;
   margin-left: auto;
 }
+.task-step .assignee {
+  margin-left: 20px;
+  background-color: var(--teal2);
+}
 `
 
-export function createStep({ caption, completed = false, id } = {}) {
+export function createStep({ caption, completed = false, id, assignee } = {}) {
   injectStyle(css)
 
   const el = createDiv({
@@ -54,6 +59,11 @@ export function createStep({ caption, completed = false, id } = {}) {
   if (completed) {
     el.querySelector('.mark-complete').toggleClasses()
     el.querySelector('.step-caption').classList.add('completed')
+    el.querySelector('.select-wrapper').setDisabled(completed)
+  }
+
+  if (assignee) {
+    el.querySelector('.assignee').selectByValue(assignee)
   }
 
   return el
@@ -73,21 +83,45 @@ function build(el) {
 
   el.appendChild(createDiv({ className: 'step-caption' }))
 
+  el.appendChild(
+    createSelect({
+      className: 'assignee',
+      name: 'assignee',
+      options: state
+        .get('users')
+        .map((u) => ({ label: u.first_name, value: u.id })),
+    }),
+  )
+
   el.appendChild(createIcon({ classes: { primary: 'fa-close' } }))
 }
 
 function listen(el, id) {
+  el.querySelector('.assignee').addEventListener('change', (e) => {
+    state.set('step-updated', {
+      id,
+      section: 'assignee',
+      value: e.target.value,
+    })
+  })
+
   el.querySelector('.mark-complete').addEventListener('click', (e) => {
     if (!id) {
       // delete step that was added to the DOM
       // before getting an id from the server
       const stepEl = e.target.closest('.task-step')
       id = stepEl.id
+      state.set('step-updated', {
+        id,
+        section: 'completed',
+        value: e.target.value,
+      })
     }
     const completed = !state.get(`step-${id}`)
     state.set(`step-${id}`, completed)
-    state.set('step-updated', { id, completed })
+    state.set('step-updated', { id, section: 'completed', value: completed })
     el.querySelector('.step-caption').classList.toggle('completed', completed)
+    el.querySelector('.select-wrapper').setDisabled(completed)
   })
 
   el.querySelector('.fa-close').addEventListener('click', (e) => {

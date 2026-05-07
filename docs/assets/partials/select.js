@@ -11,16 +11,23 @@ const css = `
   height: 20px;
   cursor: pointer;
 }
+.select-wrapper.disabled {
+  background-color: var(--gray3);
+}
 
 .custom-select {
   appearance: none;
   background-color: transparent;
   border-radius: var(--border-radius);
-  color: var(--gray5);
+  color: var(--gray6);
   border: none;
   font-size: 1rem !important;
   z-index: 2;
   width: 100%;
+}
+.custom-select:disabled,
+.select-wrapper.disabled i {
+  color: var(--gray0);
 }
 
 .custom-select:focus {
@@ -36,7 +43,7 @@ const css = `
 }
 
 .caret-wrapper i {
-  color: var(--gray5);
+  color: var(--gray6);
   font-size: 0.8rem;
 }
 `
@@ -54,6 +61,7 @@ export function createSelect({
 
   addElementParts({ el, name })
 
+  el.setDisabled = setDisabled.bind(el)
   el.getOptionByLabel = getOptionByLabel.bind(el)
   el.getOptionByValue = getOptionByValue.bind(el)
   el.getSelected = getSelected.bind(el)
@@ -129,6 +137,12 @@ function selectByValue(value) {
   this.querySelector('select').value = value
 }
 
+function setDisabled(value) {
+  this.classList.toggle('disabled', value)
+  this.querySelector('select').disabled = value
+  this.querySelector('i').disabled = value
+}
+
 function setOptions(options) {
   this.querySelector('select').innerHTML = ''
   options.forEach((opt) => {
@@ -174,12 +188,20 @@ function listen(el) {
     'click',
     handleSelectClick,
   )
-  el.addEventListener('click', handleSelectClick)
+  el.querySelector('.custom-select').addEventListener(
+    'select',
+    handleSelectClick,
+  )
 }
 
 function handleSelectClick(e) {
   const parent = e.target.closest('.select-wrapper')
   const selectEl = parent.querySelector('.custom-select')
+
+  if (parent.classList.contains('disabled')) {
+    console.log('Select is disabled, ignoring')
+    return
+  }
 
   if (typeof selectEl.showPicker === 'function') {
     // Chrome 118+ opens native dropdown
