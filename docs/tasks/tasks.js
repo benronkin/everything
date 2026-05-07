@@ -128,7 +128,8 @@ async function handleAddTask() {
   setMessage('Adding task...')
 
   const resp = await createTask({ title, starts_at })
-  const { id } = resp
+  const { data } = resp
+  const { id } = data
   const newDoc = { id, title, starts_at, dueInfo: dueInfo(starts_at) }
   const docs = state.get('main-documents')
   docs.unshift(newDoc)
