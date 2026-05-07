@@ -1,5 +1,6 @@
 import { createToolbar } from '../../assets/composites/toolbar.js'
 import { createIcon } from '../../assets/partials/icon.js'
+import { createAvatarGroup } from '../../assets/partials/avatarGroup.js'
 import { state } from '../../assets/js/state.js'
 // import { log } from '../../assets/js/logger.js'
 
@@ -37,10 +38,19 @@ function react(el) {
     )
     el.querySelector('#sort-icon').classList.toggle('hidden', !isLeftPanel)
 
-    // hide the entire toolbar on mainPanel
-    // don't use display: none: it pulls up the footer due
-    // to one horizontal element missing (toolbar)
-    el.style.visibility = isLeftPanel ? 'visible' : 'hidden'
+    if (!isLeftPanel) {
+      el.querySelector('.avatar-group')?.remove()
+
+      const doc = state.get('main-documents')[0]
+
+      const avatarGroup = createAvatarGroup({
+        peers: doc.peers,
+        className: 'ml-auto',
+        showShare: true,
+      })
+
+      el.querySelector('.icons').appendChild(avatarGroup)
+    }
   })
 
   state.on('icon-click:calendar-priority', 'toolbar', ({ className }) => {

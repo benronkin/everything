@@ -18,6 +18,7 @@ import {
   deleteLabel,
   fetchLabels,
   fetchLabelsAssignments,
+  shareNote,
   unassignLabel,
   updateLabel,
 } from './notes.api.js'
@@ -125,6 +126,10 @@ function react() {
     if (state.get('right-drawer-use') === 'labels') {
       labels(document.getElementById('right-drawer'))
     }
+  })
+
+  state.on('modal-share-updated', 'note', async (data) => {
+    await shareNote(data)
   })
 }
 

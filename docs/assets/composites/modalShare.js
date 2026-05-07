@@ -6,8 +6,6 @@ import { createHeader } from '../partials/header.js'
 import { createSpan } from '../partials/span.js'
 import { createPill } from '../partials/pill.js'
 import { fetchPeers } from '../../users/users.api.js'
-import { shareNote } from '../../notes/notes.api.js'
-import { log } from '../js/logger.js'
 
 const css = `
 .modal {
@@ -120,7 +118,7 @@ export function react(el) {
           html: peer.first_name,
           dataset: { id: peer.id, name: peer.first_name, role: 'pill' },
           isSelected: doc?.peers?.find((dp) => dp.id === peer.id),
-        })
+        }),
       )
     }
   })
@@ -152,7 +150,8 @@ function listen(el) {
       id,
       peers: peers.map((p) => p.id),
     }
-    await shareNote(data)
+
+    state.set('modal-share-updated', data)
     const docs = [...state.get('main-documents')]
     const idx = docs.findIndex((d) => d.id === id)
     docs[idx].peers = peers
@@ -162,7 +161,7 @@ function listen(el) {
   })
 
   el.querySelector('#modal-second-btn').addEventListener('click', () =>
-    el.close()
+    el.close(),
   )
 }
 

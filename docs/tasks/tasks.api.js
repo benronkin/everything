@@ -3,25 +3,12 @@ import { getWebApp, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/tasks`
 
-export async function createStep(caption, taskId) {
-  const resp = await postWebAppJson(`${url}/steps/create`, {
-    caption,
-    taskId,
-  })
-  return resp
-}
-
-export async function deleteStep(id) {
-  const resp = await getWebApp(`${url}/steps/delete?id=${id}`)
-  return resp
-}
-
 export async function createTask({ title, starts_at }) {
-  const { error, data } = await postWebAppJson(`${url}/create`, {
+  const resp = await postWebAppJson(`${url}/create`, {
     title,
     starts_at,
   })
-  return data
+  return resp
 }
 
 export async function deleteTask(id) {
@@ -39,19 +26,6 @@ export async function fetchTasks() {
   return { tasks, error }
 }
 
-export async function fetchSteps(id) {
-  const { steps, error } = await getWebApp(`${url}/steps/read?id=${id}`)
-  return { steps, error }
-}
-
-export async function fetchStepsOfMultipleTasks(task_ids) {
-  const { data, error } = await postWebAppJson(`${url}/steps/multi-tasks`, {
-    task_ids,
-  })
-
-  return { steps: data.steps, error }
-}
-
 export async function searchTasks(q) {
   const { journal, error } = await getWebApp(
     `${url}/search?q=${q.trim().toLowerCase()}`,
@@ -66,9 +40,8 @@ export async function update(tasks) {
   return { message, error }
 }
 
-export async function updateStep(payload) {
-  // console.log('payload', payload)
-  const resp = await postWebAppJson(`${url}/steps/update`, payload)
+export async function shareTask(payload) {
+  const resp = await postWebAppJson(`${url}/share`, payload)
   return resp
 }
 
@@ -78,4 +51,40 @@ export async function updateTask({ id, section, value }) {
     [section]: value,
   })
   return { message, error }
+}
+
+// -----------------------------
+// Steps
+// -----------------------------
+
+export async function createStep(caption, taskId) {
+  const resp = await postWebAppJson(`${url}/steps/create`, {
+    caption,
+    taskId,
+  })
+  return resp
+}
+
+export async function deleteStep(id) {
+  const resp = await getWebApp(`${url}/steps/delete?id=${id}`)
+  return resp
+}
+
+export async function fetchSteps(id) {
+  const { steps, error } = await getWebApp(`${url}/steps/read?id=${id}`)
+  return { steps, error }
+}
+
+export async function fetchStepsOfMultipleTasks(task_ids) {
+  const { data, error } = await postWebAppJson(`${url}/steps/multi-tasks`, {
+    task_ids,
+  })
+
+  return { steps: data.steps, error }
+}
+
+export async function updateStep(payload) {
+  // console.log('payload', payload)
+  const resp = await postWebAppJson(`${url}/steps/update`, payload)
+  return resp
 }

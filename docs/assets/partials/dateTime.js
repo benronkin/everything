@@ -9,8 +9,15 @@ input[name="date"] {
   margin-right: 20px;
 }
 `
-
-export function createDateTime({ name }) {
+/**
+ * Returns a div containing two inputs for date and time.
+ * The name property is used in setting field-changed in state.
+ * You can pass the value as ISO or Date either as value, or by
+ * setting it after the div is structured by callign setDateTime().
+ * The component will split to the date and time fields.
+ * The component sets field-changed only when the date field has a value.
+ */
+export function createDateTime({ name, value }) {
   injectStyle(css)
 
   const el = createDiv({ className: 'date-time' })
@@ -19,10 +26,13 @@ export function createDateTime({ name }) {
   listen(el)
 
   el.setDateTime = setDateTime.bind(el)
+
   if (name) {
     el.dataset.name = name
     el.classList.add(name)
   }
+
+  if (value) el.setDateTime(value)
 
   return el
 }

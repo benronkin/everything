@@ -15,9 +15,11 @@ import {
   deleteTask,
   fetchTask,
   fetchSteps,
+  shareTask,
   updateStep,
   updateTask,
 } from './tasks.api.js'
+import { createModalShare } from '../assets/composites/modalShare.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
 
@@ -98,7 +100,7 @@ function build() {
   columnsWrapperEl.appendChild(createRightDrawer())
 
   wrapperEl.appendChild(createModalDelete({ password: false }))
-
+  wrapperEl.appendChild(createModalShare({}))
   wrapperEl.appendChild(createFooter())
 }
 
@@ -119,6 +121,15 @@ function react() {
   state.on('step-updated', 'task', handleStepUpdate)
 
   state.on('icon-click:cancel-due-date', 'task', handleDueDateCancel)
+
+  state.on('sharer-click', 'task', () => {
+    const modalEl = document.querySelector('#modal-share')
+    modalEl.showModal()
+  })
+
+  state.on('modal-share-updated', 'task', async (data) => {
+    await shareTask(data)
+  })
 }
 
 async function handleAddStep({ caption, taskId }) {
