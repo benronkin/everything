@@ -123,7 +123,20 @@ async function handleAddTask() {
   // but uses the local time instead of server time
   const now = new Date()
   const offset = now.getTimezoneOffset() * 60000
-  const starts_at = new Date(now - offset).toISOString()
+  let starts_at = new Date(now - offset).toISOString()
+
+  const hour = now.getHours()
+  let tempDate = new Date(now)
+  if (hour >= 15) {
+    // if starts_at hour is after 3pm
+    // then change starts_at to next day 9am
+    tempDate.setDate(tempDate.getDate() + 1)
+    tempDate.setHours(9, 0, 0, 0)
+  } else {
+    // otherwise hve it start the next hour
+    tempDate.setHours(hour + 1, 0, 0, 0)
+  }
+  starts_at = new Date(tempDate - offset).toISOString()
 
   setMessage('Adding task...')
 
