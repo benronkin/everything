@@ -190,6 +190,11 @@ async function handleStepUpdate(doc) {
   if (error) {
     throw new Error(error)
   }
+
+  if (section === 'assignee') {
+    // show the sharer that the task is shared with the step assignee
+    window.location.reload()
+  }
 }
 
 /**
