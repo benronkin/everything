@@ -98,6 +98,8 @@ function build(el) {
 
 function listen(el, id) {
   el.querySelector('.assignee').addEventListener('change', (e) => {
+    const stepEl = e.target.closest('.task-step')
+    id = id || stepEl.id
     state.set('step-updated', {
       id,
       section: 'assignee',
@@ -106,17 +108,14 @@ function listen(el, id) {
   })
 
   el.querySelector('.mark-complete').addEventListener('click', (e) => {
-    if (!id) {
-      // delete step that was added to the DOM
-      // before getting an id from the server
-      const stepEl = e.target.closest('.task-step')
-      id = stepEl.id
-      state.set('step-updated', {
-        id,
-        section: 'completed',
-        value: e.target.value,
-      })
-    }
+    const stepEl = e.target.closest('.task-step')
+    id = id || stepEl.id
+    state.set('step-updated', {
+      id,
+      section: 'completed',
+      value: e.target.value,
+    })
+
     const completed = !state.get(`step-${id}`)
     state.set(`step-${id}`, completed)
     state.set('step-updated', { id, section: 'completed', value: completed })

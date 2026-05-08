@@ -114,9 +114,9 @@ function react() {
 
   state.on('button-click:modal-delete-btn', 'task', handleTaskDeleteConfirm)
 
-  state.on('step-added', 'task', handleAddStep)
+  state.on('step-added', 'task', handleStepCreate)
 
-  state.on('step-deleted', 'task', handleDeleteStep)
+  state.on('step-deleted', 'task', handleStepDelete)
 
   state.on('step-updated', 'task', handleStepUpdate)
 
@@ -132,7 +132,7 @@ function react() {
   })
 }
 
-async function handleAddStep({ caption, taskId }) {
+async function handleStepCreate({ caption, taskId }) {
   const addStepEl = document.querySelector('.add-step')
   addStepEl.value = ''
   addStepEl.placeholder = 'Next step'
@@ -145,13 +145,13 @@ async function handleAddStep({ caption, taskId }) {
 
   const { data } = resp
 
-  stepEl.setAttribute('id', data.id)
+  stepEl.id = data.id
 }
 
-async function handleDeleteStep(data) {
+async function handleStepDelete(data) {
   if (!data.id) {
     throw new Error(
-      `handleDeleteStep did not receive an id. Received: ${JSON.stringify(data)}`,
+      `handleStepDelete did not receive an id. Received: ${JSON.stringify(data)}`,
     )
   }
   const id = data.id
