@@ -210,10 +210,8 @@ async function handleFieldChange(el) {
       return
     }
 
-    if (['assignee'].includes(section)) {
-      console.log(
-        `Task handleFieldChange: A non-task field ("${section}") changed. Ignoring`,
-      )
+    if (el.closest('.task-step')) {
+      console.log('el', el)
       return
     }
 

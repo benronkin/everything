@@ -1,8 +1,6 @@
 import { createSelect } from './select.js'
-import { createSelectGroup } from './selectGroup.js'
-import { createDiv } from './div.js'
-import { createSpan } from './span.js'
 import { injectStyle } from '../js/ui.js'
+import { state } from '../js/state.js'
 
 const css = `
 select {
@@ -11,40 +9,78 @@ select {
 select option {
   font-size: 1.5rem;
 }
-.users-select {
+.user-select {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 5px;
+  width: 140px !important;
+}
+.custom-select, 
+.select-wrapper .fa-caret-down {
+color: var(--gray0) !important;
 }
 `
 
-export function createUserSelect({ id, name, caption, value, options } = {}) {
+export function createUserSelect(obj) {
   injectStyle(css)
 
-  let el
+  const { id, className, name, value, options } = obj
 
-  if (caption) {
-    el = createDiv({
-      className: 'users-select',
-      html: [
-        createSpan({ html: caption }),
-        createSelect({ id, name, value, options }),
-      ],
-    })
-  } else {
-    el = createSelectGroup({
-      name,
-      id,
-      classes: {
-        group: 'mb-40 w-fc p-5-0',
-        select: 'field',
-        icon: 'fa-person',
-      },
-      options,
-    })
-  }
+  const el = createSelect({
+    id,
+    className,
+    name,
+    value,
+    options,
+  })
+
+  react(el, obj)
+  listen(el)
+
+  el.setUser = setUser.bind(el)
 
   return el
+}
+
+function react(el) {
+  const users = state.get('users')
+  if (users.length) {
+    setBackgroundColor(el, users)
+  } else {
+    state.on('users', 'userSelect', (users) => {
+      setBackgroundColor(el, users)
+    })
+  }
+}
+
+function listen(el) {
+  el.addEventListener('change', () => {
+    const users = state.get('users')
+    setBackgroundColor(el, users)
+  })
+}
+
+/**
+ *
+ */
+function setUser(id) {
+  this.selectByValue(id)
+  const users = state.get('users')
+  setBackgroundColor(this, users)
+}
+
+/**
+ *
+ */
+function setBackgroundColor(el, users) {
+  const selectedOption = el.getSelected()
+
+  if (!selectedOption) {
+    console.log('no selected option')
+    return
+  }
+
+  const user = users.find((u) => u.id === selectedOption.value)
+  el.style.backgroundColor = user.color
 }

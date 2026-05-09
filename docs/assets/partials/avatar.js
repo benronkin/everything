@@ -18,12 +18,17 @@ div.avatar {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--purple4);
   color: var(--gray1);
 }
 `
 
-export function createAvatar({ className = '', name, url, id } = {}) {
+export function createAvatar({
+  className = '',
+  name,
+  url,
+  id,
+  bgColor = 'var(--purple4)',
+} = {}) {
   injectStyle(css)
 
   const el = url
@@ -32,6 +37,8 @@ export function createAvatar({ className = '', name, url, id } = {}) {
         className: 'avatar',
         html: name ? name[0].toUpperCase() : 'U',
       })
+
+  el.style.backgroundColor = bgColor
 
   listen(el)
 

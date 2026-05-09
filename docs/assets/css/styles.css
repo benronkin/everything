@@ -294,6 +294,9 @@ ul {
 .justify-between {
   justify-content: space-between !important;
 }
+.justify-start {
+  justify-content: flex-start !important;
+}
 .list-header {
   padding: 6px 4px;
   font-size: 0.8rem;

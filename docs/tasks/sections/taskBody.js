@@ -93,12 +93,6 @@ function build(el, doc) {
   el.appendChild(createDueDate())
 
   if (doc.starts_at) {
-    // const dateObj = new Date(doc.starts_at)
-    // const [datePart, fullTimePart] = dateObj.toISOString().split('T')
-    // const timePart = fullTimePart.substring(0, 5)
-
-    // el.querySelector('#due-date').value = datePart
-    // el.querySelector('#due-time').value = timePart
     el.querySelector('.starts_at').setDateTime(doc.starts_at)
     el.querySelector('#add-due-date-wrapper').click()
   }
@@ -109,12 +103,18 @@ function build(el, doc) {
     label: user.first_name,
   }))
   el.appendChild(
-    createUserSelect({
-      id: 'assignee',
-      name: 'assignee',
-      caption: 'Assignee:',
-      value: doc.assignee,
-      options,
+    createDiv({
+      className: 'flex justify-start align-center mt-20',
+      html: [
+        createSpan({ html: 'Assignee:' }),
+        createUserSelect({
+          id: 'assignee',
+          name: 'assignee',
+          caption: 'Assignee:',
+          value: doc.assignee,
+          options,
+        }),
+      ],
     }),
   )
 

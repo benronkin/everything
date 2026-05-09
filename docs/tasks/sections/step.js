@@ -2,7 +2,7 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createSelect } from '../../assets/partials/select.js'
+import { createUserSelect } from '../../assets/partials/userSelect.js'
 
 const css = `
 .task-step {
@@ -38,7 +38,6 @@ const css = `
 }
 .task-step .assignee {
   margin-left: 20px;
-  background-color: var(--teal2);
 }
 `
 
@@ -63,7 +62,7 @@ export function createStep({ caption, completed = false, id, assignee } = {}) {
   }
 
   if (assignee) {
-    el.querySelector('.assignee').selectByValue(assignee)
+    el.querySelector('.assignee').setUser(assignee)
   }
 
   return el
@@ -84,7 +83,7 @@ function build(el) {
   el.appendChild(createDiv({ className: 'step-caption' }))
 
   el.appendChild(
-    createSelect({
+    createUserSelect({
       className: 'assignee',
       name: 'assignee',
       options: state
@@ -100,10 +99,12 @@ function listen(el, id) {
   el.querySelector('.assignee').addEventListener('change', (e) => {
     const stepEl = e.target.closest('.task-step')
     id = id || stepEl.id
+    const userId = e.target.value
+
     state.set('step-updated', {
       id,
       section: 'assignee',
-      value: e.target.value,
+      value: userId,
     })
   })
 
