@@ -97,11 +97,6 @@ function build(el, doc) {
     el.querySelector('#add-due-date-wrapper').click()
   }
 
-  const users = state.get('users')
-  const options = users.map((user) => ({
-    value: user.id,
-    label: user.first_name,
-  }))
   el.appendChild(
     createDiv({
       className: 'flex justify-start align-center mt-20',
@@ -112,7 +107,7 @@ function build(el, doc) {
           name: 'assignee',
           caption: 'Assignee:',
           value: doc.assignee,
-          options,
+          users: state.get('users'),
         }),
       ],
     }),

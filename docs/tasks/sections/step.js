@@ -86,9 +86,7 @@ function build(el) {
     createUserSelect({
       className: 'assignee',
       name: 'assignee',
-      options: state
-        .get('users')
-        .map((u) => ({ label: u.first_name, value: u.id })),
+      users: state.get('users'),
     }),
   )
 

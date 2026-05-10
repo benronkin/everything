@@ -25,7 +25,12 @@ color: var(--gray0) !important;
 export function createUserSelect(obj) {
   injectStyle(css)
 
-  const { id, className, name, value, options } = obj
+  const { id, className, name, value, users } = obj
+
+  const options = users.map((user) => ({
+    label: user.first_name,
+    value: user.id,
+  }))
 
   const el = createSelect({
     id,
@@ -36,29 +41,21 @@ export function createUserSelect(obj) {
     setUpdateState: false,
   })
 
-  react(el, obj)
   listen(el)
 
+  el._users = users
   el.setUser = setUser.bind(el)
+
+  if (value) {
+    el.setUser(value)
+  }
 
   return el
 }
 
-function react(el) {
-  const users = state.get('users')
-  if (users.length) {
-    setBackgroundColor(el, users)
-  } else {
-    state.on('users', 'userSelect', (users) => {
-      setBackgroundColor(el, users)
-    })
-  }
-}
-
 function listen(el) {
   el.addEventListener('change', () => {
-    const users = state.get('users')
-    setBackgroundColor(el, users)
+    setBackgroundColor(el)
   })
 }
 
@@ -67,14 +64,13 @@ function listen(el) {
  */
 function setUser(id) {
   this.selectByValue(id)
-  const users = state.get('users')
-  setBackgroundColor(this, users)
+  setBackgroundColor(this)
 }
 
 /**
  *
  */
-function setBackgroundColor(el, users) {
+function setBackgroundColor(el) {
   const selectedOption = el.getSelected()
 
   if (!selectedOption) {
@@ -82,6 +78,9 @@ function setBackgroundColor(el, users) {
     return
   }
 
-  const user = users.find((u) => u.id === selectedOption.value)
-  el.style.backgroundColor = user.color
+  const id = selectedOption.value
+  const user = el._users.find((u) => u.id === id)
+  const color = user.color
+
+  el.style.backgroundColor = color
 }
