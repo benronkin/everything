@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `Oops, tasks.js cannot locate user with id "${task.assignee}"`,
           )
         }
-        task.assignedPeer = { name: user.first_name }
+        task.assignedPeer = { name: user.first_name, color: user.color }
       }
 
       return task

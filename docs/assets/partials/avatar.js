@@ -21,15 +21,15 @@ div.avatar {
   color: var(--gray1);
 }
 `
-
-export function createAvatar({
-  className = '',
-  name,
-  url,
-  id,
-  bgColor = 'var(--purple4)',
-} = {}) {
+/**
+ * bgColor may arrive from server using join or via client.
+ * Avatar can either accept bgColor in doc or try to get it,
+ * from users
+ */
+export function createAvatar(doc) {
   injectStyle(css)
+
+  const { className = '', name, url, id } = doc
 
   const el = url
     ? createImage({ src: url, className: 'avatar' })
@@ -38,8 +38,9 @@ export function createAvatar({
         html: name ? name[0].toUpperCase() : 'U',
       })
 
-  el.style.backgroundColor = bgColor
+  el.dataset.color = doc.bgColor
 
+  react(el, doc)
   listen(el)
 
   if (className.length) {
@@ -52,6 +53,23 @@ export function createAvatar({
   return el
 }
 
+/**
+ *
+ */
+function react(el, doc) {
+  const users = state.get('users')
+  if (users) {
+    setBackgroundColor(el, doc, users)
+  } else {
+    state.on('users', 'avatar', (users) => {
+      setBackgroundColor(el, doc, users)
+    })
+  }
+}
+
+/**
+ *
+ */
 function listen(el) {
   el.addEventListener('click', () => {
     const active = state.get('default-page')
@@ -61,4 +79,20 @@ function listen(el) {
       active,
     })
   })
+}
+
+/**
+ *
+ */
+function setBackgroundColor(el, doc, users) {
+  const { name } = doc
+
+  if (el.dataset.color !== 'undefined') {
+    el.style.backgroundColor = el.dataset.color
+    return
+  }
+
+  const user = users.find((u) => u.first_name === name)
+  const color = user.color
+  el.style.backgroundColor = color
 }

@@ -21,7 +21,7 @@ import {
   unassignLabel,
   updateLabel,
 } from './notes.api.js'
-import { getMe } from '../users/users.api.js'
+import { fetchUsers, getMe } from '../users/users.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -42,11 +42,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     react()
     listen()
 
-    const [{ labels }, { assignments }, { notes }, { user }] =
+    const [{ labels }, { assignments }, { notes }, { users }, { user }] =
       await Promise.all([
         fetchLabels(),
         fetchLabelsAssignments(),
         fetchNotes(),
+        fetchUsers(),
         getMe(),
       ])
 
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     state.set('app-mode', 'left-panel')
+    state.set('users', users)
     state.set('user', user)
     state.set('default-page', 'notes')
 
