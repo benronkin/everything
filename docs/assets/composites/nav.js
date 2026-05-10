@@ -117,6 +117,7 @@ function react(el) {
         name: user.first_name,
         url: user.avatar,
         id: 'toggle-right-drawer',
+        bgColor: user.color,
       }),
     )
   })
