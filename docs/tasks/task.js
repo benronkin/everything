@@ -210,11 +210,6 @@ async function handleFieldChange(el) {
       return
     }
 
-    if (el.closest('.task-step')) {
-      console.log('el', el)
-      return
-    }
-
     const id = state.get('active-doc')
 
     const { error } = await updateTask({ id, section, value })

@@ -111,15 +111,11 @@ function listen(el, id) {
   el.querySelector('.mark-complete').addEventListener('click', (e) => {
     const stepEl = e.target.closest('.task-step')
     id = id || stepEl.id
-    state.set('step-updated', {
-      id,
-      section: 'completed',
-      value: e.target.value,
-    })
 
     const completed = !state.get(`step-${id}`)
     state.set(`step-${id}`, completed)
     state.set('step-updated', { id, section: 'completed', value: completed })
+
     el.querySelector('.step-caption').classList.toggle('completed', completed)
     el.querySelector('.select-wrapper').setDisabled(completed)
   })

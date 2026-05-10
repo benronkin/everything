@@ -53,9 +53,7 @@ export async function updateTask({ id, section, value }) {
   return { message, error }
 }
 
-// -----------------------------
-// Steps
-// -----------------------------
+// =========== Steps ===========
 
 export async function createStep(caption, taskId) {
   const resp = await postWebAppJson(`${url}/steps/create`, {
@@ -84,7 +82,6 @@ export async function fetchStepsOfMultipleTasks(task_ids) {
 }
 
 export async function updateStep(payload) {
-  // console.log('payload', payload)
   const resp = await postWebAppJson(`${url}/steps/update`, payload)
   return resp
 }

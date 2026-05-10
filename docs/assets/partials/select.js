@@ -54,6 +54,7 @@ export function createSelect({
   className = '',
   name = '',
   options = [],
+  setUpdateState = true,
 } = {}) {
   injectStyle(css)
 
@@ -76,6 +77,8 @@ export function createSelect({
 
   id && (el.id = id)
   el.className = `select-wrapper  ${className}`.trim()
+
+  el.dataset.updating = setUpdateState
 
   if (value) {
     el.value = value
@@ -181,6 +184,7 @@ function listen(el) {
     el.selectByValue(e.target.value)
     state.set(`select-click:${el.id || el.name}`, e.target.value)
 
+    if (!el.dataset.updating) return
     state.set('field-changed', e.target)
   })
 

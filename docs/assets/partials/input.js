@@ -19,15 +19,15 @@ export function createInput({
   maxLength,
   placeholder = '',
   autocomplete = true,
+  setUpdateState = true,
 } = {}) {
   injectStyle(css)
 
   const el = document.createElement('input')
 
-  if (id) {
-    el.id = id
-    el.dataset.id = id
-  }
+  if (id) el.id = id
+
+  el.dataset.updating = setUpdateState
 
   el.type = type
   className && (el.className = className)
@@ -85,5 +85,7 @@ function handleChange(el) {
   if (el.dataset.oldValue === el.value.trim()) return
 
   el.dataset.oldValue = el.value.trim()
+
+  if (!el.dataset.updating) return
   state.set('field-changed', el)
 }

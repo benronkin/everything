@@ -33,6 +33,7 @@ export function createUserSelect(obj) {
     name,
     value,
     options,
+    setUpdateState: false,
   })
 
   react(el, obj)
