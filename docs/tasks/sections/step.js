@@ -88,6 +88,7 @@ function build(el) {
       name: 'assignee',
       users: state.get('users'),
       setUpdateState: false,
+      value: state.get('user').id,
     }),
   )
 
