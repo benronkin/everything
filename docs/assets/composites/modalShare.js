@@ -152,12 +152,6 @@ function listen(el) {
     }
 
     state.set('modal-share-updated', data)
-    const docs = [...state.get('main-documents')]
-    const idx = docs.findIndex((d) => d.id === id)
-    docs[idx].peers = peers
-    state.set('main-documents', docs)
-    // force rerender
-    state.set('active-doc', state.get('active-doc'))
   })
 
   el.querySelector('#modal-second-btn').addEventListener('click', () =>

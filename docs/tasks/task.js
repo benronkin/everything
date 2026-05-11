@@ -129,6 +129,7 @@ function react() {
 
   state.on('modal-share-updated', 'task', async (data) => {
     await shareTask(data)
+    window.location.reload()
   })
 }
 
@@ -193,10 +194,8 @@ async function handleStepUpdate(doc) {
 
   if (section === 'assignee') {
     // show the sharer that the task is shared with the step assignee
-    const avatars = [...document.querySelectorAll('[data-avatar]')]
-    const ids = avatars.map((a) => a.dataset.avatar)
-    const alreadyShown = ids.includes(value)
-    if (!alreadyShown) window.location.reload()
+    if (!document.querySelector('.avatar-group').hasUser(value))
+      window.location.reload()
   }
 }
 
@@ -218,6 +217,12 @@ async function handleFieldChange(el) {
     const { error } = await updateTask({ id, section, value })
     if (error) {
       throw new Error(error)
+    }
+
+    if (section === 'assignee') {
+      // show the sharer that the task is shared with the step assignee
+      if (!document.querySelector('.avatar-group').hasUser(value))
+        window.location.reload()
     }
 
     setMessage('Saved', { type: 'quiet' })

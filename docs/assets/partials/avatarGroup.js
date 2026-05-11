@@ -25,9 +25,14 @@ export function createAvatarGroup({
 
   build({ el, peers, showShare })
 
+  el.hasUser = hasUser.bind(el)
+
   return el
 }
 
+/**
+ *
+ */
 function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
 
@@ -62,4 +67,14 @@ function build({ el, peers = [], showShare }) {
         },
       }),
     )
+}
+
+/**
+ *
+ */
+function hasUser(id) {
+  const avatars = [...this.querySelectorAll('[data-avatar]')]
+  const ids = avatars.map((a) => a.dataset.avatar)
+  const has = ids.includes(id)
+  return has
 }
