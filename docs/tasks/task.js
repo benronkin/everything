@@ -193,7 +193,10 @@ async function handleStepUpdate(doc) {
 
   if (section === 'assignee') {
     // show the sharer that the task is shared with the step assignee
-    window.location.reload()
+    const avatars = [...document.querySelectorAll('[data-avatar]')]
+    const ids = avatars.map((a) => a.dataset.avatar)
+    const alreadyShown = ids.includes(value)
+    if (!alreadyShown) window.location.reload()
   }
 }
 

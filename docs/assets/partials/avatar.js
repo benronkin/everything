@@ -43,7 +43,7 @@ export function createAvatar(doc) {
       el.classList.add(c)
     }
   }
-  id && (el.id = id)
+  if (id) el.dataset.avatar = id
 
   return el
 }

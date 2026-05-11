@@ -32,7 +32,12 @@ function build({ el, peers = [], showShare }) {
   const peersToShow = peers.slice(0, 3)
 
   for (const p of peersToShow) {
-    const avatar = createAvatar({ name: p.name, url: p.url, color: p.color })
+    const avatar = createAvatar({
+      id: p.id,
+      name: p.name,
+      url: p.url,
+      color: p.color,
+    })
     el.appendChild(avatar)
   }
 
