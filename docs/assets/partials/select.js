@@ -26,8 +26,9 @@ const css = `
   width: 100%;
 }
 .custom-select:disabled,
+.select-wrapper.disabled,
 .select-wrapper.disabled i {
-  color: var(--gray0);
+  color: var(--gray6);
 }
 
 .custom-select:focus {
@@ -57,7 +58,6 @@ export function createSelect({
   setUpdateState = true,
 } = {}) {
   injectStyle(css)
-
   const el = document.createElement('div')
 
   addElementParts({ el, name })
@@ -184,7 +184,10 @@ function listen(el) {
     el.selectByValue(e.target.value)
     state.set(`select-click:${el.id || el.name}`, e.target.value)
 
-    if (!el.dataset.updating) return
+    if (el.dataset.updating === 'false') {
+      console.log('skipping update')
+      return
+    }
     state.set('field-changed', e.target)
   })
 

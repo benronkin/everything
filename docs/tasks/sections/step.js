@@ -87,6 +87,7 @@ function build(el) {
       className: 'assignee',
       name: 'assignee',
       users: state.get('users'),
+      setUpdateState: false,
     }),
   )
 

@@ -20,12 +20,17 @@ select option {
 .select-wrapper .fa-caret-down {
 color: var(--gray0) !important;
 }
+.custom-select:disabled, 
+.select-wrapper.disabled .fa-caret-down {
+color: var(--gray2) !important;
+}
+
 `
 
 export function createUserSelect(obj) {
   injectStyle(css)
 
-  const { id, className, name, value, users } = obj
+  const { id, className, name, value, users, setUpdateState } = obj
 
   const options = users.map((user) => ({
     label: user.first_name,
@@ -38,7 +43,7 @@ export function createUserSelect(obj) {
     name,
     value,
     options,
-    setUpdateState: false,
+    setUpdateState,
   })
 
   listen(el)
@@ -71,6 +76,10 @@ function setUser(id) {
  *
  */
 function setBackgroundColor(el) {
+  if (el.classList.contains('disabled')) {
+    return
+  }
+
   const selectedOption = el.getSelected()
 
   if (!selectedOption) {
