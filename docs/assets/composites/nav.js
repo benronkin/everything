@@ -1,5 +1,5 @@
 import { injectStyle } from '../js/ui.js'
-import { createAvatar } from '../partials/avatar.js'
+import { createNavAvatar } from '../partials/navAvatar.js'
 import { createDiv } from '../partials/div.js'
 import { createHeader } from '../partials/header.js'
 import { createIcon } from '../partials/icon.js'
@@ -113,7 +113,7 @@ function react(el) {
     el.querySelector('#toggle-right-drawer')?.remove()
 
     el.querySelector('.container').appendChild(
-      createAvatar({
+      createNavAvatar({
         name: user.first_name,
         url: user.avatar,
         id: 'toggle-right-drawer',

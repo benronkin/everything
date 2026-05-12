@@ -1,9 +1,6 @@
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from './div.js'
 import { createImage } from './image.js'
-import { handlRightDrawerState } from '../js/ui.js'
-import { createNavigationMenu } from '../composites/navigationMenu.js'
-import { state } from '../js/state.js'
 
 const css = `
 .avatar {  
@@ -36,28 +33,16 @@ export function createAvatar(doc) {
 
   el.style.backgroundColor = doc.color
 
-  listen(el)
-
   if (className.length) {
     for (const c of className.split(' ')) {
       el.classList.add(c)
     }
   }
-  if (id) el.dataset.avatar = id
+
+  if (id) {
+    el.id = id
+    el.dataset.avatar = id
+  }
 
   return el
-}
-
-/**
- *
- */
-function listen(el) {
-  el.addEventListener('click', () => {
-    const active = state.get('default-page')
-    handlRightDrawerState('navigation-menu')
-    createNavigationMenu({
-      container: document.getElementById('right-drawer'),
-      active,
-    })
-  })
 }
