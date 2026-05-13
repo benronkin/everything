@@ -42,8 +42,13 @@ function react(el) {
 
     tasks = [...urgentTasks, ...unDueTasks].slice(0, 3)
 
+    const hasTasks = tasks.length
+    if (!hasTasks) {
+      el.style.marginTop = '0'
+    }
+
     el.innerHTML = ''
-    el.appendChild(tasksHeader(tasks.length))
+    el.appendChild(tasksHeader(hasTasks))
     el.appendChild(tasksBody(tasks))
   })
 
