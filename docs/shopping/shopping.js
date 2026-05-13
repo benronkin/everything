@@ -101,10 +101,18 @@ function react() {
     state.set('suggestions-list', [...state.get('suggestions-list')])
   })
 
-  state.on('icon-click:recurring', 'shopping', () => {
+  state.on('icon-click:recurring', 'shopping', async () => {
     const recurring = state.get('recurring')?.split(',') || []
     for (const item of recurring) {
-      addShoppingItem(item)
+      let sItems = state.get('shopping-list')
+      if (sItems.includes(item)) {
+        // delete existing items to preserve
+        // the order of recurring in settings
+        sItems = sItems.filter((sItem) => sItem !== item)
+        state.set('shopping-list', sItems)
+        await deleteShoppingItem(item)
+      }
+      await addShoppingItem(item)
     }
   })
 
