@@ -39,8 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
-
-    document.getElementById('main-item-shop').click()
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
     console.trace(error)
