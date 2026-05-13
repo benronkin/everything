@@ -13,7 +13,6 @@ export function shop() {
   const el = createDiv({ id: 'profile-wrapper' })
 
   build(el)
-  react(el)
 
   const recurring = state.get('recurring')
   if (recurring) {
@@ -51,11 +50,4 @@ function build(el) {
       placeholder: 'Add recurring items...',
     }),
   )
-}
-
-/**
- *
- */
-function react() {
-  state.on('app-mode', 'shop', (mode) => console.log('mode', mode))
 }
