@@ -3,8 +3,6 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
-import { handlRightDrawerState } from '../assets/js/ui.js'
-import { templates } from './sections/templates.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createStep as createStepElement } from './sections/step.js'
 import { createDiv } from '../assets/partials/div.js'
@@ -12,7 +10,6 @@ import { createFooter } from '../assets/composites/footer.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
-  createTask,
   createStep,
   deleteStep,
   deleteTask,
@@ -137,15 +134,6 @@ function react() {
   state.on('modal-share-updated', 'task', async (data) => {
     await shareTask(data)
     window.location.reload()
-
-    state.on('icon-click:templates', 'tasks', () => {
-      handlRightDrawerState('templates')
-      if (state.get('right-drawer-use') === 'templates') {
-        templates(document.getElementById('right-drawer'))
-      }
-    })
-
-    state.on('icon-click:add-template', 'tasks', handleAddTemplate)
   })
 
   state.on('button-click:duplicate-task', 'task', handleInstanceClick)
@@ -301,25 +289,4 @@ async function handleInstanceClick() {
   if (newTaskId) {
     window.location.href = `./task.html?id=${newTaskId}`
   }
-}
-
-/**
- *
- */
-async function handleAddTemplate() {
-  setMessage('Adding template...')
-
-  const doc = {
-    title: 'New template',
-    type: 'TEMPLATE',
-  }
-
-  const resp = await createTask(doc)
-  const { data } = resp
-  const { id } = data
-  doc.id = id
-  window.location.href = `./task.html?id=${id}`
-  // const docs = state.get('templates')
-  // docs.push(doc)
-  // state.set('templates', docs)
 }

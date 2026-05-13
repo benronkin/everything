@@ -44,6 +44,7 @@ function react(el) {
       !isLeftPanel,
     )
     el.querySelector('#sort-icon').classList.toggle('hidden', !isLeftPanel)
+    el.querySelector('#templates').classList.toggle('hidden', !isLeftPanel)
   })
 
   state.on('active-doc', 'toolbar', () => {
