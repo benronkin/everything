@@ -250,13 +250,16 @@ function handleTaskDelete() {
     return
   }
 
+  const doc = state.get('main-documents')[0]
+  const typeString = doc.type === 'TASK' ? 'task' : 'template'
+
   const modalDelete =
     document.getElementById('modal-delete') ||
     createModalDelete({ password: false })
 
-  modalDelete.querySelector('.modal-header').innerHTML = `Delete task`
+  modalDelete.querySelector('.modal-header').innerHTML = `Delete ${typeString}`
   modalDelete.querySelector('.modal-body').innerHTML =
-    `<div><strong>${document.getElementById('title').value}</strong> contains outstanding steps. Delete task?<div>`
+    `<div><strong>${document.getElementById('title').value}</strong> contains outstanding steps. Delete ${typeString}?<div>`
 
   document.getElementById('modal-delete-btn').dataset.taskId = id
 
@@ -284,6 +287,7 @@ async function handleTaskDeleteConfirm() {
  *
  */
 async function handleInstanceClick() {
+  setMessage('Creating task from template')
   const id = state.get('active-doc')
   const { id: newTaskId } = await duplicateTask(id)
   if (newTaskId) {
