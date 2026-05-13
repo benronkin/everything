@@ -44,53 +44,17 @@ export function bookmarks() {
 }
 
 function react(el) {
-  state.on('user', 'bookmarks', async ({ bookmarks: bookmarksNoteId }) => {
-    if (!bookmarksNoteId) {
-      el.insertHtml(
-        'Create a note with bookmark data and set its id in Settings/Profile/Bookmarks',
-      )
+  state.on('user', 'bookmarks', async ({ bookmarks }) => {
+    if (!bookmarks) {
+      el.insertHtml('Add your bookmarks in Settings > Profile > Bookmarks')
       return
-    }
-
-    // compare the bookmarks note update date to local storage
-    // fetch bookmark note only if different
-    const resp = await fetchNoteMetadata(bookmarksNoteId)
-    const metadata = resp.note
-    const bookmarksUpdatedAt = localStorage.getItem('bookmarks-updated-at')
-    const bookmarks = localStorage.getItem('bookmarks') || ''
-
-    // console.log('bookmarksUpdatedAt', bookmarksUpdatedAt)
-    // console.log('bookmarks', bookmarks)
-    let noteDoc = {}
-
-    if (bookmarks.length && bookmarksUpdatedAt === metadata.updated_at) {
-      // console.log('Using bookmarks from local storage')
-      noteDoc.note = bookmarks
-    } else {
-      // console.log('Fetching bookmarks from remote note')
-      const { note, error } = await fetchNote(bookmarksNoteId)
-      if (error) {
-        el.insertHtml(
-          'The note ID you set in Settings/Profile/Bookmarks is invalid.',
-        )
-        return
-      }
-
-      noteDoc = note
-      if (!noteDoc.note?.trim().length) {
-        el.insertHtml('Your bookmarks note is empty. Add bookmarks data.')
-        return
-      }
-
-      localStorage.setItem('bookmarks-updated-at', metadata.updated_at)
-      localStorage.setItem('bookmarks', noteDoc.note)
     }
 
     const arr = []
     let obj
     let o
 
-    for (let line of noteDoc.note.split('\n')) {
+    for (let line of bookmarks.split('\n')) {
       line = line.trim()
       if (!line.length) continue
 

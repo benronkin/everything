@@ -6,6 +6,7 @@ import { createImage } from '../../assets/partials/image.js'
 import { createAvatarForm } from './avatar.form.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
+import { createTextarea } from '../../assets/partials/textarea.js'
 import { deleteAvatar } from '../../users/users.api.js'
 import { state } from '../../assets/js/state.js'
 import { log } from '../../assets/js/logger.js'
@@ -30,7 +31,7 @@ function build(el) {
       className: 'mb-20',
       html: 'Profile',
       type: 'h4',
-    })
+    }),
   )
 
   el.appendChild(
@@ -38,22 +39,14 @@ function build(el) {
       name: 'first_name',
       classes: { icon: 'fa-user', input: 'field' },
       placeholder: 'Enter name',
-    })
-  )
-
-  el.appendChild(
-    createInputGroup({
-      name: 'bookmarks',
-      classes: { icon: 'fa-bookmark', input: 'field', group: 'mt-30' },
-      placeholder: 'Enter your bookmarks note ID',
-    })
+    }),
   )
 
   el.appendChild(
     createSpanGroup({
       classes: { group: 'mt-20', icon: 'fa-circle-user' },
       html: 'Avatar',
-    })
+    }),
   )
 
   el.appendChild(
@@ -67,13 +60,26 @@ function build(el) {
           className: 'bordered hidden',
         }),
       ],
-    })
+    }),
   )
 
   el.appendChild(
     createDiv({
       id: 'avatar-wrapper',
-    })
+    }),
+  )
+
+  el.appendChild(
+    createHeader({ html: 'Bookmarks:', type: 'h5', className: 'mb-20' }),
+  )
+
+  el.appendChild(
+    createTextarea({
+      name: 'bookmarks',
+      id: 'bookmarks',
+      className: 'w-100',
+      placeholder: 'Add bookmarks...',
+    }),
   )
 
   const user = state.get('user')
