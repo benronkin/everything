@@ -28,6 +28,20 @@ export function tasks() {
 
 function react(el) {
   state.on('main-documents', 'mainPanel', (tasks) => {
+    // show overdue or today tasks followed by non-due tasks
+    const urgentTasks = tasks
+      .filter((t) => t.starts_at)
+      .map((t) => {
+        t.dueInfo = dueInfo(t.starts_at)
+        return t
+      })
+      .filter((t) => ['Overdue', 'Today'].includes(t.dueInfo.label))
+      .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+
+    const unDueTasks = tasks.filter((t) => !t.starts_at)
+
+    tasks = [...urgentTasks, ...unDueTasks].slice(0, 3)
+
     el.innerHTML = ''
     el.appendChild(tasksHeader(tasks.length))
     el.appendChild(tasksBody(tasks))
@@ -49,16 +63,20 @@ function tasksHeader(hasTasks) {
     className: 'flex align-center mb-10',
     id: 'tasks-header',
   })
-  div.appendChild(createHeader({ type: 'h4', html: 'TASKS' }))
-  div.appendChild(
-    createButton({
-      className: 'primary',
-      id: 'tasks-header-btn',
-      html: hasTasks
-        ? `<i class="fa-solid fa-list-check"></i> VIEW ALL`
-        : `<i class="fa-solid fa-plus"></i> ADD`,
-    }),
-  )
+
+  if (hasTasks) {
+    div.appendChild(createHeader({ type: 'h4', html: 'TASKS' }))
+    div.appendChild(
+      createButton({
+        className: 'primary',
+        id: 'tasks-header-btn',
+        html: hasTasks
+          ? `<i class="fa-solid fa-list-check"></i> VIEW ALL`
+          : `<i class="fa-solid fa-plus"></i> ADD`,
+      }),
+    )
+  }
+
   return div
 }
 
@@ -67,20 +85,6 @@ function tasksHeader(hasTasks) {
  * but here we delete them and load only the first two
  */
 function tasksBody(tasks) {
-  // show overdue or today tasks followed by non-due tasks
-  const urgentTasks = tasks
-    .filter((t) => t.starts_at)
-    .map((t) => {
-      t.dueInfo = dueInfo(t.starts_at)
-      return t
-    })
-    .filter((t) => ['Overdue', 'Today'].includes(t.dueInfo.label))
-    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
-
-  const unDueTasks = tasks.filter((t) => !t.starts_at)
-
-  tasks = [...urgentTasks, ...unDueTasks].slice(0, 3)
-
   const list = mainDocumentsList()
   const children = tasks.map((doc) => createTaskHeader(doc, 'priority', false))
 
