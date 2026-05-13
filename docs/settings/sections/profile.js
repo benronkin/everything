@@ -28,7 +28,7 @@ export function profile() {
 function build(el) {
   el.appendChild(
     createHeader({
-      className: 'mb-20',
+      className: 'mb-30',
       html: 'Profile',
       type: 'h4',
     }),
