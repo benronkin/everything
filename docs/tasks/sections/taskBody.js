@@ -35,6 +35,14 @@ const css = `
 .due-date-badge {
   padding: 5px;
 }
+[data-type="TEMPLATE"] .task-step .assignee,
+[data-type="TEMPLATE"] .task-step .mark-complete {
+  visibility: hidden;
+}
+[data-type="TEMPLATE"] .task-assignee-wrapper,
+[data-type="TEMPLATE"] #add-due-date-wrapper {
+  display: none !important;
+}
 `
 
 export function createTaskBody(doc) {
@@ -114,7 +122,7 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'flex justify-start align-center mt-20',
+      className: 'flex justify-start align-center mt-20 task-assignee-wrapper',
       html: [
         createSpan({ html: 'Assignee:' }),
         createUserSelect({
