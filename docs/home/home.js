@@ -59,7 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     return
   }
 
-  state.set('main-documents', tasks)
+  state.set(
+    'main-documents',
+    tasks.filter((t) => t.type === 'TASK'),
+  )
   state.set('user', user)
   state.set('wotd', entry)
   state.set('default-page', 'home')
