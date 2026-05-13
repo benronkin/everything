@@ -8,34 +8,35 @@ export function toolbar() {
     className: 'container',
     children: [
       createIcon({
-        id: 'sort-icon',
+        id: 'sort',
         classes: { primary: 'fa-sort', other: 'bordered' },
       }),
       createIcon({
-        id: 'suggest-icon',
+        id: 'suggest',
         classes: { primary: 'fa-lightbulb', other: 'bordered' },
+      }),
+      createIcon({
+        id: 'recurring',
+        classes: { primary: 'fa-cloud-arrow-down', other: 'bordered' },
       }),
     ],
   })
 
   react(el)
-  listen(el)
 
   return el
 }
 
 function react(el) {
-  state.on('icon-click:sort-icon', 'toolbar', ({ id }) => {
+  state.on('icon-click:sort', 'toolbar', ({ id }) => {
     const sortEl = document.getElementById(id)
     sortEl.classList.toggle('primary')
     sortEl.classList.toggle('bordered')
   })
 
-  state.on('icon-click:suggest-icon', 'toolbar', ({ id }) => {
+  state.on('icon-click:suggest', 'toolbar', ({ id }) => {
     const suggestEl = document.getElementById(id)
     suggestEl.classList.toggle('primary')
     suggestEl.classList.toggle('bordered')
   })
 }
-
-function listen(el) {}

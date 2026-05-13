@@ -1,5 +1,4 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { log } from '../../assets/js/logger.js'
 import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createList } from '../../assets/partials/list.js'
@@ -18,7 +17,6 @@ export function leftPanel() {
 
   build(el)
   react(el)
-  listen({ el, id: 'left-panel' })
 
   el.id = 'left-panel'
 
@@ -27,6 +25,7 @@ export function leftPanel() {
 function build(el) {
   const listEl = createList({ enableDrag: 'false' })
   el.appendChild(listEl)
+
   listEl.addChildren([
     createListItem({
       id: 'main-item-profile',
@@ -35,22 +34,23 @@ function build(el) {
         classes: { icon: 'fa-circle-user' },
       }),
     }),
+    createListItem({
+      id: 'main-item-shop',
+      html: createSpanGroup({
+        html: 'Shopping',
+        classes: { icon: 'fa-shopping-cart' },
+      }),
+    }),
   ])
 }
 
 function react(el) {
   state.on('app-mode', 'leftPanel', (appMode) => {
     if (appMode !== 'left-panel') {
-      // log(`letPanel is hiding itself on app-mode: ${appMode}`)
       el.classList.add('hidden')
       return
     }
 
     el.classList.remove('hidden')
-    // log(`letPanel is showing itself on app-mode: ${appMode}`)
   })
-}
-
-function listen() {
-  // el.addEventListener('click', () => {})
 }

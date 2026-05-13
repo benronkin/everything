@@ -11,10 +11,7 @@ import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import {
-  fetchCartAndSuggestions,
-  updateShoppingList,
-} from '../shopping/shopping.api.js'
+import { fetchShopping, updateShoppingList } from '../shopping/shopping.api.js'
 import {
   createRecipe,
   deleteRecipe,
@@ -339,7 +336,7 @@ async function shopIngredients() {
   const ingredients = doc.ingredients.length ? doc.ingredients.split('\n') : []
   if (!ingredients.length) return
 
-  const { shoppingList } = await fetchCartAndSuggestions()
+  const { shoppingList } = await fetchShopping()
   const cart = [...new Set([...ingredients, ...shoppingList.split(',')])]
 
   updateShoppingList(cart.join(','))

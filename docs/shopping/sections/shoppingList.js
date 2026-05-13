@@ -49,8 +49,8 @@ function react(el) {
     })
   })
 
-  state.on('icon-click:sort-icon', 'shoppingList', () => {
-    if (document.querySelector('#sort-icon').classList.contains('primary')) {
+  state.on('icon-click:sort', 'shoppingList', () => {
+    if (document.querySelector('#sort').classList.contains('primary')) {
       enableDragging(el)
     } else {
       enableClicking(el)

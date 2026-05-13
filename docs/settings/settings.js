@@ -7,13 +7,14 @@ import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { toolbar } from './sections/toolbar.js'
 import { profile } from './sections/profile.js'
+import { shop } from './sections/shop.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { createAvatar, updateUserField } from '../users/users.api.js'
+import { fetchShopping, updateRecurring } from '../shopping/shopping.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
-import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -28,17 +29,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    const { user } = await getMe()
+    const [{ user }, { recurring }] = await Promise.all([
+      getMe(),
+      fetchShopping(),
+    ])
+
     state.set('user', user)
+    state.set('recurring', recurring)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
+
+    document.getElementById('main-item-shop').click()
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
     console.trace(error)
   }
 })
 
+/**
+ *
+ */
 async function build() {
   document.title = 'Settings | Everything App'
   const body = document.body
@@ -60,13 +71,26 @@ async function build() {
   wrapperEl.appendChild(createFooter())
 }
 
+/**
+ *
+ */
 function react() {
   state.on('item-click', 'settings', (id) => {
-    switch (id) {
-      case 'main-item-profile':
-        state.set('app-mode', 'main-panel')
-        document.getElementById('settings-wrapper').insertHtml(profile())
-        break
+    if (id === 'main-item-profile') {
+      state.set('app-mode', 'main-panel')
+      document.getElementById('settings-wrapper').insertHtml(profile())
+      return
+    }
+
+    if (id === 'main-item-shop') {
+      state.set('app-mode', 'main-panel')
+      document.getElementById('settings-wrapper').insertHtml(shop())
+      const recurringTA = document.getElementById('recurring')
+
+      requestAnimationFrame(() => {
+        recurringTA.focus()
+      })
+      return
     }
   })
 
@@ -98,7 +122,14 @@ function react() {
     const field = el.name
     const value = el.value
 
-    updateUserField({ field, value })
+    switch (field) {
+      case 'recurring':
+        updateRecurring(value)
+        break
+      default:
+        updateUserField({ field, value })
+    }
+
     setMessage('Saved', { type: 'quiet' })
   })
 }

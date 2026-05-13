@@ -6,12 +6,13 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { createNav } from '../assets/composites/nav.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import {
   addItem,
   deleteItem,
-  fetchCartAndSuggestions,
+  fetchShopping,
   updateShoppingList,
   updateSuggestionsList,
 } from './shopping.api.js'
@@ -31,9 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    const [{ shoppingList, shoppingSuggestions }, { user }] = await Promise.all(
-      [fetchCartAndSuggestions(), getMe()],
-    )
+    const [{ shoppingList, shoppingSuggestions, recurring }, { user }] =
+      await Promise.all([fetchShopping(), getMe()])
 
     state.set(
       'shopping-list',
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map((x) => x.trim())
         .filter(Boolean),
     )
+    state.set('recurring', recurring)
     state.set('app-mode', 'main-panel')
     state.set('user', user)
     state.set('default-page', 'shopping')
@@ -96,8 +97,15 @@ function react() {
     state.set('suggestions-list', [...state.get('suggestions-list')]),
   )
 
-  state.on('icon-click:suggest-icon', 'shopping', () => {
+  state.on('icon-click:suggest', 'shopping', () => {
     state.set('suggestions-list', [...state.get('suggestions-list')])
+  })
+
+  state.on('icon-click:recurring', 'shopping', () => {
+    const recurring = state.get('recurring')?.split(',') || []
+    for (const item of recurring) {
+      addShoppingItem(item)
+    }
   })
 
   state.on('form-submit:shopping-form', 'shopping', () => {

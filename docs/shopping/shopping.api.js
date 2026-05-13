@@ -3,10 +3,9 @@ import { getWebApp, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/shopping`
 
-export async function fetchCartAndSuggestions() {
-  const { shoppingList, shoppingSuggestions } = await getWebApp(`${url}/read`)
-
-  return { shoppingList, shoppingSuggestions }
+export async function fetchShopping() {
+  const resp = await getWebApp(`${url}/read`)
+  return resp
 }
 
 export async function addItem(text) {
@@ -31,6 +30,12 @@ export async function updateShoppingList(text) {
 
 export async function updateSuggestionsList(text) {
   await postWebAppJson(`${url}/suggestions/update`, {
+    value: text,
+  })
+}
+
+export async function updateRecurring(text) {
+  await postWebAppJson(`${url}/recurring/update`, {
     value: text,
   })
 }

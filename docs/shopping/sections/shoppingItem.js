@@ -54,9 +54,7 @@ export function shoppingItem({ item }) {
 }
 
 function react(el) {
-  state.on('icon-click:sort-icon', 'shoppingItem', () =>
-    handleToolbarSortClick(el),
-  )
+  state.on('icon-click:sort', 'shoppingItem', () => handleToolbarSortClick(el))
 }
 
 function listen(el) {
@@ -76,7 +74,7 @@ function listen(el) {
 
 function handleToolbarSortClick(el) {
   const isSorting = document
-    .getElementById('sort-icon')
+    .getElementById('sort')
     .classList.contains('primary')
   el.setDraggable(isSorting)
 }

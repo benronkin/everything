@@ -25,7 +25,7 @@ function refreshSuggestions(el) {
   const cartArr = state.get('shopping-list')
   const suggestionsEl = document.getElementById('suggestions-list')
 
-  const suggestIcon = document.getElementById('suggest-icon')
+  const suggestIcon = document.getElementById('suggest')
   const addInput = document.querySelector('[name="new-item"]')
   const addValue = addInput.value.trim().toLowerCase()
 
@@ -51,7 +51,7 @@ function refreshSuggestions(el) {
 
   suggestionsEl.classList.toggle(
     'hidden',
-    !suggestIcon.classList.contains('primary') && !addValue.length
+    !suggestIcon.classList.contains('primary') && !addValue.length,
   )
 
   const children = suggestionsArr.map((item) => suggestionItem({ item }))
