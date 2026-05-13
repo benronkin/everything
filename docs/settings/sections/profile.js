@@ -70,7 +70,7 @@ function build(el) {
   )
 
   el.appendChild(
-    createHeader({ html: 'Bookmarks:', type: 'h5', className: 'mb-20' }),
+    createHeader({ html: 'Bookmarks:', type: 'h5', className: 'mt-30 mb-20' }),
   )
 
   el.appendChild(
@@ -86,7 +86,7 @@ function build(el) {
   if (user) {
     insertImage(user.avatar, el)
     el.querySelector('[name="first_name"]').value = user.first_name || 'nope'
-    el.querySelector('[name="bookmarks"]').value = user.bookmarks || ''
+    el.querySelector('[name="bookmarks"]').setValue(user.bookmarks || '')
   }
 }
 
