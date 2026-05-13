@@ -3,9 +3,11 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+import { handlRightDrawerState } from '../assets/js/ui.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
+import { templates } from './sections/templates.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
@@ -53,7 +55,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return task
     })
 
-    state.set('main-documents', tasks)
+    state.set(
+      'main-documents',
+      tasks.filter((t) => t.type === 'TASK'),
+    )
+    state.set(
+      'templates',
+      tasks.filter((t) => t.type === 'TEMPLATE'),
+    )
     state.set('app-mode', 'left-panel')
     state.set('users', users)
     state.set('user', user)
@@ -100,10 +109,22 @@ function build() {
   wrapperEl.appendChild(createFooter())
 }
 
+/**
+ *
+ */
 function react() {
   state.on('form-submit:tasks-form', 'tasks', handleAddTask)
 
   state.on('list-dragged:tasks-list', 'tasks', handleTaskDragged)
+
+  state.on('icon-click:templates', 'tasks', () => {
+    handlRightDrawerState('templates')
+    if (state.get('right-drawer-use') === 'templates') {
+      templates(document.getElementById('right-drawer'))
+    }
+  })
+
+  state.on('icon-click:add-template', 'tasks', handleAddTemplate)
 }
 
 /**
@@ -140,7 +161,7 @@ async function handleAddTask() {
 
   setMessage('Adding task...')
 
-  const resp = await createTask({ title, starts_at })
+  const resp = await createTask({ title, starts_at, type: 'TASK' })
   const { data } = resp
   const { id } = data
   const newDoc = { id, title, starts_at, dueInfo: dueInfo(starts_at) }
@@ -160,4 +181,25 @@ async function handleTaskDragged() {
     setMessage(error)
     return
   }
+}
+
+/**
+ *
+ */
+async function handleAddTemplate() {
+  setMessage('Adding template...')
+
+  const doc = {
+    title: 'New template',
+    type: 'TEMPLATE',
+  }
+
+  const resp = await createTask(doc)
+  const { data } = resp
+  const { id } = data
+  doc.id = id
+  window.location.href = `./task.html?id=${id}`
+  // const docs = state.get('templates')
+  // docs.push(doc)
+  // state.set('templates', docs)
 }

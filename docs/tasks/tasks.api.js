@@ -3,16 +3,22 @@ import { getWebApp, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/tasks`
 
-export async function createTask({ title, starts_at }) {
+export async function createTask({ title, starts_at, type }) {
   const resp = await postWebAppJson(`${url}/create`, {
     title,
     starts_at,
+    type,
   })
   return resp
 }
 
 export async function deleteTask(id) {
   const resp = await getWebApp(`${url}/delete?id=${id}`)
+  return resp
+}
+
+export async function duplicateTask(id) {
+  const resp = await getWebApp(`${url}/duplicate?id=${id}`)
   return resp
 }
 

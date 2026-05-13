@@ -1,9 +1,9 @@
 import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createHeaderGroup } from '../../assets/partials/headerGroup.js'
-import { createButton } from '../../assets/partials/button.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextarea } from '../../assets/partials/textarea.js'
 import { createStep } from './step.js'
@@ -51,6 +51,21 @@ export function createTaskBody(doc) {
 }
 
 function build(el, doc) {
+  let typeString = 'Task'
+
+  if (doc.type === 'TEMPLATE') {
+    typeString = 'Template'
+    el.dataset.type = 'TEMPLATE'
+
+    el.appendChild(
+      createButton({
+        id: 'duplicate-task',
+        html: 'Create task from this template',
+        className: 'primary mb-30',
+      }),
+    )
+  }
+
   el.appendChild(
     createInputGroup({
       id: 'title',
@@ -134,7 +149,9 @@ function build(el, doc) {
   const trashBtn = createButton({
     id: 'trash-btn',
     className: 'transparent',
-    html: createSpan({ html: '<i class="fa-solid fa-trash"></i> Delete task' }),
+    html: createSpan({
+      html: `<i class="fa-solid fa-trash"></i> Delete ${typeString}`,
+    }),
   })
 
   el.appendChild(trashBtn)

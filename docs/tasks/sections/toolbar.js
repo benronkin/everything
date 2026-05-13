@@ -16,19 +16,26 @@ export function toolbar() {
           other: ['bordered'],
         },
       }),
-
       createIcon({
         id: 'sort-icon',
         classes: { primary: 'fa-sort', other: ['bordered'] },
+      }),
+      createIcon({
+        id: 'templates',
+        classes: { primary: 'fa-file-circle-plus', other: ['bordered'] },
       }),
     ],
   })
 
   react(el)
+  listen()
 
   return el
 }
 
+/**
+ *
+ */
 function react(el) {
   state.on('app-mode', 'toolbar', (mode) => {
     const isLeftPanel = mode === 'left-panel'
@@ -67,5 +74,24 @@ function react(el) {
     const sortEl = document.getElementById(id)
     sortEl.classList.toggle('primary')
     sortEl.classList.toggle('bordered')
+  })
+  state.on('icon-click:templates', 'toolbar', ({ id }) => {
+    const el = document.getElementById(id)
+    el.classList.toggle('primary')
+    el.classList.toggle('bordered')
+  })
+}
+
+/**
+ *
+ */
+function listen() {
+  document.addEventListener('click', (e) => {
+    const id = 'templates'
+    if (!e.target.closest(`#${id}`)) {
+      const el = document.getElementById(id)
+      el.classList.remove('primary')
+      el.classList.add('bordered')
+    }
   })
 }
