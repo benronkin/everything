@@ -37,8 +37,8 @@ function react(el) {
       createHeader({
         type: 'h4',
         className: 'flex align-center',
-        html: `WOTD for ${date.getMonth() + 1}/${date.getDate()}`,
-      })
+        html: `${date.getMonth() + 1}/${date.getDate()} Lexicon entry`,
+      }),
     )
     el.appendChild(div)
 
