@@ -94,7 +94,7 @@ export const navList = [
     category: 'love',
   },
   {
-    icon: 'fa-road',
+    icon: 'fa-book',
     label: 'Journal',
     url: 'journal/index.html',
     id: 'journal',

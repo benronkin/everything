@@ -8,7 +8,12 @@ import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import { createEntry, pageEntries, searchEntries } from './journal.api.js'
+import {
+  createEntry,
+  pageEntries,
+  fetchAroundThisTime,
+  searchEntries,
+} from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -28,7 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    const [{ data }, { user }] = await Promise.all([pageEntries(), getMe()])
+    const around = urlParams.get('around')
+    const entriesFn = around ? () => fetchAroundThisTime(around) : pageEntries
+
+    const [{ data }, { user }] = await Promise.all([entriesFn(), getMe()])
 
     state.set('main-documents', data)
     state.set('app-mode', 'left-panel')
@@ -37,7 +45,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document
       .querySelector('#next-page')
-      .classList.toggle('hidden', data.length < 20)
+      .classList.toggle('hidden', data.length < 20 || around)
+
+    if (around) {
+      const doc = state
+        .get('main-documents')
+        .find((d) => d.visit_date === around)
+      document.getElementById(doc.id).classList.add('active')
+    }
 
     if (messageParam) {
       const url = new URL(window.location)

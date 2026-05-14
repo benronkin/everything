@@ -11,9 +11,15 @@ export function toolbar() {
         id: 'add-entry',
         classes: { primary: 'fa-plus', other: ['primary'] },
       }),
+
       createIcon({
         id: 'copy-address',
         classes: { primary: 'fa-clipboard', other: ['primary'] },
+      }),
+
+      createIcon({
+        id: 'around-this-time',
+        classes: { primary: 'fa-road', other: ['primary'] },
       }),
     ],
   })
@@ -28,6 +34,10 @@ function react(el) {
     const isLeftPanel = mode === 'left-panel'
     el.querySelector('#add-entry').classList.toggle('hidden', !isLeftPanel)
     el.querySelector('#copy-address').classList.toggle('hidden', isLeftPanel)
+    el.querySelector('#around-this-time').classList.toggle(
+      'hidden',
+      isLeftPanel,
+    )
   })
 
   state.on('icon-click:copy-address', 'Journal toolbar', () => {

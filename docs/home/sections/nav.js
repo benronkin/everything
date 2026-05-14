@@ -4,9 +4,13 @@ import { navList } from '../../assets/js/ui.js'
 export function nav() {
   const { icon, label } = navList.find((i) => i.id === 'home')
 
+  // const el = createNav({
+  //   title: `<i class="fa-solid ${icon}"></i> ${label}`,
+  //   isHome: true,
+  // })
   const el = createNav({
-    title: `<i class="fa-solid ${icon}"></i> ${label}`,
-    isHome: true,
+    primaryIcon: icon,
+    primaryText: label,
   })
   return el
 }

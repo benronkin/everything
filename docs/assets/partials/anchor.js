@@ -20,7 +20,11 @@ export function createAnchor({ className, id, html, url } = {}) {
 function createElement({ className, id, html, url }) {
   const el = document.createElement('a')
 
-  el.innerHTML = html
+  if (typeof html === 'string') {
+    el.innerHTML = html
+  } else {
+    el.appendChild(html)
+  }
   el.href = url
   className && (el.className = className)
   id && (el.id = id)

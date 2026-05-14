@@ -41,6 +41,13 @@ export async function pageEntries(page = 0) {
   return { data: journal, error }
 }
 
+export async function fetchAroundThisTime(dateString) {
+  const { journal, error } = await getWebApp(
+    `${url}/around-this-time?date=${dateString}`,
+  )
+  return { data: journal, error }
+}
+
 /**
  * @param {String} q - The search query
  */

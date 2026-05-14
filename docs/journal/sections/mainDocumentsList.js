@@ -44,6 +44,9 @@ function addChildren(el, docs) {
 
   if (!docs || !docs.length) return
 
+  const urlParams = new URLSearchParams(window.location.search)
+  const around = urlParams.get('around')
+
   const children = docs.map((doc) => {
     const obj = formatDateParts(doc.visit_date)
     const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
@@ -52,10 +55,18 @@ function addChildren(el, docs) {
       createSpan({ html: visited }),
     ]
 
+    let url = `./journal.html?id=${doc.id}`
+
+    if (around) {
+      // keep around-that-time context when
+      // user clicks the browser's BACK button
+      url += `&around=${around}`
+    }
+
     return createMainDocumentLink({
       id: doc.id,
       html,
-      url: `./journal.html?id=${doc.id}`,
+      url,
     })
   })
   el.addChildren(children)

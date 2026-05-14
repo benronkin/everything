@@ -94,7 +94,7 @@ function react() {
 
   state.on('field-changed', 'journal', handleFieldChange)
 
-  state.on('photo-form-submit', 'recipes.js', async (formData) => {
+  state.on('photo-form-submit', 'journal', async (formData) => {
     const compressionOptions = {
       maxWidthOrHeight: 600,
       useWebWorker: true,
@@ -117,7 +117,7 @@ function react() {
     state.set('photos-metadata', photosMetadata)
   })
 
-  state.on('photo-delete-request', 'recipes.js', async (id) => {
+  state.on('photo-delete-request', 'journal', async (id) => {
     const { error, message } = await deleteEntryPhoto(id)
     state.set('photo-delete-response', { error, message })
     // refresh photo list
@@ -126,13 +126,19 @@ function react() {
     state.set('photos-metadata', photosMetadata)
   })
 
-  state.on('photo-caption-change', 'recipes.js', async ({ id, value }) => {
+  state.on('photo-caption-change', 'journal', async ({ id, value }) => {
     const { error, message } = await updatePhotoCaption({ id, value })
     state.set('photo-caption-response', { error, message })
     // refresh photo list
     const entryId = state.get('active-doc')
     const photosMetadata = await fetchEntryPhotosMetadata(entryId)
     state.set('photos-metadata', photosMetadata)
+  })
+
+  state.on('icon-click:around-this-time', 'journal', () => {
+    const doc = state.get('main-documents')[0]
+    // window.location.href = `./index.html?around=${doc.visit_date.slice(0, 10)}`
+    window.location.href = `./index.html?around=${doc.visit_date}`
   })
 }
 
