@@ -8,6 +8,7 @@ import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
+import { getLocalDate } from '../assets/js/format.js'
 import {
   createEntry,
   pageEntries,
@@ -104,10 +105,9 @@ async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
 
-  const visit_date = new Date().toISOString()
+  const visit_date = getLocalDate()
 
   const resp = await createEntry(visit_date)
-  console.log('resp', resp)
   const { id, error } = resp
   if (error) {
     console.error(`Journal server error: ${error}`)

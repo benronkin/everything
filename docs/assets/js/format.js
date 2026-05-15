@@ -50,3 +50,14 @@ export function formatDateParts(isoDateString) {
   }
   return obj
 }
+
+/**
+ * Create a date string that follows the ISO format
+ * but uses the local time instead of server time
+ */
+export function getLocalDate(date) {
+  date = date || new Date()
+  const offset = date.getTimezoneOffset() * 60000
+  const dateString = new Date(date - offset).toISOString()
+  return dateString
+}

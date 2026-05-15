@@ -10,6 +10,7 @@ import { createFooter } from '../assets/composites/footer.js'
 import { templates } from './sections/templates.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
+import { getLocalDate } from '../assets/js/format.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
 import { createTask, fetchTasks, update } from './tasks.api.js'
@@ -143,8 +144,8 @@ async function handleAddTask() {
   // Create a date string that follows the ISO format
   // but uses the local time instead of server time
   const now = new Date()
-  const offset = now.getTimezoneOffset() * 60000
-  let starts_at = new Date(now - offset).toISOString()
+
+  let starts_at = getLocalDate()
 
   const hour = now.getHours()
   let tempDate = new Date(now)
@@ -157,7 +158,7 @@ async function handleAddTask() {
     // otherwise hve it start the next hour
     tempDate.setHours(hour + 1, 0, 0, 0)
   }
-  starts_at = new Date(tempDate - offset).toISOString()
+  starts_at = getLocalDate(tempDate)
 
   setMessage('Adding task...')
 
