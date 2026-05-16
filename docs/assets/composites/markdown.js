@@ -56,6 +56,9 @@ ul {
 }
 `
 
+/**
+ *
+ */
 export function createMarkdown({
   name,
   id,
@@ -85,6 +88,9 @@ export function createMarkdown({
   return el
 }
 
+/**
+ *
+ */
 function build({ el, id, name, iconsVisible }) {
   el.appendChild(createDiv({ className: 'markdown-viewer' }))
   el.appendChild(
@@ -107,6 +113,9 @@ function build({ el, id, name, iconsVisible }) {
   }
 }
 
+/**
+ *
+ */
 function listen({ el, iconsVisible }) {
   if (iconsVisible) {
     el.addEventListener('mouseover', () => {
@@ -149,6 +158,9 @@ function listen({ el, iconsVisible }) {
   }
 }
 
+/**
+ *
+ */
 function toggle() {
   const scrollPercent =
     window.scrollY / (document.body.scrollHeight - window.innerHeight)
@@ -176,6 +188,9 @@ function toggle() {
   })
 }
 
+/**
+ *
+ */
 function updateEditor(content) {
   const editor = this.querySelector('.markdown-editor')
   editor.value = content
@@ -184,6 +199,9 @@ function updateEditor(content) {
   })
 }
 
+/**
+ *
+ */
 function updateViewer() {
   const viewer = this.querySelector('.markdown-viewer')
 
@@ -204,6 +222,9 @@ function updateViewer() {
   viewer.innerHTML = this.renderer(content)
 }
 
+/**
+ *
+ */
 function resetIcons() {
   const icons = this.querySelector('.markdown-icons')
   icons.querySelector('.fa-pencil').classList.remove('hidden')

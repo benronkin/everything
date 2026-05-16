@@ -79,7 +79,7 @@ export function executeNoteUpdate() {
   doc.note = note
   state.set('main-documents', docs)
 
-  updateNote({ id, title, note })
+  updateNote(doc)
   setMessage('saved', { type: 'quiet' })
 
   // used to force save after 15 seconds of no-save
@@ -214,8 +214,7 @@ async function updateHistories() {
       const clickedRestore = e.target.closest('button')
       if (clickedRestore) {
         const note = state.get('note-body')
-        document.querySelector('.markdown-editor').value = note
-        document.querySelector('.markdown-editor').resize()
+        document.querySelector('.markdown-wrapper').updateEditor(note)
         await executeNoteUpdate()
         updateHistories()
         document.querySelector('#history').classList.remove('on')
