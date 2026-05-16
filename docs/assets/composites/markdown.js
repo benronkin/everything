@@ -32,9 +32,9 @@ h1, h2, h3, h4, h5, h6 {
 ol, ul {
   margin-left: 20px;
 }
-ol, p, ul{
-  margin-bottom: 10px;
-  margin-top: 10px;
+.markdown-viewer ol, 
+.markdown-viewer ul{
+  margin: 0 0 0 20px;
 }
 .markdown-viewer ul {
   list-style-type: disc;
