@@ -411,7 +411,7 @@ ul {
   textarea,
   select {
     font-size: inherit;
-    line-height: inherit;
+    line-height: 1.2rem;
   }
   dialog {
     width: 400px;

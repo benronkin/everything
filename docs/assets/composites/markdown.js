@@ -36,7 +36,7 @@ ol, p, ul{
   margin-bottom: 10px;
   margin-top: 10px;
 }
-ul {
+.markdown-viewer ul {
   list-style-type: disc;
 }
 .markdown-editor {
