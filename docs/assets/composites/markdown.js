@@ -22,13 +22,6 @@ import { createTextarea } from '../partials/textarea.js'
 import { state } from '../js/state.js'
 
 const css = `
- .viewer a,
- .viewer a:visited {
-  color: var(--purple3) !important;
-}
-a:hover {
-  color: var(--purple5) !important;
-}
 blockquote {
   margin: 20px 0;
   padding: 5px;
@@ -42,12 +35,22 @@ h1, h2, h3, h4, h5, h6 {
 .markdown-viewer {
   min-height: 41px;
 }
+.markdown-viewer a,
+.markdown-viewer a:visited {
+  color: var(--purple3) !important;
+}
+.markdown-viewer a:hover {
+  color: var(--purple4) !important;
+}
 .markdown-viewer ol, 
 .markdown-viewer ul{
   margin: 0 0 0 20px;
 }
 .markdown-viewer ul {
   list-style-type: disc;
+}
+.markdown-viewer p {
+  margin: 10px 0;
 }
 .markdown-editor {
   width: 100%;
@@ -83,9 +86,9 @@ export function createMarkdown(obj) {
   el.className = 'markdown-wrapper'
 
   el.renderer = renderer
-  el._updateViewer = _updateViewer.bind(el)
   el.updateEditor = updateEditor.bind(el)
   el.toggle = toggle.bind(el)
+  el._updateViewer = _updateViewer.bind(el)
   el.md = markdownit({
     html: true,
     linkify: true,
