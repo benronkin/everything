@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -47,13 +47,12 @@
 
       document.body.appendChild(markDownWrapper)
 
-      markDownWrapper.querySelector('.markdown-editor').value = `
-<style>a {color: red;}</style>
-# Hello, world!
-
-<a href="https://wnba.com">Click here</a>
+      const markdown = `
+# Hello world!
+<a style="color: red;" href="https://wnba.com">Click here please</a>
 `
-      markDownWrapper.updateViewer()
+
+      markDownWrapper.updateEditor(markdown)
     </script>
   </body>
 </html>

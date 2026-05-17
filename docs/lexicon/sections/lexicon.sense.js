@@ -33,7 +33,7 @@ async function build(el, sense, noFaMinus) {
         icon: 'fa-layer-group',
       },
       html: 'Part of speech',
-    })
+    }),
   )
 
   const posWrapper = createDiv({ className: 'flex align-center' })
@@ -57,7 +57,7 @@ async function build(el, sense, noFaMinus) {
 
   if (!noFaMinus) {
     posWrapper.appendChild(
-      createIcon({ classes: { primary: 'fa-minus', other: 'primary' } })
+      createIcon({ classes: { primary: 'fa-minus', other: 'primary' } }),
     )
   }
 
@@ -68,16 +68,15 @@ async function build(el, sense, noFaMinus) {
         icon: 'fa-magnifying-glass-arrow-right',
       },
       html: 'Definition',
-    })
+    }),
   )
 
-  let markdown = createMarkdown({ name: 'definition' })
+  let markdown = createMarkdown({ name: 'definition', toggleId: 'edit-toggle' })
   let markdownEditor = markdown.querySelector('.markdown-editor')
   markdown.classList.add('w-100')
   markdownEditor.palceholder = 'Add definition'
   markdownEditor.classList.add('definition')
   markdown.updateEditor(sense.definition)
-  markdown.updateViewer()
   el.appendChild(markdown)
 
   el.appendChild(
@@ -87,16 +86,15 @@ async function build(el, sense, noFaMinus) {
         icon: 'fa-feather-pointed',
       },
       html: 'Example',
-    })
+    }),
   )
 
-  markdown = createMarkdown({ name: 'example' })
+  markdown = createMarkdown({ name: 'example', toggleId: 'edit-toggle' })
   markdownEditor = markdown.querySelector('.markdown-editor')
   markdown.classList.add('w-100')
   markdownEditor.palceholder = 'Add example'
   markdownEditor.classList.add('example')
   markdown.updateEditor(sense.example)
-  markdown.updateViewer()
   el.appendChild(markdown)
 
   el.appendChild(
@@ -106,16 +104,15 @@ async function build(el, sense, noFaMinus) {
         icon: 'fa-water',
       },
       html: 'Synonyms',
-    })
+    }),
   )
 
-  markdown = createMarkdown({ name: 'synonyms' })
+  markdown = createMarkdown({ name: 'synonyms', toggleId: 'edit-toggle' })
   markdownEditor = markdown.querySelector('.markdown-editor')
   markdown.classList.add('w-100')
   markdownEditor.palceholder = 'Add synonyms'
   markdownEditor.classList.add('synonyms')
   markdown.updateEditor(sense.synonyms)
-  markdown.updateViewer()
   el.appendChild(markdown)
 
   el.appendChild(
@@ -125,7 +122,7 @@ async function build(el, sense, noFaMinus) {
         icon: 'fa-user',
       },
       html: 'Added by',
-    })
+    }),
   )
 
   const date = new Date(sense.created_at)
@@ -151,7 +148,7 @@ async function build(el, sense, noFaMinus) {
       modal.querySelector('.modal-body').insertHtml(partOfSpeech)
       modal.dataset.vitest = 'modal-open'
       modal.showModal()
-    })
+    }),
   )
 
   return el

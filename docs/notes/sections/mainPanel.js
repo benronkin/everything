@@ -97,7 +97,7 @@ function build(el) {
     }),
   )
 
-  el.appendChild(createMarkdown({ name: 'note', iconsVisible: false }))
+  el.appendChild(createMarkdown({ name: 'note' }))
 
   el.appendChild(dangerZone())
 
@@ -116,7 +116,7 @@ function react(el) {
     el.querySelector('#note-title').value = doc.title
     el.querySelector('.markdown-wrapper').updateEditor(doc.note)
 
-    document.querySelector('.markdown-wrapper').updateViewer()
+    document.querySelector('.markdown-wrapper')._updateViewer()
 
     el.querySelector('#note-id').insertHtml(doc.id)
 

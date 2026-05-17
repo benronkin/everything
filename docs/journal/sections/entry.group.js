@@ -32,7 +32,6 @@ export function createEntryGroup() {
   const el = createDiv({ id: 'entry-group' })
 
   build(el)
-  react(el)
 
   return el
 }
@@ -49,13 +48,6 @@ function build(el) {
   )
 
   el.appendChild(
-    // createInputGroup({
-    //   name: 'visit_date',
-    //   id: 'journal-visit_date',
-    //   type: 'date',
-    //   classes: { group: 'mb-40', icon: 'fa-calendar' },
-    //   value: new Date().toISOString().split('T')[0],
-    // }),
     createDateTimeGroup({
       name: 'visit_date',
       id: 'journal-visit_date',
@@ -128,21 +120,10 @@ function build(el) {
   )
 
   el.appendChild(
-    createMarkdown({ id: 'journal-notes', name: 'notes', iconsVisible: false }),
-    // createTextarea({
-    //   name: 'notes',
-    //   id: 'journal-notes',
-    //   className: 'w-100',
-    //   placeholder: 'Add details...',
-    // }),
+    createMarkdown({
+      id: 'journal-notes',
+      name: 'notes',
+      toggleId: 'edit-note-toggle',
+    }),
   )
-}
-
-/**
- *
- */
-function react(el) {
-  state.on('icon-click:edit-note-toggle', 'entry.group', () => {
-    document.querySelector('.markdown-wrapper').toggle()
-  })
 }

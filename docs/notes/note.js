@@ -128,7 +128,7 @@ function react() {
     }
   })
 
-  state.on('modal-share-updated', 'note', async (data) => {
+  state.on('modal-share', 'note', async (data) => {
     await shareNote(data)
   })
 }
@@ -197,7 +197,6 @@ async function handleFieldChange(el) {
   doc.updated_at = data.updated_at
   state.set('main-documents', [doc])
 
-  document.querySelector('.markdown-wrapper').updateViewer()
   state.set('update-in-process', false)
   setMessage('Saved', { type: 'quiet' })
 }

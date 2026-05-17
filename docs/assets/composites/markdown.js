@@ -1,15 +1,25 @@
 /* global markdownit */
 
 /*
+This component combines a textarea and a div for editing and viewing text.
+The component expects the markdownit lib to be referenced in the global scope,
+via the html page.
+
+You can register the id of an external toggle button that will toggle the 
+component mode. This way, you don't have to react to clicks from the consumer.
+
+You don't need to manually update the viewer; it gets updated when the editor is updated 
+either automatically or manually.
+
 You can pass a renderer function into the constructor that can manipulate
-the viewer's content inside updateViewer. For instance, if the lexicon
+the viewer's content. For instance, if the lexicon
 needs to generate a list of urls for the terms in definition or synonyms.
 */
 
 import { injectStyle } from '../js/ui.js'
 import { createDiv } from '../partials/div.js'
-import { createIcon } from '../partials/icon.js'
 import { createTextarea } from '../partials/textarea.js'
+import { state } from '../js/state.js'
 
 const css = `
  .viewer a,
@@ -29,8 +39,8 @@ blockquote {
 h1, h2, h3, h4, h5, h6 {
   margin: 30px 0 15px;
 }
-ol, ul {
-  margin-left: 20px;
+.markdown-viewer {
+  min-height: 41px;
 }
 .markdown-viewer ol, 
 .markdown-viewer ul{
@@ -57,33 +67,32 @@ ol, ul {
 `
 
 /**
- *
+ * Create a markdown/html editor/viewer component
+ * @param {Object} obj
+ * @param {string} obj.name - The textarea field name for server (required)
+ * @param {string} obj.id - The id of the textarea editor (optional)
+ * @param {Function} object.renderer - Any rendering fn (optional)
+ * @param {string} obj.toggleId - The id of the external component that will toggle the component (optional)
  */
-export function createMarkdown({
-  name,
-  id,
-  iconsVisible = true,
-  renderer = (content) => content,
-}) {
+export function createMarkdown(obj) {
   injectStyle(css)
+
+  const { renderer = (content) => content } = obj
 
   const el = document.createElement('div')
   el.className = 'markdown-wrapper'
 
   el.renderer = renderer
-  el.updateViewer = updateViewer.bind(el)
+  el._updateViewer = _updateViewer.bind(el)
   el.updateEditor = updateEditor.bind(el)
-  el.resetIcons = resetIcons.bind(el)
   el.toggle = toggle.bind(el)
   el.md = markdownit({
     html: true,
     linkify: true,
   })
 
-  build({ el, id, name, iconsVisible })
-  listen({ el, iconsVisible })
-
-  if (iconsVisible) el.resetIcons()
+  build(el, obj)
+  react(el, obj)
 
   return el
 }
@@ -91,69 +100,28 @@ export function createMarkdown({
 /**
  *
  */
-function build({ el, id, name, iconsVisible }) {
+function build(el, obj) {
   el.appendChild(createDiv({ className: 'markdown-viewer' }))
   el.appendChild(
-    createTextarea({ id, className: 'markdown-editor field hidden', name }),
+    createTextarea({
+      id: obj.id,
+      className: 'markdown-editor field hidden',
+      name: obj.name,
+    }),
   )
-
-  if (iconsVisible) {
-    const icons = createDiv({
-      className: 'markdown-icons',
-      html: [
-        createIcon({ classes: { primary: 'fa-pencil primary' } }),
-        createIcon({ classes: { primary: 'fa-check primary' } }),
-        createIcon({
-          classes: { primary: 'fa-close primary', other: 'ml-5' },
-        }),
-      ],
-    })
-
-    el.appendChild(icons)
-  }
 }
 
 /**
  *
  */
-function listen({ el, iconsVisible }) {
-  if (iconsVisible) {
-    el.addEventListener('mouseover', () => {
-      el.querySelector('.markdown-icons').classList.remove('invisible')
-    })
+function react(el, obj) {
+  state.on('field-changed', 'note', () => {
+    el._updateViewer()
+  })
 
-    el.addEventListener('mouseout', () => {
-      if (!el.querySelector('.markdown-editor').classList.contains('hidden'))
-        return
-
-      el.querySelector('.markdown-icons').classList.add('invisible')
-    })
-
-    el.querySelector('.fa-pencil').addEventListener('click', () => {
-      console.log('here')
-      el.querySelector('.fa-pencil').classList.add('hidden')
-      el.querySelector('.fa-check').classList.remove('hidden')
-      el.querySelector('.fa-close').classList.remove('hidden')
-
-      const editor = el.querySelector('.markdown-editor')
-      editor.dataset.old = editor.value
+  if (obj.toggleId) {
+    state.on(`icon-click:${obj.toggleId}`, 'markdown', () => {
       el.toggle()
-    })
-
-    el.querySelector('.fa-check').addEventListener('click', () => {
-      el.toggle()
-      el.resetIcons()
-      const editor = el.querySelector('.markdown-editor')
-      editor.dataset.old = editor.value
-      el.updateViewer()
-    })
-
-    el.querySelector('.fa-close').addEventListener('click', () => {
-      el.toggle()
-      const editor = el.querySelector('.markdown-editor')
-      editor.value = editor.dataset.old || ''
-      editor.resize()
-      el.resetIcons()
     })
   }
 }
@@ -197,12 +165,13 @@ function updateEditor(content) {
   requestAnimationFrame(() => {
     editor.resize()
   })
+  this._updateViewer()
 }
 
 /**
  *
  */
-function updateViewer() {
+function _updateViewer() {
   const viewer = this.querySelector('.markdown-viewer')
 
   if (typeof window.markdownit !== 'function') {
@@ -220,15 +189,4 @@ function updateViewer() {
 
   const content = this.md.render(markdown)
   viewer.innerHTML = this.renderer(content)
-}
-
-/**
- *
- */
-function resetIcons() {
-  const icons = this.querySelector('.markdown-icons')
-  icons.querySelector('.fa-pencil').classList.remove('hidden')
-  icons.querySelector('.fa-check').classList.add('hidden')
-  icons.querySelector('.fa-close').classList.add('hidden')
-  icons.classList.add('invisible')
 }

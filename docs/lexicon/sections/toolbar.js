@@ -23,6 +23,14 @@ export function toolbar() {
         id: 'add',
         classes: { primary: 'fa-plus', other: ['primary', 'hidden'] },
       }),
+      createIcon({
+        id: 'edit-toggle',
+        classes: {
+          primary: 'fa-pencil',
+          secondary: 'fa-close',
+          other: ['primary'],
+        },
+      }),
     ],
   })
 
@@ -35,10 +43,12 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
-    const sels = ['#back', '#add']
+    const sels = ['#back', '#add', '#edit-toggle']
 
     sels.forEach((sel) =>
-      el.querySelector(sel).classList.toggle('hidden', appMode !== 'main-panel')
+      el
+        .querySelector(sel)
+        .classList.toggle('hidden', appMode !== 'main-panel'),
     )
 
     document
