@@ -238,7 +238,7 @@ ul {
   align-items: flex-start !important;
 }
 .columns-wrapper {
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
   display: flex;
 }
@@ -431,8 +431,5 @@ ul {
   #left-panel,
   #main-panel {
     width: 100%;
-  }
-  .columns-wrapper {
-    width: 90%;
   }
 }
