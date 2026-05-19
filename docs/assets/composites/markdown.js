@@ -100,6 +100,17 @@ textarea::-webkit-scrollbar {
 export function createMarkdown(obj) {
   injectStyle(css)
 
+  if (typeof window.markdownit !== 'function') {
+    const errorMsg = `
+            markDown error: markdown-it library is missing. 
+            Ensure <script src="../assets/js/markdown-it.js"></script>
+            is included in your HTML before this component.
+        `
+    console.error(errorMsg)
+
+    return
+  }
+
   const { renderer = (content) => content } = obj
 
   const el = document.createElement('div')
@@ -196,20 +207,7 @@ function updateEditor(content) {
  */
 function _updateViewer() {
   const viewer = this.querySelector('.markdown-viewer')
-
-  if (typeof window.markdownit !== 'function') {
-    const errorMsg = `
-            markDown error: markdown-it library is missing. 
-            Ensure <script src="../assets/js/markdown-it.js"></script>
-            is included in your HTML before this component.
-        `
-    console.error(errorMsg)
-    viewer.innerHTML = errorMsg
-    return
-  }
-
   const markdown = this.querySelector('.markdown-editor').value
-
   const content = this.md.render(markdown)
   viewer.innerHTML = this.renderer(content)
 }

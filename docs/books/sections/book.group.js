@@ -1,12 +1,13 @@
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
+import { createIcon } from '../../assets/partials/icon.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createRating } from '../../assets/partials/rating.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createSwitch } from '../../assets/partials/switch.js'
-import { createTextarea } from '../../assets/partials/textarea.js'
+import { createMarkdown } from '../../assets/composites/markdown.js'
 import { state } from '../../assets/js/state.js'
 import { fetchBook } from '../books.api.js'
 
@@ -41,18 +42,29 @@ async function build(el) {
   )
 
   el.appendChild(
-    createSpanGroup({
-      classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
-      html: 'Note',
+    createDiv({
+      className: 'mt-30 mb-20',
+      html: [
+        createSpan({ html: 'Details' }),
+        createIcon({
+          id: 'note-toggle',
+          classes: {
+            primary: 'fa-pencil',
+            secondary: 'fa-close',
+            other: 'primary ml-10',
+          },
+        }),
+      ],
     }),
   )
 
   el.appendChild(
-    createTextarea({
+    createMarkdown({
       name: 'note',
       id: 'book-note',
       className: 'mb-20 w-100',
       placeholder: 'Add note...',
+      toggleId: 'note-toggle',
     }),
   )
 
@@ -139,7 +151,9 @@ function react(el) {
     requestAnimationFrame(() => {
       el.querySelector('#book-title').value = doc.title
       el.querySelector('#book-author').value = doc.author || ''
-      el.querySelector('#book-note').setValue(doc.note)
+      el.querySelector('#book-note')
+        .closest('.markdown-wrapper')
+        .updateEditor(doc.note)
       el.querySelector('#book-rating').selectByValue(doc.rating || '')
       el.querySelector('#book-completed').value = doc.completed === '1'
       el.querySelector('#book-read-year').value = doc.read_year || ''
