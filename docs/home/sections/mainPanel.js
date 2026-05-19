@@ -24,6 +24,9 @@ a, a:visited {
   width: 100%;
 }
 @media (min-width: 768px) {
+  #wotd-header {
+    margin-top: 0;
+  }
   .equal-cols {
     flex-direction: row;
   }
