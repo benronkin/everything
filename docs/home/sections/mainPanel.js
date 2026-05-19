@@ -31,6 +31,9 @@ a, a:visited {
     flex: 1; /* Forces all items to share space equally only on wide screens */
     width: auto; /* Reset width to allow flex-grow to work */
   }
+  .tasks-wrapper {
+    margin-top: 0;
+  }
 }
 `
 
