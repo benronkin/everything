@@ -38,6 +38,9 @@ a, a:visited {
   .tasks-wrapper {
     margin-top: 0 !important;
   }
+  #tasks-header, #wotd-header {
+    margin-bottom: 10px !important;
+  }
 }
 `
 
