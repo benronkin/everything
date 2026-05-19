@@ -29,17 +29,26 @@ a, a:visited {
   }
   .equal-cols {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
   }
   .equal-cols > * {
     flex: 1; /* Forces all items to share space equally only on wide screens */
     width: auto; /* Reset width to allow flex-grow to work */
+    display: flex;
+    flex-direction: column;
   }
   .tasks-wrapper {
     margin-top: 0 !important;
   }
   #tasks-header, #wotd-header {
     margin-bottom: 10px !important;
+  }
+  .wotd-wrapper .outer-wrapper {
+    margin-top: 0 !important;
+    flex: 1;
+  }
+  .md-item:last-child {
+    margin-bottom: 0 !important;
   }
 }
 `
@@ -61,7 +70,7 @@ function build(el) {
   el.appendChild(navList())
 
   const div = createDiv({
-    className: 'flex align-center equal-cols gap-20 mt-10',
+    className: 'flex equal-cols gap-20 mt-10',
   })
 
   el.appendChild(div)
