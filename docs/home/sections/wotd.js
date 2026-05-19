@@ -37,7 +37,7 @@ function react(el) {
       createHeader({
         type: 'h4',
         className: 'flex align-center',
-        html: `${date.getMonth() + 1}/${date.getDate()} Lexicon entry`,
+        html: `${date.getMonth() + 1}/${date.getDate()} Word of the day`,
       }),
     )
     el.appendChild(div)
