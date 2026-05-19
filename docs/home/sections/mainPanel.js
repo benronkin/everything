@@ -57,7 +57,7 @@ function build(el) {
   el.appendChild(navList())
 
   const div = createDiv({
-    className: 'flex align-center equal-cols gap-20 mt-20',
+    className: 'flex align-center equal-cols gap-20 mt-10',
   })
 
   el.appendChild(div)
