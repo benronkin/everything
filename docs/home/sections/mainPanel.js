@@ -29,6 +29,7 @@ a, a:visited {
   }
   .equal-cols {
     flex-direction: row;
+    align-items: flex-start;
   }
   .equal-cols > * {
     flex: 1; /* Forces all items to share space equally only on wide screens */
