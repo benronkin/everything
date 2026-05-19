@@ -25,7 +25,7 @@ a, a:visited {
 }
 @media (min-width: 768px) {
   #wotd-header {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
   .equal-cols {
     flex-direction: row;
@@ -35,7 +35,7 @@ a, a:visited {
     width: auto; /* Reset width to allow flex-grow to work */
   }
   .tasks-wrapper {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 }
 `
@@ -56,7 +56,9 @@ export function mainPanel() {
 function build(el) {
   el.appendChild(navList())
 
-  const div = createDiv({ className: 'flex align-center equal-cols gap-20' })
+  const div = createDiv({
+    className: 'flex align-center equal-cols gap-20 mt-20',
+  })
 
   el.appendChild(div)
 
