@@ -94,6 +94,7 @@ textarea::-webkit-scrollbar {
  * @param {Object} obj
  * @param {string} obj.name - The textarea field name for server (required)
  * @param {string} obj.id - The id of the textarea editor (optional)
+ * @param {string} obj.classname - The classes for the markdown wrapper
  * @param {Function} object.renderer - Any rendering fn (optional)
  * @param {string} obj.toggleId - The id of the external component that will toggle the component (optional)
  */
@@ -111,10 +112,10 @@ export function createMarkdown(obj) {
     return
   }
 
-  const { renderer = (content) => content } = obj
+  const { classname = '', renderer = (content) => content } = obj
 
   const el = document.createElement('div')
-  el.className = 'markdown-wrapper'
+  el.className = `markdown-wrapper ${classname}`.trim()
 
   el.renderer = renderer
   el.updateEditor = updateEditor.bind(el)
