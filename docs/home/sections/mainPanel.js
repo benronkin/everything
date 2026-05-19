@@ -17,6 +17,21 @@ const css = `
 a, a:visited {
   color: var(--gray6);
 }
+.equal-cols {
+  flex-direction: column;
+}
+.equal-cols > * {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .equal-cols {
+    flex-direction: row;
+  }
+  .equal-cols > * {
+    flex: 1; /* Forces all items to share space equally only on wide screens */
+    width: auto; /* Reset width to allow flex-grow to work */
+  }
+}
 `
 
 export function mainPanel() {
@@ -35,9 +50,13 @@ export function mainPanel() {
 function build(el) {
   el.appendChild(navList())
 
-  el.appendChild(tasks())
+  const div = createDiv({ className: 'flex align-center equal-cols gap-20' })
 
-  el.appendChild(wotd())
+  el.appendChild(div)
+
+  div.appendChild(tasks())
+
+  div.appendChild(wotd())
 
   el.appendChild(bookmarks())
 }
