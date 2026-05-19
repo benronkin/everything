@@ -73,7 +73,7 @@ function tasksHeader(hasTasks) {
     div.appendChild(createHeader({ type: 'h4', html: 'TASKS' }))
     div.appendChild(
       createButton({
-        className: 'primary',
+        className: 'bordered',
         id: 'tasks-header-btn',
         html: hasTasks
           ? `<i class="fa-solid fa-list-check"></i> VIEW ALL`
