@@ -4,8 +4,9 @@ import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createHeaderGroup } from '../../assets/partials/headerGroup.js'
+import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
-import { createTextarea } from '../../assets/partials/textarea.js'
+import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -14,6 +15,9 @@ import { createUserSelect } from '../../assets/partials/userSelect.js'
 const css = `
 #due-date-wrapper {
   margin-top: 30px;
+}
+#note-header5 {
+  margin: 0;
 }
 #steps-wrapper {
   margin-top: 20px;
@@ -137,19 +141,28 @@ function build(el, doc) {
   )
 
   el.appendChild(
-    createHeaderGroup({
-      type: 'h5',
-      classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
-      html: 'Notes',
+    createDiv({
+      className: 'mt-30 mb-20 flex align-center gap-10 justify-start',
+      html: [
+        createHeader({ html: 'Notes', type: 'h5', id: 'note-header5' }),
+        createIcon({
+          id: 'notes-toggle',
+          classes: {
+            primary: 'fa-pencil',
+            secondary: 'fa-close',
+            other: ['primary'],
+          },
+        }),
+      ],
     }),
   )
 
   el.appendChild(
-    createTextarea({
+    createMarkdown({
       name: 'details',
       id: 'details',
       className: 'mb-20 w-100',
-      placeholder: 'Additional information...',
+      toggleId: 'notes-toggle',
       value: doc.details || '',
     }),
   )
