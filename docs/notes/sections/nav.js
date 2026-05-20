@@ -1,8 +1,11 @@
 import { createNav } from '../../assets/composites/nav.js'
+import { navList } from '../../assets/js/ui.js'
 
 export function nav() {
+  const { icon, label } = navList.find((i) => i.id === 'notes')
+
   const el = createNav({
-    title: '<i class="fa-solid fa-note-sticky"></i> Notes',
+    title: `<i class="fa-solid ${icon}"></i> ${label}`,
   })
 
   return el

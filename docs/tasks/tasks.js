@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let [{ user }, { users }, { tasks }] = await Promise.all([
       getMe(),
       fetchUsers(),
-      fetchTasks(),
+      fetchTasks()
     ])
 
     tasks = tasks.map((task) => {
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!user) {
           console.log('users', users)
           throw new Error(
-            `Oops, tasks.js cannot locate user with id "${task.assignee}"`,
+            `Oops, tasks.js cannot locate user with id "${task.assignee}"`
           )
         }
         task.assignedPeer = { name: user.first_name, color: user.color }
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     state.set(
       'main-documents',
-      tasks.filter((t) => t.type === 'TASK'),
+      tasks.filter((t) => t.type === 'TASK')
     )
     state.set(
       'templates',
-      tasks.filter((t) => t.type === 'TEMPLATE'),
+      tasks.filter((t) => t.type === 'TEMPLATE')
     )
     state.set('app-mode', 'left-panel')
     state.set('users', users)
@@ -99,7 +99,7 @@ function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
@@ -165,12 +165,7 @@ async function handleAddTask() {
   const resp = await createTask({ title, starts_at, type: 'TASK' })
   const { data } = resp
   const { id } = data
-  const newDoc = { id, title, starts_at, dueInfo: dueInfo(starts_at) }
-  const docs = state.get('main-documents')
-  docs.unshift(newDoc)
-  state.set('main-documents', docs)
-
-  // window.location.href = `./task.html?id=${id}`
+  window.location.href = `./task.html?id=${id}`
 }
 
 async function handleTaskDragged() {
@@ -192,15 +187,11 @@ async function handleAddTemplate() {
 
   const doc = {
     title: 'New template',
-    type: 'TEMPLATE',
+    type: 'TEMPLATE'
   }
 
   const resp = await createTask(doc)
   const { data } = resp
   const { id } = data
-  doc.id = id
   window.location.href = `./task.html?id=${id}`
-  // const docs = state.get('templates')
-  // docs.push(doc)
-  // state.set('templates', docs)
 }

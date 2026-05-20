@@ -30,6 +30,19 @@ const css = `
 }  
 `
 
+/**
+ * USAGE:
+    const html = [
+      createSpan({ html: title }),
+      createSpan({ html: `(${startDate})` }),
+    ]
+    return createMainDocumentLink({
+      id,
+      className: `md-item list-item ${className}`.trim(),
+      html,
+      url: `${state.getBaseUrl()}projects/project.html?id=${id}`,
+    })
+ */
 export function createMainDocumentLink({ id, html, url } = {}) {
   injectStyle(css)
 

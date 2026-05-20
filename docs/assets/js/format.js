@@ -33,6 +33,14 @@ export function insertHtml(content) {
 /**
  * Convert a UTC date in ISO format to date/time
  * parts in local time
+ * USAGE: 
+      const obj = formatDateParts(starts_at)
+      const startDate = `${obj.month}/${obj.day}/${obj.shortYear}`
+
+      const html = [
+        createSpan({ html: title }),
+        createSpan({ html: `(${startDate})` }),
+      ]
  */
 export function formatDateParts(isoDateString) {
   const obj = {

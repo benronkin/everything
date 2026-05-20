@@ -96,6 +96,7 @@ textarea::-webkit-scrollbar {
  * @param {string} obj.id - The id of the textarea editor (optional)
  * @param {string} obj.classname - The classes for the markdown wrapper
  * @param {string} obj.value - The initial value of the editor
+ * @param {string} obj.placeholder - Placeholder text when there is no value
  * @param {Function} object.renderer - Any rendering fn (optional)
  * @param {string} obj.toggleId - The id of the external component that will toggle the component (optional)
  */
@@ -134,6 +135,11 @@ export function createMarkdown(obj) {
     el.updateEditor(obj.value)
   }
 
+  if (obj.placeholder) {
+    el.dataset.placeholder = obj.placeholder
+    _setPlaceholder(el)
+  }
+
   return el
 }
 
@@ -160,8 +166,14 @@ function react(el, obj) {
   })
 
   if (obj.toggleId) {
-    state.on(`icon-click:${obj.toggleId}`, 'markdown', () => {
+    state.on(`icon-click:${obj.toggleId}`, 'markdown', ({ className }) => {
       el.toggle()
+      if (
+        className === 'fa-pencil' &&
+        !el.querySelector('.markdown-editor').value.trim().length
+      ) {
+        _setPlaceholder(el)
+      }
     })
   }
 }
@@ -216,4 +228,19 @@ function _updateViewer() {
   const markdown = this.querySelector('.markdown-editor').value
   const content = this.md.render(markdown)
   viewer.innerHTML = this.renderer(content)
+}
+
+/**
+ *
+ */
+function _setPlaceholder(el) {
+  const placeholder = el.dataset.placeholder
+  if (!placeholder) return
+
+  el.querySelector('.markdown-viewer').appendChild(
+    createDiv({
+      html: placeholder,
+      className: 'c-gray3',
+    }),
+  )
 }

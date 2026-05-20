@@ -80,6 +80,13 @@ export const navList = [
     category: 'live',
   },
   {
+    icon: 'fa-folder-tree',
+    label: 'Projects',
+    url: 'projects/index.html',
+    id: 'projects',
+    category: 'love',
+  },
+  {
     icon: 'fa-list-check',
     label: 'Tasks',
     url: 'tasks/index.html',

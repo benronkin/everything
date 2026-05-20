@@ -1,7 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createDateTime } from '../../assets/partials/dateTime.js'
-import { createInput } from '../../assets/partials/input.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
@@ -66,16 +65,6 @@ function build(el) {
       html: [
         createSpan({ html: 'Due:' }),
         createDateTime({ name: 'starts_at' }),
-        // createInput({
-        //   id: 'due-date',
-        //   name: 'due-date',
-        //   type: 'date',
-        // }),
-        // createInput({
-        //   id: 'due-time',
-        //   name: 'due-time',
-        //   type: 'time',
-        // }),
         createIcon({
           id: 'cancel-due-date',
           classes: { primary: 'fa-close' },
