@@ -11,7 +11,7 @@ import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createUserSelect } from '../../assets/partials/userSelect.js'
-import { createProjectSelect } from '../../assets/partials/projectSelect.js'
+import { createProjectSpanSelectLink } from '../../assets/partials/projectSpanSelectLink.js'
 
 const css = `
 #due-date-wrapper {
@@ -141,21 +141,7 @@ function build(el, doc) {
     })
   )
 
-  el.appendChild(
-    createDiv({
-      className: 'flex justify-start align-center mt-20 task-assignee-wrapper',
-      html: [
-        createSpan({ html: 'Project:' }),
-        createProjectSelect({
-          id: 'project',
-          name: 'project',
-          caption: 'Project:',
-          value: doc.assignedProject,
-          projects: doc.projects
-        })
-      ]
-    })
-  )
+  el.appendChild(createProjectSpanSelectLink(doc))
 
   el.appendChild(
     createDiv({

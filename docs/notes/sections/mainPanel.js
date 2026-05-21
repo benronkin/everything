@@ -8,7 +8,7 @@ import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { handlRightDrawerState } from '../../assets/js/ui.js'
-import { createProjectSelect } from '../../assets/partials/projectSelect.js'
+import { createProjectSpanSelectLink } from '../../assets/partials/projectSpanSelectLink.js'
 import { state } from '../../assets/js/state.js'
 import {
   fetchNoteHistories,
@@ -101,16 +101,10 @@ function build(el) {
   el.appendChild(createMarkdown({ name: 'note' }))
 
   el.appendChild(
-    createDiv({
-      className: 'flex justify-start align-center mt-20 task-assignee-wrapper',
-      html: [
-        createSpan({ html: 'Project:' }),
-        createProjectSelect({
-          id: 'project',
-          name: 'project',
-          caption: 'Project:'
-        })
-      ]
+    createProjectSpanSelectLink({
+      id: 'project',
+      name: 'project',
+      caption: 'Project:'
     })
   )
 
@@ -135,13 +129,7 @@ function react(el) {
 
     el.querySelector('#note-id').insertHtml(doc.id)
 
-    el.querySelector('#project').setOptions(
-      doc.projects.map((project) => ({
-        label: project.title,
-        value: project.id
-      }))
-    )
-    el.querySelector('#project').selectByValue(doc.assignedProject)
+    el.querySelector('.project-span-select-link').update(doc)
 
     // if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })

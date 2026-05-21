@@ -13,7 +13,7 @@ select option {
   align-items: center;
   justify-content: flex-start;
   gap: 5px;
-  background-color: var(--teal3);
+  background-color: var(--teal2);
 }
 
 .custom-select:disabled, 

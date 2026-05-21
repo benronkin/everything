@@ -15,7 +15,7 @@ export function mainDocumentsList() {
   injectStyle(css)
 
   const el = createList({
-    id: 'tasks-list',
+    id: 'tasks-list'
   })
 
   react(el)
@@ -82,7 +82,7 @@ function createCalendarList() {
     Today: [],
     Tomorrow: [],
     Later: [],
-    Unscheduled: [],
+    Unscheduled: []
   }
 
   for (const doc of docs) {
