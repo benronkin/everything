@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       return task
     })
-
     state.set(
       'main-documents',
       tasks.filter((t) => t.type === 'TASK')

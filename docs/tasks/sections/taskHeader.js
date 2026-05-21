@@ -23,12 +23,28 @@ const css = `
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.project-chip {
+  background-color: var(--teal3);
+  white-space: nowrap;
+  padding: 5px;
+  border-radius: var(--border-radius);
+  color: var(--gray0);
+}
 `
 
 export function createTaskHeader(doc, viewMode) {
   injectStyle(css)
 
-  const { title, startAt, id, dueInfo, assignedPeer, className = '' } = doc
+  const {
+    title,
+    startAt,
+    id,
+    dueInfo,
+    assigned_project,
+    projects,
+    assignedPeer,
+    className = ''
+  } = doc
 
   const div = createDiv({ className: 'title-wrapper' })
 
@@ -53,7 +69,10 @@ export function createTaskHeader(doc, viewMode) {
 
   const html = [div]
 
-  if (assignedPeer) {
+  if (assigned_project) {
+    const title = projects.find((p) => p.id === assigned_project).title
+    html.push(createDiv({ html: title, className: 'project-chip' }))
+  } else if (assignedPeer) {
     const peer = createAvatarGroup({ peers: [assignedPeer] })
     html.push(peer)
   }
@@ -62,7 +81,7 @@ export function createTaskHeader(doc, viewMode) {
     id,
     className: `md-item list-item ${className}`.trim(),
     html,
-    url: `${state.getBaseUrl()}tasks/task.html?id=${id}`,
+    url: `${state.getBaseUrl()}tasks/task.html?id=${id}`
   })
 
   react(el)

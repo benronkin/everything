@@ -133,8 +133,6 @@ function react(el) {
 
     document.querySelector('.markdown-wrapper')._updateViewer()
 
-    console.log('doc.id', doc.id)
-
     el.querySelector('#note-id').insertHtml(doc.id)
 
     el.querySelector('#project').setOptions(

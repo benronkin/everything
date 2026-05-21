@@ -7,7 +7,7 @@ export async function createTask({ title, starts_at, type }) {
   const resp = await postWebAppJson(`${url}/create`, {
     title,
     starts_at,
-    type,
+    type
   })
   return resp
 }
@@ -28,20 +28,20 @@ export async function fetchTask(id) {
 }
 
 export async function fetchTasks() {
-  const { tasks, error } = await getWebApp(`${url}/read`)
-  return { tasks, error }
+  const resp = await getWebApp(`${url}/read`)
+  return resp
 }
 
 export async function searchTasks(q) {
   const { journal, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`,
+    `${url}/search?q=${q.trim().toLowerCase()}`
   )
   return { data: journal, error }
 }
 
 export async function update(tasks) {
   const { message, error } = postWebAppJson(`${url}/update`, {
-    tasks,
+    tasks
   })
   return { message, error }
 }
@@ -54,7 +54,7 @@ export async function shareTask(payload) {
 export async function updateTask({ id, section, value }) {
   const { message, error } = postWebAppJson(`${url}/update-task`, {
     id,
-    [section]: value,
+    [section]: value
   })
   return { message, error }
 }
@@ -64,7 +64,7 @@ export async function updateTask({ id, section, value }) {
 export async function createStep(caption, taskId) {
   const resp = await postWebAppJson(`${url}/steps/create`, {
     caption,
-    taskId,
+    taskId
   })
   return resp
 }
@@ -81,7 +81,7 @@ export async function fetchSteps(id) {
 
 export async function fetchStepsOfMultipleTasks(task_ids) {
   const { data, error } = await postWebAppJson(`${url}/steps/multi-tasks`, {
-    task_ids,
+    task_ids
   })
 
   return { steps: data.steps, error }
