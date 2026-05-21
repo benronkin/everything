@@ -14,13 +14,13 @@ export function dangerZone() {
 
   const el = createDangerZone({
     modalId: 'modal-delete',
-    password: false,
+    password: false
   })
 
   react(el)
 
   el.classList.add('mt-20')
-  el.querySelector('#danger-zone-header').insertHtml('Delete note')
+  el.querySelector('#danger-zone-header').insertHtml('Delete project')
 
   return el
 }
@@ -32,7 +32,7 @@ function react(el) {
     const modalBody = doc.title
 
     const modal = el.querySelector('#modal-delete')
-    modal.querySelector('.modal-header').insertHtml('Delete note:')
+    modal.querySelector('.modal-header').insertHtml('Delete project:')
     modal.querySelector('.modal-body').insertHtml(modalBody)
     modal.dataset.vitest = 'modal-open'
     modal.showModal()
