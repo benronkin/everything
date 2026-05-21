@@ -27,10 +27,11 @@ export async function attachProjectItem({ project_id, item_id, type }) {
 /**
  *
  */
-export async function createProjectItem({ id, type }) {
+export async function createProjectItem({ id, type, starts_at }) {
   const resp = await postWebAppJson(`${url}/create-item`, {
     id,
-    type
+    type,
+    starts_at
   })
   return resp
 }

@@ -8,6 +8,7 @@ import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
+import { nowDateTime } from '../tasks/tasks.utils.js'
 import {
   createProjectItem,
   deleteProject,
@@ -255,7 +256,13 @@ function handleFloatingMenuOptionClick({ id }) {
 async function handleAddItem(type) {
   setMessage(`Adding ${type}...`)
 
-  const resp = await createProjectItem({ id: state.get('active-doc'), type })
+  const starts_at = nowDateTime()
+
+  const resp = await createProjectItem({
+    id: state.get('active-doc'),
+    type,
+    starts_at
+  })
   const { data } = resp
   const { id } = data
 

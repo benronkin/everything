@@ -10,7 +10,7 @@ import { createFooter } from '../assets/composites/footer.js'
 import { templates } from './sections/templates.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import { getLocalDate } from '../assets/js/format.js'
+import { nowDateTime } from './tasks.utils.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
 import { createTask, fetchTasks, update } from './tasks.api.js'
@@ -140,24 +140,7 @@ async function handleAddTask() {
 
   inputEl.value = ''
 
-  // Create a date string that follows the ISO format
-  // but uses the local time instead of server time
-  const now = new Date()
-
-  let starts_at = getLocalDate()
-
-  const hour = now.getHours()
-  let tempDate = new Date(now)
-  if (hour >= 15) {
-    // if starts_at hour is after 3pm
-    // then change starts_at to next day 9am
-    tempDate.setDate(tempDate.getDate() + 1)
-    tempDate.setHours(9, 0, 0, 0)
-  } else {
-    // otherwise hve it start the next hour
-    tempDate.setHours(hour + 1, 0, 0, 0)
-  }
-  starts_at = getLocalDate(tempDate)
+  const starts_at = nowDateTime()
 
   setMessage('Adding task...')
 

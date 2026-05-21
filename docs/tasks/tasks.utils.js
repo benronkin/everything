@@ -1,5 +1,6 @@
 import { createDiv } from '../assets/partials/div.js'
 import { createIcon } from '../assets/partials/icon.js'
+import { getLocalDate } from '../assets/js/format.js'
 
 /**
  *
@@ -17,12 +18,12 @@ export function createDueLabel(dueInfo, viewMode) {
       dueHTML = createIcon({
         classes: {
           primary: 'fa-bell',
-          other: ['danger-foreground', 'due-label'],
-        },
+          other: ['danger-foreground', 'due-label']
+        }
       })
     if (['Today', 'Tomorrow'].includes(dueInfo.label))
       dueHTML = createIcon({
-        classes: { primary: 'fa-bell', other: ['due-label'] },
+        classes: { primary: 'fa-bell', other: ['due-label'] }
       })
     if (dueInfo.label === 'Later') {
       // do nothing
@@ -44,6 +45,9 @@ export function createDueLabel(dueInfo, viewMode) {
   return dueHTML
 }
 
+/**
+ *
+ */
 export function dueInfo(isoString) {
   if (!isoString) return {}
 
@@ -64,7 +68,7 @@ export function dueInfo(isoString) {
   let obj = {
     isoString,
     date: givenFormattedDate,
-    time: hhMm,
+    time: hhMm
   }
 
   if (givenDatePart < nowDatePart) {
@@ -78,4 +82,30 @@ export function dueInfo(isoString) {
   }
 
   return obj
+}
+
+/**
+ *
+ */
+export function nowDateTime() {
+  // Create a date string that follows the ISO format
+  // but uses the local time instead of server time
+  const now = new Date()
+
+  let local = getLocalDate()
+
+  const hour = now.getHours()
+  let tempDate = new Date(now)
+  if (hour >= 15) {
+    // if starts_at hour is after 3pm
+    // then change starts_at to next day 9am
+    tempDate.setDate(tempDate.getDate() + 1)
+    tempDate.setHours(9, 0, 0, 0)
+  } else {
+    // otherwise hve it start the next hour
+    tempDate.setHours(hour + 1, 0, 0, 0)
+  }
+  local = getLocalDate(tempDate)
+  console.log('local', local)
+  return local
 }
