@@ -7,7 +7,7 @@ let sharedStyleEl = null
 
 export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent,
+    navigator.userAgent
   )
 }
 
@@ -63,70 +63,70 @@ export const navList = [
     icon: 'fa-house',
     label: 'home',
     url: 'home/index.html',
-    id: 'home',
+    id: 'home'
   },
   {
     icon: 'fa-cart-shopping',
     label: 'Shop',
     url: 'shopping/index.html',
     id: 'shopping',
-    category: 'live',
+    category: 'food'
   },
   {
     icon: 'fa-cake-candles',
     label: 'Recipes',
     url: 'recipes/index.html',
     id: 'recipes',
-    category: 'live',
-  },
-  {
-    icon: 'fa-folder-tree',
-    label: 'Projects',
-    url: 'projects/index.html',
-    id: 'projects',
-    category: 'love',
-  },
-  {
-    icon: 'fa-list-check',
-    label: 'Tasks',
-    url: 'tasks/index.html',
-    id: 'tasks',
-    category: 'love',
-  },
-  {
-    icon: 'fa-note-sticky',
-    label: 'Notes',
-    url: 'notes/index.html',
-    id: 'notes',
-    category: 'love',
+    category: 'food'
   },
   {
     icon: 'fa-book',
     label: 'Journal',
     url: 'journal/index.html',
     id: 'journal',
-    category: 'love',
+    category: 'food'
+  },
+  {
+    icon: 'fa-folder-tree',
+    label: 'Projects',
+    url: 'projects/index.html',
+    id: 'projects',
+    category: 'plan'
+  },
+  {
+    icon: 'fa-list-check',
+    label: 'Tasks',
+    url: 'tasks/index.html',
+    id: 'tasks',
+    category: 'plan'
+  },
+  {
+    icon: 'fa-note-sticky',
+    label: 'Notes',
+    url: 'notes/index.html',
+    id: 'notes',
+    category: 'plan'
   },
   {
     icon: 'fa-spell-check',
     label: 'Lexicon',
     url: 'lexicon/index.html',
     id: 'lexicon',
-    category: 'learn',
+    category: 'learn'
   },
   {
     icon: 'fa-book',
     label: 'Books',
     url: 'books/index.html',
     id: 'books',
-    category: 'learn',
+    category: 'learn'
   },
   {
     icon: 'fa-gear',
     label: 'Settings',
     url: 'settings/index.html',
-    id: 'settings',
-  },
+    id: 'settings'
+  }
 ]
 
 export function setMessage(
@@ -136,8 +136,8 @@ export function setMessage(
     type = 'message',
     showProgress = true,
     autoClose = 3000,
-    position = 'BOTTOM_RIGHT',
-  } = {},
+    position = 'BOTTOM_RIGHT'
+  } = {}
 ) {
   if (!message) {
     // user wishes to clear all toasts
@@ -176,7 +176,7 @@ export function setMessage(
     className,
     autoClose,
     showProgress,
-    position,
+    position
   })
 
   document.querySelector('body').appendChild(toast)
