@@ -133,6 +133,8 @@ function react(el) {
 
     document.querySelector('.markdown-wrapper')._updateViewer()
 
+    console.log('doc.id', doc.id)
+
     el.querySelector('#note-id').insertHtml(doc.id)
 
     el.querySelector('#project').setOptions(
@@ -143,7 +145,7 @@ function react(el) {
     )
     el.querySelector('#project').selectByValue(doc.assignedProject)
 
-    if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
+    // if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
 
   state.on('icon-click:edit-note', 'mainPanel', () => {
