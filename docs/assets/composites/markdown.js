@@ -77,11 +77,9 @@ textarea::-webkit-scrollbar {
   margin: 30px 0 15px;
 }
 .markdown-viewer h2 {
-  font-size: 1.4rem;
   margin: 30px 0 15px;
 }
 .markdown-viewer h3 {
-  font-size: 1.2rem;
   margin: 30px 0 15px;
 }
 .markdown-viewer h2 + h3 {

@@ -5,6 +5,7 @@ import { createSpan } from '../../assets/partials/span.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { formatDateParts } from '../../assets/js/format.js'
 import { calendarListChildren } from '../../tasks/sections/calendarListChildren.js'
+import { dueInfo } from '../../tasks/tasks.utils.js'
 
 const css = `
 .md-item:not(:last-child) {
@@ -28,8 +29,27 @@ function build(el, doc) {
   el.deleteChildren()
 
   const docs = doc.items.filter((i) => i.type === 'task')
+  const users = state.get('users')
+  const user = state.get('user')
 
-  if (!docs.length) {
+  const tasks = docs.map((task) => {
+    if (task.starts_at) {
+      task.dueInfo = dueInfo(task.starts_at)
+    }
+    if (task.assignee && task.assignee !== user.id) {
+      const user = users.find((user) => user.id === task.assignee)
+      if (!user) {
+        console.log('users', users)
+        throw new Error(
+          `Oops, tasks.js cannot locate user with id "${task.assignee}"`
+        )
+      }
+      task.assignedPeer = { name: user.first_name, color: user.color }
+    }
+    return task
+  })
+
+  if (!tasks.length) {
     el.appendChild(
       createSpan({
         className: 'c-gray3',
@@ -39,7 +59,7 @@ function build(el, doc) {
     return
   }
 
-  const children = calendarListChildren(docs)
+  const children = calendarListChildren(tasks)
   // const children = docs.map(({ id, title, starts_at, className }) => {
   //   const obj = formatDateParts(starts_at)
   //   const startDate = `${obj.month}/${obj.day}/${obj.shortYear}`

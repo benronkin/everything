@@ -16,7 +16,13 @@ const css = `
 #starts_at_wrapper {
   margin-top: 30px;
 }
-#note-header5 {
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 30px 0 10px;
+}
+.header-with-icon h4 {
   margin: 0;
 }
 `
@@ -84,9 +90,12 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'mt-30 mb-20 flex align-center gap-10 justify-start',
+      className: 'header-with-icon',
       html: [
-        createHeader({ html: 'Details', type: 'h5', id: 'note-header5' }),
+        createHeader({
+          html: 'Details',
+          type: 'h4'
+        }),
         createIcon({
           id: 'notes-toggle',
           classes: {
@@ -112,9 +121,9 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'mt-30 mb-20 flex align-center gap-10 justify-start',
+      className: 'header-with-icon',
       html: [
-        createHeader({ html: 'Tasks', type: 'h5', id: 'note-header5' }),
+        createHeader({ html: 'Tasks', type: 'h4' }),
         createIcon({
           id: 'add-task',
           classes: {
@@ -130,9 +139,9 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'mt-30 mb-20 flex align-center gap-10 justify-start',
+      className: 'header-with-icon',
       html: [
-        createHeader({ html: 'Notes', type: 'h5', id: 'note-header5' }),
+        createHeader({ html: 'Notes', type: 'h4' }),
         createIcon({
           id: 'add-note',
           classes: {
@@ -148,9 +157,9 @@ function build(el, doc) {
 
   // el.appendChild(
   //   createDiv({
-  //     className: 'mt-30 mb-20 flex align-center gap-10 justify-start',
+  //     className: 'header-with-icon',
   //     html: [
-  //       createHeader({ html: 'Journal', type: 'h5', id: 'note-header5' }),
+  //       createHeader({ html: 'Journal', type: 'h5', class: 'header-with-icon' }),
   //       createIcon({
   //         id: 'add-journal',
   //         classes: {
