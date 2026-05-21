@@ -86,8 +86,8 @@ function build({ el, obj, top = 30, left = 30 }) {
 
   const rect = document.getElementById(toggleId).getBoundingClientRect()
 
-  if (top) el.style.top = `${rect.top + top}px`
-  if (left) el.style.left = `${rect.left - left}px`
+  if (top) el.style.top = `${rect.top + top + window.scrollY}px`
+  if (left) el.style.left = `${rect.left - left + window.scrollX}px`
 }
 
 /**
