@@ -10,7 +10,8 @@ const css = `
     margin-bottom: 10px;
 }
 .md-item .title {
-  flex: 1 1 auto;           /* take all leftover width */
+ flex: 1;
+  min-width: 0; /* Crucial: tells the span it can shrink to 0px */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;  /* … when it runs out */
@@ -22,7 +23,7 @@ export function mainDocumentsList() {
 
   const el = createMainDocumentsList({
     id: 'left-panel-list',
-    className: 'mt-20',
+    className: 'mt-20'
   })
 
   react(el)
@@ -52,7 +53,7 @@ function addChildren(el, docs) {
     const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
-      createSpan({ html: visited }),
+      createSpan({ html: visited })
     ]
 
     let url = `./journal.html?id=${doc.id}`
@@ -66,7 +67,7 @@ function addChildren(el, docs) {
     return createMainDocumentLink({
       id: doc.id,
       html,
-      url,
+      url
     })
   })
   el.addChildren(children)
