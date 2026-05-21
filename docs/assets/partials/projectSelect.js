@@ -26,7 +26,7 @@ color: var(--gray2) !important;
 export function createProjectSelect(obj) {
   injectStyle(css)
 
-  const { id, className, name, value, projects, setUpdateState } = obj
+  const { id, className, name, value, projects = [], setUpdateState } = obj
 
   const options = projects.map((project) => ({
     label: project.title,

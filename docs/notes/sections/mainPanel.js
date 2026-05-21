@@ -8,11 +8,12 @@ import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { handlRightDrawerState } from '../../assets/js/ui.js'
+import { createProjectSelect } from '../../assets/partials/projectSelect.js'
 import { state } from '../../assets/js/state.js'
 import {
   fetchNoteHistories,
   fetchNoteHistory,
-  updateNote,
+  updateNote
 } from '../notes.api.js'
 import { setMessage } from '../../assets/js/ui.js'
 
@@ -93,17 +94,31 @@ function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: 'mb-20', input: 'field', icon: 'fa-note-sticky' },
-    }),
+      classes: { group: 'mb-20', input: 'field', icon: 'fa-note-sticky' }
+    })
   )
 
   el.appendChild(createMarkdown({ name: 'note' }))
 
-  el.appendChild(dangerZone())
+  el.appendChild(
+    createDiv({
+      className: 'flex justify-start align-center mt-20 task-assignee-wrapper',
+      html: [
+        createSpan({ html: 'Project:' }),
+        createProjectSelect({
+          id: 'project',
+          name: 'project',
+          caption: 'Project:'
+        })
+      ]
+    })
+  )
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
 
   el.appendChild(createSpan({ id: 'note-id', className: 'smaller' }))
+
+  el.appendChild(dangerZone())
 
   el.querySelector('#note-title').taxIndex = '0'
   el.querySelector('.markdown-viewer').taxIndex = '1'
@@ -119,6 +134,14 @@ function react(el) {
     document.querySelector('.markdown-wrapper')._updateViewer()
 
     el.querySelector('#note-id').insertHtml(doc.id)
+
+    el.querySelector('#project').setOptions(
+      doc.projects.map((project) => ({
+        label: project.title,
+        value: project.id
+      }))
+    )
+    el.querySelector('#project').selectByValue(doc.assignedProject)
 
     if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
   })
@@ -153,8 +176,8 @@ async function updateHistories() {
     createHeader({
       html: 'History',
       type: 'h5',
-      className: 'toc-header',
-    }),
+      className: 'toc-header'
+    })
   )
 
   const { histories } = await fetchNoteHistories(state.get('active-doc'))
@@ -166,10 +189,10 @@ async function updateHistories() {
       className: 'toc-item flex align-center',
       dataset: {
         history: 'current',
-        current: document.querySelector('.markdown-viewer').innerHTML,
+        current: document.querySelector('.markdown-viewer').innerHTML
       },
-      html: createSpan({ html: 'Current', className: 'smaller' }),
-    }),
+      html: createSpan({ html: 'Current', className: 'smaller' })
+    })
   )
 
   histories.forEach(({ id, created_at }, idx) => {
@@ -180,20 +203,20 @@ async function updateHistories() {
       year: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: true,
+      hour12: true
     })
 
     const div = createDiv({
       className: `toc-item flex align-center`,
       dataset: { history: id },
-      html: [createSpan({ html: dateString, className: 'smaller' })],
+      html: [createSpan({ html: dateString, className: 'smaller' })]
     })
 
     div.appendChild(
       createButton({
         html: 'Restore',
-        className: 'history-btn secondary hidden',
-      }),
+        className: 'history-btn secondary hidden'
+      })
     )
 
     rightPanelEl.appendChild(div)
@@ -231,13 +254,13 @@ async function updateHistories() {
 
         const md = markdownit({
           html: true,
-          linkify: true,
+          linkify: true
         })
         const html = md.render(note)
         document.querySelector('.markdown-viewer').innerHTML = html
         state.set('note-body', note)
       }
-    }),
+    })
   )
 
   rightPanelEl.querySelector('[data-history]').classList.add('active')

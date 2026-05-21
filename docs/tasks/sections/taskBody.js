@@ -149,7 +149,7 @@ function build(el, doc) {
         createProjectSelect({
           id: 'project',
           name: 'project',
-          caption: 'Project::',
+          caption: 'Project:',
           value: doc.assignedProject,
           projects: doc.projects
         })

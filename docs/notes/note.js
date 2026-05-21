@@ -20,8 +20,12 @@ import {
   fetchLabelsAssignments,
   shareNote,
   unassignLabel,
-  updateLabel,
+  updateLabel
 } from './notes.api.js'
+import {
+  attachProjectItem,
+  detachProjectItem
+} from '../projects/projects.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { getMe } from '../users/users.api.js'
 
@@ -47,21 +51,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const id = urlParams.get('id')
 
     const [{ note }, { labels }, { assignments }, { user }] = await Promise.all(
-      [fetchNote(id), fetchLabels(), fetchLabelsAssignments(), getMe()],
+      [fetchNote(id), fetchLabels(), fetchLabelsAssignments(), getMe()]
     )
 
     if (note.user_id === user.id) note.role = 'owner'
+
+    note.projects.unshift({ id: '', title: '' })
+    note.assignedProject = note?.assignedProject?.project_id
 
     state.set('main-documents', [note])
     state.set('app-mode', 'main-panel')
     state.set('active-doc', id)
     state.set(
       'note-labels',
-      labels.map(({ id, title }) => [id, title]),
+      labels.map(({ id, title }) => [id, title])
     )
     state.set(
       'note-label-assignments',
-      assignments.map(({ label_id, note_id }) => [label_id, note_id]),
+      assignments.map(({ label_id, note_id }) => [label_id, note_id])
     )
     state.set('user', user)
     state.set('default-page', 'notes')
@@ -97,7 +104,7 @@ function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
@@ -165,9 +172,20 @@ async function reactNoteDelete() {
 async function handleFieldChange(el) {
   if (!el) return
 
+  const id = state.get('active-doc')
+
+  if (el.name === 'project') {
+    if (el.value) {
+      attachProjectItem({ project_id: el.value, item_id: id, type: 'note' })
+    } else {
+      detachProjectItem({ item_id: id })
+    }
+    setMessage('Saved', { type: 'quiet' })
+    return
+  }
+
   if (['label-title'].includes(el.name)) return
 
-  const id = state.get('active-doc')
   const doc = state.get('main-documents')[0]
   const title = document.querySelector('#note-title').value
   const note = document.querySelector('.markdown-editor').value
