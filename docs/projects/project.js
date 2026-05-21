@@ -17,6 +17,7 @@ import {
 } from './projects.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
+import { floatingMenu } from '../assets/partials/floatingMenu.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -119,12 +120,25 @@ function react() {
   })
 
   state.on('icon-click:add-task', 'project', () => {
-    handleAddItem('task')
+    floatingMenu({
+      id: 'add-task-floating-menu',
+      options: [
+        { id: 'option-new-task', html: 'Add new task' },
+        { id: 'option-existing-task', html: 'Attach existing task' }
+      ],
+      toggleId: 'add-task'
+    })
   })
 
   state.on('icon-click:add-note', 'project', () => {
     handleAddItem('note')
   })
+
+  state.on(
+    'floating-menu-option-click',
+    'project',
+    handleFloatingMenuOptionClick
+  )
 }
 
 /**
@@ -206,6 +220,19 @@ async function handleprojectDeleteConfirm() {
     return
   }
   window.location = `./index.html?message=${typeString}+deleted`
+}
+
+/**
+ *
+ */
+function handleFloatingMenuOptionClick({ id }) {
+  switch (id) {
+    case 'option-new-task':
+      handleAddItem('task')
+      break
+    case 'option-existing-task':
+      window.location.href = `../tasks/index.html`
+  }
 }
 
 /**
