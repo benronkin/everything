@@ -18,8 +18,12 @@ import {
   fetchSteps,
   shareTask,
   updateStep,
-  updateTask,
+  updateTask
 } from './tasks.api.js'
+import {
+  attachProjectItem,
+  detachProjectItem
+} from '../projects/projects.api.js'
 import { createModalShare } from '../assets/composites/modalShare.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { dueInfo } from './tasks.utils.js'
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       getMe(),
       fetchUsers(),
       fetchTask(id),
-      fetchSteps(id),
+      fetchSteps(id)
     ])
 
     if (!task) {
@@ -60,6 +64,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     task.steps = steps
+
+    task.projects.unshift({ id: '', title: '' })
+    task.assignedProject = task?.assignedProject?.project_id
 
     state.set('user', user)
     state.set('users', users)
@@ -97,7 +104,7 @@ function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
@@ -158,7 +165,7 @@ async function handleStepCreate({ caption, taskId }) {
 async function handleStepDelete(data) {
   if (!data.id) {
     throw new Error(
-      `handleStepDelete did not receive an id. Received: ${JSON.stringify(data)}`,
+      `handleStepDelete did not receive an id. Received: ${JSON.stringify(data)}`
     )
   }
   const id = data.id
@@ -192,7 +199,7 @@ async function handleStepUpdate(doc) {
   const { error } = await updateStep({
     id,
     section,
-    value,
+    value
   })
   if (error) {
     throw new Error(error)
@@ -219,6 +226,16 @@ async function handleFieldChange(el) {
     }
 
     const id = state.get('active-doc')
+
+    if (section === 'project') {
+      if (value) {
+        attachProjectItem({ project_id: value, item_id: id, type: 'task' })
+      } else {
+        detachProjectItem({ item_id: id })
+      }
+      setMessage('Saved', { type: 'quiet' })
+      return
+    }
 
     const { error } = await updateTask({ id, section, value })
     if (error) {

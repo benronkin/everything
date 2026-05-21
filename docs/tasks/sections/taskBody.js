@@ -11,6 +11,7 @@ import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createUserSelect } from '../../assets/partials/userSelect.js'
+import { createProjectSelect } from '../../assets/partials/projectSelect.js'
 
 const css = `
 #due-date-wrapper {
@@ -53,7 +54,7 @@ export function createTaskBody(doc) {
   injectStyle(css)
 
   const el = createDiv({
-    id: 'task-body',
+    id: 'task-body'
   })
 
   build(el, doc)
@@ -73,8 +74,8 @@ function build(el, doc) {
       createButton({
         id: 'duplicate-task',
         html: 'Create task from this template',
-        className: 'primary mb-30',
-      }),
+        className: 'primary mb-30'
+      })
     )
   }
 
@@ -85,16 +86,16 @@ function build(el, doc) {
       placeholder: 'Title',
       autocomplete: 'off',
       classes: { group: '', input: 'w-100', icon: 'fa-square' },
-      value: doc.title || '',
-    }),
+      value: doc.title || ''
+    })
   )
 
   el.appendChild(
     createHeaderGroup({
       type: 'h5',
       classes: { group: 'mt-40 mb-20', icon: 'fa-rectangle-list' },
-      html: 'Steps',
-    }),
+      html: 'Steps'
+    })
   )
 
   el.appendChild(createDiv({ id: 'steps-wrapper' }))
@@ -112,9 +113,9 @@ function build(el, doc) {
       classes: {
         group: 'add-step-wrapper mt-20',
         input: 'add-step',
-        icon: 'fa-plus',
-      },
-    }),
+        icon: 'fa-plus'
+      }
+    })
   )
 
   el.appendChild(createDueDate())
@@ -134,10 +135,26 @@ function build(el, doc) {
           name: 'assignee',
           caption: 'Assignee:',
           value: doc.assignee,
-          users: state.get('users'),
-        }),
-      ],
-    }),
+          users: state.get('users')
+        })
+      ]
+    })
+  )
+
+  el.appendChild(
+    createDiv({
+      className: 'flex justify-start align-center mt-20 task-assignee-wrapper',
+      html: [
+        createSpan({ html: 'Project:' }),
+        createProjectSelect({
+          id: 'project',
+          name: 'project',
+          caption: 'Project::',
+          value: doc.assignedProject,
+          projects: doc.projects
+        })
+      ]
+    })
   )
 
   el.appendChild(
@@ -150,11 +167,11 @@ function build(el, doc) {
           classes: {
             primary: 'fa-pencil',
             secondary: 'fa-close',
-            other: ['primary'],
-          },
-        }),
-      ],
-    }),
+            other: ['primary']
+          }
+        })
+      ]
+    })
   )
 
   el.appendChild(
@@ -163,16 +180,16 @@ function build(el, doc) {
       id: 'details',
       className: 'mb-20 w-100',
       toggleId: 'notes-toggle',
-      value: doc.details || '',
-    }),
+      value: doc.details || ''
+    })
   )
 
   const trashBtn = createButton({
     id: 'trash-btn',
     className: 'transparent',
     html: createSpan({
-      html: `<i class="fa-solid fa-trash"></i> Delete ${typeString}`,
-    }),
+      html: `<i class="fa-solid fa-trash"></i> Delete ${typeString}`
+    })
   })
 
   el.appendChild(trashBtn)
@@ -182,7 +199,7 @@ function build(el, doc) {
   })
 
   el.appendChild(
-    createHeader({ type: 'h5', html: 'Id', className: 'mt-20 mb-20' }),
+    createHeader({ type: 'h5', html: 'Id', className: 'mt-20 mb-20' })
   )
 
   el.appendChild(createSpan({ html: doc.id }))

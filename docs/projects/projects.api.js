@@ -15,6 +15,18 @@ export async function createProject({ title, starts_at, type }) {
 /**
  *
  */
+export async function attachProjectItem({ project_id, item_id, type }) {
+  const resp = await postWebAppJson(`${url}/attach-item`, {
+    project_id,
+    item_id,
+    type
+  })
+  return resp
+}
+
+/**
+ *
+ */
 export async function createProjectItem({ id, type }) {
   const resp = await postWebAppJson(`${url}/create-item`, {
     id,
@@ -23,11 +35,27 @@ export async function createProjectItem({ id, type }) {
   return resp
 }
 
+/**
+ *
+ */
 export async function deleteProject(id) {
   const resp = await getWebApp(`${url}/delete?id=${id}`)
   return resp
 }
 
+/**
+ *
+ */
+export async function detachProjectItem({ item_id }) {
+  const resp = await postWebAppJson(`${url}/detach-item`, {
+    item_id
+  })
+  return resp
+}
+
+/**
+ *
+ */
 export async function fetchProject(id) {
   const { project, error } = await getWebApp(`${url}/read-one?id=${id}`)
   return { project, error }

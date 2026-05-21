@@ -3,7 +3,6 @@
 // ------------------------
 
 import { setMessage } from './ui.js'
-import { log } from './logger.js'
 
 /**
  * If the user clicked on the email link then the token will be in the query param.
@@ -38,7 +37,7 @@ export async function getWebApp(path) {
   headers.append('Auth-Token', token)
 
   const req = new Request(path, {
-    headers,
+    headers
   })
   let res
   try {
@@ -60,7 +59,7 @@ export async function getWebApp(path) {
     if (status !== 200) {
       console.log(
         `getWebApp ${status} sent by server for path: "${path}":`,
-        message,
+        message
       )
       return { error: message }
     }
@@ -71,7 +70,7 @@ export async function getWebApp(path) {
     }
 
     return {
-      error,
+      error
     }
   }
 }
@@ -92,7 +91,7 @@ export async function postWebAppForm(path, formData) {
   const req = new Request(path, {
     method: 'POST',
     headers,
-    body: formData, // 🚀 native FormData, NOT JSON.stringify
+    body: formData // 🚀 native FormData, NOT JSON.stringify
   })
 
   let res
@@ -123,7 +122,7 @@ export async function postWebAppJson(path, clientData) {
   const req = new Request(path, {
     method: 'POST',
     headers,
-    body: JSON.stringify(clientData),
+    body: JSON.stringify(clientData)
   })
   let res
   try {
@@ -139,11 +138,13 @@ export async function postWebAppJson(path, clientData) {
     if (status !== 200) {
       console.error(
         `postWebAppJson ${status} sent by server for path: "${path}":`,
-        message,
+        message
       )
       resp.error = message
       delete resp.status
       delete resp.message
+    } else {
+      console.log('postWebAppJson message', message)
     }
 
     return resp
@@ -152,7 +153,7 @@ export async function postWebAppJson(path, clientData) {
       console.warn('Is cloudflare running?')
     }
     const errorMessage = `postWebAppJson error: ${err}\nFetch payload: ${JSON.stringify(
-      clientData,
+      clientData
     )}`
     return { error: errorMessage }
   }
