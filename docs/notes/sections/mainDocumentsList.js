@@ -1,5 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
+import { createDiv } from '../../assets/partials/div.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -9,6 +10,13 @@ const css = `
 .md-item:not(:last-child) {
     margin-bottom: 10px;
 }
+.project-chip {
+  background-color: var(--teal3);
+  white-space: nowrap;
+  padding: 5px;
+  border-radius: var(--border-radius);
+  color: var(--gray0);
+}
 `
 
 export function mainDocumentsList() {
@@ -16,7 +24,7 @@ export function mainDocumentsList() {
 
   const el = createMainDocumentsList({
     id: 'left-panel-list',
-    className: 'mt-10',
+    className: 'mt-10'
   })
 
   react(el)
@@ -52,14 +60,21 @@ function addChildren(el, docs) {
 
   const children = docs.map((doc) => {
     const html = [createSpan({ html: doc.title })]
-    if (doc?.peers?.length) {
+
+    if (doc.assigned_project) {
+      const title = doc.projects.find(
+        (p) => p.id === doc.assigned_project
+      ).title
+      const firstToken = title.split(/[ -]/)[0]
+      html.push(createDiv({ html: firstToken, className: 'project-chip' }))
+    } else if (doc?.peers?.length) {
       html.push(createAvatarGroup({ peers: doc.peers }))
     }
 
     return createMainDocumentLink({
       id: doc.id,
       html,
-      url: `./note.html?id=${doc.id}`,
+      url: `./note.html?id=${doc.id}`
     })
   })
   el.addChildren(children)
