@@ -33,7 +33,7 @@ function react(el) {
           className: 'c-gray3',
           html: [
             createIcon({ classes: { primary: 'fa-umbrella-beach' } }),
-            createSpan({ html: 'No projects created...', className: 'ml-10' })
+            createSpan({ html: 'No projects found...', className: 'ml-10' })
           ]
         })
       )

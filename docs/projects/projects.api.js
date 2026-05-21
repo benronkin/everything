@@ -67,10 +67,8 @@ export async function fetchProjects() {
 }
 
 export async function searchProjects(q) {
-  const { journal, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`
-  )
-  return { data: journal, error }
+  const resp = await getWebApp(`${url}/search?q=${q.trim().toLowerCase()}`)
+  return resp
 }
 
 export async function shareProject(payload) {

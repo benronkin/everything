@@ -11,7 +11,7 @@ import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getLocalDate } from '../assets/js/format.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
-import { createProject, fetchProjects } from './projects.api.js'
+import { createProject, fetchProjects, searchProjects } from './projects.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -83,6 +83,8 @@ function build() {
  */
 function react() {
   state.on('icon-click:add-project', 'projects', handleAddproject)
+
+  state.on('form-submit:left-panel-search', 'projects', reactSearch)
 }
 
 /**
@@ -98,4 +100,28 @@ async function handleAddproject() {
   const { data } = resp
   const { id } = data
   window.location.href = `./project.html?id=${id}`
+}
+
+/**
+ *
+ */
+async function reactSearch() {
+  let resp
+
+  const query = document.querySelector('[name="search-projects"]').value?.trim()
+
+  if (query.length) {
+    resp = await searchProjects(query)
+  } else {
+    // get most recent notes instead
+    resp = await fetchProjects()
+  }
+
+  const { projects, message } = resp
+
+  if (message) {
+    console.error(`Notes server error: ${message}`)
+    return
+  }
+  state.set('main-documents', projects)
 }
