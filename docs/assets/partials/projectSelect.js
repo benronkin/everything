@@ -15,7 +15,10 @@ select option {
   gap: 5px;
   background-color: var(--teal2);
 }
-
+.project-select select,
+.project-select .caret-wrapper i {    
+  color: var(--gray6) !important;
+}
 .custom-select:disabled, 
 .select-wrapper.disabled .fa-caret-down {
 color: var(--gray2) !important;

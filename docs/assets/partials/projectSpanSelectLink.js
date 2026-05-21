@@ -19,7 +19,7 @@ export function createProjectSpanSelectLink(doc) {
   })
 
   build({ el, doc })
-  react()
+  react(el)
   listen(el)
 
   el.update = update.bind(el)
@@ -39,12 +39,15 @@ function build({ el, doc }) {
     caption: 'Project:'
   }
 
-  let otherClassString = 'primary hidden'
+  let otherClassString = 'secondary hidden'
 
   if (doc.projects) {
-    obj.value = doc.assignedProject
     obj.projects = doc.projects
-    otherClassString = 'primary'
+  }
+
+  if (doc.assignedProject) {
+    obj.value = doc.assignedProject
+    otherClassString = 'secondary'
   }
 
   el.appendChild(createProjectSelect(obj))
@@ -63,11 +66,14 @@ function build({ el, doc }) {
 /**
  *
  */
-function react() {
+function react(el) {
   state.on('icon-click:link-to-project', 'projectSpanSelectLink', () => {
-    const doc = state.get('main-documents')[0]
+    const linkEl = el.querySelector('#link-to-project')
+    const parent = linkEl.closest('.project-span-select-link')
+    const select = parent.querySelector('select')
+    const value = select.value
 
-    window.location = `../projects/project.html?id=${doc.assignedProject}`
+    window.location = `../projects/project.html?id=${value}`
   })
 }
 

@@ -1,6 +1,5 @@
 import { createSelect } from './select.js'
 import { injectStyle } from '../js/ui.js'
-import { state } from '../js/state.js'
 
 const css = `
 select {
@@ -34,7 +33,7 @@ export function createUserSelect(obj) {
 
   const options = users.map((user) => ({
     label: user.first_name,
-    value: user.id,
+    value: user.id
   }))
 
   const el = createSelect({
@@ -43,7 +42,7 @@ export function createUserSelect(obj) {
     name,
     value,
     options,
-    setUpdateState,
+    setUpdateState
   })
 
   listen(el)

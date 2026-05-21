@@ -7,7 +7,7 @@ const css = `
   display: flex;
   align-items: center;
   border-radius: var(--border-radius);
-  padding: 5px 10px;
+  padding: 13px 10px;
   height: 20px;
   cursor: pointer;
 }
@@ -55,7 +55,7 @@ export function createSelect({
   className = '',
   name = '',
   options = [],
-  setUpdateState = true,
+  setUpdateState = true
 } = {}) {
   injectStyle(css)
   const el = document.createElement('div')
@@ -193,11 +193,12 @@ function listen(el) {
 
   el.querySelector('.caret-wrapper i').addEventListener(
     'click',
-    handleSelectClick,
+    handleSelectClick
   )
+  el.addEventListener('click', handleSelectClick)
   el.querySelector('.custom-select').addEventListener(
     'select',
-    handleSelectClick,
+    handleSelectClick
   )
 }
 
