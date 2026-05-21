@@ -27,8 +27,12 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'w-100', icon: 'fa-book' },
-    }),
+      classes: {
+        group: '',
+        input: 'bigger border-bottom-on-hover w-100',
+        icon: 'fa-book'
+      }
+    })
   )
 
   el.appendChild(
@@ -37,8 +41,12 @@ async function build(el) {
       name: 'author',
       placeholder: 'Author',
       autocomplete: 'off',
-      classes: { group: 'mt-30', input: 'w-100', icon: 'fa-user' },
-    }),
+      classes: {
+        group: 'mt-30',
+        input: 'bigger border-bottom-on-hover w-100',
+        icon: 'fa-user'
+      }
+    })
   )
 
   el.appendChild(
@@ -51,11 +59,11 @@ async function build(el) {
           classes: {
             primary: 'fa-pencil',
             secondary: 'fa-close',
-            other: 'primary ml-10',
-          },
-        }),
-      ],
-    }),
+            other: 'primary ml-10'
+          }
+        })
+      ]
+    })
   )
 
   el.appendChild(
@@ -64,8 +72,8 @@ async function build(el) {
       id: 'book-note',
       className: 'mb-20 w-100',
       placeholder: 'Add note...',
-      toggleId: 'note-toggle',
-    }),
+      toggleId: 'note-toggle'
+    })
   )
 
   el.appendChild(
@@ -79,12 +87,12 @@ async function build(el) {
             createSpan({ html: 'Completed' }),
             createSwitch({
               name: 'completed',
-              id: 'book-completed',
-            }),
-          ],
-        }),
-      ],
-    }),
+              id: 'book-completed'
+            })
+          ]
+        })
+      ]
+    })
   )
 
   el.appendChild(
@@ -96,35 +104,35 @@ async function build(el) {
           html: [
             createSpanGroup({
               classes: { group: 'mt-30 mb-10', icon: 'fa-calendar' },
-              html: 'Year read',
+              html: 'Year read'
             }),
             createInput({
               id: 'book-read-year',
               name: 'read_year',
               placeholder: 'Year read',
               autocomplete: 'off',
-              className: 'w-100',
-            }),
-          ],
+              className: 'w-100'
+            })
+          ]
         }),
         createDiv({
           className: 'flex flex-column',
           html: [
             createSpanGroup({
               classes: { group: 'mt-30 mb-10', icon: 'fa-calendar' },
-              html: 'Year published',
+              html: 'Year published'
             }),
             createInput({
               id: 'book-published-year',
               name: 'published_year',
               placeholder: 'Year published',
               autocomplete: 'off',
-              className: 'w-100',
-            }),
-          ],
-        }),
-      ],
-    }),
+              className: 'w-100'
+            })
+          ]
+        })
+      ]
+    })
   )
 
   el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-40' }))

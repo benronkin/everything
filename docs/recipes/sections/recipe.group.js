@@ -22,16 +22,20 @@ async function build(el) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'w-100', icon: 'fa-utensils' },
-    }),
+      classes: {
+        group: '',
+        input: 'bigger border-bottom-on-hover w-100',
+        icon: 'fa-utensils'
+      }
+    })
   )
 
   el.appendChild(
     createHeaderGroup({
       type: 'h5',
       classes: { group: 'mt-30 mb-20', icon: 'fa-pencil' },
-      html: 'Notes',
-    }),
+      html: 'Notes'
+    })
   )
 
   el.appendChild(
@@ -39,16 +43,16 @@ async function build(el) {
       name: 'notes',
       id: 'recipe-notes',
       className: 'mb-20 w-100',
-      placeholder: 'Add notes...',
-    }),
+      placeholder: 'Add notes...'
+    })
   )
 
   el.appendChild(
     createHeaderGroup({
       type: 'h5',
       classes: { group: 'mb-20', icon: 'fa-cart-shopping' },
-      html: 'Items to buy',
-    }),
+      html: 'Items to buy'
+    })
   )
 
   el.appendChild(
@@ -56,16 +60,16 @@ async function build(el) {
       name: 'ingredients',
       id: 'recipe-ingredients',
       className: 'mb-20 w-100',
-      placeholder: 'Ingredients',
-    }),
+      placeholder: 'Ingredients'
+    })
   )
 
   el.appendChild(
     createHeaderGroup({
       type: 'h5',
       classes: { group: 'mb-20', icon: 'fa-spoon' },
-      html: 'Method',
-    }),
+      html: 'Method'
+    })
   )
 
   el.appendChild(
@@ -73,8 +77,8 @@ async function build(el) {
       name: 'method',
       id: 'recipe-method',
       className: 'mb-20 w-100',
-      placeholder: 'Method',
-    }),
+      placeholder: 'Method'
+    })
   )
 
   el.appendChild(
@@ -84,9 +88,9 @@ async function build(el) {
       classes: {
         group: 'mb-40 w-fc',
         wrapper: 'primary',
-        icon: 'fa-layer-group',
-      },
-    }),
+        icon: 'fa-layer-group'
+      }
+    })
   )
 
   el.appendChild(
@@ -95,8 +99,8 @@ async function build(el) {
       name: 'tags',
       placeholder: 'Tags',
       autocomplete: 'off',
-      classes: { group: 'mb-40', icon: 'fa-tag' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-tag' }
+    })
   )
 
   el.appendChild(
@@ -104,17 +108,17 @@ async function build(el) {
       className: 'flex mb-20',
       html: [
         createHeader({ type: 'h5', html: 'Related' }),
-        createSwitch({ id: 'related-switch', name: 'related-switch' }),
-      ],
-    }),
+        createSwitch({ id: 'related-switch', name: 'related-switch' })
+      ]
+    })
   )
 
   el.appendChild(
     createTextarea({
       name: 'related',
       id: 'recipe-related',
-      className: 'hidden w-100 bg-blue0 p-10',
-    }),
+      className: 'hidden w-100 bg-blue0 p-10'
+    })
   )
   el.appendChild(createList({ id: 'related-list' }))
 

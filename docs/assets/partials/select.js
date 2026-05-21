@@ -7,7 +7,7 @@ const css = `
   display: flex;
   align-items: center;
   border-radius: var(--border-radius);
-  padding: 13px 10px;
+  padding: 7px;
   height: 20px;
   cursor: pointer;
 }

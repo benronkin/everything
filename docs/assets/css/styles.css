@@ -369,6 +369,9 @@ ul {
 .p-10 {
   padding: 10px !important;
 }
+.p-13-10 {
+  padding: 13px 10px !important;
+}
 .p-left-10 {
   padding-left: 10px !important;
 }
