@@ -125,7 +125,7 @@ export function createMarkdown(obj) {
   el._updateViewer = _updateViewer.bind(el)
   el.md = markdownit({
     html: true,
-    linkify: true,
+    linkify: true
   })
 
   build(el, obj)
@@ -152,8 +152,8 @@ function build(el, obj) {
     createTextarea({
       id: obj.id,
       className: 'markdown-editor field hidden',
-      name: obj.name,
-    }),
+      name: obj.name
+    })
   )
 }
 
@@ -237,10 +237,12 @@ function _setPlaceholder(el) {
   const placeholder = el.dataset.placeholder
   if (!placeholder) return
 
+  if (el.querySelector('.markdown-editor').value.length) return
+
   el.querySelector('.markdown-viewer').appendChild(
     createDiv({
       html: placeholder,
-      className: 'c-gray3',
-    }),
+      className: 'c-gray3'
+    })
   )
 }
