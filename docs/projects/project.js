@@ -131,7 +131,14 @@ function react() {
   })
 
   state.on('icon-click:add-note', 'project', () => {
-    handleAddItem('note')
+    floatingMenu({
+      id: 'add-note-floating-menu',
+      options: [
+        { id: 'option-new-note', html: 'Add new note' },
+        { id: 'option-existing-note', html: 'Attach existing note' }
+      ],
+      toggleId: 'add-note'
+    })
   })
 
   state.on(
@@ -232,6 +239,13 @@ function handleFloatingMenuOptionClick({ id }) {
       break
     case 'option-existing-task':
       window.location.href = `../tasks/index.html`
+      break
+    case 'option-new-note':
+      handleAddItem('note')
+      break
+    case 'option-existing-note':
+      window.location.href = `../notes/index.html`
+      break
   }
 }
 
