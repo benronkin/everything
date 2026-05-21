@@ -70,11 +70,11 @@ function build(el, doc) {
       className:
         'flex justify-start align-center mt-20 project-assignee-wrapper',
       html: [
-        createSpan({ html: 'Assignee:' }),
+        createSpan({ html: 'Owner:' }),
         createUserSelect({
           id: 'assignee',
           name: 'assignee',
-          caption: 'Assignee:',
+          caption: 'Owner:',
           value: doc.assignee,
           users: state.get('users')
         })
