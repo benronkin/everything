@@ -46,7 +46,7 @@ function react(el) {
 
       const html = [
         createSpan({ html: title }),
-        createSpan({ html: `(${startDate})`, className: 'c-gray3' })
+        createSpan({ html: `(${startDate})`, className: 'c-gray3 text-right' })
       ]
       return createMainDocumentLink({
         id,
