@@ -2,8 +2,6 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import { createList } from '../../assets/partials/list.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
-import { formatDateParts } from '../../assets/js/format.js'
 import { calendarListChildren } from '../../tasks/sections/calendarListChildren.js'
 import { dueInfo } from '../../tasks/tasks.utils.js'
 
@@ -36,6 +34,7 @@ function build(el, doc) {
     if (task.starts_at) {
       task.dueInfo = dueInfo(task.starts_at)
     }
+
     if (task.assignee && task.assignee !== user.id) {
       const user = users.find((user) => user.id === task.assignee)
       if (!user) {

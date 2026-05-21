@@ -24,7 +24,9 @@ const css = `
   color: inherit;
 }
 .md-item span {
-    white-space: nowrap;
+  flex: 1;
+  min-width: 0; /* Crucial: tells the span it can shrink to 0px */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }  
@@ -50,7 +52,7 @@ export function createMainDocumentLink({ id, html, url } = {}) {
     id,
     url,
     className: 'md-item',
-    html: '',
+    html: ''
   })
 
   for (const h of html) {
