@@ -201,6 +201,16 @@ ul {
 .all-panel-search {
   margin: 20px auto -20px !important;
 }
+.bigger {
+  font-size: 1.2rem !important;
+}
+.border-bottom-on-hover {
+  border: none;
+  border-bottom: 1px solid transparent;
+}
+.border-bottom-on-hover:hover {
+  border-bottom: 1px solid var(--gray3);
+}
 .bb-white {
   border-bottom-color: white;
 }

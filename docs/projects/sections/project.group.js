@@ -46,7 +46,11 @@ function build(el, doc) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: '', input: 'w-100', icon: 'fa-square' },
+      classes: {
+        group: '',
+        input: 'bigger border-bottom-on-hover w-100',
+        icon: 'fa-square'
+      },
       value: doc.title || ''
     })
   )
