@@ -46,7 +46,7 @@ export function createStep({ caption, completed = false, id, assignee } = {}) {
 
   const el = createDiv({
     id,
-    className: 'task-step',
+    className: 'task-step'
   })
 
   build(el)
@@ -74,22 +74,22 @@ function build(el) {
       classes: {
         primary: 'fa-circle',
         secondary: 'fa-circle-check',
-        other: ['mark-complete'],
+        other: ['mark-complete']
       },
-      useFaRegular: true,
-    }),
+      useFaRegular: true
+    })
   )
 
   el.appendChild(createDiv({ className: 'step-caption' }))
 
   el.appendChild(
     createUserSelect({
-      className: 'assignee',
+      className: 'assignee hidden',
       name: 'assignee',
       users: state.get('users'),
       setUpdateState: false,
-      value: state.get('user').id,
-    }),
+      value: state.get('user').id
+    })
   )
 
   el.appendChild(createIcon({ classes: { primary: 'fa-close' } }))
@@ -104,7 +104,7 @@ function listen(el, id) {
     state.set('step-updated', {
       id,
       section: 'assignee',
-      value: userId,
+      value: userId
     })
   })
 
