@@ -4,6 +4,7 @@ import { createList } from '../../assets/partials/list.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { formatDateParts } from '../../assets/js/format.js'
+import { calendarListChildren } from '../../tasks/sections/calendarListChildren.js'
 
 const css = `
 .md-item:not(:last-child) {
@@ -38,21 +39,22 @@ function build(el, doc) {
     return
   }
 
-  const children = docs.map(({ id, title, starts_at, className }) => {
-    const obj = formatDateParts(starts_at)
-    const startDate = `${obj.month}/${obj.day}/${obj.shortYear}`
+  const children = calendarListChildren(docs)
+  // const children = docs.map(({ id, title, starts_at, className }) => {
+  //   const obj = formatDateParts(starts_at)
+  //   const startDate = `${obj.month}/${obj.day}/${obj.shortYear}`
 
-    const html = [
-      createSpan({ html: title }),
-      createSpan({ html: `Due ${startDate}`, className: 'c-gray3' })
-    ]
-    return createMainDocumentLink({
-      id,
-      className: `md-item list-item ${className}`.trim(),
-      html,
-      url: `${state.getBaseUrl()}tasks/task.html?id=${id}`
-    })
-  })
+  //   const html = [
+  //     createSpan({ html: title }),
+  //     createSpan({ html: `Due ${startDate}`, className: 'c-gray3' })
+  //   ]
+  //   return createMainDocumentLink({
+  //     id,
+  //     className: `md-item list-item ${className}`.trim(),
+  //     html,
+  //     url: `${state.getBaseUrl()}tasks/task.html?id=${id}`
+  //   })
+  // })
 
   el.addChildren(children)
 }

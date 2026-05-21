@@ -1,9 +1,9 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
-import { createDiv } from '../../assets/partials/div.js'
 import { createList } from '../../assets/partials/list.js'
 import { enableDragging, enableClicking } from '../../assets/js/drag.js'
 import { createTaskHeader } from './taskHeader.js'
+import { calendarListChildren } from './calendarListChildren.js'
 
 const css = `
 .md-item:not(:last-child) {
@@ -31,7 +31,7 @@ function react(el) {
     }
     const viewMode = localStorage.getItem('task-list-view')
     if (viewMode === 'calendar') {
-      el.addChildren(createCalendarList())
+      el.addChildren(calendarListChildren(docs))
     } else {
       el.addChildren(createPriorityList())
     }
@@ -54,7 +54,7 @@ function react(el) {
 
     const inCalendarView = className.includes('fa-calendar')
     if (inCalendarView) {
-      el.addChildren(createCalendarList())
+      el.addChildren(calendarListChildren(docs))
     } else {
       el.addChildren(createPriorityList())
     }
@@ -65,50 +65,8 @@ function react(el) {
   })
 }
 
-// ------------------------------------------
-// Helpers
-// ------------------------------------------
-
 function createPriorityList() {
   const docs = state.get('main-documents')
   const children = docs.map((doc) => createTaskHeader(doc, 'priority'))
-  return children
-}
-
-function createCalendarList() {
-  const docs = state.get('main-documents')
-  const dict = {
-    Overdue: [],
-    Today: [],
-    Tomorrow: [],
-    Later: [],
-    Unscheduled: []
-  }
-
-  for (const doc of docs) {
-    const k = doc?.dueInfo?.label || 'Unscheduled'
-    dict[k].push(doc)
-  }
-
-  for (const k of Object.keys(dict)) {
-    if (k == 'Unscheduled') continue
-    // sort each category
-    dict[k] = dict[k].sort((a, b) => {
-      const dateA = a.starts_at ? new Date(a.starts_at) : new Date(0)
-      const dateB = b.starts_at ? new Date(b.starts_at) : new Date(0)
-      return dateA - dateB
-    })
-  }
-
-  const children = []
-
-  for (const [cat, docs] of Object.entries(dict)) {
-    if (docs.length) {
-      children.push(createDiv({ html: cat, className: 'category' }))
-      for (const doc of docs) {
-        children.push(createTaskHeader(doc, 'calendar'))
-      }
-    }
-  }
   return children
 }
