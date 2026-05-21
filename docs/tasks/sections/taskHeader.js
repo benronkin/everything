@@ -71,7 +71,8 @@ export function createTaskHeader(doc, viewMode) {
 
   if (assigned_project) {
     const title = projects.find((p) => p.id === assigned_project).title
-    html.push(createDiv({ html: title, className: 'project-chip' }))
+    const firstToken = title.split(/[ -]/)[0]
+    html.push(createDiv({ html: firstToken, className: 'project-chip' }))
   } else if (assignedPeer) {
     const peer = createAvatarGroup({ peers: [assignedPeer] })
     html.push(peer)
