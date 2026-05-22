@@ -189,6 +189,7 @@ function listen(el, obj) {
 
   document.querySelector('body').addEventListener('click', (e) => {
     if (
+      state.get('app-mode') === 'main-panel' && // for legacy books and lexicon
       !e.target.closest('.markdown-viewer') &&
       !e.target.closest('.markdown-editor') &&
       !e.target.closest('#toolbar')
