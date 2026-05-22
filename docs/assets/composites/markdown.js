@@ -189,7 +189,9 @@ function listen(el, obj) {
 
   document.querySelector('body').addEventListener('click', (e) => {
     if (
-      state.get('app-mode') === 'main-panel' && // for legacy books and lexicon
+      document
+        .querySelector(`#${obj.toggleId}`)
+        .classList.contains('fa-pencil') &&
       !e.target.closest('.markdown-viewer') &&
       !e.target.closest('.markdown-editor') &&
       !e.target.closest('#toolbar')
