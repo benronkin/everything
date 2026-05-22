@@ -87,13 +87,6 @@ export const navList = [
     category: 'food'
   },
   {
-    icon: 'fa-folder-tree',
-    label: 'Projects',
-    url: 'projects/index.html',
-    id: 'projects',
-    category: 'plan'
-  },
-  {
     icon: 'fa-list-check',
     label: 'Tasks',
     url: 'tasks/index.html',
@@ -107,6 +100,14 @@ export const navList = [
     id: 'notes',
     category: 'plan'
   },
+  {
+    icon: 'fa-folder-tree',
+    label: 'Projects',
+    url: 'projects/index.html',
+    id: 'projects',
+    category: 'plan'
+  },
+
   {
     icon: 'fa-spell-check',
     label: 'Lexicon',

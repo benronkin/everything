@@ -11,10 +11,11 @@ import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 import {
   addItem,
+  addRecurringItems,
   deleteItem,
   fetchShopping,
   updateShoppingList,
-  updateSuggestionsList,
+  updateSuggestionsList
 } from './shopping.api.js'
 import { log } from '../assets/js/logger.js'
 
@@ -40,14 +41,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       shoppingList
         .split(',')
         .map((x) => x.trim())
-        .filter(Boolean),
+        .filter(Boolean)
     )
     state.set(
       'suggestions-list',
       shoppingSuggestions
         .split(',')
         .map((x) => x.trim())
-        .filter(Boolean),
+        .filter(Boolean)
     )
     state.set('recurring', recurring)
     state.set('app-mode', 'main-panel')
@@ -74,13 +75,13 @@ function build() {
   body.prepend(wrapperEl)
   wrapperEl.appendChild(
     createNav({
-      title: '<i class="fa-solid fa-shopping-cart"></i> Shopping',
-    }),
+      title: '<i class="fa-solid fa-shopping-cart"></i> Shopping'
+    })
   )
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
@@ -94,7 +95,7 @@ function react() {
   const cartEl = document.getElementById('shopping-list')
 
   state.on('form-keyup:shopping-form', 'suggestionsList', () =>
-    state.set('suggestions-list', [...state.get('suggestions-list')]),
+    state.set('suggestions-list', [...state.get('suggestions-list')])
   )
 
   state.on('icon-click:suggest', 'shopping', () => {
@@ -102,18 +103,23 @@ function react() {
   })
 
   state.on('icon-click:recurring', 'shopping', async () => {
-    const recurring = state.get('recurring')?.split(',') || []
-    for (const item of recurring) {
-      let sItems = state.get('shopping-list')
-      if (sItems.includes(item)) {
-        // delete existing items to preserve
-        // the order of recurring in settings
-        sItems = sItems.filter((sItem) => sItem !== item)
-        state.set('shopping-list', sItems)
-        await deleteShoppingItem(item)
-      }
-      await addShoppingItem(item)
-    }
+    await addRecurringItems()
+    // server-side update to shopping list
+    // refresh to reflect changes
+    window.location.reload()
+
+    // const recurring = state.get('recurring')?.split(',') || []
+    // for (const item of recurring) {
+    //   let sItems = state.get('shopping-list')
+    //   if (sItems.includes(item)) {
+    //     // delete existing items to preserve
+    //     // the order of recurring in settings
+    //     sItems = sItems.filter((sItem) => sItem !== item)
+    //     state.set('shopping-list', sItems)
+    //     await deleteShoppingItem(item)
+    //   }
+    //   await addShoppingItem(item)
+    // }
   })
 
   state.on('form-submit:shopping-form', 'shopping', () => {
@@ -162,7 +168,7 @@ function react() {
     const { error } = resp
     if (error) {
       console.error(error)
-      setMessage(error, { type: 'danger' })
+      setMessage(error)
     }
   })
 
