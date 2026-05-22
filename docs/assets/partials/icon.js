@@ -9,9 +9,6 @@ i {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  width: 28px;
-  height: 28px;
-  text-align: center;
 }
 i.shake {
   animation: shake-it 300ms ease;
@@ -85,7 +82,7 @@ function listen(el) {
 
 function handleClasses({ el, classes }) {
   if (!classes) {
-    el.className = 'fa-solid'
+    el.className = 'fa-solid fa-fw'
     return
   }
 

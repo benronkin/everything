@@ -184,7 +184,7 @@ function react(el, obj) {
 function listen(el, obj) {
   el.querySelector('.markdown-viewer').addEventListener('dblclick', () => {
     el.toggle()
-    document.querySelector(`#${obj.toggleId}`).toggleClasses()
+    document.querySelector(`#${obj.toggleId}`).click()
   })
 
   document.querySelector('body').addEventListener('click', (e) => {
@@ -197,7 +197,7 @@ function listen(el, obj) {
       !e.target.closest('#toolbar')
     ) {
       el.showViewer()
-      document.querySelector(`#${obj.toggleId}`).toggleClasses()
+      document.querySelector(`#${obj.toggleId}`).click()
     }
   })
 }
