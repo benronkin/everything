@@ -8,8 +8,10 @@ const css = `
 i {
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;;
-
+  transition: all 0.3s ease-in-out;
+  width: 28px;
+  height: 28px;
+  text-align: center;
 }
 i.shake {
   animation: shake-it 300ms ease;
@@ -28,7 +30,7 @@ export function createIcon({
   classes,
   dataset = {},
   role,
-  useFaRegular = false,
+  useFaRegular = false
 } = {}) {
   injectStyle(css)
 
@@ -69,13 +71,13 @@ function listen(el) {
       id: el.id,
       className: el.classList.contains(el._classes.primary)
         ? el._classes.primary
-        : el._classes.secondary,
+        : el._classes.secondary
     })
 
     if (el.dataset?.role) {
       state.set(`${el.dataset.role}-click`, {
         id: el.id,
-        className: el.className,
+        className: el.className
       })
     }
   })
@@ -89,7 +91,7 @@ function handleClasses({ el, classes }) {
 
   if (!classes.primary) {
     throw new Error(
-      `Oops, icon accepts a "classes" object with attributes: "primary" (required, string), "secondary" (string), and "other" (array)`,
+      `Oops, icon accepts a "classes" object with attributes: "primary" (required, string), "secondary" (string), and "other" (array)`
     )
   }
 
@@ -103,7 +105,7 @@ function handleClasses({ el, classes }) {
   const baseFa = el.useFaRegular ? 'fa-regular' : 'fa-solid'
 
   const arr = [...new Set([baseFa, classes.primary, ...classes.other])].join(
-    ' ',
+    ' '
   )
 
   el.className = arr
