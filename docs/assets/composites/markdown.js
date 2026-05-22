@@ -195,7 +195,6 @@ function listen(el, obj) {
       !e.target.closest('.markdown-editor') &&
       !e.target.closest('#toolbar')
     ) {
-      el.showViewer()
       document.querySelector(`#${obj.toggleId}`).click()
     }
   })
