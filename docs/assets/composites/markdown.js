@@ -129,7 +129,7 @@ export function createMarkdown(obj) {
 
   build(el, obj)
   react(el, obj)
-  listen(el)
+  listen(el, obj)
 
   if (obj.value) {
     el.updateEditor(obj.value)
@@ -181,9 +181,10 @@ function react(el, obj) {
 /**
  *
  */
-function listen(el) {
+function listen(el, obj) {
   el.querySelector('.markdown-viewer').addEventListener('dblclick', () => {
     el.toggle()
+    document.querySelector(`#${obj.toggleId}`).toggleClasses()
   })
 
   document.querySelector('body').addEventListener('click', (e) => {
@@ -193,6 +194,7 @@ function listen(el) {
       !e.target.closest('#toolbar')
     ) {
       el.showViewer()
+      document.querySelector(`#${obj.toggleId}`).toggleClasses()
     }
   })
 }

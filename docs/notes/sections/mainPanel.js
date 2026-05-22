@@ -98,7 +98,7 @@ function build(el) {
     })
   )
 
-  el.appendChild(createMarkdown({ name: 'note' }))
+  el.appendChild(createMarkdown({ name: 'note', toggleId: 'edit-note' }))
 
   el.appendChild(
     createProjectSpanSelectLink({
@@ -135,7 +135,7 @@ function react(el) {
   })
 
   state.on('icon-click:edit-note', 'mainPanel', () => {
-    document.querySelector('.markdown-wrapper').toggle()
+    // document.querySelector('.markdown-wrapper').toggle()
     handlRightDrawerState('close')
   })
 
