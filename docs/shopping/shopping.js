@@ -103,6 +103,7 @@ function react() {
   })
 
   state.on('icon-click:recurring', 'shopping', async () => {
+    setMessage('Adding recurring items...')
     await addRecurringItems()
     // server-side update to shopping list
     // refresh to reflect changes
