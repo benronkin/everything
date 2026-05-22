@@ -120,6 +120,7 @@ export function createMarkdown(obj) {
   el.renderer = renderer
   el.updateEditor = updateEditor.bind(el)
   el.toggle = toggle.bind(el)
+  el.showViewer = showViewer.bind(el)
   el._updateViewer = _updateViewer.bind(el)
   el.md = markdownit({
     html: true,
@@ -128,6 +129,7 @@ export function createMarkdown(obj) {
 
   build(el, obj)
   react(el, obj)
+  listen(el)
 
   if (obj.value) {
     el.updateEditor(obj.value)
@@ -179,6 +181,25 @@ function react(el, obj) {
 /**
  *
  */
+function listen(el) {
+  el.querySelector('.markdown-viewer').addEventListener('dblclick', () => {
+    el.toggle()
+  })
+
+  document.querySelector('body').addEventListener('click', (e) => {
+    if (
+      !e.target.closest('.markdown-viewer') &&
+      !e.target.closest('.markdown-editor') &&
+      !e.target.closest('#toolbar')
+    ) {
+      el.showViewer()
+    }
+  })
+}
+
+/**
+ *
+ */
 function toggle() {
   const scrollPercent =
     window.scrollY / (document.body.scrollHeight - window.innerHeight)
@@ -204,6 +225,11 @@ function toggle() {
   requestAnimationFrame(() => {
     window.scrollTo({ top: targetY, behavior: 'auto' })
   })
+}
+
+function showViewer() {
+  this.querySelector('.markdown-viewer').classList.remove('hidden')
+  this.querySelector('.markdown-editor').classList.add('hidden')
 }
 
 /**
