@@ -191,7 +191,7 @@ function listen(el, obj) {
     if (
       document
         .querySelector(`#${obj.toggleId}`)
-        .classList.contains('fa-pencil') &&
+        .classList.contains('fa-close') &&
       !e.target.closest('.markdown-viewer') &&
       !e.target.closest('.markdown-editor') &&
       !e.target.closest('#toolbar')
