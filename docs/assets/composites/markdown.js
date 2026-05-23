@@ -33,17 +33,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 30px 0 15px;
 }
 textarea {
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  
-  /* Optional: Ensure scrolling is still enabled */
-  overflow-y: scroll; 
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-textarea::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
 }
 .markdown-viewer {
   min-height: 41px;
