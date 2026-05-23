@@ -11,6 +11,7 @@ textarea {
   line-height: 1.2em;
   resize: none;
   padding-left: 1px;
+  .hide-scrollbar::-webkit-scrollbar;
 }
 `
 
