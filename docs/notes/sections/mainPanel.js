@@ -8,7 +8,7 @@ import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { handlRightDrawerState } from '../../assets/js/ui.js'
-import { createProjectSpanSelectLink } from '../../assets/partials/projectSpanSelectLink.js'
+import { createProjectPrompt } from '../../assets/partials/projectPrompt.js'
 import { state } from '../../assets/js/state.js'
 import {
   fetchNoteHistories,
@@ -101,7 +101,7 @@ function build(el) {
   el.appendChild(createMarkdown({ name: 'note', toggleId: 'edit-note' }))
 
   el.appendChild(
-    createProjectSpanSelectLink({
+    createProjectPrompt({
       id: 'project',
       name: 'project',
       caption: 'Project:'

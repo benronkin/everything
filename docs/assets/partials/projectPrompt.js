@@ -6,12 +6,25 @@ import { createProjectSelect } from './projectSelect.js'
 import { state } from '../js/state.js'
 
 const css = `
+#click-to-select-project  {
+  background-color: var(--teal2);
+  padding: 5px 7px;
+}
+
+
+#link-to-project {
+  background-color: var(--teal2);
+  padding: 5px;
+}
+#project {
+  padding: 12px;
+}
 `
 
 /**
  *
  */
-export function createProjectSpanSelectLink(doc) {
+export function createProjectPrompt(doc) {
   injectStyle(css)
 
   const el = createDiv({
@@ -39,16 +52,17 @@ function build({ el, doc }) {
     caption: 'Project:'
   }
 
-  let otherClassString = 'secondary hidden'
+  if (doc.projects) obj.projects = doc.projects
+  if (doc.assignedProject) obj.value = doc.assignedProject
 
-  if (doc.projects) {
-    obj.projects = doc.projects
-  }
-
-  if (doc.assignedProject) {
-    obj.value = doc.assignedProject
-    otherClassString = 'secondary'
-  }
+  el.appendChild(
+    createIcon({
+      id: 'click-to-select-project',
+      classes: {
+        primary: 'fa-chevron-right'
+      }
+    })
+  )
 
   el.appendChild(createProjectSelect(obj))
 
@@ -56,11 +70,17 @@ function build({ el, doc }) {
     createIcon({
       id: 'link-to-project',
       classes: {
-        primary: 'fa-circle-right',
-        other: [otherClassString]
+        primary: 'fa-circle-right'
       }
     })
   )
+
+  if (doc.assignedProject) {
+    el.querySelector('#click-to-select-project').classList.add('hidden')
+  } else {
+    el.querySelector('.select-wrapper').classList.add('hidden')
+    el.querySelector('#link-to-project').classList.add('hidden')
+  }
 }
 
 /**
@@ -81,10 +101,26 @@ function react(el) {
  *
  */
 function listen(el) {
+  el.querySelector('#click-to-select-project').addEventListener(
+    'click',
+    (e) => {
+      e.target.classList.add('hidden')
+      el.querySelector('.select-wrapper').classList.remove('hidden')
+      el.querySelector('select').click()
+    }
+  )
   el.querySelector('select').addEventListener('change', (e) => {
     el.querySelector('#link-to-project').classList.toggle(
       'hidden',
       !e.target.value
+    )
+    el.querySelector('.select-wrapper').classList.toggle(
+      'hidden',
+      !e.target.value
+    )
+    el.querySelector('#click-to-select-project').classList.toggle(
+      'hidden',
+      e.target.value
     )
   })
 }
@@ -102,8 +138,18 @@ function update(doc) {
 
   this.querySelector('.select-wrapper').selectByValue(doc.assignedProject)
 
+  this.querySelector('.select-wrapper').classList.toggle(
+    'hidden',
+    !doc.assignedProject
+  )
+
   this.querySelector('#link-to-project').classList.toggle(
     'hidden',
     !doc.assignedProject
+  )
+
+  this.querySelector('#click-to-select-project').classList.toggle(
+    'hidden',
+    !!doc.assignedProject
   )
 }

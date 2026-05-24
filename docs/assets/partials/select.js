@@ -206,8 +206,11 @@ function handleSelectClick(e) {
   const parent = e.target.closest('.select-wrapper')
   const selectEl = parent.querySelector('.custom-select')
 
-  if (parent.classList.contains('disabled')) {
-    console.log('Select is disabled, ignoring')
+  if (
+    parent.classList.contains('disabled') ||
+    parent.classList.contains('hidden')
+  ) {
+    console.log('Select is not in play, ignoring')
     return
   }
 

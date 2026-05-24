@@ -11,7 +11,7 @@ import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createUserSelect } from '../../assets/partials/userSelect.js'
-import { createProjectSpanSelectLink } from '../../assets/partials/projectSpanSelectLink.js'
+import { createProjectPrompt } from '../../assets/partials/projectPrompt.js'
 
 const css = `
 #due-date-wrapper {
@@ -145,7 +145,7 @@ function build(el, doc) {
     })
   )
 
-  el.appendChild(createProjectSpanSelectLink(doc))
+  el.appendChild(createProjectPrompt(doc))
 
   el.appendChild(
     createDiv({
