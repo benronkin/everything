@@ -1,8 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
 import { addItemForm } from './addItemForm.js'
-import { handleAddToBothLists } from '../shopping.handlers.js'
+import { handleAddToBothLists } from '../shopping.js'
 
 let el
 beforeAll(() => {
@@ -33,7 +32,7 @@ describe('addItemForm input functionality', () => {
       'hidden'
     )
 
-    expect(el.querySelector('input').classList).toContain('c-gray3')
+    expect(el.querySelector('textarea').classList).toContain('c-gray3')
 
     expect(el.querySelector('#shopping-form-icon').classList).toContain(
       'c-gray3'
@@ -58,7 +57,7 @@ describe('addItemForm input functionality', () => {
       el.querySelector('#add-to-both-lists-button').classList
     ).not.toContain('hidden')
 
-    expect(el.querySelector('input').classList).not.toContain('c-gray3')
+    expect(el.querySelector('textarea').classList).not.toContain('c-gray3')
 
     expect(el.querySelector('#shopping-form-icon').classList).not.toContain(
       'c-gray3'
@@ -77,7 +76,7 @@ describe('addItemForm input functionality', () => {
 describe('addItemForm addToBothButton functionality', () => {
   it('adds a new item and clicks addToBothButton', () => {
     const addToBothEl = el.querySelector('#add-to-both-lists-button')
-    el.querySelector('input').value = 'berries'
+    el.querySelector('textarea').value = 'berries'
     addToBothEl.dispatchEvent(new Event('click'))
 
     expect(addToBothEl.classList).toContain('hidden')

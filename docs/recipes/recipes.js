@@ -24,7 +24,7 @@ import {
   updateRecipeAccess,
   addEntryPhoto,
   deleteEntryPhoto,
-  updatePhotoCaption,
+  updatePhotoCaption
 } from './recipes.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let [{ categories, recipes }, { user }] = await Promise.all([
       fetchCategoriesAndRecipes(),
-      getMe(),
+      getMe()
     ])
 
     categories = categories.map((c) => ({
       value: c.id,
-      label: c.label,
+      label: c.label
     }))
     categories.unshift({ value: '', label: 'Category' })
 
@@ -71,18 +71,18 @@ async function build() {
   const body = document.body
   body.classList.add('dark-mode')
 
-  const wrapperEl = createDiv({ className: 'wraphper' })
+  const wrapperEl = createDiv({ className: 'wrapper' })
   body.prepend(wrapperEl)
 
   wrapperEl.appendChild(
     createNav({
-      title: '<i class="fa-solid fa-cake-candles"></i> Recipes',
-    }),
+      title: '<i class="fa-solid fa-cake-candles"></i> Recipes'
+    })
   )
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
@@ -102,7 +102,7 @@ function react() {
   state.on('form-submit:left-panel-search', 'recipes', reactRecipeSearch)
 
   state.on('recipe-categories', 'recipes', (options) =>
-    document.getElementById('recipe-category').setOptions(options),
+    document.getElementById('recipe-category').setOptions(options)
   )
 
   state.on('app-mode', 'recipes', async (appMode) => {
@@ -134,7 +134,7 @@ function react() {
       maxWidthOrHeight: 600,
       useWebWorker: true,
       fileType: 'image/jpeg',
-      exifOrientation: null,
+      exifOrientation: null
     }
 
     const file = formData.get('file')
@@ -194,7 +194,7 @@ async function reactRecipeAdd() {
   const doc = {
     id,
     title: 'New Recipe',
-    created_at: dateString,
+    created_at: dateString
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
@@ -317,8 +317,8 @@ function populateRelatedRecipes() {
     relatedListEl.addChild(
       createMainDocumentItem({
         id,
-        html: title,
-      }),
+        html: title
+      })
     )
   }
 }

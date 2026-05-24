@@ -233,7 +233,7 @@ async function deleteShoppingItem(item) {
   return resp
 }
 
-async function handleAddToBothLists(item) {
+export async function handleAddToBothLists(item) {
   if (!item || !item.trim().length) {
     log('a visible addToBothLists was clicked even though input was empty')
     return

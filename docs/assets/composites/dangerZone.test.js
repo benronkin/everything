@@ -11,7 +11,7 @@ beforeAll(() => {
   const doc = {
     id: 'abc123',
     location: 'Kirkland Brewery',
-    visit_date: '2024-04-18T22:00:00.000Z',
+    visit_date: '2024-04-18T22:00:00.000Z'
   }
   state.set('main-documents', [doc])
   state.set('active-doc', doc.id)
@@ -28,7 +28,7 @@ describe('Create a dangerZone section', () => {
     Promise.resolve({
       showModal() {
         console.log('Mocking modal.showModal')
-      },
+      }
     })
 
   it('responds to a dangerZone button click to open modal', () => {
@@ -44,7 +44,7 @@ describe('Create a dangerZone section', () => {
 
     expect(state.get('icon-click:show-delete-modal-icon')).toBeTruthy()
     expect(modal.querySelector('.modal-body').textContent).toBe(
-      'Kirkland Brewery (4/18)'
+      'Kirkland Brewery (04/18)'
     )
     // modal should react to the state change
     expect(modal.dataset.vitest).toBe('modal-open')
