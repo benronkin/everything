@@ -101,27 +101,21 @@ function react(el) {
  *
  */
 function listen(el) {
-  el.querySelector('#click-to-select-project').addEventListener(
-    'click',
-    (e) => {
-      e.target.classList.add('hidden')
-      el.querySelector('.select-wrapper').classList.remove('hidden')
-      el.querySelector('select').click()
-    }
-  )
-  el.querySelector('select').addEventListener('change', (e) => {
-    el.querySelector('#link-to-project').classList.toggle(
-      'hidden',
-      !e.target.value
-    )
-    el.querySelector('.select-wrapper').classList.toggle(
-      'hidden',
-      !e.target.value
-    )
-    el.querySelector('#click-to-select-project').classList.toggle(
-      'hidden',
-      e.target.value
-    )
+  const sel = el.querySelector('select')
+  const selWrap = el.querySelector('.select-wrapper')
+  const click2 = el.querySelector('#click-to-select-project')
+  const link2 = el.querySelector('#link-to-project')
+
+  click2.addEventListener('click', () => {
+    click2.classList.add('hidden')
+    selWrap.classList.remove('hidden')
+    sel.click()
+  })
+
+  sel.addEventListener('change', (e) => {
+    link2.classList.toggle('hidden', !e.target.value)
+    selWrap.classList.toggle('hidden', !e.target.value)
+    click2.classList.toggle('hidden', e.target.value)
   })
 }
 

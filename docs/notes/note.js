@@ -212,7 +212,10 @@ async function handleFieldChange(el) {
     return
   }
 
+  doc.title = title
+  doc.note = note
   doc.updated_at = data.updated_at
+
   state.set('main-documents', [doc])
 
   state.set('update-in-process', false)
