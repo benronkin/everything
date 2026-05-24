@@ -287,6 +287,7 @@ function handleTaskDelete() {
  *
  */
 async function handleTaskDeleteConfirm() {
+  setMessage('Deleting task...')
   const id = state.get('active-doc')
   const typeString =
     document.getElementById('task-body').dataset.type === 'TEMPLATE'
