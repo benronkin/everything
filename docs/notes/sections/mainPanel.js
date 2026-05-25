@@ -45,12 +45,6 @@ const css = `
 .markdown-editor:disabled {
   background-color: var(--gray4);
 }
-.markdown-viewer h1 {
-  font-size: 2.2rem;
-}
-.markdown-viewer h2 {
-  font-size: 2rem;
-}
 `
 
 export function mainPanel() {

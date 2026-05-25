@@ -63,7 +63,6 @@ textarea {
   margin-top: 5px;
 }
 .markdown-viewer h1 {
-  font-size: 1.6rem;
   margin: 30px 0 15px;
 }
 .markdown-viewer h2 {
