@@ -176,19 +176,16 @@ function listen(el, obj) {
     document.querySelector(`#${obj.toggleId}`).click()
   })
 
-  // very annoying, keeps getting you out of edit when you don't mean to.
-  // document.querySelector('body').addEventListener('click', (e) => {
-  //   if (
-  //     document
-  //       .querySelector(`#${obj.toggleId}`)
-  //       .classList.contains('fa-close') &&
-  //     !e.target.closest('.markdown-viewer') &&
-  //     !e.target.closest('.markdown-editor') &&
-  //     !e.target.closest('#toolbar')
-  //   ) {
-  //     document.querySelector(`#${obj.toggleId}`).click()
-  //   }
-  // })
+  // body click is very annoying, keeps getting you out of edit when you don't mean to.
+  // focusing on escape
+  document.querySelector('body').addEventListener('keyup', (e) => {
+    if (
+      e.key === 'Escape' &&
+      document.querySelector(`#${obj.toggleId}`).classList.contains('fa-close')
+    ) {
+      document.querySelector(`#${obj.toggleId}`).click()
+    }
+  })
 }
 
 /**
