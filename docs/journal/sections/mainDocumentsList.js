@@ -53,7 +53,7 @@ function addChildren(el, docs) {
     const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
-      createSpan({ html: visited })
+      createSpan({ html: visited, className: 'text-right' })
     ]
 
     let url = `./journal.html?id=${doc.id}`
