@@ -57,7 +57,7 @@ function build(el) {
  */
 function listen(el) {
   el.querySelectorAll('input').forEach((i) =>
-    i.addEventListener('change', handleInputChange),
+    i.addEventListener('change', handleInputChange)
   )
 }
 
@@ -65,8 +65,10 @@ function listen(el) {
  * value is ISOString or Date
  */
 function setDateTime(value) {
-  const isBad = badDateTimeValue(value)
-  if (isBad) throw new Error(isBad)
+  const { dateString, error } = badDateTimeValue(value)
+  if (error) throw new Error(error)
+
+  dateString && (value = dateString)
 
   const valString = typeof value !== 'string' ? value.toISOString() : value
   const [datePart, fullTimePart] = valString.split('T')
@@ -78,15 +80,19 @@ function setDateTime(value) {
 /**
  *
  */
-function badDateTimeValue(value) {
+export function badDateTimeValue(value) {
   if (!value) {
-    return 'Oops, dateTime.set() did not receive a value'
+    return { error: 'Oops, dateTime.set() did not receive a value' }
   }
-  if (typeof value !== 'string' && value instanceof Date) {
-    return 'Oops, dateTime.set() did not receive an ISO date string or a Date object'
+  if (value instanceof Date) {
+    return {
+      dateString: value.toISOString()
+    }
   }
   if (typeof value == 'string' && !value.includes('T')) {
-    return 'Oops, dateTime.set() did not receive an ISO date string'
+    const date = new Date(value)
+    const dateString = date.toISOString()
+    return { dateString }
   }
   return null
 }

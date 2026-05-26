@@ -1,12 +1,10 @@
-import { beforeAll, describe, done, expect, it } from 'vitest'
+/* global process */
+import { beforeAll, describe, expect, it } from 'vitest'
 import { state } from '../assets/js/state.js'
 import { fetchTasks } from './tasks.api.js'
 
 beforeAll(async () => {
-  localStorage.setItem(
-    'authToken',
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb250ZW50IjoiYmEyMDIwYUB5YWhvby5jb20iLCJpYXQiOjE3NDk0OTI5ODh9.AHywnr4aQGEEXvEIpW21mltBO6mZuX8l1yEIfFrMqoQ'
-  )
+  localStorage.setItem('authToken', process.env.AUTH_TOKEN)
 })
 
 async function setAndFetchTasks() {
