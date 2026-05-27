@@ -11,7 +11,7 @@ beforeAll(() => {
 describe('Tests dateTime component', () => {
   it('receives a valid iso date string', () => {
     const resp = badDateTimeValue('2026-08-04T00:00:00.000Z')
-    expect(resp).toBe(null)
+    expect(resp).toStrictEqual({})
   })
   it('receives a non-iso date string', () => {
     const { dateString } = badDateTimeValue('2026-08-04')

@@ -94,7 +94,7 @@ export function badDateTimeValue(value) {
     const dateString = date.toISOString()
     return { dateString }
   }
-  return null
+  return {}
 }
 
 /**
