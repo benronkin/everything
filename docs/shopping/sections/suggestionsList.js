@@ -1,13 +1,11 @@
 import { state } from '../../assets/js/state.js'
-import { setMessage } from '../../assets/js/ui.js'
 import { createList } from '../../assets/partials/list.js'
 import { suggestionItem } from './suggestionItem.js'
-import { log } from '../../assets/js/logger.js'
 
 export function suggestionsList() {
   const el = createList({
     id: 'suggestions-list',
-    className: 'outer-wrapper-teal hidden',
+    className: 'outer-wrapper-teal hidden'
   })
 
   react(el)
@@ -51,7 +49,7 @@ function refreshSuggestions(el) {
 
   suggestionsEl.classList.toggle(
     'hidden',
-    !suggestIcon.classList.contains('primary') && !addValue.length,
+    !suggestIcon.classList.contains('primary') && !addValue.length
   )
 
   const children = suggestionsArr.map((item) => suggestionItem({ item }))

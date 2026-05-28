@@ -94,7 +94,7 @@ function react() {
   const addEl = document.querySelector('[name="new-item"]')
   const cartEl = document.getElementById('shopping-list')
 
-  state.on('form-keyup:shopping-form', 'suggestionsList', () =>
+  state.on('form-keyup:shopping-form', 'shopping', () =>
     state.set('suggestions-list', [...state.get('suggestions-list')])
   )
 
@@ -108,19 +108,6 @@ function react() {
     // server-side update to shopping list
     // refresh to reflect changes
     window.location.reload()
-
-    // const recurring = state.get('recurring')?.split(',') || []
-    // for (const item of recurring) {
-    //   let sItems = state.get('shopping-list')
-    //   if (sItems.includes(item)) {
-    //     // delete existing items to preserve
-    //     // the order of recurring in settings
-    //     sItems = sItems.filter((sItem) => sItem !== item)
-    //     state.set('shopping-list', sItems)
-    //     await deleteShoppingItem(item)
-    //   }
-    //   await addShoppingItem(item)
-    // }
   })
 
   state.on('form-submit:shopping-form', 'shopping', () => {
@@ -159,6 +146,7 @@ function react() {
   state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
     addShoppingItem(item)
     addEl.value = ''
+    document.getElementById('suggestions-list').classList.add('hidden')
   })
 
   state.on('item-click:delete-item', 'shopping', async ({ item }) => {
