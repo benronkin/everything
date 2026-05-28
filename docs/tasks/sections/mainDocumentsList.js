@@ -23,6 +23,9 @@ export function mainDocumentsList() {
   return el
 }
 
+/**
+ *
+ */
 function react(el) {
   state.on('main-documents', 'mainDocumentsList', (docs) => {
     el.deleteChildren()

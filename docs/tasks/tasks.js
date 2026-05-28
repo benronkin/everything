@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     build()
     react()
+    listen()
 
     let [{ user }, { users }, { tasks }] = await Promise.all([
       getMe(),
@@ -38,31 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchTasks()
     ])
 
-    tasks = tasks.map((task) => {
-      if (task.starts_at) {
-        task.dueInfo = dueInfo(task.starts_at)
-      }
-      if (task.assignee && task.assignee !== user.id) {
-        const user = users.find((user) => user.id === task.assignee)
-        if (!user) {
-          console.log('users', users)
-          throw new Error(
-            `Oops, tasks.js cannot locate user with id "${task.assignee}"`
-          )
-        }
-        task.assignedPeer = { name: user.first_name, color: user.color }
-      }
+    setTaskState({ tasks, users, user })
 
-      return task
-    })
-    state.set(
-      'main-documents',
-      tasks.filter((t) => t.type === 'TASK')
-    )
-    state.set(
-      'templates',
-      tasks.filter((t) => t.type === 'TEMPLATE')
-    )
     state.set('app-mode', 'left-panel')
     state.set('users', users)
     state.set('user', user)
@@ -130,6 +108,21 @@ function react() {
 /**
  *
  */
+function listen() {
+  // refresh main-documents when browser tab is active
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible') {
+      const { tasks } = await fetchTasks()
+      const users = state.get('users')
+      const user = state.get('user')
+      setTaskState({ tasks, users, user })
+    }
+  })
+}
+
+/**
+ *
+ */
 async function handleAddTask() {
   const inputEl = document
     .getElementById('tasks-form')
@@ -176,4 +169,35 @@ async function handleAddTemplate() {
   const { data } = resp
   const { id } = data
   window.location.href = `./task.html?id=${id}`
+}
+
+/**
+ *
+ */
+function setTaskState({ tasks, users, user }) {
+  tasks = tasks.map((task) => {
+    if (task.starts_at) {
+      task.dueInfo = dueInfo(task.starts_at)
+    }
+    if (task.assignee && task.assignee !== user.id) {
+      const user = users.find((user) => user.id === task.assignee)
+      if (!user) {
+        console.log('users', users)
+        throw new Error(
+          `Oops, tasks.js cannot locate user with id "${task.assignee}"`
+        )
+      }
+      task.assignedPeer = { name: user.first_name, color: user.color }
+    }
+
+    return task
+  })
+  state.set(
+    'main-documents',
+    tasks.filter((t) => t.type === 'TASK')
+  )
+  state.set(
+    'templates',
+    tasks.filter((t) => t.type === 'TEMPLATE')
+  )
 }

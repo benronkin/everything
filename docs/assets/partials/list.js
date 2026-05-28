@@ -2,11 +2,6 @@ import { injectStyle } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { enableDragging, enableClicking } from '../js/drag.js'
 import { createDiv } from '../partials/div.js'
-import { log } from '../js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 .empty-state {
@@ -14,10 +9,6 @@ const css = `
   color: var(--gray3);
 }
 `
-
-// -------------------------------
-// Exported functions
-// -------------------------------
 
 export function createList({ id, emptyState, className, enableDrag = false }) {
   injectStyle(css)
@@ -68,14 +59,10 @@ function react(el) {
   state.on('list-changed', 'list', () => {
     el.querySelector('.empty-state')?.classList.toggle(
       'hidden',
-      el.getChildren().length,
+      el.getChildren().length
     )
   })
 }
-
-// -------------------------------
-// Object methods
-// -------------------------------
 
 /**
  * Add item to list
@@ -117,7 +104,7 @@ function deleteChild(id) {
  */
 function deleteChildren() {
   const emptyState = [...this.children].filter((c) =>
-    c.classList.contains('empty-state'),
+    c.classList.contains('empty-state')
   )
 
   this.innerHTML = ''
@@ -147,7 +134,7 @@ function getChildById(id) {
 function getData() {
   return [...this.querySelectorAll('[data-list-item]')].map((el, i) => ({
     ...el.data,
-    sortOrder: i,
+    sortOrder: i
   }))
 }
 
@@ -175,7 +162,7 @@ function has(text) {
 
 function reset() {
   this.querySelectorAll('[data-list-item]').forEach((child) =>
-    child.classList.remove('active'),
+    child.classList.remove('active')
   )
 }
 

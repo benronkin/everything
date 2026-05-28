@@ -38,8 +38,8 @@ function build(el) {
       placeholder: 'Add task',
       autocomplete: 'off',
       classes: { icon: 'fa-thumbtack' },
-      disabled: true,
-    }),
+      disabled: true
+    })
   )
 
   el.appendChild(mainDocumentsList())
@@ -47,9 +47,10 @@ function build(el) {
 
 function react(el) {
   state.on('main-documents', 'leftPanel', (docs) => {
-    if (!docs.length) {
-      const message = `<i class="fa-solid fa-umbrella-beach"></i> <span>Nothing to do today...</span>`
-      el.querySelector('.form-message').insertHtml(message)
-    }
+    const message = docs.length
+      ? ''
+      : `<i class="fa-solid fa-umbrella-beach"></i> <span>Nothing to do today...</span>`
+
+    el.querySelector('.form-message').insertHtml(message)
   })
 }
