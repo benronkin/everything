@@ -150,7 +150,6 @@ async function handleModalDeleteButtonClick() {
     const parent = document.getElementById(photoId)
     const trashEl = parent.querySelector('.fa-trash')
     trashEl.disabled = true
-    parent.querySelector('.photo-message').insertHtml('Deleting image...')
     state.set('photo-delete-request', photoId)
     modalDelete.dataset.photo = ''
     modalDelete.close()

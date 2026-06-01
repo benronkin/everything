@@ -4,6 +4,7 @@ import { formatDateParts } from '../../assets/js/format.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { createSpan } from '../../assets/partials/span.js'
+import { ratingOptions } from '../../assets/partials/ratingOptions.js'
 
 const css = `
 .md-item:not(:last-child) {
@@ -49,11 +50,18 @@ function addChildren(el, docs) {
   const around = urlParams.get('around')
 
   const children = docs.map((doc) => {
+    doc.rating = doc.rating || ''
+    const option = ratingOptions.find((o) => o.value === doc.rating)
+    const ratingLabel = option.label || '🫥'
+
     const obj = formatDateParts(doc.visit_date)
     const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
-      createSpan({ html: visited, className: 'text-right' })
+      createSpan({
+        html: `${visited} ${ratingLabel}`,
+        className: 'text-right'
+      })
     ]
 
     let url = `./journal.html?id=${doc.id}`
