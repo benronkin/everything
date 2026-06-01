@@ -245,8 +245,7 @@ async function handleFieldChange(el) {
     if (section === 'assignee') {
       // show the sharer that the task is shared with the step assignee
       if (!document.querySelector('.avatar-group').hasUser(value)) {
-        console.log('user', value)
-        //window.location.reload()
+        window.location.reload()
       }
     }
 
