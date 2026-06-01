@@ -62,8 +62,6 @@ function build({ el, obj }) {
   })
   el.appendChild(cgEl)
 
-  el.appendChild(createSpan({ className: 'photo-message' }))
-
   el.appendChild(createImage({ className: 'journal-photo' }))
 
   el.appendChild(
@@ -100,7 +98,7 @@ function react(el) {
   })
 
   state.on('photo-caption-response', 'photoItem', ({ error, message }) => {
-    el.querySelector('.photo-message').insertHtml(error || message)
+    // el.querySelector('.photo-message').insertHtml(error || message)
   })
 }
 
