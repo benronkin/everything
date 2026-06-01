@@ -4,8 +4,8 @@ import { createCollapsibleGroup } from '../../assets/partials/collapsibleGroup.j
 import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createImage } from '../../assets/partials/image.js'
-import { createInput } from '../../assets/partials/input.js'
 import { createMarkdown } from './markdown.js'
+import { createModalDelete } from './modalDelete.js'
 import { state } from '../js/state.js'
 
 const css = `
@@ -83,13 +83,24 @@ function build({ el, obj }) {
 
 function react(el) {
   state.on('photo-delete-response', 'photoItem', ({ error }) => {
+    const modalDelete = document.getElementById('modal-delete')
+
     if (error) {
-      el.querySelector('.fa-trash').removeAttribute('disabled')
-      el.querySelector('.photo-message').insertHtml(error)
+      modalDelete.message(error)
+
       return
     } else {
       el.remove()
+      modalDelete.showPassword()
+      modalDelete.dataset.photo = ''
     }
+  })
+
+  state.on('button-click:modal-cancel-btn', 'photoItem', () => {
+    el.querySelector('.fa-trash').removeAttribute('disabled')
+    const modalDelete = document.getElementById('modal-delete')
+    modalDelete.showPassword()
+    modalDelete.dataset.photo = ''
   })
 
   state.on('photo-caption-response', 'photoItem', ({ error, message }) => {
@@ -101,19 +112,15 @@ function listen(el) {
   el.querySelector('.fa-trash').addEventListener('click', async (e) => {
     const parent = e.target.closest('.photo-item')
     const id = parent.id
+    const caption = parent.querySelector('.markdown-wrapper').getValue()
 
-    const trashEl = e.target
-    trashEl.disabled = true
-    el.querySelector('.photo-message').insertHtml('Deleting image...')
+    const modalDelete = document.getElementById('modal-delete')
 
-    state.set('photo-delete-request', id)
+    modalDelete.setHeader('Delete image')
+    modalDelete.setBody(caption ? `Delete "${caption}"?` : 'Delete this image?')
+    modalDelete.hidePassword()
+
+    modalDelete.dataset.photo = id
+    modalDelete.showModal()
   })
-
-  // el.querySelector('.photo-caption').addEventListener('change', async (e) => {
-  //   const parent = e.target.closest('.photo-item')
-  //   const id = parent.id
-  //   const value = e.target.value
-
-  //   state.set('photo-caption-change', { id, value })
-  // })
 }

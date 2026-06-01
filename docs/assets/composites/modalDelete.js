@@ -7,10 +7,6 @@ import { createIcon } from '../partials/icon.js'
 import { createInput } from '../partials/input.js'
 import { createSpan } from '../partials/span.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .modal {
   padding: 0;
@@ -55,12 +51,14 @@ const css = `
 }
 `
 
-export function createModalDelete({ password = true }) {
+export function createModalDelete(obj) {
   injectStyle(css)
+
+  const { password = true } = obj
 
   const el = document.createElement('dialog')
 
-  build({ el, password })
+  build({ el, obj })
   react({ el, password })
   listen({ el, password })
 
@@ -68,23 +66,31 @@ export function createModalDelete({ password = true }) {
 
   el.message = message.bind(el)
   el.getPassword = getPassword.bind(el)
+  el.hidePassword = hidePassword.bind(el)
+  el.setBody = setBody.bind(el)
+  el.setHeader = setHeader.bind(el)
   el.setPassword = setPassword.bind(el)
+  el.showPassword = showPassword.bind(el)
 
   return el
 }
 
-function build({ el, password }) {
+function build({ el, obj }) {
+  const { password = true, header, body } = obj
+
   const divEl = createDiv({ className: 'modal' })
   el.appendChild(divEl)
 
   const headerEl = createHeader({
     className: 'modal-header',
     type: 'h3',
+    html: header || ''
   })
   divEl.appendChild(headerEl)
 
   let spanEl = createSpan({
     className: 'modal-body',
+    html: body || ''
   })
   divEl.appendChild(spanEl)
 
@@ -99,9 +105,9 @@ function build({ el, password }) {
             name: 'password',
             autocomplete: 'new-password', // to block auto complete
             placeholder: 'Password',
-            id: 'modal-delete-input',
-          }),
-        ],
+            id: 'modal-delete-input'
+          })
+        ]
       })
     )
   }
@@ -112,7 +118,7 @@ function build({ el, password }) {
   let buttonEl = createButton({
     id: 'modal-delete-btn',
     html: 'Delete',
-    className: 'primary',
+    className: 'primary'
   })
 
   groupEl.appendChild(buttonEl)
@@ -120,13 +126,13 @@ function build({ el, password }) {
   buttonEl = createButton({
     id: 'modal-cancel-btn',
     html: 'Cancel',
-    className: 'bordered',
+    className: 'bordered'
   })
 
   groupEl.appendChild(buttonEl)
 
   spanEl = createSpan({
-    className: 'modal-message smaller',
+    className: 'modal-message smaller'
   })
   divEl.appendChild(spanEl)
 }
@@ -153,10 +159,6 @@ function listen({ el, password }) {
   })
 }
 
-// -------------------------------
-// Object methods
-// -------------------------------
-
 function message(text = '') {
   this.querySelector('.modal-message').insertHtml(text)
 }
@@ -165,6 +167,34 @@ function getPassword() {
   return this.querySelector('#modal-delete-input').value
 }
 
+/**
+ *
+ */
+function hidePassword() {
+  this.querySelector('.input-group').classList.add('hidden')
+}
+
+/**
+ *
+ */
+function setBody(content) {
+  this.querySelector('.modal-body').innerHTML = content
+}
+
+/**
+ *
+ */
+function setHeader(content) {
+  this.querySelector('.modal-header').innerHTML = content
+}
+
 function setPassword(value) {
   return (this.querySelector('#modal-delete-input').value = value)
+}
+
+/**
+ *
+ */
+function showPassword() {
+  this.querySelector('.input-group').classList.remove('hidden')
 }

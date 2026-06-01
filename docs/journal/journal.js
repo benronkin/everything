@@ -90,7 +90,11 @@ function react() {
     state.set('photos-metadata', photosMetadata)
   })
 
-  state.on('button-click:modal-delete-btn', 'journal', reactEntryDelete)
+  state.on(
+    'button-click:modal-delete-btn',
+    'journal',
+    handleModalDeleteButtonClick
+  )
 
   state.on('field-changed', 'journal', handleFieldChange)
 
@@ -126,16 +130,6 @@ function react() {
     state.set('photos-metadata', photosMetadata)
   })
 
-  state.on('photo-caption-change', 'journal', async ({ id, value }) => {
-    console.log('here')
-    const { error, message } = await updatePhotoCaption({ id, value })
-    state.set('photo-caption-response', { error, message })
-    // refresh photo list
-    const entryId = state.get('active-doc')
-    const photosMetadata = await fetchEntryPhotosMetadata(entryId)
-    state.set('photos-metadata', photosMetadata)
-  })
-
   state.on('icon-click:around-this-time', 'journal', () => {
     const doc = state.get('main-documents')[0]
     // window.location.href = `./index.html?around=${doc.visit_date.slice(0, 10)}`
@@ -146,28 +140,46 @@ function react() {
 /**
  *
  */
-async function reactEntryDelete() {
-  const modalEl = document.querySelector('#modal-delete')
-  modalEl.message('')
+async function handleModalDeleteButtonClick() {
+  const modalDelete = document.querySelector('#modal-delete')
+  const photoId = modalDelete.dataset.photo
+  modalDelete.message('')
 
-  const id = state.get('active-doc')
-  const password = modalEl.getPassword()
-  const { error } = await deleteEntry(id, password)
+  if (photoId) {
+    // handle delete entry photo
+    const parent = document.getElementById(photoId)
+    const trashEl = parent.querySelector('.fa-trash')
+    trashEl.disabled = true
+    parent.querySelector('.photo-message').insertHtml('Deleting image...')
+    state.set('photo-delete-request', photoId)
+    modalDelete.dataset.photo = ''
+    modalDelete.close()
+  } else {
+    // handle delete entire entry
+    const id = state.get('active-doc')
+    const password = modalDelete.getPassword()
+    const { error } = await deleteEntry(id, password)
 
-  if (error) {
-    modalEl.message(error)
-    return
+    if (error) {
+      modalDelete.message(error)
+      return
+    }
+
+    window.location = './index.html?message=Journal+entry+deleted'
   }
-
-  window.location = './index.html?message=Journal+entry+deleted'
 }
 
 async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (['file', 'caption', 'password'].includes(section)) {
+  if (['file', 'password'].includes(section)) {
     console.log('Ignoring non-field')
+    return
+  }
+
+  if (section === 'caption') {
+    handleCaptionChange(el)
     return
   }
 
@@ -187,4 +199,23 @@ async function handleFieldChange(el) {
     defaults[section] = value
     state.set('journal-defaults', defaults)
   }
+}
+
+/**
+ *
+ */
+async function handleCaptionChange(el) {
+  const value = el.value
+
+  const parent = el.closest('.photo-item')
+  const { error, message } = await updatePhotoCaption({
+    id: parent.id,
+    value
+  })
+  state.set('photo-caption-response', { error, message })
+  // refresh photo list
+  const entryId = state.get('active-doc')
+  const photosMetadata = await fetchEntryPhotosMetadata(entryId)
+  state.set('photos-metadata', photosMetadata)
+  setMessage('Saved', { type: 'quiet' })
 }

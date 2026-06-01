@@ -107,6 +107,7 @@ export function createMarkdown(obj) {
   el.className = `markdown-wrapper ${className}`.trim()
 
   el.renderer = renderer
+  el.getValue = getValue.bind(el)
   el.updateEditor = updateEditor.bind(el)
   el.toggle = toggle.bind(el)
   el.showViewer = showViewer.bind(el)
@@ -185,6 +186,14 @@ function listen(el, obj) {
       document.querySelector(`#${obj.toggleId}`).click()
     }
   })
+}
+
+/**
+ *
+ */
+function getValue() {
+  const editor = this.querySelector('.markdown-editor')
+  return editor.value
 }
 
 /**
