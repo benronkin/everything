@@ -5,6 +5,7 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createImage } from '../../assets/partials/image.js'
 import { createInput } from '../../assets/partials/input.js'
+import { createMarkdown } from './markdown.js'
 import { state } from '../js/state.js'
 
 const css = `
@@ -37,25 +38,31 @@ const css = `
  * Constructor for the custom item
  * @param {String} id The id of the image
  */
-export function createPhotoItem({ id, imgSrc, caption }) {
+export function createPhotoItem(obj) {
   injectStyle(css)
+
+  const { id, imgSrc } = obj
 
   const el = createDiv({ id, className: 'photo-item list-item container' })
 
-  build(el)
+  build({ el, obj })
   react(el)
   listen(el)
 
   imgSrc && (el.querySelector('img').src = imgSrc)
-  caption && (el.querySelector('input').value = caption)
 
   return el
 }
 
-function build(el) {
+function build({ el, obj }) {
+  const markdownToggleId = `ev${crypto.randomUUID()}`
+
   const cgEl = createCollapsibleGroup({
     collapsed: true,
-    html: [createIcon({ classes: { primary: 'fa-trash' } })],
+    html: [
+      createIcon({ classes: { primary: 'fa-pencil' }, id: markdownToggleId }),
+      createIcon({ classes: { primary: 'fa-trash' } })
+    ]
   })
   el.appendChild(cgEl)
 
@@ -64,11 +71,13 @@ function build(el) {
   el.appendChild(createImage({ className: 'journal-photo' }))
 
   el.appendChild(
-    createInput({
+    createMarkdown({
       className: 'photo-caption mt-20 w-100',
       placeholder: 'Add caption...',
       name: 'caption',
-    }),
+      toggleId: markdownToggleId,
+      value: obj.value || ''
+    })
   )
 }
 
@@ -100,11 +109,11 @@ function listen(el) {
     state.set('photo-delete-request', id)
   })
 
-  el.querySelector('.photo-caption').addEventListener('change', async (e) => {
-    const parent = e.target.closest('.photo-item')
-    const id = parent.id
-    const value = e.target.value
+  // el.querySelector('.photo-caption').addEventListener('change', async (e) => {
+  //   const parent = e.target.closest('.photo-item')
+  //   const id = parent.id
+  //   const value = e.target.value
 
-    state.set('photo-caption-change', { id, value })
-  })
+  //   state.set('photo-caption-change', { id, value })
+  // })
 }

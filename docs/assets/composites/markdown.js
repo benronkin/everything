@@ -81,7 +81,7 @@ textarea {
  * @param {Object} obj
  * @param {string} obj.name - The textarea field name for server (required)
  * @param {string} obj.id - The id of the textarea editor (optional)
- * @param {string} obj.classname - The classes for the markdown wrapper
+ * @param {string} obj.className - The classes for the markdown wrapper
  * @param {string} obj.value - The initial value of the editor
  * @param {string} obj.placeholder - Placeholder text when there is no value
  * @param {Function} object.renderer - Any rendering fn (optional)
@@ -101,10 +101,10 @@ export function createMarkdown(obj) {
     return
   }
 
-  const { classname = '', renderer = (content) => content } = obj
+  const { className = '', renderer = (content) => content } = obj
 
   const el = document.createElement('div')
-  el.className = `markdown-wrapper ${classname}`.trim()
+  el.className = `markdown-wrapper ${className}`.trim()
 
   el.renderer = renderer
   el.updateEditor = updateEditor.bind(el)

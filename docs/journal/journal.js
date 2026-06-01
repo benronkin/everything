@@ -19,7 +19,7 @@ import {
   fetchGeoIndex,
   updateEntry,
   updateJournalDefaults,
-  updatePhotoCaption,
+  updatePhotoCaption
 } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       fetchEntry(id),
       fetchGeoIndex(),
       fetchDefaults(),
-      getMe(),
+      getMe()
     ])
 
     state.set('main-documents', [journal])
@@ -76,7 +76,7 @@ async function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(mainPanel())
@@ -99,7 +99,7 @@ function react() {
       maxWidthOrHeight: 600,
       useWebWorker: true,
       fileType: 'image/jpeg',
-      exifOrientation: null,
+      exifOrientation: null
     }
 
     const file = formData.get('file')
@@ -127,6 +127,7 @@ function react() {
   })
 
   state.on('photo-caption-change', 'journal', async ({ id, value }) => {
+    console.log('here')
     const { error, message } = await updatePhotoCaption({ id, value })
     state.set('photo-caption-response', { error, message })
     // refresh photo list
