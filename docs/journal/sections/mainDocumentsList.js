@@ -60,7 +60,7 @@ function addChildren(el, docs) {
       createSpan({ html: `${doc.location} (${doc.city})` }),
       createSpan({
         html: `${visited} ${ratingLabel}`,
-        className: 'text-right'
+        className: 'text-right c-gray3'
       })
     ]
 
