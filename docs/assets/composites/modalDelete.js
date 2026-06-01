@@ -64,6 +64,7 @@ export function createModalDelete(obj) {
 
   el.id = 'modal-delete'
 
+  el.config = config.bind(el)
   el.message = message.bind(el)
   el.getPassword = getPassword.bind(el)
   el.hidePassword = hidePassword.bind(el)
@@ -159,6 +160,20 @@ function listen({ el, password }) {
   })
 }
 
+/**
+ *
+ */
+function config(obj) {
+  if (typeof obj !== 'object')
+    throw new Error('modalDelete.config() requires an object')
+
+  if (Object.hasOwn(obj, 'body')) this.setBody(obj.body)
+  if (Object.hasOwn(obj, 'header')) this.setHeader(obj.header)
+  if (Object.hasOwn(obj, 'password'))
+    this.querySelector('.input-group').classList.toggle('hidden', !obj.password)
+  if (Object.hasOwn(obj, 'photo')) this.dataset.photo = obj.photo
+}
+
 function message(text = '') {
   this.querySelector('.modal-message').insertHtml(text)
 }
@@ -177,15 +192,17 @@ function hidePassword() {
 /**
  *
  */
-function setBody(content) {
-  this.querySelector('.modal-body').innerHTML = content
+function setBody(html) {
+  this.querySelector('.modal-body').innerHTML = ''
+  this.querySelector('.modal-body').appendChild(html)
 }
 
 /**
  *
  */
-function setHeader(content) {
-  this.querySelector('.modal-header').innerHTML = content
+function setHeader(html) {
+  this.querySelector('.modal-header').innerHTML = ''
+  this.querySelector('.modal-header').appendChild(html)
 }
 
 function setPassword(value) {

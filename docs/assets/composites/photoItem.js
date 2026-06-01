@@ -2,9 +2,9 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createCollapsibleGroup } from '../../assets/partials/collapsibleGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createSpan } from '../../assets/partials/span.js'
 import { createImage } from '../../assets/partials/image.js'
 import { createMarkdown } from './markdown.js'
+import { createSpan } from '../partials/span.js'
 import { state } from '../js/state.js'
 
 const css = `
@@ -81,19 +81,14 @@ function react(el) {
 
     if (error) {
       modalDelete.message(error)
-
-      return
     } else {
       el.remove()
-      modalDelete.showPassword()
-      modalDelete.dataset.photo = ''
     }
   })
 
   state.on('button-click:modal-cancel-btn', 'photoItem', () => {
     el.querySelector('.fa-trash').removeAttribute('disabled')
     const modalDelete = document.getElementById('modal-delete')
-    modalDelete.showPassword()
     modalDelete.dataset.photo = ''
   })
 
@@ -109,12 +104,14 @@ function listen(el) {
     const caption = parent.querySelector('.markdown-wrapper').getValue()
 
     const modalDelete = document.getElementById('modal-delete')
-
-    modalDelete.setHeader('Delete image')
-    modalDelete.setBody(caption ? `Delete "${caption}"?` : 'Delete this image?')
-    modalDelete.hidePassword()
-
-    modalDelete.dataset.photo = id
+    modalDelete.config({
+      header: createSpan({ html: 'Delete image' }),
+      body: createSpan({
+        html: caption ? `Delete "${caption}"?` : 'Delete this image?'
+      }),
+      password: false,
+      photo: id
+    })
     modalDelete.showModal()
   })
 }
