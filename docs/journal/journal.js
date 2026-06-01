@@ -214,8 +214,8 @@ async function handleCaptionChange(el) {
   })
   state.set('photo-caption-response', { error, message })
   // refresh photo list
-  const entryId = state.get('active-doc')
-  const photosMetadata = await fetchEntryPhotosMetadata(entryId)
-  state.set('photos-metadata', photosMetadata)
+  // const entryId = state.get('active-doc')
+  // const photosMetadata = await fetchEntryPhotosMetadata(entryId)
+  // state.set('photos-metadata', photosMetadata)
   setMessage('Saved', { type: 'quiet' })
 }
