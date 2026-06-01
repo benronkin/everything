@@ -52,7 +52,7 @@ function addChildren(el, docs) {
   const children = docs.map((doc) => {
     doc.rating = doc.rating || ''
     const option = ratingOptions.find((o) => o.value === doc.rating)
-    const ratingLabel = option.label || '🫥'
+    const ratingLabel = option.label
 
     const obj = formatDateParts(doc.visit_date)
     const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
