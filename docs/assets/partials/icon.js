@@ -27,6 +27,7 @@ export function createIcon({
   classes,
   dataset = {},
   role,
+  title,
   useFaRegular = false
 } = {}) {
   injectStyle(css)
@@ -37,6 +38,7 @@ export function createIcon({
   el.toggleClasses = toggleClasses.bind(el)
 
   el.id = id
+  title && (el.title = title)
   role && (el.role = role)
   for (const [k, v] of Object.entries(dataset)) {
     el.dataset[k] = v

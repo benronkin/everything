@@ -1,10 +1,11 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import { formatDateParts } from '../../assets/js/format.js'
+import { createDiv } from '../../assets/partials/div.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { ratingOptions } from '../../assets/partials/ratingOptions.js'
+import { getRatingIcon } from '../../assets/partials/ratingOptions.js'
 
 const css = `
 .md-item:not(:last-child) {
@@ -51,15 +52,20 @@ function addChildren(el, docs) {
 
   const children = docs.map((doc) => {
     doc.rating = doc.rating || ''
-    const option = ratingOptions.find((o) => o.value === doc.rating)
-    const ratingLabel = option.label
+    const ratingIcon = getRatingIcon(doc.rating)
 
     const obj = formatDateParts(doc.visit_date)
-    const visited = `${obj.month}/${obj.day}/${obj.shortYear}`
+    const visited = createSpan({
+      html: `${obj.month}/${obj.day}/${obj.shortYear}`
+    })
+
+    console.log('visited', visited)
+    console.log('ratingIcon', ratingIcon)
+
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
-      createSpan({
-        html: `${visited} ${ratingLabel}`,
+      createDiv({
+        html: [visited, ratingIcon],
         className: 'text-right c-gray3'
       })
     ]

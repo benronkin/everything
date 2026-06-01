@@ -1,6 +1,5 @@
 import { injectStyle } from '../js/ui.js'
 import { insertHtml } from '../js/format.js'
-import { log } from '../js/logger.js'
 
 // -------------------------------
 // Globals
@@ -16,7 +15,7 @@ span {
 /**
  * Constructor for custom span element
  */
-export function createSpan({ html, className, id } = {}) {
+export function createSpan({ html, className, id, title } = {}) {
   injectStyle(css)
 
   const el = document.createElement('span')
@@ -28,6 +27,7 @@ export function createSpan({ html, className, id } = {}) {
     el.dataset.id = id
   }
 
+  title && (el.title = title)
   className && (el.className = className)
   html && el.insertHtml(html)
 
