@@ -5,7 +5,6 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createImage } from '../../assets/partials/image.js'
 import { createMarkdown } from './markdown.js'
-import { createModalDelete } from './modalDelete.js'
 import { state } from '../js/state.js'
 
 const css = `
@@ -19,9 +18,6 @@ const css = `
 .photo-item.container {
   padding: 0;
   width: 100%;
-}
-.photo-item:hover {
-  border: none !important;
 }
 .journal-photo {
   max-width: 100%;
@@ -43,7 +39,7 @@ export function createPhotoItem(obj) {
 
   const { id, imgSrc } = obj
 
-  const el = createDiv({ id, className: 'photo-item list-item container' })
+  const el = createDiv({ id, className: 'photo-item container' })
 
   build({ el, obj })
   react(el)
