@@ -76,7 +76,7 @@ function build({ el, obj }) {
       placeholder: 'Add caption...',
       name: 'caption',
       toggleId: markdownToggleId,
-      value: obj.value || ''
+      value: obj.caption || ''
     })
   )
 }
