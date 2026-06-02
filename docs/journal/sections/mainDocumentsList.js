@@ -56,7 +56,8 @@ function addChildren(el, docs) {
 
     const obj = formatDateParts(doc.visit_date)
     const visited = createSpan({
-      html: `${obj.month}/${obj.day}/${obj.shortYear}`
+      html: `${obj.month}/${obj.day}/${obj.shortYear}`,
+      className: 'mr-10'
     })
 
     console.log('visited', visited)
