@@ -60,9 +60,6 @@ function addChildren(el, docs) {
       className: 'mr-10'
     })
 
-    console.log('visited', visited)
-    console.log('ratingIcon', ratingIcon)
-
     const html = [
       createSpan({ html: `${doc.location} (${doc.city})` }),
       createDiv({
