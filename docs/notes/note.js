@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (note.user_id === user.id) note.role = 'owner'
 
-    note.projects.unshift({ id: '', title: '' })
     note.assignedProject = note?.assignedProject?.project_id
 
     state.set('main-documents', [note])

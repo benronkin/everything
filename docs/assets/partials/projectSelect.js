@@ -31,10 +31,14 @@ export function createProjectSelect(obj) {
 
   const { id, className, name, value, projects = [], setUpdateState } = obj
 
+  projects.sort((a, b) => b.starts_at.localeCompare(a.starts_at))
+
   const options = projects.map((project) => ({
     label: project.title,
     value: project.id
   }))
+
+  options.unshift({ value: '', label: '' })
 
   const el = createSelect({
     id,

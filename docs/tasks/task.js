@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     task.steps = steps
 
-    task.projects.unshift({ id: '', title: '' })
     task.assignedProject = task?.assignedProject?.project_id
 
     state.set('user', user)
