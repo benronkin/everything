@@ -10,18 +10,21 @@ export function toolbar() {
       createIcon({
         id: 'add-entry',
         classes: { primary: 'fa-plus', other: ['primary'] },
+        title: 'Create a new entry'
       }),
 
       createIcon({
         id: 'copy-address',
         classes: { primary: 'fa-clipboard', other: ['primary'] },
+        title: 'Copy address to clipboard'
       }),
 
       createIcon({
         id: 'around-this-time',
         classes: { primary: 'fa-road', other: ['primary'] },
-      }),
-    ],
+        title: 'View adjacent entries'
+      })
+    ]
   })
 
   react(el)
@@ -36,7 +39,7 @@ function react(el) {
     el.querySelector('#copy-address').classList.toggle('hidden', isLeftPanel)
     el.querySelector('#around-this-time').classList.toggle(
       'hidden',
-      isLeftPanel,
+      isLeftPanel
     )
   })
 
