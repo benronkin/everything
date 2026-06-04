@@ -92,7 +92,13 @@ function build(el) {
     })
   )
 
-  el.appendChild(createMarkdown({ name: 'note', toggleId: 'edit-note' }))
+  el.appendChild(
+    createMarkdown({
+      name: 'note',
+      toggleId: 'edit-note',
+      placeholder: 'Add details...'
+    })
+  )
 
   el.appendChild(
     createProjectPrompt({
