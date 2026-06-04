@@ -127,6 +127,7 @@ export function createMarkdown(obj) {
 
   if (obj.placeholder) {
     el.dataset.placeholder = obj.placeholder
+    el.querySelector('.markdown-editor').placeholder = obj.placeholder
     _setPlaceholder(el)
   }
 
@@ -251,6 +252,7 @@ function _updateViewer() {
   const markdown = this.querySelector('.markdown-editor').value
   const content = this.md.render(markdown)
   viewer.innerHTML = this.renderer(content)
+  _setPlaceholder(this)
 }
 
 /**
@@ -260,8 +262,9 @@ function _setPlaceholder(el) {
   const placeholder = el.dataset.placeholder
   if (!placeholder) return
 
-  if (el.querySelector('.markdown-editor').value.length) return
+  if (el.querySelector('.markdown-editor').value.trim().length) return
 
+  el.querySelector('.markdown-viewer').innerHTML = ''
   el.querySelector('.markdown-viewer').appendChild(
     createDiv({
       html: placeholder,
