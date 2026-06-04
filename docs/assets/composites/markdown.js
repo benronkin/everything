@@ -36,7 +36,9 @@ textarea {
   overflow: hidden;
 }
 .markdown-viewer {
-  min-height: 41px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--gray0);
+  margin-bottom: 26px;
 }
 .markdown-viewer a,
 .markdown-viewer a:visited {
