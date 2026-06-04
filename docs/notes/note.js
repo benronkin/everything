@@ -134,8 +134,10 @@ function react() {
     }
   })
 
-  state.on('modal-share', 'note', async (data) => {
+  state.on('modal-share-updated', 'note', async (data) => {
     await shareNote(data)
+    // force refresh to reflect sharing in toolbar
+    window.location.reload()
   })
 }
 
