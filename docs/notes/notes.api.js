@@ -43,9 +43,9 @@ export async function fetchNoteHistory(id) {
  */
 export async function searchNotes(q) {
   const { notes, error } = await getWebApp(
-    `${url}/search?q=${encodeURIComponent(q.trim().toLowerCase())}`,
+    `${url}/search?q=${encodeURIComponent(q.trim().toLowerCase())}`
   )
-  return { data: notes, error }
+  return { notes, error }
 }
 
 export async function shareNote({ id, peers }) {
@@ -58,7 +58,7 @@ export async function updateNote({ id, title, note, updated_at }) {
     id,
     title,
     note,
-    updated_at,
+    updated_at
   })
   return resp
 }
@@ -77,7 +77,7 @@ export async function assignLabel({ labelId, noteId }) {
   // title for server message
   const resp = await postWebAppJson(`${url}/labels/assign`, {
     labelId,
-    noteId,
+    noteId
   })
   let { error, message } = resp
   return { error, message }
@@ -102,7 +102,7 @@ export async function fetchLabelsAssignments() {
 export async function unassignLabel({ labelId, noteId }) {
   const resp = await postWebAppJson(`${url}/labels/unassign`, {
     labelId,
-    noteId,
+    noteId
   })
   let { error, message } = resp
   return { error, message }

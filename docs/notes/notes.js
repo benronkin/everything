@@ -19,7 +19,7 @@ import {
   fetchLabels,
   fetchLabelsAssignments,
   unassignLabel,
-  updateLabel,
+  updateLabel
 } from './notes.api.js'
 import { fetchUsers, getMe } from '../users/users.api.js'
 
@@ -39,6 +39,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
+    let notesFn = fetchNotes
+
+    const q = urlParams.get('q')
+    if (q?.length) {
+      document.querySelector('[name="search-note"]').value = q
+      notesFn = async () => await searchNotes(q)
+    }
+
     react()
     listen()
 
@@ -46,19 +54,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       await Promise.all([
         fetchLabels(),
         fetchLabelsAssignments(),
-        fetchNotes(),
+        notesFn(),
         fetchUsers(),
-        getMe(),
+        getMe()
       ])
 
     state.set('main-documents', notes)
     state.set(
       'note-labels',
-      labels.map(({ id, title }) => [id, title]),
+      labels.map(({ id, title }) => [id, title])
     )
     state.set(
       'note-label-assignments',
-      assignments.map(({ label_id, note_id }) => [label_id, note_id]),
+      assignments.map(({ label_id, note_id }) => [label_id, note_id])
     )
 
     const viewByLabel = localStorage.getItem('notes-by-label')
@@ -98,7 +106,7 @@ function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
@@ -156,17 +164,20 @@ async function reactSearch() {
 
   if (query.length) {
     resp = await searchNotes(query)
+    const url = new URL(window.location)
+    url.searchParams.set('q', query)
+    window.history.pushState({}, '', url)
   } else {
     // get most recent notes instead
     resp = await fetchNotes()
   }
 
-  const { data, message } = resp
+  const { notes, message } = resp
   if (message) {
     console.error(`Notes server error: ${message}`)
     return
   }
-  state.set('main-documents', data)
+  state.set('main-documents', notes)
 }
 
 /**
