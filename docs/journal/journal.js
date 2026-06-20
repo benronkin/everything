@@ -100,24 +100,32 @@ function react() {
 
   state.on('photo-form-submit', 'journal', async (formData) => {
     const compressionOptions = {
-      maxWidthOrHeight: 600,
+      maxWidthOrHeight: 900,
       useWebWorker: true,
       fileType: 'image/jpeg',
       exifOrientation: null
     }
 
-    const file = formData.get('file')
-    const compressed = await imageCompression(file, compressionOptions)
-    const id = state.get('active-doc')
+    let id
+    let compressed
 
-    formData.set('file', compressed)
-    formData.set('entry', id)
+    try {
+      const file = formData.get('file')
+      compressed = await imageCompression(file, compressionOptions)
+      id = state.get('active-doc')
+      formData.set('file', compressed)
+      formData.set('entry', id)
+    } catch (error) {
+      console.error(error)
+      return
+    }
 
     const { message } = await addEntryPhoto(formData)
 
     state.set('photo-upload-response', message)
     // refresh photo list
     const photosMetadata = await fetchEntryPhotosMetadata(id)
+    console.log('photosMetadata', photosMetadata)
     state.set('photos-metadata', photosMetadata)
   })
 
