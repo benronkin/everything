@@ -1,4 +1,3 @@
-/* global imageCompression */
 import { state } from '../assets/js/state.js'
 import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
@@ -130,18 +129,18 @@ function react() {
   state.on('field-changed', 'recipes', handleFieldChange)
 
   state.on('photo-form-submit', 'recipes.js', async (formData) => {
-    const compressionOptions = {
-      maxWidthOrHeight: 900,
-      useWebWorker: true,
-      fileType: 'image/jpeg',
-      exifOrientation: null
-    }
+    // const compressionOptions = {
+    //   maxWidthOrHeight: 900,
+    //   useWebWorker: true,
+    //   fileType: 'image/jpeg',
+    //   exifOrientation: null
+    // }
 
     const file = formData.get('file')
-    const compressed = await imageCompression(file, compressionOptions)
+    // const compressed = await imageCompression(file, compressionOptions)
     const id = state.get('active-doc')
 
-    formData.set('file', compressed)
+    formData.set('file', file)
     formData.set('entry', id)
 
     const { message } = await addEntryPhoto(formData)
@@ -205,26 +204,38 @@ async function reactRecipeAdd() {
 }
 
 async function reactRecipeDelete() {
-  const modalEl = document.querySelector('#modal-delete')
-  modalEl.message('')
+  const modalDelete = document.querySelector('#modal-delete')
+  const photoId = modalDelete.dataset.photo
+  modalDelete.message('')
 
-  const id = state.get('active-doc')
-  const password = modalEl.getPassword()
-  const { error } = await deleteRecipe(id, password)
+  if (photoId) {
+    // handle delete recipe photo
+    const parent = document.getElementById(photoId)
+    const trashEl = parent.querySelector('.fa-trash')
+    trashEl.disabled = true
+    state.set('photo-delete-request', photoId)
+    modalDelete.dataset.photo = ''
+    modalDelete.close()
+  } else {
+    // handle delete recipe
+    const id = state.get('active-doc')
+    const password = modalDelete.getPassword()
+    const { error } = await deleteRecipe(id, password)
 
-  if (error) {
-    modalEl.message(error)
-    return
+    if (error) {
+      modalDelete.message(error)
+      return
+    }
+
+    modalDelete.setPassword('')
+    modalDelete.close()
+
+    const filteredDocs = state
+      .get('main-documents')
+      .filter((doc) => doc.id !== id)
+    state.set('main-documents', filteredDocs)
+    state.set('app-mode', 'left-panel')
   }
-
-  modalEl.setPassword('')
-  modalEl.close()
-
-  const filteredDocs = state
-    .get('main-documents')
-    .filter((doc) => doc.id !== id)
-  state.set('main-documents', filteredDocs)
-  state.set('app-mode', 'left-panel')
 }
 
 async function reactRecipeSearch() {

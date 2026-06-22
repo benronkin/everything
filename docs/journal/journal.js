@@ -1,4 +1,3 @@
-/* global imageCompression */
 import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
