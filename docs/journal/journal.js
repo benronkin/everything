@@ -126,7 +126,6 @@ function react() {
     state.set('photo-upload-response', message)
     // refresh photo list
     const photosMetadata = await fetchEntryPhotosMetadata(id)
-    console.log('photosMetadata', photosMetadata)
     state.set('photos-metadata', photosMetadata)
   })
 
