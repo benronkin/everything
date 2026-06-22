@@ -99,21 +99,22 @@ function react() {
   state.on('field-changed', 'journal', handleFieldChange)
 
   state.on('photo-form-submit', 'journal', async (formData) => {
-    const compressionOptions = {
-      maxWidthOrHeight: 900,
-      useWebWorker: true,
-      fileType: 'image/jpeg',
-      exifOrientation: null
-    }
+    // const compressionOptions = {
+    //   maxWidthOrHeight: 900,
+    //   useWebWorker: true,
+    //   fileType: 'image/jpeg',
+    //   exifOrientation: null
+    // }
 
     let id
-    let compressed
+    // let compressed
 
     try {
       const file = formData.get('file')
-      compressed = await imageCompression(file, compressionOptions)
+      // compressed = await imageCompression(file, compressionOptions)
       id = state.get('active-doc')
-      formData.set('file', compressed)
+      // formData.set('file', compressed)
+      formData.set('file', file)
       formData.set('entry', id)
     } catch (error) {
       console.error(error)
@@ -180,7 +181,7 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (['file', 'password'].includes(section)) {
+  if (['file', 'password', 'caption'].includes(section)) {
     console.log('Ignoring non-field')
     return
   }

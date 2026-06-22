@@ -131,7 +131,7 @@ function react() {
 
   state.on('photo-form-submit', 'recipes.js', async (formData) => {
     const compressionOptions = {
-      maxWidthOrHeight: 600,
+      maxWidthOrHeight: 900,
       useWebWorker: true,
       fileType: 'image/jpeg',
       exifOrientation: null
