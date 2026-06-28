@@ -1,5 +1,5 @@
 import { state } from '../../assets/js/state.js'
-import { injectStyle } from '../../assets/js/ui.js'
+import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
@@ -44,11 +44,15 @@ export function mainPanel() {
 }
 
 function build(el) {
+  // hide empty elements
+  el.classList.add('hidden')
+  setMessage('Fetching journal entry...')
+
   el.appendChild(createEntryGroup())
 
   const phw = createDiv({
     id: 'photos-header-wrapper',
-    className: 'flex mt-20 align-center',
+    className: 'flex mt-20 align-center'
   })
 
   el.appendChild(phw)
@@ -58,12 +62,12 @@ function build(el) {
   phw.appendChild(
     createIcon({
       id: 'add-photo-toggle',
-      classes: { primary: 'fa-camera', other: 'primary btn' },
-    }),
+      classes: { primary: 'fa-camera', other: 'primary btn' }
+    })
   )
 
   const upw = createDiv({
-    id: 'upload-photo-wrapper',
+    id: 'upload-photo-wrapper'
   })
 
   el.appendChild(upw)
@@ -94,5 +98,13 @@ function react(el) {
     el.querySelector('#journal-notes').setValue(doc.notes)
     el.querySelector('.markdown-wrapper').updateEditor(doc.notes)
     el.querySelector('#journal-id').insertHtml(doc.id)
+
+    // show filled elements
+    el.classList.remove('hidden')
+    const urlParams = new URLSearchParams(window.location.search)
+    if (!urlParams.get('message')) {
+      console.debug('Clearing setMessage on main-documents state')
+      setMessage()
+    }
   })
 }

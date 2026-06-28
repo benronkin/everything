@@ -82,6 +82,10 @@ export function executeNoteUpdate() {
 }
 
 function build(el) {
+  // hide empty elements
+  el.classList.add('hidden')
+  setMessage('Fetching note...')
+
   el.appendChild(
     createInputGroup({
       id: 'note-title',
@@ -132,6 +136,14 @@ function react(el) {
     el.querySelector('.project-span-select-link').update(doc)
 
     // if (doc.role === 'peer') document.querySelector('.danger-zone')?.remove()
+
+    // show filled elements
+    el.classList.remove('hidden')
+    const urlParams = new URLSearchParams(window.location.search)
+    if (!urlParams.get('message')) {
+      console.debug('Clearing setMessage on main-documents state')
+      setMessage()
+    }
   })
 
   state.on('icon-click:edit-note', 'mainPanel', () => {
