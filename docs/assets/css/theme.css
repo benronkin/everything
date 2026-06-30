@@ -247,6 +247,11 @@ button.bordered {
   color: var(--gray6);
   border: 1px solid var(--gray6);
 }
+button.bordered-gray1 {
+  background-color: transparent;
+  color: var(--gray6);
+  border: 1px solid var(--gray1);
+}
 button.primary,
 label.primary {
   border: 1px solid var(--purple2);

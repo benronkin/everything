@@ -59,26 +59,26 @@ function react(el) {
   state.on(
     'button-click:tasks-header-btn',
     'tasks',
-    () => (window.location.href = '../tasks/index.html'),
+    () => (window.location.href = '../tasks/index.html')
   )
 }
 
 function tasksHeader(hasTasks) {
   const div = createDiv({
     className: 'flex align-center mb-10',
-    id: 'tasks-header',
+    id: 'tasks-header'
   })
 
   if (hasTasks) {
     div.appendChild(createHeader({ type: 'h4', html: 'TASKS' }))
     div.appendChild(
       createButton({
-        className: 'bordered',
+        className: 'bordered-gray1',
         id: 'tasks-header-btn',
         html: hasTasks
           ? `<i class="fa-solid fa-list-check"></i> VIEW ALL`
-          : `<i class="fa-solid fa-plus"></i> ADD`,
-      }),
+          : `<i class="fa-solid fa-plus"></i> ADD`
+      })
     )
   }
 
@@ -107,7 +107,7 @@ async function handleTaskUpdate(el) {
     const { error } = await updateTask({
       id,
       section,
-      value,
+      value
     })
     if (error) {
       throw new Error(error)
