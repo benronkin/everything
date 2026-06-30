@@ -58,20 +58,27 @@ function addChildren(el, docs) {
 
   if (!docs || !docs.length) return
 
-  for (const doc of docs) {
-    if (!doc) {
-      console.warn('One of the docs is empty')
-      return
-    }
-  }
+  // for (const doc of docs) {
+  //   if (!doc) {
+  //     console.warn('One of the docs is empty')
+  //     return
+  //   }
+  // }
 
   const children = docs.map((doc) => {
     const html = [createSpan({ html: doc.title })]
 
     if (doc.assigned_project) {
-      const title = doc.projects.find(
-        (p) => p.id === doc.assigned_project
-      ).title
+      const project = doc.projects.find((p) => p.id === doc.assigned_project)
+
+      if (!project) {
+        console.warn(
+          `Unable to locate project with id "${doc.assigned_project}"`
+        )
+        return
+      }
+
+      const title = project.title
       const firstToken = title.split(/[ -]/)[0]
       html.push(createDiv({ html: firstToken, className: 'project-chip' }))
     } else if (doc?.peers?.length) {
