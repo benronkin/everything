@@ -91,5 +91,6 @@ function addChildren(el, docs) {
       url: `./note.html?id=${doc.id}`
     })
   })
-  el.addChildren(children)
+
+  if (children) el.addChildren(children)
 }
