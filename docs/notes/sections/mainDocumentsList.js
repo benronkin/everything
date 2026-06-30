@@ -58,6 +58,13 @@ function addChildren(el, docs) {
 
   if (!docs || !docs.length) return
 
+  for (const doc of docs) {
+    if (!doc) {
+      console.warn('One of the docs is empty')
+      return
+    }
+  }
+
   const children = docs.map((doc) => {
     const html = [createSpan({ html: doc.title })]
 
