@@ -73,7 +73,7 @@ function addChildren(el, docs) {
 
       if (!project) {
         console.warn(
-          `Unable to locate project with id "${doc.assigned_project}"`
+          `Unable to locate project with id "${doc.assigned_project}". Most likely this is due to unshared project`
         )
         return
       }
