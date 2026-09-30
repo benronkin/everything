@@ -181,6 +181,7 @@ async function reactBookSearch() {
  */
 async function reactBookInfo() {
   try {
+    setMessage('Fetching books, one moment...')
     const title = getBookTitle()
     const url = getBookListUrl(title)
     const bookList = await getBookList(url, title)
@@ -189,6 +190,7 @@ async function reactBookInfo() {
     const dialog = document.getElementById('dialog')
     dialog.setHeader('Select book')
     dialog.setBody(bookList)
+    setMessage()
     dialog.showModal()
     // Reset after opening, since dialog autofocus can scroll to Cancel.
     dialog.scrollTop = 0
