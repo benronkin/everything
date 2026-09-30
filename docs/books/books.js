@@ -2,7 +2,7 @@ import { state } from '../assets/js/state.js'
 import { nav } from './sections/nav.js'
 import { toolbar } from './sections/toolbar.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
-
+import { modalBookCards } from './sections/modalBookCards.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { createDiv } from '../assets/partials/div.js'
@@ -16,7 +16,7 @@ import {
   fetchBook,
   fetchRecentBooks,
   searchBooks,
-  updateBook,
+  updateBook
 } from './books.api.js'
 // import { log } from '../assets/js/logger.js'
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let [{ data, error }, { user }] = await Promise.all([
       fetchRecentBooks(),
-      getMe(),
+      getMe()
     ])
 
     if (error) {
@@ -82,24 +82,28 @@ async function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(mainPanel())
   columnsWrapperEl.appendChild(createRightDrawer())
-
   wrapperEl.appendChild(createFooter())
+  wrapperEl.appendChild(modalBookCards())
 }
 
 function react() {
   state.on('icon-click:add-book', 'books', reactBookAdd)
+
+  state.on('icon-click:book-info', 'books', reactBookInfo)
 
   state.on('button-click:modal-delete-btn', 'books', reactBookDelete)
 
   state.on('form-submit:left-panel-search', 'books', reactBookSearch)
 
   state.on('field-changed', 'books', handleFieldChange)
+
+  state.on('card-click', 'books', reactBookCardClick)
 }
 async function reactBookAdd() {
   const addBtn = document.getElementById('add-book')
@@ -120,7 +124,7 @@ async function reactBookAdd() {
     title: 'new Book',
     created_at,
     read_year,
-    completed: '0',
+    completed: '0'
   }
 
   state.set('main-documents', [doc, ...state.get('main-documents')])
@@ -172,6 +176,48 @@ async function reactBookSearch() {
   state.set('app-mode', 'left-panel')
 }
 
+/**
+ *
+ */
+async function reactBookInfo() {
+  try {
+    const title = getBookTitle()
+    const url = getBookListUrl(title)
+    const bookList = await getBookList(url, title)
+    // const bookList = await getDummyBookList()
+
+    const dialog = document.getElementById('dialog')
+    dialog.setHeader('Select book')
+    dialog.setBody(bookList)
+    dialog.showModal()
+  } catch (error) {
+    console.log(error)
+    setMessage(error.message)
+  }
+}
+
+/**
+ *
+ */
+async function reactBookCardClick(book) {
+  try {
+    book.description = await getBookDescription(book)
+  } catch (error) {
+    console.log(error)
+    setMessage(error.message)
+  }
+
+  let el = document.getElementById('book-author')
+  el.value = book.author_name
+  handleFieldChange(el)
+  el = document.getElementById('book-published-year')
+  el.value = book.first_publish_year
+  handleFieldChange(el)
+  el = document.querySelector('.markdown-wrapper')
+  el.updateEditor(book.description)
+  handleFieldChange(document.querySelector('.markdown-editor'))
+}
+
 async function handleFieldChange(el) {
   const id = state.get('active-doc')
   if (!id) return
@@ -190,4 +236,84 @@ async function handleFieldChange(el) {
 
   updateBook({ id, section, value })
   setMessage('Saved', { type: 'quiet' })
+}
+
+/**
+ *
+ */
+function getBookTitle() {
+  const title = document.getElementById('book-title').value?.trim()
+  if (!title) {
+    throw new Error(`Enter a title and try again`)
+  }
+  return title
+}
+
+/**
+ *
+ */
+function getBookListUrl(title) {
+  const params = {
+    title: title.trim(),
+    fields: 'key,title,author_name,first_publish_year',
+    limit: '20'
+  }
+
+  const queryString = new URLSearchParams(params).toString()
+  const url = `https://openlibrary.org/search.json?${queryString}`
+  return url
+}
+
+/**
+ *
+ */
+async function getBookList(url, title) {
+  const resp = await fetch(url)
+  if (!resp.ok) {
+    throw new Error(`OpenLibrary returned HTTP ${resp.status}`)
+  }
+
+  const data = await resp.json()
+  if (!data.numFound) {
+    throw new Error(`OpenLibrary has no book with title "${title}"`)
+  }
+  return data.docs
+}
+
+/**
+ *
+ */
+async function getBookDescription(book) {
+  if (!book?.key) throw new Error(`Did not receive book key`)
+  const resp = await fetch(`https://openlibrary.org${book.key}.json`)
+  if (!resp.ok) {
+    throw new Error(`OpenLibrary returned HTTP ${resp.status}`)
+  }
+
+  const data = await resp.json()
+  const description =
+    typeof data.description === 'string'
+      ? data.description
+      : data.description?.value || 'No details availble'
+  return description
+}
+
+/**
+ *
+ */
+function getDummyBookList() {
+  return [
+    {
+      author_name: ['Richard K. Morgan'],
+      first_publish_year: 2004,
+      key: '/works/OL5730140W',
+      title: 'Market Forces'
+    },
+    {
+      author_name: ['Molly Dunigan', 'Ulrich Petersohn'],
+      first_publish_year: 2015,
+      key: '/works/OL21283132W',
+      title: 'Markets for Force'
+    }
+  ]
 }

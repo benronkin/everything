@@ -6,16 +6,7 @@ import { createIcon } from '../../assets/partials/icon.js'
 export function toolbar() {
   const el = createToolbar({
     className: 'container',
-    children: [
-      createIcon({
-        id: 'back',
-        classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
-      }),
-      createIcon({
-        id: 'add-book',
-        classes: { primary: 'fa-plus', other: ['primary'] },
-      }),
-    ],
+    children: getControls().map((c) => createIcon(c))
   })
 
   react(el)
@@ -26,8 +17,18 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
-    const backEl = el.querySelector('#back')
-    backEl.classList.toggle('hidden', appMode !== 'main-panel')
+    el.querySelector('#back').classList.toggle(
+      'hidden',
+      appMode !== 'main-panel'
+    )
+    el.querySelector('#add-book').classList.toggle(
+      'hidden',
+      appMode === 'main-panel'
+    )
+    el.querySelector('#book-info').classList.toggle(
+      'hidden',
+      appMode !== 'main-panel'
+    )
   })
 }
 
@@ -36,4 +37,34 @@ function listen(el) {
     state.set('active-doc', null)
     state.set('app-mode', 'left-panel')
   })
+}
+
+/**
+ *
+ */
+function getControls() {
+  return [
+    // {
+    //   id: 'toggle-toolbar-floating-menu',
+    //   classes: { primary: 'fa-bars', other: ['primary'] },
+    //   title: 'Open options',
+    //   skipMenu: true,
+    //   mobileOnly: true
+    // },
+    {
+      id: 'back',
+      classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] }
+    },
+    {
+      id: 'add-book',
+      classes: { primary: 'fa-plus', other: ['primary'] },
+      title: 'Add a book',
+      skipMenu: true
+    },
+    {
+      id: 'book-info',
+      classes: { primary: 'fa-cloud-arrow-down', other: ['primary', 'hidden'] },
+      title: 'Set book info'
+    }
+  ]
 }
