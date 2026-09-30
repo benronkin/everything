@@ -11,11 +11,15 @@ const css = `
   left: 20px !important;
   top: 150px !important;
   background-color: var(--purple2) !important;
+  border: 1px solid var(--purple3) !important;
   color: var(--gray6) !important;
   width: 300px;
 }
 .floating-menu-option {
-  border: 1px solid var(--purple3);
+  padding: 15px 10px !important;
+}
+.floating-menu-option:not(:first-child) {
+  border-top: 3px solid var(--purple3);
 }
 `
 
@@ -45,7 +49,7 @@ export function toolbar() {
 function react(el) {
   state.on('app-mode', 'toolbar', (mode) => {
     const isLeftPanel = mode === 'left-panel'
-    el.querySelector('#toggle-toolbar-floating-menu').classList.toggle(
+    el.querySelector('#toggle-toolbar-floating-menu')?.classList.toggle(
       'hidden',
       isLeftPanel
     )
