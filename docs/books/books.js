@@ -180,8 +180,10 @@ async function reactBookSearch() {
  *
  */
 async function reactBookInfo() {
+  const el = document.getElementById('book-info')
   try {
     setMessage('Fetching books, one moment...')
+    el.classList.add('disabled')
     const title = getBookTitle()
     const url = getBookListUrl(title)
     const bookList = await getBookList(url, title)
@@ -197,6 +199,8 @@ async function reactBookInfo() {
   } catch (error) {
     console.log(error)
     setMessage(error.message)
+  } finally {
+    el.classList.remove('disabled')
   }
 }
 

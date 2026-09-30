@@ -10,6 +10,10 @@ i {
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
+i.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 i.shake {
   animation: shake-it 300ms ease;
 }
