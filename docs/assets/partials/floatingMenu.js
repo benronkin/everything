@@ -77,7 +77,7 @@ function build({ el, obj, top = 30, left = 30 }) {
   el.innerHTML = ''
 
   for (const { id, html } of options) {
-    const optionEl = createSpan({ id, html })
+    const optionEl = createSpan({ className: 'floating-menu-option', id, html })
     optionEl.addEventListener('click', () =>
       state.set('floating-menu-option-click', { id, html })
     )
