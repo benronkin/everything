@@ -8,12 +8,17 @@ import { createPill } from '../../assets/partials/pill.js'
 import { fetchPeers } from '../../users/users.api.js'
 
 const css = `
+dialog {
+  width: min(90vw, 900px);
+  max-width: none;
+  padding: 0;
+}
 .modal {
+  width: 100%;
+  max-width: none;
   background-color: var(--purple0);
   color: var(--gray6);
   padding: 0;
-  width: min(90vw, 900px);
-  max-width: none;
   margin: auto;
 }
 .modal .modal-header {

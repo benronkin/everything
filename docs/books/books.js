@@ -190,6 +190,8 @@ async function reactBookInfo() {
     dialog.setHeader('Select book')
     dialog.setBody(bookList)
     dialog.showModal()
+    // Reset after opening, since dialog autofocus can scroll to Cancel.
+    dialog.scrollTop = 0
   } catch (error) {
     console.log(error)
     setMessage(error.message)
