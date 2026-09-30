@@ -137,6 +137,8 @@ function react() {
     state.set('photos-metadata', photosMetadata)
   })
 
+  state.on('icon-click:geo-location', 'journal', handleGeoLocation)
+
   state.on('icon-click:around-this-time', 'journal', () => {
     const doc = state.get('main-documents')[0]
     // window.location.href = `./index.html?around=${doc.visit_date.slice(0, 10)}`
@@ -224,4 +226,89 @@ async function handleCaptionChange(el) {
   // const photosMetadata = await fetchEntryPhotosMetadata(entryId)
   // state.set('photos-metadata', photosMetadata)
   setMessage('Saved', { type: 'quiet' })
+}
+
+/**
+ *
+ */
+async function handleGeoLocation() {
+  if (!('geolocation' in navigator)) {
+    setMessage('Geolocation is not supported by this browser.')
+    return
+  }
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude
+      const lon = position.coords.longitude
+      if (!lat) {
+        setMessage('Did not receive geo data from browser')
+        return
+      }
+
+      const {
+        error,
+        street,
+        city,
+        state: addressState,
+        country
+      } = await getAddress(lat, lon)
+      if (error) {
+        setMessage(error)
+        return
+      }
+      document.getElementById('journal-street').value = street
+      state.set('field-changed', document.getElementById('journal-street'))
+      document.getElementById('journal-city').value = city
+      state.set('field-changed', document.getElementById('journal-city'))
+      document.getElementById('journal-state').value = addressState
+      state.set('field-changed', document.getElementById('journal-state'))
+      document.getElementById('journal-country').value = country
+      state.set('field-changed', document.getElementById('journal-country'))
+    },
+    (error) => {
+      setMessage(error.message)
+      console.error('Error code:', error.code, 'Message:', error.message)
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  )
+}
+
+/**
+ *
+ */
+async function getAddress(lat, lon) {
+  const params = {
+    lat,
+    lon,
+    format: 'geocodejson',
+    layer: 'address',
+    addressdetails: '1',
+    zoom: '18'
+  }
+  const queryString = new URLSearchParams(params).toString()
+  const url = `https://nominatim.openstreetmap.org/reverse?${queryString}`
+  try {
+    const resp = await fetch(url)
+    if (!resp.ok) {
+      throw new Error(`Nominatim returned HTTP ${resp.status}`)
+    }
+
+    const json = await resp.json()
+    const data = json.features?.[0]?.properties?.geocoding
+    if (!data) {
+      throw new Error('No address found for this location')
+    }
+
+    const street = [data.housenumber, data.street].filter(Boolean).join(' ')
+
+    const address = {
+      street: street || null,
+      city: data.city ?? data.locality ?? null,
+      state: data.state ?? null,
+      country: data.country ?? null
+    }
+    return address
+  } catch (error) {
+    return { error: error.message }
+  }
 }

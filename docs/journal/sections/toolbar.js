@@ -12,7 +12,11 @@ export function toolbar() {
         classes: { primary: 'fa-plus', other: ['primary'] },
         title: 'Create a new entry'
       }),
-
+      createIcon({
+        id: 'geo-location',
+        classes: { primary: 'fa-location-dot', other: 'primary hidden' },
+        title: 'Get this address'
+      }),
       createIcon({
         id: 'copy-address',
         classes: { primary: 'fa-clipboard', other: ['primary'] },
@@ -62,6 +66,18 @@ function react(el) {
       console.error('Clipboard write failed:', err)
     })
     setMessage(`Copied: "${address}"`)
+  })
+
+  // Wait for main documents to see whether to make geo button visible
+  state.on('main-documents', 'Journal toolbar', (docs) => {
+    if (!docs) return
+    const doc = docs[0]
+    if (!doc || typeof doc.street !== 'string') return
+    const street = doc.street.trim()
+    el.querySelector('#geo-location').classList.toggle(
+      'hidden',
+      street.length > 0
+    )
   })
 }
 
