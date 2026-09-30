@@ -11,11 +11,11 @@ const css = `
   left: 20px !important;
   top: 150px !important;
   background-color: var(--purple2) !important;
-  border: 1px solid var(--purple3) !important;
   color: var(--gray6) !important;
   width: 300px;
-}
+  }
 .floating-menu-option {
+  border: 1px solid var(--purple3) !important;
   padding: 15px 10px !important;
 }
 .floating-menu-option:not(:first-child) {
