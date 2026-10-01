@@ -12,7 +12,6 @@ export async function deleteBook(id) {
   const { book, error } = await getWebApp(`${url}/delete?id=${id}`)
   return { data: book, error }
 }
-
 export async function fetchRecentBooks() {
   const resp = await getWebApp(`${url}/read`)
   const { books, error } = resp
@@ -23,6 +22,13 @@ export async function fetchBook(id) {
   const resp = await getWebApp(`${url}/read-one?id=${id}`)
   const { book, error } = resp
   return { book, error }
+}
+
+export async function fetchBookDescription(params) {
+  const queryString = new URLSearchParams(params).toString()
+  const fullUrl = `${url}/get-description?${queryString}`
+  const resp = await getWebApp(fullUrl)
+  return resp
 }
 
 export async function searchBooks(q) {
@@ -36,7 +42,7 @@ export async function updateBook({ id, section, value }) {
   const { message, error } = await postWebAppJson(`${url}/update`, {
     id,
     value,
-    section,
+    section
   })
   return { message, error }
 }

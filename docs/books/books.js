@@ -14,6 +14,7 @@ import {
   createBook,
   deleteBook,
   fetchBook,
+  fetchBookDescription,
   fetchRecentBooks,
   searchBooks,
   updateBook
@@ -210,6 +211,20 @@ async function reactBookInfo() {
 async function reactBookCardClick(book) {
   try {
     book.description = await getBookDescription(book)
+    if (!book.description) {
+      // OpenLibrary didn't provide description;
+      // get it from ChatGpt instead
+      const params = {
+        title: book.title,
+        author: book.author_name,
+        date: book.first_publish_year
+      }
+      setMessage('Fetching book description. Please wait...')
+      const { error, description } = await fetchBookDescription(params)
+      if (error) throw new Error(error)
+      book.description = description
+      setMessage()
+    }
   } catch (error) {
     console.log(error)
     setMessage(error.message)
@@ -302,7 +317,7 @@ async function getBookDescription(book) {
   const description =
     typeof data.description === 'string'
       ? data.description
-      : data.description?.value || 'No details availble'
+      : data.description?.value || ''
   return description
 }
 

@@ -156,7 +156,6 @@ function setBody(bookList) {
  *
  */
 function makeCard(book) {
-  console.log('book', book)
   const el = createDiv({ id: book.key, className: 'book-card' })
   el.appendChild(createDiv({ className: 'book-title', html: book.title }))
   el.appendChild(
