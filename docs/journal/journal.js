@@ -181,13 +181,13 @@ async function handleFieldChange(el) {
   const section = el.name
   let value = el.value
 
-  if (['file', 'password', 'caption'].includes(section)) {
-    console.log('Ignoring non-field')
+  if (section === 'caption') {
+    handleCaptionChange(el)
     return
   }
 
-  if (section === 'caption') {
-    handleCaptionChange(el)
+  if (['file', 'password', 'caption'].includes(section)) {
+    console.log('Ignoring non-field')
     return
   }
 

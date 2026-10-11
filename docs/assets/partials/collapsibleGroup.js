@@ -1,11 +1,6 @@
 import { injectStyle } from '../js/ui.js'
-import { state } from '../js/state.js'
 import { createGroup } from './group.js'
 import { createIcon } from './icon.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
 .collapsible-group {
@@ -39,7 +34,7 @@ export function createCollapsibleGroup({
   id,
   className,
   html,
-  collapsed = false,
+  collapsed = false
 } = {}) {
   injectStyle(css)
 
@@ -64,16 +59,15 @@ function build({ el, html }) {
     classes: {
       primary: 'fa-chevron-right',
       secondary: 'fa-chevron-left',
-      other: ['toggler', 'btn'],
-    },
+      other: ['toggler', 'btn']
+    }
   })
   el.appendChild(toggler)
   for (const child of html) {
+    child.classList.add('btn')
     el.appendChild(child)
   }
 }
-
-function react(el) {}
 
 function listen(el) {
   el.querySelector('.toggler').addEventListener('click', () => {

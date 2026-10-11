@@ -266,7 +266,8 @@ ul {
   /* margin-left: 10px; */
   border-radius: 6px;
 }
-.fa-trash:hover {
+.fa-trash:hover,
+i.btn.fa-trash:hover {
   color: var(--red3);
 }
 .flex {
