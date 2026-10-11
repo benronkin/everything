@@ -1,4 +1,4 @@
-import { injectStyle } from '../js/ui.js'
+import { injectStyle, setMessage } from '../js/ui.js'
 import { state } from '../js/state.js'
 import { createDiv } from './div.js'
 
@@ -65,8 +65,12 @@ function listen(el) {
  * value is ISOString or Date
  */
 function setDateTime(value) {
-  const { dateString, error } = badDateTimeValue(value)
-  if (error) throw new Error(error)
+  let { dateString, error } = badDateTimeValue(value)
+
+  if (error) {
+    setMessage(error)
+    dateString = new Date().toISOString()
+  }
 
   dateString && (value = dateString)
 
