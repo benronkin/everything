@@ -6,8 +6,8 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createEntryGroup } from './entry.group.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { dangerZone } from './dangerZone.js'
-import { createPhotoForm } from '../../assets/composites/photo.form.js'
-import { photoList } from '../../assets/composites/photoList.js'
+import { createMediaForm } from '../../assets/composites/media.form.js'
+import { mediaList } from '../../assets/composites/mediaList.js'
 
 const css = `
 #main-panel {
@@ -51,29 +51,29 @@ function build(el) {
   el.appendChild(createEntryGroup())
 
   const phw = createDiv({
-    id: 'photos-header-wrapper',
+    id: 'media-header-wrapper',
     className: 'flex mt-20 align-center'
   })
 
   el.appendChild(phw)
 
-  phw.appendChild(createHeader({ type: 'h4', html: 'Photos' }))
+  phw.appendChild(createHeader({ type: 'h4', html: 'Media' }))
 
   phw.appendChild(
     createIcon({
-      id: 'add-photo-toggle',
+      id: 'add-media-toggle',
       classes: { primary: 'fa-camera', other: 'primary btn' }
     })
   )
 
   const upw = createDiv({
-    id: 'upload-photo-wrapper'
+    id: 'upload-media-wrapper'
   })
 
   el.appendChild(upw)
-  upw.appendChild(createPhotoForm())
+  upw.appendChild(createMediaForm())
 
-  el.appendChild(photoList())
+  el.appendChild(mediaList())
 
   el.appendChild(dangerZone())
 

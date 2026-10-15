@@ -1,41 +1,41 @@
-import { state } from '../../assets/js/state.js'
-import { createDiv } from '../../assets/partials/div.js'
-import { createForm } from '../../assets/partials/form.js'
-import { createFileInput } from '../../assets/partials/fileInput.js'
-import { createButton } from '../../assets/partials/button.js'
-import { createInputGroup } from '../../assets/partials/inputGroup.js'
-import { createSpan } from '../../assets/partials/span.js'
+import { state } from '../js/state.js'
+import { createDiv } from '../partials/div.js'
+import { createForm } from '../partials/form.js'
+import { createFileInput } from '../partials/fileInput.js'
+import { createButton } from '../partials/button.js'
+import { createInputGroup } from '../partials/inputGroup.js'
+import { createSpan } from '../partials/span.js'
 
-export function createPhotoForm() {
+export function createMediaForm() {
   const el = createForm({
-    id: 'add-photo-form',
+    id: 'add-media-form',
     children: [
       createFileInput({
-        id: 'photo-file-input',
-        label: 'SELECT PHOTO',
-        accept: 'image/*',
-        iconClass: 'fa-camera',
+        id: 'media-file-input',
+        label: 'SELECT MEDIA',
+        accept: 'image/* video/*',
+        iconClass: 'fa-camera'
       }),
       createInputGroup({
-        id: 'photo-caption-input',
+        id: 'media-caption-input',
         classes: { group: 'bb-white', icon: 'fa-pencil' },
         name: 'caption',
-        placeholder: 'Describe this photo...',
+        placeholder: 'Describe this media...'
       }),
       createDiv({
         className: 'flex mt-20',
         html: [
           createButton({
-            id: 'upload-photo-button',
+            id: 'upload-media-button',
             className: 'primary',
             html: '<i class="fa-solid fa-upload"></i> Upload',
             type: 'submit',
-            disabled: true,
+            disabled: true
           }),
-          createSpan({ className: 'form-message' }),
-        ],
-      }),
-    ],
+          createSpan({ className: 'form-message' })
+        ]
+      })
+    ]
   })
 
   el.className = 'hidden'
@@ -47,15 +47,15 @@ export function createPhotoForm() {
 }
 
 function react(el) {
-  state.on('icon-click:add-photo-toggle', 'photo form', () => {
+  state.on('icon-click:add-media-toggle', 'media form', () => {
     el.classList.toggle('hidden')
     el.querySelector('input[type="file"]').value = ''
     el.querySelector('span.file-name').innerHTML = ''
-    el.querySelector('#photo-caption-input').value = ''
+    el.querySelector('#media-caption-input').value = ''
     el.querySelector('.form-message').insertHtml('')
   })
 
-  state.on('button-click:upload-photo-button', 'photo form', ({ e }) => {
+  state.on('button-click:upload-media-button', 'media form', ({ e }) => {
     e.preventDefault()
 
     const formMessage = el.querySelector('.form-message')
@@ -71,17 +71,17 @@ function react(el) {
 
     el.querySelector('button').disabled = true
     formMessage.insertHtml('Uploading...')
-    state.set('photo-form-submit', formData)
+    state.set('media-form-submit', formData)
   })
 
-  state.on('photo-upload-response', 'photo.form.js', (message) => {
+  state.on('media-upload-response', 'media.form.js', (message) => {
     const formMessage = el.querySelector('.form-message')
 
     formMessage.insertHtml(message)
 
-    if (message === 'Photo uploaded') {
+    if (message === 'media uploaded') {
       el.querySelector('button').disabled = false
-      el.querySelector('#photo-caption-input').value = ''
+      el.querySelector('#media-caption-input').value = ''
       el.querySelector('span.file-name').innerHTML = ''
       el.querySelector('input[type="file"]').value = ''
     } else {

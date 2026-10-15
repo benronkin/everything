@@ -9,16 +9,16 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
-  addEntryPhoto,
+  addMedia,
   deleteEntry,
-  deleteEntryPhoto,
+  deleteMedia,
   fetchEntry,
   fetchDefaults,
-  fetchEntryPhotosMetadata,
+  fetchMediaMetadata,
   fetchGeoIndex,
   updateEntry,
   updateJournalDefaults,
-  updatePhotoCaption
+  updateMediaCaption
 } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -85,8 +85,8 @@ async function build() {
 
 function react() {
   state.on('active-doc', 'journal', async (id) => {
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
   })
 
   state.on(
@@ -97,7 +97,7 @@ function react() {
 
   state.on('field-changed', 'journal', handleFieldChange)
 
-  state.on('photo-form-submit', 'journal', async (formData) => {
+  state.on('media-form-submit', 'journal', async (formData) => {
     // const compressionOptions = {
     //   maxWidthOrHeight: 900,
     //   useWebWorker: true,
@@ -120,21 +120,21 @@ function react() {
       return
     }
 
-    const { message } = await addEntryPhoto(formData)
+    const { message } = await addMedia(formData)
 
-    state.set('photo-upload-response', message)
+    state.set('media-upload-response', message)
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
   })
 
-  state.on('photo-delete-request', 'journal', async (id) => {
-    const { error, message } = await deleteEntryPhoto(id)
-    state.set('photo-delete-response', { error, message })
-    // refresh photo list
+  state.on('media-delete-request', 'journal', async (id) => {
+    const { error, message } = await deleteMedia(id)
+    state.set('media-delete-response', { error, message })
+    // refresh media list
     const entryId = state.get('active-doc')
-    const photosMetadata = await fetchEntryPhotosMetadata(entryId)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(entryId)
+    state.set('media-metadata', mediaMetadata)
   })
 
   state.on('icon-click:geo-location', 'journal', handleGeoLocation)
@@ -159,7 +159,7 @@ async function handleModalDeleteButtonClick() {
     const parent = document.getElementById(photoId)
     const trashEl = parent.querySelector('.fa-trash')
     trashEl.disabled = true
-    state.set('photo-delete-request', photoId)
+    state.set('media-delete-request', photoId)
     modalDelete.dataset.photo = ''
     modalDelete.close()
   } else {
@@ -213,18 +213,24 @@ async function handleFieldChange(el) {
  *
  */
 async function handleCaptionChange(el) {
+  if (el.id === 'media-caption-input') {
+    // user is filling out caption in upload form
+    // not editing existing caption
+    return
+  }
+
   const value = el.value
 
-  const parent = el.closest('.photo-item')
-  const { error, message } = await updatePhotoCaption({
+  const parent = el.closest('.media-item')
+  const { error, message } = await updateMediaCaption({
     id: parent.id,
     value
   })
-  state.set('photo-caption-response', { error, message })
+  state.set('media-caption-response', { error, message })
   // refresh photo list
   // const entryId = state.get('active-doc')
-  // const photosMetadata = await fetchEntryPhotosMetadata(entryId)
-  // state.set('photos-metadata', photosMetadata)
+  // const mediaMetadata = await fetchMediaMetadata(entryId)
+  // state.set('media-metadata', mediaMetadata)
   setMessage('Saved', { type: 'quiet' })
 }
 

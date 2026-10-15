@@ -6,8 +6,8 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createRecipeGroup } from './recipe.group.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createDangerZone } from '../../assets/composites/dangerZone.js'
-import { createPhotoForm } from '../../assets/composites/photo.form.js'
-import { photoList } from '../../assets/composites/photoList.js'
+import { createMediaForm } from '../../assets/composites/media.form.js'
+import { mediaList } from '../../assets/composites/mediaList.js'
 
 const css = `
 #main-panel {
@@ -48,8 +48,8 @@ function build(el) {
   el.appendChild(createRecipeGroup())
 
   const phw = createDiv({
-    id: 'photos-header-wrapper',
-    className: 'flex mt-20 align-center',
+    id: 'media-header-wrapper',
+    className: 'flex mt-20 align-center'
   })
 
   el.appendChild(phw)
@@ -58,19 +58,19 @@ function build(el) {
 
   phw.appendChild(
     createIcon({
-      id: 'add-photo-toggle',
-      classes: { primary: 'fa-camera', other: 'primary btn' },
-    }),
+      id: 'add-media-toggle',
+      classes: { primary: 'fa-camera', other: 'primary btn' }
+    })
   )
 
   const upw = createDiv({
-    id: 'upload-photo-wrapper',
+    id: 'upload-media-wrapper'
   })
 
   el.appendChild(upw)
-  upw.appendChild(createPhotoForm())
+  upw.appendChild(createMediaForm())
 
-  el.appendChild(photoList())
+  el.appendChild(mediaList())
 
   const dangerZoneEl = createDangerZone({ modalId: 'modal-delete' })
   dangerZoneEl.classList.add('mt-20')

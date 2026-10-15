@@ -14,13 +14,13 @@ export function createAvatarForm() {
     id: 'profile-avatar',
     children: [
       createFileInput({
-        id: 'photo-file-input',
+        id: 'media-file-input',
         label: 'SELECT PHOTO',
         accept: 'image/*',
-        iconClass: 'fa-camera',
+        iconClass: 'fa-camera'
       }),
-      createSpan({ className: 'form-message' }),
-    ],
+      createSpan({ className: 'form-message' })
+    ]
   })
 
   listen(el)

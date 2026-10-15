@@ -11,7 +11,7 @@ export async function createEntry(visit_date) {
 
 export async function deleteEntry(id, password) {
   const { journal, error } = await getWebApp(
-    `${url}/delete?id=${id}&password=${password}`,
+    `${url}/delete?id=${id}&password=${password}`
   )
   return { data: journal, error }
 }
@@ -21,9 +21,9 @@ export async function fetchDefaults() {
   return { defaults, error }
 }
 
-export async function fetchEntryPhotosMetadata(id) {
-  const { photos, error } = await getWebApp(`${url}/photos/read?entry=${id}`)
-  return { photos, error }
+export async function fetchMediaMetadata(id) {
+  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
+  return { media, error }
 }
 
 export async function fetchEntry(id) {
@@ -43,7 +43,7 @@ export async function pageEntries(page = 0) {
 
 export async function fetchAroundThisTime(dateString) {
   const { journal, error } = await getWebApp(
-    `${url}/around-this-time?date=${dateString}`,
+    `${url}/around-this-time?date=${dateString}`
   )
   return { data: journal, error }
 }
@@ -53,7 +53,7 @@ export async function fetchAroundThisTime(dateString) {
  */
 export async function searchEntries(q) {
   const { journal, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`,
+    `${url}/search?q=${q.trim().toLowerCase()}`
   )
   return { data: journal, error }
 }
@@ -62,39 +62,39 @@ export async function updateEntry({ id, section, value }) {
   const { message, error } = postWebAppJson(`${url}/update`, {
     id,
     value,
-    section,
+    section
   })
   return { message, error }
 }
 
 export async function updateGeoIndex({ tree }) {
   await postWebAppJson(`${url}/geo-index/update`, {
-    tree,
+    tree
   })
 }
 
 export async function updateJournalDefaults({ id, section, value }) {
   await postWebAppJson(`${url}/defaults/update`, {
     id,
-    [section]: value,
+    [section]: value
   })
 }
 
-export async function updatePhotoCaption({ id, value }) {
-  const { error, message } = await postWebAppJson(`${url}/photos/update`, {
+export async function updateMediaCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(`${url}/media/update`, {
     id,
     value: value,
-    section: 'caption',
+    section: 'caption'
   })
   return { error, message }
 }
 
-export async function addEntryPhoto(formData) {
-  const { message } = await postWebAppForm(`${url}/photos/create`, formData)
+export async function addMedia(formData) {
+  const { message } = await postWebAppForm(`${url}/media/create`, formData)
   return { message }
 }
 
-export async function deleteEntryPhoto(id) {
-  const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
+export async function deleteMedia(id) {
+  const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
   return { error }
 }

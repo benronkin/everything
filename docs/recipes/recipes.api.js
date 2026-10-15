@@ -10,7 +10,7 @@ export async function createRecipe() {
 
 export async function deleteRecipe(id, password) {
   const { recipe, error } = await getWebApp(
-    `${url}/delete?id=${id}&password=${password}`,
+    `${url}/delete?id=${id}&password=${password}`
   )
   return { data: recipe, error }
 }
@@ -23,14 +23,14 @@ export async function fetchCategories() {
 export async function fetchCategoriesAndRecipes() {
   const [{ categories }, { recipes }] = await Promise.all([
     getWebApp(`${url}/categories/read`),
-    getWebApp(`${url}/latest`),
+    getWebApp(`${url}/latest`)
   ])
 
   return { categories, recipes }
 }
 
-export async function fetchEntryPhotosMetadata(id) {
-  const { photos, error } = await getWebApp(`${url}/photos/read?entry=${id}`)
+export async function fetchMediaMetadata(id) {
+  const { photos, error } = await getWebApp(`${url}/media/read?entry=${id}`)
   return { photos, error }
 }
 
@@ -48,7 +48,7 @@ export async function fetchRecipesByCategory(id) {
 
 export async function searchRecipes(q) {
   const { recipes, error } = await getWebApp(
-    `${url}/search?q=${q.trim().toLowerCase()}`,
+    `${url}/search?q=${q.trim().toLowerCase()}`
   )
   return { recipes, error }
 }
@@ -57,7 +57,7 @@ export async function updateRecipe({ id, section, value }) {
   const { message, error } = await postWebAppJson(`${url}/update`, {
     id,
     value,
-    section,
+    section
   })
   return { message, error }
 }
@@ -67,22 +67,22 @@ export async function updateRecipeAccess(id) {
   return { message }
 }
 
-export async function updatePhotoCaption({ id, value }) {
-  const { error, message } = await postWebAppJson(`${url}/photos/update`, {
+export async function updateMediaCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(`${url}/media/update`, {
     id,
     value: value,
-    section: 'caption',
+    section: 'caption'
   })
   return { error, message }
 }
 
-export async function addEntryPhoto(formData) {
-  const { message } = await postWebAppForm(`${url}/photos/create`, formData)
+export async function addMedia(formData) {
+  const { message } = await postWebAppForm(`${url}/media/create`, formData)
   return { message }
 }
 
 /* delete the photo */
-export async function deleteEntryPhoto(id) {
-  const { error } = await getWebApp(`${url}/photos/delete?id=${id}`)
+export async function deleteMedia(id) {
+  const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
   return { error }
 }

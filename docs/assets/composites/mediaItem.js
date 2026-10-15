@@ -1,31 +1,32 @@
-import { injectStyle } from '../../assets/js/ui.js'
-import { createDiv } from '../../assets/partials/div.js'
-import { createCollapsibleGroup } from '../../assets/partials/collapsibleGroup.js'
-import { createIcon } from '../../assets/partials/icon.js'
-import { createImage } from '../../assets/partials/image.js'
+import { injectStyle } from '../js/ui.js'
+import { createDiv } from '../partials/div.js'
+import { createCollapsibleGroup } from '../partials/collapsibleGroup.js'
+import { createIcon } from '../partials/icon.js'
+import { createImage } from '../partials/image.js'
+import { createVideo } from '../partials/video.js'
 import { createMarkdown } from './markdown.js'
 import { createSpan } from '../partials/span.js'
 import { state } from '../js/state.js'
 
 const css = `
-.photo-item {
+.media-item {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   border: none !important;
 }
-.photo-item.container {
+.media-item.container {
   padding: 0;
   width: 100%;
 }
-.journal-photo {
+.journal-media {
   max-width: 100%;
   height: auto;
   display: block;
   margin-top: 10px;
 }
-.journal-photo-caption {
+.journal-media-caption {
   margin-top: 20px;
 }
 `
@@ -34,18 +35,14 @@ const css = `
  * Constructor for the custom item
  * @param {String} id The id of the image
  */
-export function createPhotoItem(obj) {
+export function createMediaItem(obj) {
   injectStyle(css)
 
-  const { id, imgSrc } = obj
-
-  const el = createDiv({ id, className: 'photo-item container' })
+  const el = createDiv({ id: obj.id, className: 'media-item container' })
 
   build({ el, obj })
   react(el)
   listen(el)
-
-  imgSrc && (el.querySelector('img').src = imgSrc)
 
   return el
 }
@@ -62,11 +59,24 @@ function build({ el, obj }) {
   })
   el.appendChild(cgEl)
 
-  el.appendChild(createImage({ className: 'journal-photo' }))
+  let media
+  switch (obj.mediaType) {
+    case 'image':
+      media = createImage({ className: 'journal-media' })
+      obj.src && (media.src = obj.src)
+      break
+    case 'video':
+      media = createVideo({ className: 'journal-media' })
+      obj.src && (media.src = obj.src)
+      break
+    default:
+      media = createDiv({ html: `Unknwon media type: "${obj.mediaType}"` })
+  }
+  el.appendChild(media)
 
   el.appendChild(
     createMarkdown({
-      className: 'photo-caption mt-20 w-100',
+      className: 'media-caption mt-20 w-100',
       placeholder: 'Add caption...',
       name: 'caption',
       toggleId: markdownToggleId,
@@ -76,7 +86,7 @@ function build({ el, obj }) {
 }
 
 function react(el) {
-  state.on('photo-delete-response', 'photoItem', ({ error }) => {
+  state.on('media-delete-response', 'mediaItem', ({ error }) => {
     const modalDelete = document.getElementById('modal-delete')
 
     if (error) {
@@ -86,20 +96,20 @@ function react(el) {
     }
   })
 
-  state.on('button-click:modal-cancel-btn', 'photoItem', () => {
+  state.on('button-click:modal-cancel-btn', 'mediaItem', () => {
     el.querySelector('.fa-trash').removeAttribute('disabled')
     const modalDelete = document.getElementById('modal-delete')
     modalDelete.dataset.photo = ''
   })
 
-  state.on('photo-caption-response', 'photoItem', ({ error, message }) => {
+  state.on('media-caption-response', 'mediaItem', ({ error, message }) => {
     // el.querySelector('.photo-message').insertHtml(error || message)
   })
 }
 
 function listen(el) {
   el.querySelector('.fa-trash').addEventListener('click', async (e) => {
-    const parent = e.target.closest('.photo-item')
+    const parent = e.target.closest('.media-item')
     const id = parent.id
     const caption = parent.querySelector('.markdown-wrapper').getValue()
 

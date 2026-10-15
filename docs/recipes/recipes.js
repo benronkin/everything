@@ -15,15 +15,15 @@ import {
   createRecipe,
   deleteRecipe,
   fetchCategoriesAndRecipes,
-  fetchEntryPhotosMetadata,
+  fetchMediaMetadata,
   fetchRecentRecipes,
   fetchRecipesByCategory,
   searchRecipes,
   updateRecipe,
   updateRecipeAccess,
-  addEntryPhoto,
-  deleteEntryPhoto,
-  updatePhotoCaption
+  addMedia,
+  deleteMedia,
+  updateMediaCaption
 } from './recipes.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -109,8 +109,8 @@ function react() {
       populateRelatedRecipes()
       const id = state.get('active-doc')
       if (id) {
-        const photosMetadata = await fetchEntryPhotosMetadata(id)
-        state.set('photos-metadata', photosMetadata)
+        const mediaMetadata = await fetchMediaMetadata(id)
+        state.set('media-metadata', mediaMetadata)
 
         updateRecipeAccess(id)
         const docs = state.get('main-documents')
@@ -143,28 +143,28 @@ function react() {
     formData.set('file', file)
     formData.set('entry', id)
 
-    const { message } = await addEntryPhoto(formData)
+    const { message } = await addMedia(formData)
 
     state.set('photo-upload-response', message)
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
   })
 
-  state.on('photo-delete-request', 'recipes.js', async (id) => {
-    const { error, message } = await deleteEntryPhoto(id)
-    state.set('photo-delete-response', { error, message })
+  state.on('media-delete-request', 'recipes.js', async (id) => {
+    const { error, message } = await deleteMedia(id)
+    state.set('media-delete-response', { error, message })
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
   })
 
-  state.on('photo-caption-change', 'recipes.js', async ({ id, value }) => {
-    const { error, message } = await updatePhotoCaption({ id, value })
-    state.set('photo-caption-response', { error, message })
+  state.on('media-caption-change', 'recipes.js', async ({ id, value }) => {
+    const { error, message } = await updateMediaCaption({ id, value })
+    state.set('media-caption-response', { error, message })
     // refresh photo list
-    const photosMetadata = await fetchEntryPhotosMetadata(id)
-    state.set('photos-metadata', photosMetadata)
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
   })
 }
 
@@ -213,7 +213,7 @@ async function reactRecipeDelete() {
     const parent = document.getElementById(photoId)
     const trashEl = parent.querySelector('.fa-trash')
     trashEl.disabled = true
-    state.set('photo-delete-request', photoId)
+    state.set('media-delete-request', photoId)
     modalDelete.dataset.photo = ''
     modalDelete.close()
   } else {
