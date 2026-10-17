@@ -82,7 +82,7 @@ export async function deleteStep(id) {
   return resp
 }
 
-export async function deleteTaskSteps(id) {
+export async function deleteAllSteps(id) {
   const resp = await getWebApp(`${url}/steps/delete-all?id=${id}`)
   return resp
 }

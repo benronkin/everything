@@ -12,9 +12,9 @@ import { setMessage } from '../assets/js/ui.js'
 import {
   createStep,
   createSteps,
+  deleteAllSteps,
   deleteStep,
   deleteTask,
-  deleteTaskSteps,
   duplicateTask,
   fetchTask,
   fetchSteps,
@@ -173,7 +173,7 @@ async function handleBulkStepDeleteConfirm() {
   setMessage('Deleting all steps...')
   const id = state.get('active-doc')
 
-  const { error } = await deleteTaskSteps(id)
+  const { error } = await deleteAllSteps(id)
   if (error) {
     setMessage(error, { type: 'danger' })
     return
