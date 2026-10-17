@@ -115,9 +115,9 @@ function listen(el) {
 
     const modalDelete = document.getElementById('modal-delete')
     modalDelete.config({
-      header: createSpan({ html: 'Delete image' }),
+      header: createSpan({ html: 'Delete media' }),
       body: createSpan({
-        html: caption ? `Delete "${caption}"?` : 'Delete this image?'
+        html: caption ? `Delete "${caption}"?` : 'Delete this media?'
       }),
       password: false,
       photo: id

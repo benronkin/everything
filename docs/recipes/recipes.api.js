@@ -30,8 +30,8 @@ export async function fetchCategoriesAndRecipes() {
 }
 
 export async function fetchMediaMetadata(id) {
-  const { photos, error } = await getWebApp(`${url}/media/read?entry=${id}`)
-  return { photos, error }
+  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
+  return { media, error }
 }
 
 export async function fetchRecentRecipes() {

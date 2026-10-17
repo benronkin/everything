@@ -79,7 +79,7 @@ function react(el) {
 
     formMessage.insertHtml(message)
 
-    if (message === 'media uploaded') {
+    if (message === 'media_uploaded') {
       el.querySelector('button').disabled = false
       el.querySelector('#media-caption-input').value = ''
       el.querySelector('span.file-name').innerHTML = ''

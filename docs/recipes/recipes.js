@@ -128,7 +128,7 @@ function react() {
 
   state.on('field-changed', 'recipes', handleFieldChange)
 
-  state.on('photo-form-submit', 'recipes.js', async (formData) => {
+  state.on('media-form-submit', 'recipes.js', async (formData) => {
     // const compressionOptions = {
     //   maxWidthOrHeight: 900,
     //   useWebWorker: true,
@@ -145,7 +145,7 @@ function react() {
 
     const { message } = await addMedia(formData)
 
-    state.set('photo-upload-response', message)
+    state.set('media-upload-response', message)
     // refresh photo list
     const mediaMetadata = await fetchMediaMetadata(id)
     state.set('media-metadata', mediaMetadata)
