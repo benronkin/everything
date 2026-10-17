@@ -69,6 +69,14 @@ export async function createStep(caption, taskId) {
   return resp
 }
 
+export async function createSteps(captionArr, taskId) {
+  const resp = await postWebAppJson(`${url}/steps/create-many`, {
+    captions: captionArr,
+    taskId
+  })
+  return resp
+}
+
 export async function deleteStep(id) {
   const resp = await getWebApp(`${url}/steps/delete?id=${id}`)
   return resp

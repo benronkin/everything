@@ -6,6 +6,7 @@ import { createHeader } from '../../assets/partials/header.js'
 import { createHeaderGroup } from '../../assets/partials/headerGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTextareaGroup } from '../../assets/partials/textareaGroup.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
@@ -112,11 +113,11 @@ function build(el, doc) {
   }
 
   el.appendChild(
-    createInputGroup({
+    createTextareaGroup({
       placeholder: doc.steps?.length ? 'Next step' : 'Add step',
       classes: {
         group: 'add-step-wrapper mt-20',
-        input: 'add-step',
+        textarea: 'add-step',
         icon: 'fa-plus'
       }
     })
@@ -206,5 +207,13 @@ function listen(el) {
 
     const taskId = state.get('active-doc')
     state.set('step-added', { taskId, caption })
+  })
+
+  // add step is a textarea that needs to change on enter key
+  el.querySelector('.add-step').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      event.target.dispatchEvent(new Event('change', { bubbles: true }))
+    }
   })
 }

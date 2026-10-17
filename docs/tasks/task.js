@@ -11,6 +11,7 @@ import { fetchUsers, getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
   createStep,
+  createSteps,
   deleteStep,
   deleteTask,
   duplicateTask,
@@ -151,16 +152,25 @@ async function handleStepCreate({ caption, taskId }) {
   addStepEl.placeholder = 'Next step'
   addStepEl.focus()
 
-  const stepEl = createStepElement({ caption })
-  document.querySelector('#steps-wrapper').appendChild(stepEl)
+  const captionArr = caption.split('\n')
 
-  const resp = await createStep(caption, taskId)
+  if (captionArr.length === 1) {
+    const stepEl = createStepElement({ caption })
+    document.querySelector('#steps-wrapper').appendChild(stepEl)
 
-  const { data } = resp
+    const resp = await createStep(caption, taskId)
 
-  stepEl.id = data.id
+    const { data } = resp
 
-  state.set('steps-changed', true)
+    stepEl.id = data.id
+
+    state.set('steps-changed', true)
+
+    return
+  }
+
+  await createSteps(captionArr, taskId)
+  window.location.reload()
 }
 
 async function handleStepDelete(data) {
