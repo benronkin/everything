@@ -1,5 +1,6 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 
 import { mainDocumentsList } from './mainDocumentsList.js'
@@ -8,6 +9,10 @@ import { newEntry } from './newEntry.js'
 const css = `
 #left-panel {
   width: 100%;
+}
+  
+#next-page {
+  margin: 20px 0;
 }
 `
 
@@ -28,6 +33,14 @@ function build(el) {
   el.appendChild(newEntry())
 
   el.appendChild(mainDocumentsList())
+
+  el.appendChild(
+    createButton({
+      id: 'next-page',
+      html: 'Show older entries',
+      className: 'primary'
+    })
+  )
 }
 
 function react(el) {

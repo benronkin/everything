@@ -11,7 +11,7 @@ import { getMe, fetchUsers } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { fetchEntry } from './lexicon.api.js'
 import { search } from '../assets/composites/search.js'
-import { fetchRecentEntries, updateEntryAccess } from './lexicon.api.js'
+import { pageEntries, updateEntryAccess } from './lexicon.api.js'
 import {
   handleSearch,
   handleFieldChange,
@@ -19,6 +19,7 @@ import {
   handleEntryAdd,
   handleEntryDelete,
   handleSenseDelete,
+  handlePageEntries
 } from './lexicon.handlers.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -84,17 +85,17 @@ async function build() {
     classes: {
       icon: 'fa-magnifying-glass',
       group: 'outer-wrapper',
-      form: 'all-panel-search',
+      form: 'all-panel-search'
     },
     placeholder: 'Search lexicon...',
-    name: 'search-lexicon',
+    name: 'search-lexicon'
   })
   div.appendChild(searchEl)
 
   div.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
 
@@ -109,7 +110,7 @@ function react() {
   state.on('default-left-pane', 'lexicon', async () => {
     document.querySelector('[name="search-lexicon"').value = ''
 
-    const { entries } = await fetchRecentEntries()
+    const { entries } = await pageEntries()
 
     entries.forEach((e) => {
       e.senses = JSON.parse(e.senses)
@@ -149,4 +150,6 @@ function react() {
   state.on('field-changed', 'lexicon', handleFieldChange)
 
   state.on('name-change', 'lexicon', handleNameChange)
+
+  state.on('button-click:next-page', 'lexicon', handlePageEntries)
 }

@@ -6,9 +6,9 @@ import {
   createEntry,
   deleteEntry,
   deleteSense,
+  pageEntries,
   updateEntry,
-  updateEntries,
-  fetchRecentEntries,
+  updateEntries
 } from './lexicon.api.js'
 import { updateUserPrefs } from '../users/users.api.js'
 
@@ -18,7 +18,7 @@ export async function handleSearch() {
   const q = search.value.trim().toLowerCase()
 
   if (!q) {
-    const { entries } = await fetchRecentEntries()
+    const { entries } = await pageEntries()
 
     entries.forEach((e) => {
       e.senses = JSON.parse(e.senses)
@@ -46,7 +46,7 @@ export async function handleSearch() {
 
   state.set('lexicon-search', {
     q,
-    exact,
+    exact
   })
 
   if (exact.length) {
@@ -78,7 +78,7 @@ export async function handleEntryAdd() {
     synonyms: newEntry.synonyms || '',
     example: newEntry.example || '',
     created_at: new Date().toISOString(),
-    submitter,
+    submitter
   }
 
   const { error } = await createEntry(sense)
@@ -97,7 +97,7 @@ export async function handleEntryAdd() {
     delete sense.entry
     doc = {
       title,
-      senses: [sense],
+      senses: [sense]
     }
     docs.unshift(doc)
   }
@@ -179,6 +179,38 @@ export async function handleEntryDelete() {
     .filter((doc) => doc.title !== title)
   state.set('main-documents', filteredDocs)
   state.set('app-mode', 'left-panel')
+}
+
+/**
+ *
+ */
+export async function handlePageEntries() {
+  let page = state.get('lexicon-page')
+  if (typeof page === 'undefined') page = 0
+  page++
+
+  const { entries, error } = await pageEntries(page)
+
+  entries.forEach((e) => {
+    e.senses = JSON.parse(e.senses)
+  })
+
+  if (error) {
+    console.error(`Lexicon server error: ${error}`)
+    return
+  }
+
+  state.set('lexicon-page', page)
+
+  let entryDocs = entries
+  if (page > 0) {
+    entryDocs = [...state.get('main-documents'), ...entries]
+  }
+  state.set('main-documents', entryDocs)
+
+  document
+    .querySelector('#next-page')
+    .classList.toggle('hidden', entries.length < 5)
 }
 
 export async function handleSenseDelete() {

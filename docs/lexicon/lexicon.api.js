@@ -34,8 +34,8 @@ export async function fetchLatestWotd() {
   return { entry, error }
 }
 
-export async function fetchRecentEntries() {
-  const { entries, error } = await getWebApp(`${url}/latest`)
+export async function pageEntries(page = 0) {
+  const { entries, error } = await getWebApp(`${url}/read?page=${page}`)
   return { entries, error }
 }
 
@@ -50,7 +50,7 @@ export async function updateEntry({ id, section, value }) {
   const { message, error } = await postWebAppJson(`${url}/update-one`, {
     id,
     value,
-    section,
+    section
   })
   return { message, error }
 }
