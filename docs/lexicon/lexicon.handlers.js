@@ -208,9 +208,8 @@ export async function handlePageEntries() {
   }
   state.set('main-documents', entryDocs)
 
-  document
-    .querySelector('#next-page')
-    .classList.toggle('hidden', entries.length < 5)
+  document.querySelector('#next-page').classList.remove('hidden')
+  // .classList.toggle('hidden', entries.length < 5)
 }
 
 export async function handleSenseDelete() {
