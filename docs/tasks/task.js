@@ -14,6 +14,7 @@ import {
   createSteps,
   deleteStep,
   deleteTask,
+  deleteTaskSteps,
   duplicateTask,
   fetchTask,
   fetchSteps,
@@ -123,7 +124,7 @@ function react() {
 
   state.on('task-deleted', 'task', handleTaskDelete)
 
-  state.on('button-click:modal-delete-btn', 'task', handleTaskDeleteConfirm)
+  state.on('button-click:modal-delete-btn', 'task', handleModalDeleteConfirm)
 
   state.on('step-added', 'task', handleStepCreate)
 
@@ -144,6 +145,55 @@ function react() {
   })
 
   state.on('button-click:duplicate-task', 'task', handleInstanceClick)
+
+  state.on('button-click:delete-all-steps', 'taskBody', handleBulkStepDelete)
+}
+
+/**
+ *
+ */
+async function handleBulkStepDelete() {
+  state.set('delete-target', 'all-steps')
+
+  const modalDelete =
+    document.getElementById('modal-delete') ||
+    createModalDelete({ password: false })
+
+  modalDelete.setHeader('Delete all steps in this task')
+  modalDelete.setBody(
+    '<strong>Are you sure you want to delete all steps?</strong> This cannot be undone.'
+  )
+  modalDelete.showModal()
+}
+
+/**
+ *
+ */
+async function handleBulkStepDeleteConfirm() {
+  setMessage('Deleting all steps...')
+  const id = state.get('active-doc')
+
+  const { error } = await deleteTaskSteps(id)
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+  window.location.reload()
+}
+
+/**
+ *
+ */
+function handleModalDeleteConfirm() {
+  switch (state.get('delete-target')) {
+    case 'all-steps':
+      handleBulkStepDeleteConfirm()
+      break
+    case 'task':
+      handleTaskDeleteConfirm()
+      break
+  }
+  state.set('delete-target', null)
 }
 
 async function handleStepCreate({ caption, taskId }) {
@@ -268,6 +318,9 @@ async function handleFieldChange(el) {
   }
 }
 
+/**
+ *
+ */
 function handleTaskDelete() {
   const id = state.get('active-doc')
   // get steps from the dom not from state
@@ -288,12 +341,14 @@ function handleTaskDelete() {
     document.getElementById('modal-delete') ||
     createModalDelete({ password: false })
 
-  modalDelete.querySelector('.modal-header').innerHTML = `Delete ${typeString}`
-  modalDelete.querySelector('.modal-body').innerHTML =
+  modalDelete.setHeader(`Delete ${typeString}`)
+  modalDelete.setBody(
     `<div><strong>${document.getElementById('title').value}</strong> contains outstanding steps. Delete ${typeString}?<div>`
+  )
 
   document.getElementById('modal-delete-btn').dataset.taskId = id
 
+  state.set('delete-target', 'task')
   modalDelete.showModal()
 }
 

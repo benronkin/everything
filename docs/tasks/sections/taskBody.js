@@ -15,6 +15,10 @@ import { createUserSelect } from '../../assets/partials/userSelect.js'
 import { createProjectPrompt } from '../../assets/partials/projectPrompt.js'
 
 const css = `
+#delete-all-steps {
+  border-color: var(--red1);
+  background-color: var(--red0);
+}
 #due-date-wrapper {
   margin-top: 30px;
 }
@@ -30,6 +34,14 @@ const css = `
 #trash-btn i {
   margin-right: 20px;
   margin-left: 0 !important;  
+}
+#steps-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-group h5 {
+  margin: 0;
 }
 .add-step {
   width: 90%;
@@ -59,6 +71,7 @@ export function createTaskBody(doc) {
   })
 
   build(el, doc)
+  react(el)
   listen(el, doc)
 
   return el
@@ -96,10 +109,20 @@ function build(el, doc) {
   )
 
   el.appendChild(
-    createHeaderGroup({
-      type: 'h5',
-      classes: { group: 'mt-40 mb-20', icon: 'fa-rectangle-list' },
-      html: 'Steps'
+    createDiv({
+      id: 'steps-header-wrapper',
+      html: [
+        createHeaderGroup({
+          type: 'h5',
+          classes: { group: 'mt-40 mb-20', icon: 'fa-rectangle-list' },
+          html: 'Steps'
+        }),
+        createButton({
+          id: 'delete-all-steps',
+          html: '❌',
+          className: 'bordered hidden'
+        })
+      ]
     })
   )
 
@@ -194,6 +217,19 @@ function build(el, doc) {
   )
 
   el.appendChild(createSpan({ html: doc.id }))
+}
+
+/**
+ *
+ */
+function react(el) {
+  state.on('steps-changed', 'taskBody', () => {
+    const hasSteps =
+      document.getElementById('steps-wrapper')?.children?.length > 0
+    document
+      .getElementById('delete-all-steps')
+      .classList.toggle('hidden', !hasSteps)
+  })
 }
 
 /**

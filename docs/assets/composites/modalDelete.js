@@ -192,17 +192,31 @@ function hidePassword() {
 /**
  *
  */
-function setBody(html) {
-  this.querySelector('.modal-body').innerHTML = ''
-  this.querySelector('.modal-body').appendChild(html)
+function setBody(content) {
+  const body = this.querySelector('.modal-body')
+
+  if (content instanceof Node) {
+    body.replaceChildren(content)
+  }
+
+  if (typeof content === 'string') {
+    body.innerHTML = content
+  }
 }
 
 /**
  *
  */
-function setHeader(html) {
-  this.querySelector('.modal-header').innerHTML = ''
-  this.querySelector('.modal-header').appendChild(html)
+function setHeader(content) {
+  const header = this.querySelector('.modal-header')
+
+  if (content instanceof Node) {
+    header.replaceChildren(content)
+  }
+
+  if (typeof content === 'string') {
+    header.innerHTML = content
+  }
 }
 
 function setPassword(value) {

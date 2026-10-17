@@ -82,6 +82,11 @@ export async function deleteStep(id) {
   return resp
 }
 
+export async function deleteTaskSteps(id) {
+  const resp = await getWebApp(`${url}/steps/delete-all?id=${id}`)
+  return resp
+}
+
 export async function fetchSteps(id) {
   const { steps, error } = await getWebApp(`${url}/steps/read?id=${id}`)
   return { steps, error }
