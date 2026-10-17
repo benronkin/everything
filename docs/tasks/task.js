@@ -159,6 +159,8 @@ async function handleStepCreate({ caption, taskId }) {
   const { data } = resp
 
   stepEl.id = data.id
+
+  state.set('steps-changed', true)
 }
 
 async function handleStepDelete(data) {
@@ -180,6 +182,8 @@ async function handleStepDelete(data) {
   if (error) {
     throw new Error(error)
   }
+
+  state.set('steps-changed', true)
 }
 
 /**
