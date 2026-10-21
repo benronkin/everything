@@ -98,21 +98,11 @@ function react() {
   state.on('field-changed', 'journal', handleFieldChange)
 
   state.on('media-form-submit', 'journal', async (formData) => {
-    // const compressionOptions = {
-    //   maxWidthOrHeight: 900,
-    //   useWebWorker: true,
-    //   fileType: 'image/jpeg',
-    //   exifOrientation: null
-    // }
-
     let id
-    // let compressed
 
     try {
       const file = formData.get('file')
-      // compressed = await imageCompression(file, compressionOptions)
       id = state.get('active-doc')
-      // formData.set('file', compressed)
       formData.set('file', file)
       formData.set('entry', id)
     } catch (error) {

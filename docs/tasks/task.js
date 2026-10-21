@@ -197,6 +197,7 @@ function handleModalDeleteConfirm() {
 }
 
 async function handleStepCreate({ caption, taskId }) {
+  setMessage('Adding step(s)...')
   const addStepEl = document.querySelector('.add-step')
   addStepEl.value = ''
   addStepEl.placeholder = 'Next step'
@@ -215,8 +216,7 @@ async function handleStepCreate({ caption, taskId }) {
     stepEl.id = data.id
 
     state.set('steps-changed', true)
-
-    return
+    setMessage()
   }
 
   await createSteps(captionArr, taskId)

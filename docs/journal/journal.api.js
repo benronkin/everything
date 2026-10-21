@@ -5,7 +5,7 @@ const url = `${state.const('APP_URL')}/journal`
 
 export async function createEntry(visit_date) {
   const resp = await postWebAppJson(`${url}/create`, { visit_date })
-  const { data, error } = resp
+  const { data } = resp
   return { id: data.id }
 }
 

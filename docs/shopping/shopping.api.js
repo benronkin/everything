@@ -1,5 +1,5 @@
 import { state } from '../assets/js/state.js'
-import { getWebApp, postWebAppJson } from '../assets/js/io.js'
+import { getWebApp, postWebAppForm, postWebAppJson } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/shopping`
 
@@ -29,6 +29,11 @@ export async function deleteItem(id, list) {
   return resp
 }
 
+export async function fetchMediaMetadata(id) {
+  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
+  return { media, error }
+}
+
 /**
  *
  */
@@ -51,4 +56,23 @@ export async function getItems() {
 export async function updateItem(data) {
   const resp = await postWebAppJson(`${url}/update`, data)
   return resp
+}
+
+export async function updateMediaCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(`${url}/media/update`, {
+    id,
+    value: value,
+    section: 'caption'
+  })
+  return { error, message }
+}
+
+export async function addMedia(formData) {
+  const { message } = await postWebAppForm(`${url}/media/create`, formData)
+  return { message }
+}
+
+export async function deleteMedia(id) {
+  const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
+  return { error }
 }

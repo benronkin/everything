@@ -8,7 +8,15 @@ import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import { getItem, deleteItem, updateItem } from './shopping.api.js'
+import {
+  addMedia,
+  deleteMedia,
+  fetchMediaMetadata,
+  getItem,
+  deleteItem,
+  updateItem,
+  updateMediaCaption
+} from './shopping.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -65,6 +73,11 @@ async function build() {
 }
 
 function react() {
+  state.on('active-doc', 'journal', async (id) => {
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
+  })
+
   state.on(
     'button-click:modal-delete-btn',
     'shoppingItem',
@@ -80,7 +93,7 @@ function react() {
       const file = formData.get('file')
       id = state.get('active-doc')
       formData.set('file', file)
-      formData.set('entry', id)
+      formData.set('id', id)
     } catch (error) {
       console.error(error)
       return
