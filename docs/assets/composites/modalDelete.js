@@ -179,7 +179,7 @@ function message(text = '') {
 }
 
 function getPassword() {
-  return this.querySelector('#modal-delete-input').value
+  return this.querySelector('#modal-delete-input')?.value
 }
 
 /**

@@ -1,12 +1,13 @@
-import { injectStyle } from '../../assets/js/ui.js'
+import { state } from '../../assets/js/state.js'
+import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { shoppingList } from './shoppingList.js'
-import { suggestionsList } from './suggestionsList.js'
-import { addItemForm } from './addItemForm.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
+import { createHeader } from '../../assets/partials/header.js'
+import { createIcon } from '../../assets/partials/icon.js'
+import { createItemGroup } from './item.group.js'
+import { createSpan } from '../../assets/partials/span.js'
+import { dangerZone } from './dangerZone.js'
+import { createMediaForm } from '../../assets/composites/media.form.js'
+import { mediaList } from '../../assets/composites/mediaList.js'
 
 const css = `
 #main-panel {
@@ -16,16 +17,15 @@ const css = `
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  min-height: 83vh;
 }
 #main-panel.hidden {
   display: none;
 }
-#main-panel form {
-  gap: 0 !important;
-}
-#main-panel .list-item .fa-trash {
-  font-size: 30px;
+#main-panel input.field,
+#main-panel textarea.field {
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px dotted var(--gray1);
 }
 `
 
@@ -36,7 +36,6 @@ export function mainPanel() {
 
   build(el)
   react(el)
-  listen(el)
 
   el.id = 'main-panel'
 
@@ -44,13 +43,64 @@ export function mainPanel() {
 }
 
 function build(el) {
-  el.appendChild(addItemForm())
+  // hide empty elements
+  el.classList.add('hidden')
+  setMessage('Fetching item info...')
 
-  el.appendChild(suggestionsList())
+  el.appendChild(createItemGroup())
 
-  el.appendChild(shoppingList())
+  const phw = createDiv({
+    id: 'media-header-wrapper',
+    className: 'flex align-center'
+  })
+
+  el.appendChild(phw)
+
+  phw.appendChild(
+    createHeader({ type: 'h4', html: 'Media', className: 'mt-0' })
+  )
+
+  phw.appendChild(
+    createIcon({
+      id: 'add-media-toggle',
+      classes: { primary: 'fa-camera', other: 'primary btn' }
+    })
+  )
+
+  const upw = createDiv({
+    id: 'upload-media-wrapper'
+  })
+
+  el.appendChild(upw)
+  upw.appendChild(createMediaForm())
+
+  el.appendChild(mediaList())
+
+  el.appendChild(dangerZone())
+
+  el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
+
+  el.appendChild(createSpan({ id: 'item-id' }))
 }
 
-function react() {}
+function react(el) {
+  state.on('main-documents', 'mainPanel', (docs) => {
+    const doc = docs[0]
 
-function listen() {}
+    el.querySelector('#title').value = doc.title
+    el.querySelector('#carted').value = doc.carted
+    el.querySelector('#recurring').value = doc.recurring
+    el.querySelector('#store').value = doc.store
+    el.querySelector('#note').setValue(doc.note)
+    el.querySelector('.markdown-wrapper').updateEditor(doc.note)
+    el.querySelector('#item-id').insertHtml(doc.id)
+
+    // show filled elements
+    el.classList.remove('hidden')
+    const urlParams = new URLSearchParams(window.location.search)
+    if (!urlParams.get('message')) {
+      console.debug('Clearing setMessage on main-documents state')
+      setMessage()
+    }
+  })
+}

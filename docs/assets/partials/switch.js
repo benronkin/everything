@@ -52,7 +52,10 @@ const css = `
   font-size: 0.75rem;
 }
 `
-
+/**
+ * USAGE:
+ *   Set a value: el.querySelector('#carted').value = doc.carted
+ */
 export function createSwitch({ id, name, iconOff, iconOn, className }) {
   injectStyle(css)
 
@@ -78,8 +81,8 @@ export function createSwitch({ id, name, iconOff, iconOn, className }) {
       },
       set(v) {
         el.classList.toggle('on', v)
-      },
-    },
+      }
+    }
   })
 
   return el

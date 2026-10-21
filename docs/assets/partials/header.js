@@ -8,10 +8,6 @@ import { insertHtml } from '../js/format.js'
 const css = `
 `
 
-// -------------------------------
-// Exported functions
-// -------------------------------
-
 /**
  * Constructor for custom header element
  * @param {String} type - h1... h6

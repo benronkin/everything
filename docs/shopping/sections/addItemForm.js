@@ -64,12 +64,6 @@ function react(el) {
   state.on('form-submit:shopping-form', 'addItemForm', () => {
     el.querySelector('#add-to-both-lists-button').classList.add('hidden')
   })
-
-  state.on('main-documents', 'addItemForm', () => {
-    if (!isMobile()) {
-      document.querySelector('textarea[new-item]').focus()
-    }
-  })
 }
 
 function listen(el) {
@@ -80,9 +74,10 @@ function listen(el) {
 }
 
 function handleFormKeyup({ el, value }) {
+  return
   if (!value || !value.toString().trim().length) return
 
-  const inShoppingList = state.get('shopping-list').includes(value)
+  const inShoppingList = state.get('main-documents').includes(value)
   const inSuggestionsList = state.get('suggestions-list').includes(value)
 
   el.querySelector('#add-to-both-lists-button').classList.toggle(

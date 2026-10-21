@@ -1,22 +1,15 @@
 import { state } from '../assets/js/state.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { toolbar } from './sections/toolbar.js'
-import { mainPanel } from './sections/mainPanel.js'
+import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
-import { createNav } from '../assets/composites/nav.js'
+import { nav } from './sections/nav.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
-import { handlRightDrawerState } from '../assets/js/ui.js'
 import { setMessage } from '../assets/js/ui.js'
+import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { getMe } from '../users/users.api.js'
-import {
-  addItem,
-  addRecurringItems,
-  deleteItem,
-  fetchShopping,
-  updateShoppingList,
-  updateSuggestionsList
-} from './shopping.api.js'
+import { addItem, deleteItem, getItems } from './shopping.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -33,25 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Token not found locally')
     }
 
-    const [{ shoppingList, shoppingSuggestions, recurring }, { user }] =
-      await Promise.all([fetchShopping(), getMe()])
+    const [{ items }, { user }] = await Promise.all([getItems(), getMe()])
 
-    state.set(
-      'shopping-list',
-      shoppingList
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean)
-    )
-    state.set(
-      'suggestions-list',
-      shoppingSuggestions
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean)
-    )
-    state.set('recurring', recurring)
-    state.set('app-mode', 'main-panel')
+    state.set('main-documents', items)
+    state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'shopping')
     window.state = state // avail to browser console
@@ -73,19 +51,17 @@ function build() {
 
   const wrapperEl = createDiv({ className: 'wrapper' })
   body.prepend(wrapperEl)
-  wrapperEl.appendChild(
-    createNav({
-      title: '<i class="fa-solid fa-shopping-cart"></i> Shopping'
-    })
-  )
+  wrapperEl.appendChild(nav({}))
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
     className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
-  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(leftPanel())
   columnsWrapperEl.appendChild(createRightDrawer({ active: 'shopping' }))
+
+  wrapperEl.appendChild(createModalDelete({ password: false }))
 
   wrapperEl.appendChild(createFooter())
 }
@@ -93,10 +69,6 @@ function build() {
 function react() {
   const addEl = document.querySelector('[name="new-item"]')
   const cartEl = document.getElementById('shopping-list')
-
-  state.on('form-keyup:shopping-form', 'shopping', () =>
-    state.set('suggestions-list', [...state.get('suggestions-list')])
-  )
 
   state.on('icon-click:suggest', 'shopping', () => {
     state.set('suggestions-list', [...state.get('suggestions-list')])
@@ -130,7 +102,7 @@ function react() {
 
     for (let i = items.length - 1; i >= 0; i--) {
       const item = items[i]
-      resp = addShoppingItem(item)
+      resp = handleAddItem(item)
       if (resp.error) {
         setMessage(resp.error, { type: 'warn' })
         return
@@ -144,22 +116,16 @@ function react() {
   })
 
   state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
-    addShoppingItem(item)
+    handleAddItem(item)
     addEl.value = ''
     document.getElementById('suggestions-list').classList.add('hidden')
   })
 
-  state.on('item-click:delete-item', 'shopping', async ({ item }) => {
-    let sItems = state.get('shopping-list')
-    sItems = sItems.filter((sItem) => sItem !== item)
-    state.set('shopping-list', sItems)
-    const resp = await deleteShoppingItem(item)
-    const { error } = resp
-    if (error) {
-      console.error(error)
-      setMessage(error)
-    }
+  state.on('item-click:delete-item', 'shopping', async (item) => {
+    const resp = await handleDeleteItem(item)
   })
+
+  state.on('button-click:modal-delete-btn', 'task', handleModalDeleteConfirm)
 
   state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
     let sItems = state.get('suggestions-list')
@@ -183,41 +149,66 @@ function react() {
   })
 }
 
-async function addShoppingItem(item) {
-  item = item.trim().toLowerCase()
-  if (!item.length) return
+/**
+ *
+ */
+async function handleAddItem(title) {
+  title = title.trim().toLowerCase()
+  if (!title.length) return
 
-  const sItems = state.get('shopping-list')
-  if (sItems.includes(item)) {
-    return { message: `${item} already on the list` }
+  setMessage(`Adding ${title}...`)
+
+  const viewSelect = document.getElementById('view-select')
+  const view = viewSelect.getSelected().value
+
+  const { data } = await addItem(title, view)
+  const items = [...state.get('main-documents')]
+  const index = items.findIndex((item) => item.id === data.item.id)
+
+  if (index === -1) {
+    items.unshift(data.item)
+  } else {
+    items[index] = data.item
   }
 
-  sItems.unshift(item)
-  state.set('shopping-list', sItems)
-
-  const resp = await addItem(item)
-
-  if (resp?.error) {
-    // revert operation
-    sItems.shift()
-    state.set('shopping-list', sItems)
-    return { error: resp.error }
-  }
-  return
+  state.set('main-documents', items)
 }
 
-async function deleteShoppingItem(item) {
-  item = item.trim().toLowerCase()
-  if (!item.length) return
+async function handleDeleteItem({ id, title }) {
+  const viewSelect = document.getElementById('view-select')
+  const view = viewSelect.getSelected().value
 
-  const sItems = state.get('shopping-list')
-
-  const idx = sItems.indexOf(item)
-  if (!idx === -1) {
-    return { message: `${item} is not on the list` }
+  if (view === 'all') {
+    const modal = document.getElementById('modal-delete')
+    modal.setHeader(`Delete ${title}`)
+    modal.setBody('Permanently remove this item from the app?')
+    modal.showModal()
+    state.set('permanent-delete', id)
+  } else {
+    const resp = await deleteItem(id, view)
+    state.set('permanent-delete', null)
+    const items = state.get('main-documents')
+    const item = items.find((i) => i.id === id)
+    if (view === 'cart') item.carted = 0
+    if (view === 'recurring') item.recurring = 0
+    state.set('main-documents', items)
+    return resp
   }
+}
 
-  const resp = await deleteItem(item)
+/**
+ *
+ */
+async function handleModalDeleteConfirm() {
+  const id = state.get('permanent-delete')
+  state.set('permanent-delete', null)
+
+  let items = state.get('main-documents')
+  items = items.filter((i) => i.id !== id)
+  state.set('main-documents', [...items])
+  document.getElementById('modal-delete').close()
+
+  const resp = await deleteItem(id, 'all')
   return resp
 }
 
@@ -226,9 +217,9 @@ export async function handleAddToBothLists(item) {
     log('a visible addToBothLists was clicked even though input was empty')
     return
   }
-  let arr = state.get('shopping-list')
+  let arr = state.get('main-documents')
   arr.unshift(item)
-  state.set('shopping-list', [...arr])
+  state.set('main-documents', [...arr])
 
   addItem(item)
 

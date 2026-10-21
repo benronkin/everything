@@ -16,11 +16,11 @@ export function suggestionsList() {
 function react(el) {
   state.on('suggestions-list', 'suggestionsList', () => refreshSuggestions(el))
 
-  state.on('shopping-list', 'suggestionsList', () => refreshSuggestions(el))
+  state.on('main-documents', 'suggestionsList', () => refreshSuggestions(el))
 }
 
 function refreshSuggestions(el) {
-  const cartArr = state.get('shopping-list')
+  const cartArr = state.get('main-documents')
   const suggestionsEl = document.getElementById('suggestions-list')
 
   const suggestIcon = document.getElementById('suggest')

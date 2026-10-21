@@ -1,4 +1,3 @@
-import { state } from '../../assets/js/state.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDateTimeGroup } from '../../assets/partials/dateTimeGroup.js'
@@ -43,16 +42,16 @@ function build(el) {
       name: 'location',
       placeholder: 'Attraction',
       autocomplete: 'off',
-      classes: { group: 'mb-40', icon: 'fa-utensils' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-utensils' }
+    })
   )
 
   el.appendChild(
     createDateTimeGroup({
       name: 'visit_date',
       id: 'journal-visit_date',
-      classes: { group: 'mb-40', icon: 'fa-calendar' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-calendar' }
+    })
   )
 
   el.appendChild(
@@ -60,8 +59,8 @@ function build(el) {
       name: 'street',
       id: 'journal-street',
       placeholder: 'Street address',
-      classes: { group: 'mb-40', icon: 'fa-road' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-road' }
+    })
   )
 
   el.appendChild(
@@ -69,8 +68,8 @@ function build(el) {
       name: 'city',
       id: 'journal-city',
       placeholder: 'City',
-      classes: { group: 'mb-40', icon: 'fa-city' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-city' }
+    })
   )
 
   el.appendChild(
@@ -78,8 +77,8 @@ function build(el) {
       name: 'state',
       id: 'journal-state',
       placeholder: 'State',
-      classes: { group: 'mb-40', icon: 'fa-map' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-map' }
+    })
   )
 
   el.appendChild(
@@ -87,8 +86,8 @@ function build(el) {
       name: 'country',
       id: 'journal-country',
       placeholder: 'Country',
-      classes: { group: 'mb-40', icon: 'fa-flag' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-flag' }
+    })
   )
 
   el.appendChild(
@@ -96,8 +95,8 @@ function build(el) {
       name: 'phone',
       id: 'journal-phone',
       placeholder: 'Phone',
-      classes: { group: 'mb-40', icon: 'fa-phone' },
-    }),
+      classes: { group: 'mb-40', icon: 'fa-phone' }
+    })
   )
 
   el.appendChild(createRating({ id: 'journal-rating' }))
@@ -112,18 +111,18 @@ function build(el) {
           classes: {
             primary: 'fa-pencil',
             secondary: 'fa-close',
-            other: ['primary'],
-          },
-        }),
-      ],
-    }),
+            other: ['primary']
+          }
+        })
+      ]
+    })
   )
 
   el.appendChild(
     createMarkdown({
       id: 'journal-notes',
       name: 'notes',
-      toggleId: 'edit-note-toggle',
-    }),
+      toggleId: 'edit-note-toggle'
+    })
   )
 }

@@ -34,15 +34,14 @@ const css = `
   gap: 10px;
   border: 1px dotted var(--gray1);
   border-radius: 10px;
-    padding: 4px 10px;
-
+  padding: 10px;
   box-sizing: content-box;
-  font-size: 1.1rem;
   transition: all 0.3 ease-in-out;
 }
 #toolbar i {
-  width: 30px;
-  height: 30px;
+  width: 45px;
+  font-size: x-large;
+  height: 45px;
   padding: 0;
   display: flex;
   align-items: center;

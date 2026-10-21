@@ -8,6 +8,7 @@ const css = `
   border-radius: var(--border-radius);
   cursor: pointer;
   display: flex;
+  font-size: x-large;
   font-weight: 500;
   justify-content: space-between;
   padding: 8px 14px;
@@ -18,12 +19,13 @@ const css = `
 }
 .list-item .icons {
   display: flex;
-  gap: 12px;
+  gap: 30px;
   align-items: center;
   justify-content: flex-end;
 }
 .list-item i {
   color: inherit;
+  font-size: x-large;
 }
 .list-item[data-draggable="true"] i.fa-bars {
   display: inline-block !important;

@@ -223,4 +223,6 @@ function handleSelectClick(e) {
     selectEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     selectEl.focus() // keeps keyboard / VoiceOver happy
   }
+
+  state.set(`select-click:${parent.id}`, parent)
 }

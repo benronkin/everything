@@ -48,7 +48,6 @@ export async function getWebApp(path) {
     }
 
     const resp = await res.json()
-    // log(resp)
     const { status, message, data, unauthorized } = resp
 
     if (unauthorized) {
