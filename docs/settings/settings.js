@@ -7,12 +7,12 @@ import { leftPanel } from './sections/leftPanel.js'
 import { mainPanel } from './sections/mainPanel.js'
 import { toolbar } from './sections/toolbar.js'
 import { profile } from './sections/profile.js'
-import { shop } from './sections/shop.js'
+// import { shop } from './sections/shop.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { createAvatar, updateUserField } from '../users/users.api.js'
-import { fetchShopping, updateRecurring } from '../shopping/shopping.api.js'
+// import { fetchShopping, updateRecurring } from '../shopping/shopping.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import { getMe } from '../users/users.api.js'
 
@@ -29,13 +29,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     react()
 
-    const [{ user }, { recurring }] = await Promise.all([
-      getMe(),
-      fetchShopping(),
-    ])
+    // const [{ user }, { recurring }] = await Promise.all([
+    //   getMe(),
+    //   fetchShopping()
+    // ])
+    const [{ user }] = await Promise.all([getMe()])
 
     state.set('user', user)
-    state.set('recurring', recurring)
+    // state.set('recurring', recurring)
     state.set('app-mode', 'left-panel')
     state.set('default-page', 'settings')
     window.state = state // avail to browser console
@@ -59,7 +60,7 @@ async function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
@@ -80,16 +81,16 @@ function react() {
       return
     }
 
-    if (id === 'main-item-shop') {
-      state.set('app-mode', 'main-panel')
-      document.getElementById('settings-wrapper').insertHtml(shop())
-      const recurringTA = document.getElementById('recurring')
+    // if (id === 'main-item-shop') {
+    //   state.set('app-mode', 'main-panel')
+    //   document.getElementById('settings-wrapper').insertHtml(shop())
+    //   const recurringTA = document.getElementById('recurring')
 
-      requestAnimationFrame(() => {
-        recurringTA.focus()
-      })
-      return
-    }
+    //   requestAnimationFrame(() => {
+    //     recurringTA.focus()
+    //   })
+    //   return
+    // }
   })
 
   state.on('profile-avatar', 'settings', async (file) => {
@@ -97,7 +98,7 @@ function react() {
       maxWidthOrHeight: 125,
       useWebWorker: true,
       fileType: 'image/png',
-      exifOrientation: null,
+      exifOrientation: null
     }
 
     try {
@@ -105,12 +106,11 @@ function react() {
       const formData = new FormData()
       formData.set('file', compressed)
 
-      const { message, data } = await createAvatar(formData)
+      const { data } = await createAvatar(formData)
 
       const user = state.get('user')
       user.avatar = data?.url
       state.set('user', user)
-      log(message)
     } catch (error) {
       console.error(error)
     }
@@ -121,9 +121,9 @@ function react() {
     const value = el.value
 
     switch (field) {
-      case 'recurring':
-        updateRecurring(value)
-        break
+      // case 'recurring':
+      //   updateRecurring(value)
+      //   break
       default:
         updateUserField({ field, value })
     }

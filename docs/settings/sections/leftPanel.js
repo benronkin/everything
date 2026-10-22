@@ -31,16 +31,16 @@ function build(el) {
       id: 'main-item-profile',
       html: createSpanGroup({
         html: 'Profile',
-        classes: { icon: 'fa-circle-user' },
-      }),
-    }),
-    createListItem({
-      id: 'main-item-shop',
-      html: createSpanGroup({
-        html: 'Shopping',
-        classes: { icon: 'fa-shopping-cart' },
-      }),
-    }),
+        classes: { icon: 'fa-circle-user' }
+      })
+    })
+    // createListItem({
+    //   id: 'main-item-shop',
+    //   html: createSpanGroup({
+    //     html: 'Shopping',
+    //     classes: { icon: 'fa-shopping-cart' },
+    //   }),
+    // }),
   ])
 }
 

@@ -1,3 +1,5 @@
+// DELETE THIS FILE
+
 import { injectStyle, setMessage } from '../../assets/js/ui.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createDiv } from '../../assets/partials/div.js'
@@ -7,39 +9,39 @@ import { state } from '../../assets/js/state.js'
 const css = `
 `
 
-export function shop() {
-  injectStyle(css)
+// export function shop() {
+//   injectStyle(css)
 
-  const el = createDiv({ id: 'profile-wrapper' })
+//   const el = createDiv({ id: 'profile-wrapper' })
 
-  build(el)
+//   build(el)
 
-  const recurring = state.get('recurring')
-  if (recurring) {
-    const value = recurring
-      .split(',')
-      .map((i) => i.trim())
-      .join('\n')
-    const recurringEl = el.querySelector('#recurring')
-    recurringEl.setValue(value)
-  } else {
-    setMessage('settings.js did not set recurring', { type: 'warn' })
-  }
+//   const recurring = state.get('recurring')
+//   if (recurring) {
+//     const value = recurring
+//       .split(',')
+//       .map((i) => i.trim())
+//       .join('\n')
+//     const recurringEl = el.querySelector('#recurring')
+//     recurringEl.setValue(value)
+//   } else {
+//     setMessage('settings.js did not set recurring', { type: 'warn' })
+//   }
 
-  return el
-}
+//   return el
+// }
 
 function build(el) {
   el.appendChild(
     createHeader({
       className: 'mb-30',
       html: 'Shopping',
-      type: 'h4',
-    }),
+      type: 'h4'
+    })
   )
 
   el.appendChild(
-    createHeader({ html: 'Recurring items:', type: 'h5', className: 'mb-10' }),
+    createHeader({ html: 'Recurring items:', type: 'h5', className: 'mb-10' })
   )
 
   el.appendChild(
@@ -47,7 +49,7 @@ function build(el) {
       name: 'recurring',
       id: 'recurring',
       className: 'w-100',
-      placeholder: 'Add recurring items...',
-    }),
+      placeholder: 'Add recurring items...'
+    })
   )
 }
