@@ -22,7 +22,7 @@ export function toolbar() {
       createIcon({
         id: 'back',
         classes: { primary: 'fa-chevron-left', other: ['bordered', 'hidden'] },
-        title: 'Sort'
+        title: 'Back'
       }),
       createIcon({
         id: 'sort',
@@ -35,7 +35,8 @@ export function toolbar() {
         classes: {
           primary: 'fa-cloud-arrow-down',
           other: ['bordered', 'hidden']
-        }
+        },
+        title: 'Cart recurring'
       }),
       createSelect({
         id: 'view-select',

@@ -39,13 +39,18 @@ function react(el) {
         child
           .querySelector('.fa-trash')
           .classList.toggle('hidden', !child.classList.contains('active'))
-        child
-          .querySelector('.fa-circle-info')
-          .classList.toggle('hidden', !child.classList.contains('active'))
+
+        if (!child.dataset.noteworthy) {
+          child
+            .querySelector('.fa-circle-info')
+            .classList.toggle('hidden', !child.classList.contains('active'))
+        }
       } else {
         child.classList.remove('active')
         child.querySelector('.fa-trash').classList.add('hidden')
-        child.querySelector('.fa-circle-info').classList.add('hidden')
+        if (!child.dataset.noteworthy) {
+          child.querySelector('.fa-circle-info').classList.add('hidden')
+        }
       }
     })
   })

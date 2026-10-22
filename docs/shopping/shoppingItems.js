@@ -9,7 +9,7 @@ import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { getMe } from '../users/users.api.js'
-import { addItem, deleteItem, getItems } from './shopping.api.js'
+import { addItem, cartRecurring, deleteItem, getItems } from './shopping.api.js'
 import { log } from '../assets/js/logger.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -70,13 +70,9 @@ function react() {
   const addEl = document.querySelector('[name="new-item"]')
   const cartEl = document.getElementById('shopping-list')
 
-  state.on('icon-click:suggest', 'shopping', () => {
-    state.set('suggestions-list', [...state.get('suggestions-list')])
-  })
-
   state.on('icon-click:recurring', 'shopping', async () => {
     setMessage('Adding recurring items...')
-    await addRecurringItems()
+    await cartRecurring()
     // server-side update to shopping list
     // refresh to reflect changes
     window.location.reload()
@@ -115,32 +111,11 @@ function react() {
     addEl.resize()
   })
 
-  state.on('item-click:shop-suggestion', 'shopping', ({ item }) => {
-    handleAddItem(item)
-    addEl.value = ''
-    document.getElementById('suggestions-list').classList.add('hidden')
-  })
-
   state.on('item-click:delete-item', 'shopping', async (item) => {
-    const resp = await handleDeleteItem(item)
+    await handleDeleteItem(item)
   })
 
   state.on('button-click:modal-delete-btn', 'task', handleModalDeleteConfirm)
-
-  state.on('item-click:delete-suggestion', 'shopping', ({ item }) => {
-    let sItems = state.get('suggestions-list')
-    sItems = sItems.filter((sItem) => sItem !== item)
-    state.set('suggestions-list', sItems)
-    updateSuggestionsList(sItems.join(','))
-  })
-
-  state.on('button-click:add-to-both-lists-button', 'shopping', ({ e }) => {
-    e.preventDefault()
-    const inputEl = document.querySelector('[name="new-item')
-    const item = inputEl.value.trim().toLowerCase()
-    inputEl.value = ''
-    handleAddToBothLists(item)
-  })
 
   state.on('list-dragged:shopping-list', 'tasks', async () => {
     const items = [...cartEl.querySelectorAll('.list-item')]
@@ -162,6 +137,7 @@ async function handleAddItem(title) {
   const view = viewSelect.getSelected().value
 
   const { data } = await addItem(title, view)
+  setMessage()
   const items = [...state.get('main-documents')]
   const index = items.findIndex((item) => item.id === data.item.id)
 

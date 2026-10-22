@@ -11,7 +11,7 @@ const css = `
 export function mainDocumentItem(item) {
   injectStyle(css)
 
-  const { carted, comment, id, image_url, recurring, sort_order, title } = item
+  const { id, noteWorthy, title } = item
 
   const el = createListItem({
     id,
@@ -28,12 +28,16 @@ export function mainDocumentItem(item) {
             classes: { primary: 'fa-trash', other: ['hidden'] }
           }),
           createIcon({
-            classes: { primary: 'fa-circle-info', other: ['hidden'] }
+            classes: {
+              primary: 'fa-circle-info',
+              other: [!noteWorthy && 'hidden']
+            }
           })
         ]
       })
     ]
   })
+  el.dataset.noteworthy = noteWorthy || ''
 
   react(el)
   listen(el)

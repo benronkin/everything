@@ -17,6 +17,14 @@ export async function addItem(title, listName) {
 /**
  *
  */
+export async function cartRecurring() {
+  const resp = await getWebApp(`${url}/cart-recurring`)
+  return resp
+}
+
+/**
+ *
+ */
 export async function cartItems(titles) {
   const resp = await postWebAppJson(`${url}/cart`, {
     titles
