@@ -17,7 +17,7 @@ export function mainDocumentItem(item) {
     id,
     className: 'shopping-item flex w-100',
     html: [
-      createSpan({ className: 'title', html: title.toUpperCase() }),
+      createSpan({ className: 'title', html: title.toLowerCase() }),
       createDiv({
         className: 'icons',
         html: [

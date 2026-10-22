@@ -21,7 +21,7 @@ export function mainDocumentsList() {
 function react(el) {
   state.on('main-documents', 'shoppingList', (docs) => {
     el.deleteChildren()
-    if (!docs.length) {
+    if (!docs?.length) {
       return
     }
 

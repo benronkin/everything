@@ -32,11 +32,17 @@ export async function cartItems(titles) {
   return resp
 }
 
+/**
+ *
+ */
 export async function deleteItem(id, list) {
   const resp = await getWebApp(`${url}/delete?id=${id}&list=${list}`)
   return resp
 }
 
+/**
+ *
+ */
 export async function fetchMediaMetadata(id) {
   const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
   return { media, error }

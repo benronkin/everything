@@ -10,8 +10,8 @@ import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
-import { fetchShopping, updateShoppingList } from '../shopping/shopping.api.js'
 import {
+  cartRecipe,
   createRecipe,
   deleteRecipe,
   fetchCategoriesAndRecipes,
@@ -94,7 +94,7 @@ async function build() {
 function react() {
   state.on('icon-click:add-recipe', 'recipes', reactRecipeAdd)
 
-  state.on('icon-click:shop', 'recipes', shopIngredients)
+  state.on('icon-click:shop', 'recipes', handleCartRecipe)
 
   state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
 
@@ -334,23 +334,14 @@ function populateRelatedRecipes() {
   }
 }
 
-async function shopIngredients() {
+/**
+ *
+ */
+async function handleCartRecipe() {
   const id = state.get('active-doc')
   if (!id) return
 
-  const docs = state.get('main-documents')
-  if (!docs.length) return
-
-  const doc = docs.find((d) => d.id === id)
-  if (!doc) return
-
-  const ingredients = doc.ingredients.length ? doc.ingredients.split('\n') : []
-  if (!ingredients.length) return
-
-  const { shoppingList } = await fetchShopping()
-  const cart = [...new Set([...ingredients, ...shoppingList.split(',')])]
-
-  updateShoppingList(cart.join(','))
+  await cartRecipe(id)
   setMessage('Ingredients added to shopping list')
 }
 
