@@ -82,38 +82,7 @@ function react() {
     window.location.reload()
   })
 
-  state.on('form-submit:shopping-form', 'shopping', () => {
-    const value = addEl.value
-
-    const delimiter = value.includes('\n')
-      ? '\n'
-      : value.includes(',')
-        ? ','
-        : ''
-
-    const items = delimiter
-      ? value
-          .split(delimiter)
-          .map((i) => i.trim().toLowerCase())
-          .filter(Boolean)
-      : [value.trim().toLowerCase()]
-
-    let resp
-
-    for (let i = items.length - 1; i >= 0; i--) {
-      const item = items[i]
-      resp = handleAddItem(item)
-      if (resp.error) {
-        setMessage(resp.error, { type: 'warn' })
-        return
-      }
-    }
-    if (resp.message) {
-      setMessage(resp.message)
-    }
-    addEl.setValue('')
-    addEl.resize()
-  })
+  state.on('form-submit:shopping-form', 'shopping', handleFormSubmit)
 
   state.on('item-click:delete-item', 'shopping', async (item) => {
     await handleDeleteItem(item)
@@ -127,26 +96,48 @@ function react() {
 /**
  *
  */
-async function handleAddItem(title) {
-  title = title.trim().toLowerCase()
-  if (!title.length) return
+async function handleFormSubmit() {
+  const textArea = document.querySelector('[name="new-item"]')
+  const value = textArea.value.trim().toLowerCase()
+  if (!value) return
 
-  setMessage(`Adding ${title}...`)
+  const titles = value
+    .split(/\n|,/)
+    .map((i) => i.trim())
+    .filter(Boolean)
+    // Process the last title first so unshift preserves the entered order
+    .reverse()
+
+  if (!titles.length) return
+
+  const adding = titles.length === 1 ? titles[0] : 'items'
+  setMessage(`Adding ${adding}...`)
 
   const view = document.getElementById('view-select').getSelected().value
+  const docs = [...state.get('main-documents')]
 
-  const { data } = await addItem(title, view)
-  setMessage()
-  const items = [...state.get('main-documents')]
-  const index = items.findIndex((item) => item.id === data.item.id)
+  for (const title of titles) {
+    const { data, error } = await addItem(title, view)
 
-  if (index === -1) {
-    items.unshift(data.item)
-  } else {
-    items[index] = data.item
+    if (error) {
+      // Keep any items successfully added earlier in this submission
+      state.set('main-documents', docs)
+      setMessage(error, { type: 'danger' })
+      return
+    }
+    const index = docs.findIndex((item) => item.id === data.item.id)
+
+    if (index === -1) {
+      docs.unshift(data.item)
+    } else {
+      docs[index] = data.item
+    }
   }
 
-  state.set('main-documents', items)
+  textArea.setValue('')
+  textArea.resize()
+  setMessage()
+  state.set('main-documents', docs)
 }
 
 async function handleDeleteItem({ id, title }) {
