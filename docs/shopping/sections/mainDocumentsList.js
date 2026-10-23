@@ -25,7 +25,7 @@ function react(el) {
       return
     }
 
-    docs = filterItemsByView(docs)
+    docs = arrangeItemsByView(docs)
 
     const children = docs.map(mainDocumentItem)
 
@@ -79,16 +79,25 @@ function react(el) {
 /**
  *
  */
-function filterItemsByView(items) {
+function arrangeItemsByView(items) {
   const viewSelect = document.getElementById('view-select')
   const view = viewSelect.getSelected().value
 
   switch (view) {
+    case 'all':
+      items = items.sort((a, b) =>
+        a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
+      )
+      break
     case 'cart':
-      items = items.filter((item) => item.carted)
+      items = items
+        .filter((item) => item.carted)
+        .sort((a, b) => (a.cart_order || 0) - (b.cart_order || 0))
       break
     case 'recurring':
-      items = items.filter((item) => item.recurring)
+      items = items
+        .filter((item) => item.recurring)
+        .sort((a, b) => (a.recurring_order || 0) - (b.recurring_order || 0))
       break
   }
 

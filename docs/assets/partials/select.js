@@ -3,8 +3,16 @@ import { createIcon } from './icon.js'
 import { state } from '../js/state.js'
 
 const css = `
+select {
+  padding: 0.5rem 0.75rem;
+}
+select option {
+  background-color: var(--gray2);
+  color: var(--gray6);
+}
 .select-wrapper {
   display: flex;
+  position: relative;
   align-items: center;
   border-radius: var(--border-radius);
   padding: 7px;
@@ -24,6 +32,7 @@ const css = `
   font-size: 1rem !important;
   z-index: 2;
   width: 100%;
+  padding-right: 24px;
 }
 .custom-select:disabled,
 .select-wrapper.disabled,
@@ -36,15 +45,18 @@ const css = `
 }
 
 .caret-wrapper {
+  position: absolute;
+  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 10px;
-  margin-left: 10px;
+  margin-left: 0;
+  pointer-events: none;
 }
 
 .caret-wrapper i {
-  color: var(--gray6);
+  color: var(--gray4);
   font-size: 0.8rem;
 }
 `
@@ -191,18 +203,12 @@ function listen(el) {
     state.set('field-changed', e.target)
   })
 
-  el.querySelector('.caret-wrapper i').addEventListener(
-    'click',
-    handleSelectClick
-  )
   el.addEventListener('click', handleSelectClick)
-  el.querySelector('.custom-select').addEventListener(
-    'select',
-    handleSelectClick
-  )
 }
 
 function handleSelectClick(e) {
+  if (e.target.closest('select')) return
+
   const parent = e.target.closest('.select-wrapper')
   const selectEl = parent.querySelector('.custom-select')
 
