@@ -9,8 +9,13 @@ import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { setMessage } from '../assets/js/ui.js'
 import { createModalDelete } from '../assets/composites/modalDelete.js'
 import { getMe } from '../users/users.api.js'
-import { addItem, cartRecurring, deleteItem, getItems } from './shopping.api.js'
-import { log } from '../assets/js/logger.js'
+import {
+  addItem,
+  cartRecurring,
+  deleteItem,
+  getItems,
+  sortItems
+} from './shopping.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   build()
@@ -68,7 +73,6 @@ function build() {
 
 function react() {
   const addEl = document.querySelector('[name="new-item"]')
-  const cartEl = document.getElementById('shopping-list')
 
   state.on('icon-click:recurring', 'shopping', async () => {
     setMessage('Adding recurring items...')
@@ -117,11 +121,7 @@ function react() {
 
   state.on('button-click:modal-delete-btn', 'task', handleModalDeleteConfirm)
 
-  state.on('list-dragged:shopping-list', 'tasks', async () => {
-    const items = [...cartEl.querySelectorAll('.list-item')]
-    const values = items.map((item) => item.querySelector('span').textContent)
-    updateShoppingList(values.join(','))
-  })
+  state.on('list-dragged:shopping-list', 'tasks', handleSortItems)
 }
 
 /**
@@ -133,8 +133,7 @@ async function handleAddItem(title) {
 
   setMessage(`Adding ${title}...`)
 
-  const viewSelect = document.getElementById('view-select')
-  const view = viewSelect.getSelected().value
+  const view = document.getElementById('view-select').getSelected().value
 
   const { data } = await addItem(title, view)
   setMessage()
@@ -151,8 +150,7 @@ async function handleAddItem(title) {
 }
 
 async function handleDeleteItem({ id, title }) {
-  const viewSelect = document.getElementById('view-select')
-  const view = viewSelect.getSelected().value
+  const view = document.getElementById('view-select').getSelected().value
 
   if (view === 'all') {
     const modal = document.getElementById('modal-delete')
@@ -188,28 +186,39 @@ async function handleModalDeleteConfirm() {
   return resp
 }
 
-export async function handleAddToBothLists(item) {
-  if (!item || !item.trim().length) {
-    log('a visible addToBothLists was clicked even though input was empty')
+/**
+ *
+ */
+async function handleSortItems() {
+  const items = [...document.querySelectorAll('#shopping-list .list-item')]
+  const ids = items.map((item) => item.id)
+  const view = document.getElementById('view-select').getSelected().value
+
+  const sortColumns = {
+    cart: 'cart_order',
+    recurring: 'recurring_order'
+  }
+
+  const column = sortColumns[view]
+  if (!column || !ids.length) return
+
+  const { error } = await sortItems(ids, view)
+  if (error) {
+    setMessage(error, { type: 'danger' })
     return
   }
-  let arr = state.get('main-documents')
-  arr.unshift(item)
-  state.set('main-documents', [...arr])
 
-  addItem(item)
+  // Create a key/value lookup
+  const viewOrderMap = new Map(ids.map((id, index) => [id, index]))
+  const idInView = (id) => viewOrderMap.has(id)
 
-  arr = state.get('suggestions-list')
-  arr.unshift(item)
-  arr.sort()
-  state.set('suggestions-list', [...arr])
+  const docs = state.get('main-documents').map((doc) => {
+    if (idInView(doc.id)) {
+      // update only docs in current view
+      doc[column] = viewOrderMap.get(doc.id)
+    }
+    return doc
+  })
 
-  const resp = await updateSuggestionsList(arr.join(','))
-
-  if (resp?.error) {
-    // revert operation
-    arr = arr.filter((i) => i !== item)
-    state.set('suggestions-list', [...arr])
-    return { error: resp.error }
-  }
+  state.set('main-documents', docs)
 }

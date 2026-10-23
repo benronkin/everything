@@ -67,6 +67,14 @@ export async function getItems() {
 /**
  *
  */
+export async function sortItems(ids, view) {
+  const resp = await postWebAppJson(`${url}/sort`, { ids, view })
+  return resp
+}
+
+/**
+ *
+ */
 export async function updateItem(data) {
   const resp = await postWebAppJson(`${url}/update`, data)
   return resp

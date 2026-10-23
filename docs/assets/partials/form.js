@@ -88,7 +88,10 @@ function listen(el) {
   // a submit type button, yet the form might still submit
   // without firing its submit event
   el.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
+    const isTextarea = e.target.tagName === 'TEXTAREA'
+    const isLineBreak = isTextarea && e.shiftKey
+
+    if (e.key === 'Enter' && !isLineBreak) {
       e.preventDefault()
       handleFormSubmit(el.id)
     }
@@ -102,7 +105,7 @@ function listen(el) {
     state.set(`form-keyup:${el.id}`, {
       key: e.key,
       value:
-        el.querySelector('input')?.value || el.querySelector('textarea')?.value,
+        el.querySelector('input')?.value || el.querySelector('textarea')?.value
     })
   })
 }

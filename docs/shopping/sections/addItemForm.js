@@ -8,16 +8,6 @@ import { createFormHorizontal } from '../../assets/partials/formHorizontal.js'
 // -------------------------------
 
 const css = `
-#shopping-form {
-  position: relative;
-}
-#add-to-both-lists-button {
-  position: absolute;
-  margin: 0;
-  padding: 5px;
-  right: 0;
-  bottom: 20px;
-}
 `
 
 export function addItemForm() {
@@ -33,72 +23,18 @@ export function addItemForm() {
     classes: {
       icon: 'fa-cart-shopping',
       form: 'pos-relative'
-    },
-    disabled: true
+    }
   })
 
-  el.querySelector('i').id = 'shopping-form-icon'
-
-  build(el)
   react(el)
-  listen(el)
 
   return el
-}
-
-function build(el) {
-  const addToBothEl = createButton({
-    id: 'add-to-both-lists-button',
-    className: 'bordered smaller bg-gray0 hidden',
-    html: '<i class="fa-solid fa-cart-shopping"></i><i class="fa-solid fa-lightbulb"></i>'
-  })
-
-  el.appendChild(addToBothEl)
 }
 
 function react(el) {
   state.on('form-keyup:shopping-form', 'addItemForm', ({ value }) =>
     handleFormKeyup({ el, value })
   )
-
-  state.on('form-submit:shopping-form', 'addItemForm', () => {
-    el.querySelector('#add-to-both-lists-button').classList.add('hidden')
-  })
 }
 
-function listen(el) {
-  const addToBothEl = el.querySelector('#add-to-both-lists-button')
-  addToBothEl.addEventListener('click', () => {
-    addToBothEl.classList.add('hidden')
-  })
-}
-
-function handleFormKeyup({ el, value }) {
-  return
-  if (!value || !value.toString().trim().length) return
-
-  const inShoppingList = state.get('main-documents').includes(value)
-  const inSuggestionsList = state.get('suggestions-list').includes(value)
-
-  el.querySelector('#add-to-both-lists-button').classList.toggle(
-    'hidden',
-    inShoppingList || inSuggestionsList
-  )
-
-  el.querySelector('textarea').classList.toggle('c-gray3', inShoppingList)
-
-  el.querySelector('#shopping-form-icon').classList.toggle(
-    'c-gray3',
-    inShoppingList
-  )
-
-  el.querySelector('#shopping-form-icon').classList.toggle(
-    'fa-cart-arrow-down',
-    inShoppingList
-  )
-
-  el.querySelector('#shopping-form-icon').classList.toggle(
-    'fa-cart-shopping',
-    !inShoppingList
-  )
-}
+function handleFormKeyup({ el, value }) {}

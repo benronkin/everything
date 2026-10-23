@@ -74,4 +74,9 @@ function react(el) {
     sortEl.classList.toggle('primary')
     sortEl.classList.toggle('bordered')
   })
+
+  state.on('select-click:view-select', 'toolbar', (view) => {
+    const isAll = view === 'all'
+    el.querySelector('#sort').classList.toggle('disabled', isAll)
+  })
 }
