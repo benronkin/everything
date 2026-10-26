@@ -19,7 +19,7 @@ export function mainDocumentsList() {
 }
 
 function react(el) {
-  state.on('main-documents', 'shoppingList', (docs) => {
+  state.on('main-documents', 'mainDocumentsList', (docs) => {
     el.deleteChildren()
     if (!docs?.length) {
       return
@@ -33,7 +33,7 @@ function react(el) {
     el.addChildren(children)
   })
 
-  state.on('item-click', 'list', (id) => {
+  state.on('item-click', 'mainDocumentsList', (id) => {
     el.getChildren().forEach((child) => {
       if (child.id === id) {
         child.classList.toggle('active')
@@ -57,21 +57,30 @@ function react(el) {
   })
 
   state.on('icon-click:sort', 'shoppingList', () => {
-    if (document.querySelector('#sort').classList.contains('primary')) {
+    const isSorting = document
+      .getElementById('sort')
+      .classList.contains('primary')
+
+    // remove drag listeners before changing the target classes
+    enableClicking(el)
+
+    for (const child of el.getChildren()) {
+      child.setDraggable(isSorting)
+    }
+
+    if (isSorting) {
       enableDragging(el)
-    } else {
-      enableClicking(el)
     }
   })
 
-  state.on('drag-end', 'shoppingList', ({ id }) => {
+  state.on('drag-end', 'mainDocumentsList', ({ id }) => {
     state.set('list-dragged:shopping-list', {
       id: 'shopping-list',
       targetId: id
     })
   })
 
-  state.on('select-click:view-select', 'shoppingList', () => {
+  state.on('select-click:view-select', 'mainDocumentsList', () => {
     // force refresh for filtered view
     state.set('main-documents', [...state.get('main-documents')])
   })

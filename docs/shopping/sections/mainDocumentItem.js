@@ -39,19 +39,12 @@ export function mainDocumentItem(item) {
   })
   el.dataset.noteworthy = noteWorthy || ''
 
-  react(el)
   listen(el)
 
   el.classList.add('draggable-target')
   el.setDraggable = setDraggable.bind(el)
 
   return el
-}
-
-function react(el) {
-  state.on('icon-click:sort', 'mainDocumentItem', () =>
-    handleToolbarSortClick(el)
-  )
 }
 
 function listen(el) {
@@ -62,13 +55,6 @@ function listen(el) {
   el.querySelector('.fa-circle-info').addEventListener('click', () =>
     handleViewClick(el)
   )
-}
-
-function handleToolbarSortClick(el) {
-  const isSorting = document
-    .getElementById('sort')
-    .classList.contains('primary')
-  el.setDraggable(isSorting)
 }
 
 function handlemainDocumentItemClick(el) {

@@ -217,6 +217,7 @@ async function handleStepCreate({ caption, taskId }) {
 
     state.set('steps-changed', true)
     setMessage()
+    return
   }
 
   await createSteps(captionArr, taskId)

@@ -72,9 +72,7 @@ function build() {
 }
 
 function react() {
-  const addEl = document.querySelector('[name="new-item"]')
-
-  state.on('icon-click:recurring', 'shopping', async () => {
+  state.on('icon-click:recurring', 'shoppingitem', async () => {
     setMessage('Adding recurring items...')
     await cartRecurring()
     // server-side update to shopping list
@@ -82,15 +80,21 @@ function react() {
     window.location.reload()
   })
 
-  state.on('form-submit:shopping-form', 'shopping', handleFormSubmit)
+  state.on('form-submit:shopping-form', 'shoppingitem', handleFormSubmit)
 
-  state.on('item-click:delete-item', 'shopping', async (item) => {
+  state.on('item-click:delete-item', 'shoppingitem', async (item) => {
     await handleDeleteItem(item)
   })
 
-  state.on('button-click:modal-delete-btn', 'task', handleModalDeleteConfirm)
+  state.on('item-click:sort', 'shoppingitem', updateLocalSortOrder)
 
-  state.on('list-dragged:shopping-list', 'tasks', handleSortItems)
+  state.on(
+    'button-click:modal-delete-btn',
+    'shoppingitem',
+    handleModalDeleteConfirm
+  )
+
+  state.on('list-dragged:shopping-list', 'shoppingitem', handleSortItems)
 }
 
 /**
@@ -197,9 +201,12 @@ async function handleModalDeleteConfirm() {
 }
 
 /**
- *
+ * Send updated order and view to server. Update
+ * main-documents only after sort mode is exited by user
  */
 async function handleSortItems() {
+  state.set('update-local-sort', true)
+
   const items = [...document.querySelectorAll('#shopping-list .list-item')]
   const ids = items.map((item) => item.id)
   const view = document.getElementById('view-select').getSelected().value
@@ -217,6 +224,25 @@ async function handleSortItems() {
     setMessage(error, { type: 'danger' })
     return
   }
+}
+
+/**
+ * Update main-documents now that sort mode was exited by user
+ */
+async function updateLocalSortOrder() {
+  if (!state.get('update-local-sort')) return
+
+  const items = [...document.querySelectorAll('#shopping-list .list-item')]
+  const ids = items.map((item) => item.id)
+  const view = document.getElementById('view-select').getSelected().value
+
+  const sortColumns = {
+    cart: 'cart_order',
+    recurring: 'recurring_order'
+  }
+
+  const column = sortColumns[view]
+  if (!column || !ids.length) return
 
   // Create a key/value lookup
   const viewOrderMap = new Map(ids.map((id, index) => [id, index]))
@@ -231,4 +257,5 @@ async function handleSortItems() {
   })
 
   state.set('main-documents', docs)
+  state.set('update-local-sort', null)
 }
