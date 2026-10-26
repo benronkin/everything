@@ -6,11 +6,8 @@ const url = `${state.const('APP_URL')}/shopping`
 /**
  *
  */
-export async function addItem(title, listName) {
-  const resp = await postWebAppJson(`${url}/add`, {
-    title,
-    listName
-  })
+export async function addItem(data) {
+  const resp = await postWebAppJson(`${url}/add`, data)
   return resp
 }
 

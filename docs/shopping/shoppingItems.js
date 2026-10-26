@@ -120,8 +120,12 @@ async function handleFormSubmit() {
   const view = document.getElementById('view-select').getSelected().value
   const docs = [...state.get('main-documents')]
 
+  const isTemp =
+    view === 'cart' &&
+    Number(document.getElementById('temp').classList.contains('primary'))
+
   for (const title of titles) {
-    const { data, error } = await addItem(title, view)
+    const { data, error } = await addItem({ title, view, isTemp })
 
     if (error) {
       // Keep any items successfully added earlier in this submission

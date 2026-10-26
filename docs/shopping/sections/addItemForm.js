@@ -62,4 +62,15 @@ function react(el) {
   state.on('icon-click:temp', 'addItemForm', () => {
     el.querySelector('#temp').classList.toggle('primary')
   })
+
+  state.on('select-click:view-select', 'addItemForm', (value) => {
+    const tempIcon = el.querySelector('#temp')
+    const isCart = value === 'cart'
+
+    tempIcon.style.visibility = isCart ? 'visible' : 'hidden'
+
+    if (!isCart) {
+      tempIcon.classList.remove('primary')
+    }
+  })
 }
