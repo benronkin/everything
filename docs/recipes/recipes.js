@@ -341,7 +341,12 @@ async function handleCartRecipe() {
   const id = state.get('active-doc')
   if (!id) return
 
-  await cartRecipe(id)
+  const { error } = await cartRecipe(id)
+  if (error) {
+    console.error(error)
+    setMessage(error, { type: 'danger' })
+    return
+  }
   setMessage('Ingredients added to shopping list')
 }
 
