@@ -2,6 +2,7 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { mainDocumentsList } from './mainDocumentsList.js'
 import { addItemForm } from './addItemForm.js'
+import { suggestionsList } from './suggestionsList.js'
 
 // -------------------------------
 // Globals
@@ -44,7 +45,7 @@ export function leftPanel() {
 
 function build(el) {
   el.appendChild(addItemForm())
-
+  el.appendChild(suggestionsList())
   el.appendChild(mainDocumentsList())
 }
 

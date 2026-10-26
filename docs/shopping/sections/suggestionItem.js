@@ -1,75 +1,36 @@
 import { injectStyle } from '../../assets/js/ui.js'
-import { insertHtml } from '../../assets/js/format.js'
 import { createListItem } from '../../assets/partials/listItem.js'
-import { createIcon } from '../../assets/partials/icon.js'
 import { createSpan } from '../../assets/partials/span.js'
-import { createDiv } from '../../assets/partials/div.js'
 import { state } from '../../assets/js/state.js'
-import { log } from '../../assets/js/logger.js'
-
-// -------------------------------
-// Globals
-// -------------------------------
 
 const css = `
+.suggestion-item {
+  border: 1px solid var(--gray2);
+  color: var(--gray4);
+}
 `
 
 export function suggestionItem({ item }) {
   injectStyle(css)
 
+  const { id, title } = item
+
   const el = createListItem({
-    className: 'suggestion-item',
-    html: [
-      createDiv({
-        className: 'flex w-100',
-        html: [
-          createSpan({ html: item }),
-          createDiv({
-            className: 'icons',
-            html: [
-              createIcon({
-                classes: { primary: 'fa-trash' },
-              }),
-            ],
-          }),
-        ],
-      }),
-    ],
+    id,
+    className: 'list-item suggestion-item flex w-100',
+    html: [createSpan({ className: 'title', html: title.toLowerCase() })]
   })
 
-  el.setDraggable = setDraggable.bind(el)
-
-  // react(el)
-  listen(el)
+  listen(el, id, title)
 
   return el
 }
 
-function listen(el) {
-  el.addEventListener('click', (e) => {
-    if (e.target.closest('i')) return // ignore event bubbling
-
-    state.set('item-click:shop-suggestion', {
-      id: el.id,
-      item: el.querySelector('span').textContent,
+function listen(el, id, title) {
+  el.addEventListener('click', () => {
+    state.set('item-click:cart-suggestion', {
+      id,
+      title
     })
   })
-
-  el.querySelector('.fa-trash').addEventListener('click', () =>
-    state.set('item-click:delete-suggestion', {
-      id: el.id,
-      item: el.querySelector('span').textContent,
-    })
-  )
-}
-
-// -------------------------------
-// Object methods
-// -------------------------------
-
-function setDraggable(isDraggable) {
-  this.classList.remove('active')
-  this.classList.toggle('draggable-target', isDraggable)
-  this.querySelector('.fa-sort').classList.toggle('hidden', !isDraggable)
-  this.querySelector('.fa-trash').classList.add('hidden')
 }

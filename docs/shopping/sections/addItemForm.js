@@ -73,4 +73,11 @@ function react(el) {
       tempIcon.classList.remove('primary')
     }
   })
+
+  state.on('suggestion-carted', 'addItemForm', () => {
+    const textarea = el.querySelector('textarea')
+    textarea.rows = 1
+    textarea.value = ''
+    textarea.focus()
+  })
 }

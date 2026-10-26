@@ -62,7 +62,7 @@ function handlemainDocumentItemClick(el) {
 }
 
 function handleTrashClick(el) {
-  state.set('item-click:delete-item', {
+  state.set('icon-click:delete-item', {
     id: el.id,
     title: el.querySelector('span').textContent
   })

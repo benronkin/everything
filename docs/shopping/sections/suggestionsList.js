@@ -13,45 +13,61 @@ export function suggestionsList() {
   return el
 }
 
+/**
+ *
+ */
 function react(el) {
-  state.on('suggestions-list', 'suggestionsList', () => refreshSuggestions(el))
+  state.on('app-mode', 'suggestionsList', (mode) => {
+    if (mode !== 'left-panel') return
 
-  state.on('main-documents', 'suggestionsList', () => refreshSuggestions(el))
+    document
+      .querySelector('textarea[name="new-item"]')
+      .addEventListener('input', (e) => {
+        refreshSuggestions(el, e.target.value)
+      })
+  })
+
+  state.on('main-documents', 'suggestionsList', () => {
+    el.deleteChildren()
+    el.classList.add('hidden')
+  })
 }
 
-function refreshSuggestions(el) {
-  const cartArr = state.get('main-documents')
-  const suggestionsEl = document.getElementById('suggestions-list')
+/**
+ *
+ */
+function refreshSuggestions(el, query) {
+  const view = document.getElementById('view-select').getSelected().value
+  const textArea = document.querySelector('[name="new-item"]')
+  const value = textArea.value.trim().toLowerCase()
 
-  const suggestIcon = document.getElementById('suggest')
-  const addInput = document.querySelector('[name="new-item"]')
-  const addValue = addInput.value.trim().toLowerCase()
+  if (!value) {
+    el.deleteChildren()
+    el.classList.add('hidden')
+    return
+  }
+  if (view === 'all') return
 
-  let suggestionsArr = state.get('suggestions-list')
-
-  if (!suggestionsArr) {
-    suggestionsEl.classList.add('hidden')
+  query = query.trim().toLowerCase()
+  if (!query) {
+    el.classList.add('hidden')
     return
   }
 
-  suggestionsArr = suggestionsArr.filter((s) => !cartArr.includes(s))
+  const docs = state.get('main-documents').filter((d) => {
+    if (view === 'cart') {
+      return !d.carted && d.title.includes(query)
+    }
+    if (view === 'recurring') {
+      return !d.recurring && d.title.includes(query)
+    }
+  })
 
-  if (addValue.length) {
-    suggestionsArr = suggestionsArr.filter((s) => s.includes(addValue))
-  }
+  if (!docs.length) return
 
   el.deleteChildren()
 
-  if (!suggestionsArr.length) {
-    suggestionsEl.classList.add('hidden')
-    return
-  }
-
-  suggestionsEl.classList.toggle(
-    'hidden',
-    !suggestIcon.classList.contains('primary') && !addValue.length
-  )
-
-  const children = suggestionsArr.map((item) => suggestionItem({ item }))
+  const children = docs.map((item) => suggestionItem({ item }))
   el.addChildren(children)
+  el.classList.remove('hidden')
 }

@@ -72,7 +72,7 @@ function build() {
 }
 
 function react() {
-  state.on('icon-click:recurring', 'shoppingitem', async () => {
+  state.on('icon-click:recurring', 'shoppingItems', async () => {
     setMessage('Adding recurring items...')
     await cartRecurring()
     // server-side update to shopping list
@@ -80,13 +80,15 @@ function react() {
     window.location.reload()
   })
 
-  state.on('form-submit:shopping-form', 'shoppingitem', handleFormSubmit)
+  state.on('form-submit:shopping-form', 'shoppingItems', handleFormSubmit)
 
-  state.on('item-click:delete-item', 'shoppingitem', async (item) => {
+  state.on('item-click:cart-suggestion', 'shoppingItems', handleCartsuggestion)
+
+  state.on('icon-click:delete-item', 'shoppingItems', async (item) => {
     await handleDeleteItem(item)
   })
 
-  state.on('item-click:sort', 'shoppingitem', updateLocalSortOrder)
+  state.on('icon-click:sort', 'shoppingItems', updateLocalSortOrder)
 
   state.on(
     'button-click:modal-delete-btn',
@@ -94,7 +96,7 @@ function react() {
     handleModalDeleteConfirm
   )
 
-  state.on('list-dragged:shopping-list', 'shoppingitem', handleSortItems)
+  state.on('list-dragged:shopping-list', 'shoppingItems', handleSortItems)
 }
 
 /**
@@ -133,7 +135,7 @@ async function handleFormSubmit() {
       setMessage(error, { type: 'danger' })
       return
     }
-    const index = docs.findIndex((item) => item.id === data.item.id)
+    const index = docs.findIndex((d) => d.id === data.item.id)
 
     if (index === -1) {
       docs.unshift(data.item)
@@ -146,6 +148,31 @@ async function handleFormSubmit() {
   textArea.resize()
   setMessage()
   state.set('main-documents', docs)
+}
+
+/**
+ *
+ */
+async function handleCartsuggestion({ id, title }) {
+  const view = document.getElementById('view-select').getSelected().value
+
+  const { data, error } = await addItem({ title, view, isTemp: 0 })
+
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+
+  const docs = [...state.get('main-documents')]
+  const index = docs.findIndex((d) => d.id === id)
+
+  if (index === -1) {
+    docs.unshift(data.item)
+  } else {
+    docs[index] = data.item
+  }
+  state.set('main-documents', docs)
+  state.set('suggestion-carted', true)
 }
 
 /**

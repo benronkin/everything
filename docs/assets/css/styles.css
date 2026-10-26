@@ -152,15 +152,7 @@ ul {
 #left-panel {
   width: 350px;
 }
-#suggestions-wrapper,
-#suggest-auto-complete {
-  background-color: var(--gray1);
-  border-left: 3px solid var(--teal3);
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.08);
-}
+
 @keyframes fadeInSlideDown {
   from {
     opacity: 0;
