@@ -46,7 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.state = state // avail to browser console
 
-    setMessage()
+    if (item.temp) {
+      const panel = document.getElementById('main-panel')
+      panel.querySelector('#carted').classList.add('disabled')
+      panel.querySelector('#recurring').classList.add('disabled')
+      setMessage('This is a one-off item')
+    } else {
+      setMessage()
+    }
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
     console.trace(error)
