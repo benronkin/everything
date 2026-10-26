@@ -95,9 +95,11 @@ function arrangeItemsByView(items) {
 
   switch (view) {
     case 'all':
-      items = items.sort((a, b) =>
-        a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
-      )
+      items = items
+        .filter((i) => !i.temp)
+        .sort((a, b) =>
+          a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
+        )
       break
     case 'cart':
       items = items
@@ -106,7 +108,7 @@ function arrangeItemsByView(items) {
       break
     case 'recurring':
       items = items
-        .filter((item) => item.recurring)
+        .filter((i) => i.recurring && !i.temp)
         .sort((a, b) => (a.recurring_order || 0) - (b.recurring_order || 0))
       break
   }

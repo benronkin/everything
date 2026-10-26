@@ -168,9 +168,13 @@ async function handleDeleteItem({ id, title }) {
 
     state.set('permanent-delete', null)
     const items = state.get('main-documents')
-    const item = items.find((i) => i.id === id)
-    if (view === 'cart') item.carted = 0
-    if (view === 'recurring') item.recurring = 0
+    const i = items.findIndex((i) => i.id === id)
+    if (view === 'cart' && items[i].temp) {
+      items.splice(i, 1)
+    } else {
+      if (view === 'cart') items[i].carted = 0
+      if (view === 'recurring') items[i].recurring = 0
+    }
     state.set('main-documents', items)
     return message
   }
