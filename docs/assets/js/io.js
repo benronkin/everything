@@ -82,8 +82,8 @@ export async function postWebAppForm(path, formData) {
 
   const token = localStorage.getItem('authToken')
   if (!token) {
-    console.log('postWebAppForm no token. aborting')
-    return
+    console.error('postWebAppForm no token. aborting')
+    return { error: 'postWebAppForm no token. aborting' }
   }
   headers.append('Auth-Token', token)
 
@@ -96,6 +96,9 @@ export async function postWebAppForm(path, formData) {
   let res
   try {
     res = await fetch(req)
+    if (resp.unauthorized || resp.status !== 200) {
+      return { error: resp.message || 'Upload failed' }
+    }
     const resp = await res.json()
     return resp
   } catch (err) {

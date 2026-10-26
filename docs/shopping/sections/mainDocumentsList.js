@@ -25,6 +25,7 @@ function react(el) {
       return
     }
 
+    docs = [...docs]
     docs = arrangeItemsByView(docs)
 
     const children = docs.map(mainDocumentItem)

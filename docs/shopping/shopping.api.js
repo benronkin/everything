@@ -90,8 +90,8 @@ export async function updateMediaCaption({ id, value }) {
 }
 
 export async function addMedia(formData) {
-  const { message } = await postWebAppForm(`${url}/media/create`, formData)
-  return { message }
+  const resp = await postWebAppForm(`${url}/media/create`, formData)
+  return resp
 }
 
 export async function deleteMedia(id) {

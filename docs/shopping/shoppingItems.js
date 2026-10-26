@@ -105,7 +105,7 @@ async function handleFormSubmit() {
     .split(/\n|,/)
     .map((i) => i.trim())
     .filter(Boolean)
-    // Process the last title first so unshift preserves the entered order
+    // process last title first so unshift preserves original order
     .reverse()
 
   if (!titles.length) return
@@ -140,6 +140,9 @@ async function handleFormSubmit() {
   state.set('main-documents', docs)
 }
 
+/**
+ *
+ */
 async function handleDeleteItem({ id, title }) {
   const view = document.getElementById('view-select').getSelected().value
 
@@ -150,14 +153,22 @@ async function handleDeleteItem({ id, title }) {
     modal.showModal()
     state.set('permanent-delete', id)
   } else {
-    const resp = await deleteItem(id, view)
+    setMessage(`Deleting ${title}...`)
+    const { message, error } = await deleteItem(id, view)
+    if (error) {
+      setMessage(error, { type: 'danger' })
+      return
+    } else {
+      setMessage()
+    }
+
     state.set('permanent-delete', null)
     const items = state.get('main-documents')
     const item = items.find((i) => i.id === id)
     if (view === 'cart') item.carted = 0
     if (view === 'recurring') item.recurring = 0
     state.set('main-documents', items)
-    return resp
+    return message
   }
 }
 
@@ -166,15 +177,23 @@ async function handleDeleteItem({ id, title }) {
  */
 async function handleModalDeleteConfirm() {
   const id = state.get('permanent-delete')
-  state.set('permanent-delete', null)
-
   let items = state.get('main-documents')
+  const title = items.find((i) => i.id === id).title
+
+  setMessage(`Permanently deleting ${title}...`)
+
+  const { message, error } = await deleteItem(id, 'all')
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+
+  document.getElementById('modal-delete').close()
+  setMessage()
   items = items.filter((i) => i.id !== id)
   state.set('main-documents', [...items])
-  document.getElementById('modal-delete').close()
-
-  const resp = await deleteItem(id, 'all')
-  return resp
+  state.set('permanent-delete', null)
+  return message
 }
 
 /**

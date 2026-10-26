@@ -99,7 +99,12 @@ function react() {
       return
     }
 
-    const { message } = await addMedia(formData)
+    const { error, message } = await addMedia(formData)
+    if (error) {
+      state.set('media-upload-response', error)
+      setMessage(error, { type: 'danger' })
+      return
+    }
 
     state.set('media-upload-response', message)
     // refresh photo list
@@ -152,7 +157,7 @@ async function handleFieldChange(el) {
   let value = el.value
 
   if (section === 'caption') {
-    handleCaptionChange(el)
+    await handleCaptionChange(el)
     return
   }
 
@@ -162,12 +167,21 @@ async function handleFieldChange(el) {
   }
 
   const id = state.get('active-doc')
+
+  const { error, message } = await updateItem({ id, section, value })
+
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+
   const docs = [...state.get('main-documents')]
   const idx = docs.findIndex((d) => d.id === id)
   docs[idx][section] = value
   state.set('main-documents', docs)
-  updateItem({ id, section, value })
+
   setMessage('Saved', { type: 'quiet' })
+  return message
 }
 
 /**
@@ -187,6 +201,14 @@ async function handleCaptionChange(el) {
     id: parent.id,
     value
   })
+
   state.set('media-caption-response', { error, message })
+
+  if (error) {
+    setMessage(error, { type: 'danger' })
+    return
+  }
+
   setMessage('Saved', { type: 'quiet' })
+  return message
 }

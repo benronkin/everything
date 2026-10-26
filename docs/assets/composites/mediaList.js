@@ -32,7 +32,7 @@ function listen(el) {
     const children = media.map((m) =>
       createMediaItem({
         id: m.id,
-        src: m.url,
+        src: m.public_url || m.url,
         caption: m.caption,
         mediaType: m.media_type
       })
