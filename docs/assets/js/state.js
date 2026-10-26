@@ -8,7 +8,7 @@ export const state = {
   _data: {},
   _listeners: {},
   _constants: {
-    APP_URL: devUrl,
+    APP_URL: prodUrl,
   },
 
   const(key) {
