@@ -169,7 +169,7 @@ function config(obj) {
 
   if (Object.hasOwn(obj, 'body')) this.setBody(obj.body)
   if (Object.hasOwn(obj, 'header')) this.setHeader(obj.header)
-  if (Object.hasOwn(obj, 'password'))
+  if (Object.hasOwn(obj, 'password') && this.querySelector('.input-group'))
     this.querySelector('.input-group').classList.toggle('hidden', !obj.password)
   if (Object.hasOwn(obj, 'photo')) this.dataset.photo = obj.photo
 }

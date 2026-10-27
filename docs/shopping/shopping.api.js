@@ -40,14 +40,6 @@ export async function deleteItem(id, list) {
 /**
  *
  */
-export async function fetchMediaMetadata(id) {
-  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
-  return { media, error }
-}
-
-/**
- *
- */
 export async function getItem(id) {
   const resp = await getWebApp(`${url}/read-one?id=${id}`)
   return resp
@@ -77,6 +69,9 @@ export async function updateItem(data) {
   return resp
 }
 
+/**
+ *
+ */
 export async function updateMediaCaption({ id, value }) {
   const { error, message } = await postWebAppJson(`${url}/media/update`, {
     id,
@@ -86,11 +81,25 @@ export async function updateMediaCaption({ id, value }) {
   return { error, message }
 }
 
+/**
+ *
+ */
 export async function addMedia(formData) {
   const resp = await postWebAppForm(`${url}/media/create`, formData)
   return resp
 }
 
+/**
+ *
+ */
+export async function fetchMediaMetadata(id) {
+  const { media, error } = await getWebApp(`${url}/media/read?parent_id=${id}`)
+  return { media, error }
+}
+
+/**
+ *
+ */
 export async function deleteMedia(id) {
   const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
   return { error }

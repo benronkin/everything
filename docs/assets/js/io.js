@@ -93,14 +93,13 @@ export async function postWebAppForm(path, formData) {
     body: formData // 🚀 native FormData, NOT JSON.stringify
   })
 
-  let res
   try {
-    res = await fetch(req)
+    const resp = await fetch(req)
     if (resp.unauthorized || resp.status !== 200) {
       return { error: resp.message || 'Upload failed' }
     }
-    const resp = await res.json()
-    return resp
+    const json = await resp.json()
+    return json
   } catch (err) {
     console.warn('postWebAppForm error:', err)
     return { error: `postWebAppForm error: ${err}` }
