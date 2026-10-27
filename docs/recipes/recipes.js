@@ -141,8 +141,7 @@ function react() {
     const id = state.get('active-doc')
 
     formData.set('file', file)
-    formData.set('entry', id)
-
+    formData.set('parent_id', id)
     const { message } = await addMedia(formData)
 
     state.set('media-upload-response', message)
@@ -155,7 +154,8 @@ function react() {
     const { error, message } = await deleteMedia(id)
     state.set('media-delete-response', { error, message })
     // refresh photo list
-    const mediaMetadata = await fetchMediaMetadata(id)
+    const recipeId = state.get('active-doc')
+    const mediaMetadata = await fetchMediaMetadata(recipeId)
     state.set('media-metadata', mediaMetadata)
   })
 
@@ -163,7 +163,8 @@ function react() {
     const { error, message } = await updateMediaCaption({ id, value })
     state.set('media-caption-response', { error, message })
     // refresh photo list
-    const mediaMetadata = await fetchMediaMetadata(id)
+    const recipeId = state.get('active-doc')
+    const mediaMetadata = await fetchMediaMetadata(recipeId)
     state.set('media-metadata', mediaMetadata)
   })
 }

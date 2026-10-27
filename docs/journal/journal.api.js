@@ -3,12 +3,18 @@ import { getWebApp, postWebAppJson, postWebAppForm } from '../assets/js/io.js'
 
 const url = `${state.const('APP_URL')}/journal`
 
+/**
+ *
+ */
 export async function createEntry(visit_date) {
   const resp = await postWebAppJson(`${url}/create`, { visit_date })
   const { data } = resp
   return { id: data.id }
 }
 
+/**
+ *
+ */
 export async function deleteEntry(id, password) {
   const { journal, error } = await getWebApp(
     `${url}/delete?id=${id}&password=${password}`
@@ -16,31 +22,41 @@ export async function deleteEntry(id, password) {
   return { data: journal, error }
 }
 
+/**
+ *
+ */
 export async function fetchDefaults() {
   const { defaults, error } = await getWebApp(`${url}/defaults/read`)
   return { defaults, error }
 }
 
-export async function fetchMediaMetadata(id) {
-  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
-  return { media, error }
-}
-
+/**
+ *
+ */
 export async function fetchEntry(id) {
   const resp = await getWebApp(`${url}/read-one?id=${id}`)
   return resp
 }
 
+/**
+ *
+ */
 export async function fetchGeoIndex() {
   const { tree, error } = await getWebApp(`${url}/geo-index/read`)
   return { tree, error }
 }
 
+/**
+ *
+ */
 export async function pageEntries(page = 0) {
   const { journal, error } = await getWebApp(`${url}/read?page=${page}`)
   return { data: journal, error }
 }
 
+/**
+ *
+ */
 export async function fetchAroundThisTime(dateString) {
   const { journal, error } = await getWebApp(
     `${url}/around-this-time?date=${dateString}`
@@ -58,6 +74,9 @@ export async function searchEntries(q) {
   return { data: journal, error }
 }
 
+/**
+ *
+ */
 export async function updateEntry({ id, section, value }) {
   const { message, error } = postWebAppJson(`${url}/update`, {
     id,
@@ -67,12 +86,18 @@ export async function updateEntry({ id, section, value }) {
   return { message, error }
 }
 
+/**
+ *
+ */
 export async function updateGeoIndex({ tree }) {
   await postWebAppJson(`${url}/geo-index/update`, {
     tree
   })
 }
 
+/**
+ *
+ */
 export async function updateJournalDefaults({ id, section, value }) {
   await postWebAppJson(`${url}/defaults/update`, {
     id,
@@ -80,6 +105,33 @@ export async function updateJournalDefaults({ id, section, value }) {
   })
 }
 
+/**
+ *
+ */
+export async function addMedia(formData) {
+  const { message } = await postWebAppForm(`${url}/media/create`, formData)
+  return { message }
+}
+
+/**
+ *
+ */
+export async function deleteMedia(id) {
+  const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
+  return { error }
+}
+
+/**
+ *
+ */
+export async function fetchMediaMetadata(id) {
+  const { media, error } = await getWebApp(`${url}/media/read?parent_id=${id}`)
+  return { media, error }
+}
+
+/**
+ *
+ */
 export async function updateMediaCaption({ id, value }) {
   const { error, message } = await postWebAppJson(`${url}/media/update`, {
     id,
@@ -87,14 +139,4 @@ export async function updateMediaCaption({ id, value }) {
     section: 'caption'
   })
   return { error, message }
-}
-
-export async function addMedia(formData) {
-  const { message } = await postWebAppForm(`${url}/media/create`, formData)
-  return { message }
-}
-
-export async function deleteMedia(id) {
-  const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
-  return { error }
 }

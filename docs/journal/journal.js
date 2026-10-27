@@ -104,7 +104,7 @@ function react() {
       const file = formData.get('file')
       id = state.get('active-doc')
       formData.set('file', file)
-      formData.set('entry', id)
+      formData.set('parent_id', id)
     } catch (error) {
       console.error(error)
       return

@@ -52,14 +52,6 @@ export async function fetchCategoriesAndRecipes() {
 /**
  *
  */
-export async function fetchMediaMetadata(id) {
-  const { media, error } = await getWebApp(`${url}/media/read?entry=${id}`)
-  return { media, error }
-}
-
-/**
- *
- */
 export async function fetchRecentRecipes() {
   const resp = await getWebApp(`${url}/latest`)
   const { recipes, error } = resp
@@ -104,19 +96,6 @@ export async function updateRecipeAccess(id) {
   const { message } = await getWebApp(`${url}/update-access?id=${id}`)
   return { message }
 }
-
-/**
- *
- */
-export async function updateMediaCaption({ id, value }) {
-  const { error, message } = await postWebAppJson(`${url}/media/update`, {
-    id,
-    value: value,
-    section: 'caption'
-  })
-  return { error, message }
-}
-
 /**
  *
  */
@@ -132,4 +111,24 @@ export async function addMedia(formData) {
 export async function deleteMedia(id) {
   const { error } = await getWebApp(`${url}/media/delete?id=${id}`)
   return { error }
+}
+
+/**
+ *
+ */
+export async function fetchMediaMetadata(id) {
+  const { media, error } = await getWebApp(`${url}/media/read?parent_id=${id}`)
+  return { media, error }
+}
+
+/**
+ *
+ */
+export async function updateMediaCaption({ id, value }) {
+  const { error, message } = await postWebAppJson(`${url}/media/update`, {
+    id,
+    value: value,
+    section: 'caption'
+  })
+  return { error, message }
 }
