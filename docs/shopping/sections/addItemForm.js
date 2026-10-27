@@ -83,6 +83,7 @@ function react(el) {
   state.on('icon-click:temp', 'addItemForm', () => {
     el.querySelector('#temp').classList.toggle('primary')
     handleTempMessage()
+    document.querySelector('textarea[name="new-item"]').focus()
   })
 
   state.on('select-click:view-select', 'addItemForm', (value) => {
@@ -122,11 +123,13 @@ function listen(el) {
   el.querySelector('#make-temporary-span').addEventListener('click', () => {
     el.querySelector('#temp').classList.add('primary')
     handleTempMessage()
+    document.querySelector('textarea[name="new-item"]').focus()
   })
 
   el.querySelector('#make-temporary-icon').addEventListener('click', () => {
     el.querySelector('#temp').classList.add('primary')
     handleTempMessage()
+    document.querySelector('textarea[name="new-item"]').focus()
   })
 
   el.querySelector('textarea[name="new-item"]').addEventListener(
