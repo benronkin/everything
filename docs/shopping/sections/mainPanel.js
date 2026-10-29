@@ -78,7 +78,7 @@ function build(el) {
 
   el.appendChild(dangerZone())
 
-  el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-20' }))
+  el.appendChild(createHeader({ type: 'h5', html: 'Id', className: 'mt-40' }))
 
   el.appendChild(createSpan({ id: 'item-id' }))
 }
@@ -90,7 +90,7 @@ function react(el) {
     el.querySelector('#title').value = doc.title
     el.querySelector('#carted').value = doc.carted
     el.querySelector('#recurring').value = doc.recurring
-    el.querySelector('#store').value = doc.store
+    // store select value is set after store options are set in state
     el.querySelector('#note').setValue(doc.note)
     el.querySelector('.markdown-wrapper').updateEditor(doc.note)
     el.querySelector('#item-id').insertHtml(doc.id)
@@ -103,4 +103,23 @@ function react(el) {
       setMessage()
     }
   })
+
+  state.on('stores', 'item.group', (stores) => {
+    const options = stores.map(createOption)
+    const storeEl = document.getElementById('store')
+    options.unshift(createOption({ id: null, name: 'Select store' }))
+    storeEl.setOptions(options)
+    const storeId = state.get('main-documents')[0].store || ''
+    storeEl.selectByValue(storeId)
+  })
+}
+
+/**
+ *
+ */
+function createOption({ id, name }) {
+  const o = document.createElement('option')
+  o.value = id
+  o.label = name
+  return o
 }

@@ -36,9 +36,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search)
     const id = urlParams.get('id')
 
-    const [{ item }, { user }] = await Promise.all([getItem(id), getMe()])
+    const [{ item, stores }, { user }] = await Promise.all([
+      getItem(id),
+      getMe()
+    ])
 
     state.set('main-documents', [item])
+    state.set('stores', stores)
     state.set('app-mode', 'main-panel')
     state.set('active-doc', id)
     state.set('user', user)

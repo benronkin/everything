@@ -18,6 +18,7 @@ select option {
   padding: 7px;
   height: 20px;
   cursor: pointer;
+  background-color: var(--gray1);
 }
 .select-wrapper.disabled {
   background-color: var(--gray3);
@@ -148,7 +149,7 @@ function selectByValue(value) {
   // remove prior select
   this.unselect()
   const option = this.getOptionByValue(value) || this.querySelector('option')
-  option.setAttribute('selected', true)
+  option.selected = true
   this.querySelector('select').value = value
 }
 
