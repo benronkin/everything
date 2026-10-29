@@ -121,7 +121,7 @@ function getOptionByValue(value) {
 }
 
 function getSelected() {
-  return this.querySelector('option[selected="true"]')
+  return this.querySelector('select').selectedOptions[0] || null
 }
 
 function hasOptionLabel(label) {
@@ -146,11 +146,10 @@ function selectByLabel(label) {
 }
 
 function selectByValue(value) {
-  // remove prior select
-  this.unselect()
   const option = this.getOptionByValue(value) || this.querySelector('option')
-  option.selected = true
-  this.querySelector('select').value = value
+  if (!option) return
+
+  this.querySelector('select').value = option.value
 }
 
 function setDisabled(value) {
@@ -173,11 +172,7 @@ function setOptions(options) {
 }
 
 function unselect() {
-  const oldSelected = this.getSelected()
-  if (oldSelected) {
-    oldSelected.setAttribute('selected', null)
-  }
-  this.querySelector('select').value = ''
+  this.querySelector('select').selectedIndex = -1
 }
 
 function addElementParts({ el, name }) {

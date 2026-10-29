@@ -91,6 +91,9 @@ function react(el) {
  */
 function arrangeItemsByView(items) {
   const viewSelect = document.getElementById('view-select')
+  console.log('viewSelect', viewSelect.innerHTML)
+  const selectedOption = viewSelect.getSelected()
+  console.log('selectedOption', selectedOption)
   const view = viewSelect.getSelected().value
 
   switch (view) {
