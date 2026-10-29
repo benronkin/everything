@@ -6,12 +6,14 @@ import { createMediaItem } from './mediaItem.js'
 const css = `
 `
 
-export function mediaList() {
+export function mediaList({ className } = {}) {
   injectStyle(css)
 
   const el = createList({
     id: 'media-list'
   })
+
+  className && (el.classList = className)
 
   listen(el)
 

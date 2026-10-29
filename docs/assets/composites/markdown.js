@@ -22,12 +22,16 @@ import { createTextarea } from '../partials/textarea.js'
 import { state } from '../js/state.js'
 
 const css = `
-blockquote {
+blockquote, pre {
   margin: 20px 0;
-  padding: 5px;
+  padding: 10px;
   border-left: 3px solid var(--gray3);
   background-color: var(--gray2);
   border-radius: 6px;
+  }
+  pre code {
+    color: var(--pastel-lime);
+    text-wrap: auto;
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 30px 0 15px;
@@ -59,6 +63,7 @@ textarea {
 }
 .markdown-editor {
   width: 100%;
+  margin-bottom: 26px !important;
 }
 .markdown-icons {
   display: flex;

@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       getMe()
     ])
 
+    console.log('stores', stores)
+
     state.set('main-documents', [item])
     state.set('stores', stores)
     state.set('app-mode', 'main-panel')

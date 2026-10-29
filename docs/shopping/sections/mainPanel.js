@@ -56,9 +56,7 @@ function build(el) {
 
   el.appendChild(phw)
 
-  phw.appendChild(
-    createHeader({ type: 'h4', html: 'Media', className: 'mt-0' })
-  )
+  phw.appendChild(createHeader({ type: 'h4', html: 'Media' }))
 
   phw.appendChild(
     createIcon({

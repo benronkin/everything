@@ -190,10 +190,12 @@ async function handleDeleteItem({ id, title }) {
     modal.showModal()
     state.set('permanent-delete', id)
   } else {
-    setMessage(`Deleting ${title}...`)
+    // setMessage(`Deleting ${title}...`)
+    document.getElementById(id).classList.add('hidden')
     const { message, error } = await deleteItem(id, view)
     if (error) {
       setMessage(error, { type: 'danger' })
+      document.getElementById(id).classList.remove('hidden')
       return
     } else {
       setMessage()
