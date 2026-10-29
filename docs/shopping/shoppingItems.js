@@ -125,6 +125,8 @@ async function handleFormSubmit() {
   const isTemp =
     view === 'cart' &&
     Number(document.getElementById('temp').classList.contains('primary'))
+      ? 1
+      : 0
 
   for (const title of titles) {
     const { data, error } = await addItem({ title, view, isTemp })
