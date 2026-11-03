@@ -77,9 +77,12 @@ function createSearchList(docs) {
 
   const children = []
 
-  for (const [cat, docs] of Object.entries(map)) {
-    children.push(createDiv({ html: cat, className: 'category' }))
-    for (const doc of docs) {
+  const sortedKeys = Object.keys(map).sort((a, b) => a.localeCompare(b))
+
+  for (const key of sortedKeys) {
+    children.push(createDiv({ html: key, className: 'category' }))
+    const sortedDocs = map[key].sort((a, b) => a.title.localeCompare(b.title))
+    for (const doc of sortedDocs) {
       children.push(
         createMainDocumentLink({
           id: doc.id,
