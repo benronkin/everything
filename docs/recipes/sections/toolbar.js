@@ -30,10 +30,18 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
-    const shopEl = el.querySelector('#shop')
-    const categoryEl = el.querySelector('#category-filter')
-    shopEl.classList.toggle('hidden', appMode !== 'main-panel')
-    categoryEl.classList.toggle('hidden', appMode === 'main-panel')
+    el.querySelector('#add-recipe').classList.toggle(
+      'hidden',
+      appMode === 'main-panel'
+    )
+    el.querySelector('#shop').classList.toggle(
+      'hidden',
+      appMode !== 'main-panel'
+    )
+    el.querySelector('#category-filter').classList.toggle(
+      'hidden',
+      appMode === 'main-panel'
+    )
   })
 
   state.on('recipe-categories', 'toolbar', (cats) => {
