@@ -16,14 +16,6 @@ import {
   searchRecipes
 } from './recipes.api.js'
 
-// Refresh recipes when Back/Forward restores this page from cache,
-// preserving the current search query and selected category.
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
-    window.location.reload()
-  }
-})
-
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     build()
