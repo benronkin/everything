@@ -8,23 +8,19 @@ export function toolbar() {
     className: 'container',
     children: [
       createIcon({
-        id: 'back',
-        classes: { primary: 'fa-chevron-left', other: ['primary', 'hidden'] },
-      }),
-      createIcon({
         id: 'add-recipe',
-        classes: { primary: 'fa-plus', other: ['primary'] },
+        classes: { primary: 'fa-plus', other: ['primary'] }
       }),
       createIcon({
         id: 'shop',
-        classes: { primary: 'fa-shopping-cart', other: ['primary', 'hidden'] },
+        classes: { primary: 'fa-shopping-cart', other: ['primary', 'hidden'] }
       }),
       createSelect({
         id: 'category-filter',
         name: 'category-filter',
-        className: 'primary',
-      }),
-    ],
+        className: 'primary'
+      })
+    ]
   })
 
   react(el)
@@ -34,17 +30,10 @@ export function toolbar() {
 
 function react(el) {
   state.on('app-mode', 'toolbar', (appMode) => {
-    const backEl = el.querySelector('#back')
     const shopEl = el.querySelector('#shop')
     const categoryEl = el.querySelector('#category-filter')
-    backEl.classList.toggle('hidden', appMode !== 'main-panel')
     shopEl.classList.toggle('hidden', appMode !== 'main-panel')
     categoryEl.classList.toggle('hidden', appMode === 'main-panel')
-  })
-
-  state.on('icon-click:back', 'toolbar', () => {
-    state.set('active-doc', null)
-    state.set('app-mode', 'left-panel')
   })
 
   state.on('recipe-categories', 'toolbar', (cats) => {
