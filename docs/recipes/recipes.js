@@ -3,7 +3,6 @@ import { toolbar } from './sections/toolbar.js'
 import { leftPanel } from './sections/leftPanel.js'
 import { createDiv } from '../assets/partials/div.js'
 import { createFooter } from '../assets/composites/footer.js'
-import { createMainDocumentItem } from '../assets/partials/mainDocumentItem.js'
 import { nav } from './sections/nav.js'
 import { createRightDrawer } from '../assets/partials/rightDrawer.js'
 import { handleTokenQueryParam } from '../assets/js/io.js'
@@ -48,6 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('app-mode', 'left-panel')
     state.set('user', user)
     state.set('default-page', 'recipes')
+
+    if (document.querySelector('[name="search-recipe"]').value.trim()) {
+      await reactRecipeSearch()
+    }
+
     window.state = state // avail to browser console
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
@@ -108,8 +112,9 @@ async function reactRecipeSearch() {
 
   const query = document.querySelector('[name="search-recipe"]').value?.trim()
 
+  state.set('search-action', Boolean(query.length))
+
   if (query.length) {
-    state.set('search-action', true)
     resp = await searchRecipes(query)
   } else {
     // get most recent entries instead
