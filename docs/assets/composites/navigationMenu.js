@@ -1,4 +1,4 @@
-import { injectStyle, navList } from '../js/ui.js'
+import { injectStyle, navList, setMessage } from '../js/ui.js'
 import { createList } from '../partials/list.js'
 import { createMenuItem } from '../partials/menuItem.js'
 import { createHeader } from '../partials/header.js'
@@ -17,7 +17,7 @@ export function createNavigationMenu({ container, active } = {}) {
 
   const el = createList({
     className: 'nav',
-    itemClass: 'list-item',
+    itemClass: 'list-item'
   })
 
   build({ el, active })
@@ -35,8 +35,8 @@ function build({ el, active }) {
         createHeader({
           type: 'h5',
           html: ni.category,
-          className: 'nav-category',
-        }),
+          className: 'nav-category'
+        })
       )
       categories.push(ni.category)
     }
@@ -46,8 +46,8 @@ function build({ el, active }) {
         html: `<i class="fa-solid ${ni.icon}"></i> ${ni.label}`,
         url: `../${ni.url}`,
         id: `rd-item-${ni.id}`,
-        className: 'menu-item',
-      }),
+        className: 'menu-item'
+      })
     )
   }
 
@@ -55,6 +55,17 @@ function build({ el, active }) {
   if (active) {
     const id = `rd-item-${active}`
     const child = el.getChildById(id)
+
+    if (!child) {
+      const msg =
+        'Looks like you incorrectly did a ' +
+        `state.set('default-page', '${active}') in the top level js file.` +
+        `'${active}' is not a valid page type.`
+      console.warn(msg)
+      setMessage(msg, { type: 'danger' })
+      return
+    }
+
     child.classList.add('active')
   }
 }

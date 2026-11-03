@@ -16,7 +16,6 @@ import {
   fetchMediaMetadata,
   fetchRecentRecipes,
   fetchRecipesByCategory,
-  searchRecipes,
   updateRecipe,
   updateRecipeAccess,
   addMedia,
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('active-doc', id)
     state.set('app-mode', 'main-panel')
     state.set('user', user)
-    state.set('default-page', 'recipe')
+    state.set('default-page', 'recipes')
     window.state = state // avail to browser console
   } catch (error) {
     setMessage(error.message, { type: 'danger' })
