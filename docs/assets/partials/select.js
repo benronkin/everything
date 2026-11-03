@@ -15,8 +15,7 @@ select option {
   position: relative;
   align-items: center;
   border-radius: var(--border-radius);
-  padding: 7px;
-  height: 20px;
+  padding: 4px;
   cursor: pointer;
   background-color: var(--gray1);
 }

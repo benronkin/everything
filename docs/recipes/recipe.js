@@ -1,0 +1,308 @@
+import { state } from '../assets/js/state.js'
+import { toolbar } from './sections/toolbar.js'
+import { mainPanel } from './sections/mainPanel.js'
+import { createDiv } from '../assets/partials/div.js'
+import { createFooter } from '../assets/composites/footer.js'
+import { createMainDocumentItem } from '../assets/partials/mainDocumentItem.js'
+import { nav } from './sections/nav.js'
+import { createRightDrawer } from '../assets/partials/rightDrawer.js'
+import { handleTokenQueryParam } from '../assets/js/io.js'
+import { getMe } from '../users/users.api.js'
+import { setMessage } from '../assets/js/ui.js'
+import {
+  cartRecipe,
+  deleteRecipe,
+  fetchRecipe,
+  fetchMediaMetadata,
+  fetchRecentRecipes,
+  fetchRecipesByCategory,
+  searchRecipes,
+  updateRecipe,
+  updateRecipeAccess,
+  addMedia,
+  deleteMedia,
+  updateMediaCaption
+} from './recipes.api.js'
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    build()
+    setMessage('Loading...')
+
+    handleTokenQueryParam()
+
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Token not found locally')
+    }
+
+    react()
+    listen()
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const id = urlParams.get('id')
+
+    let [{ categories, recipe }, { user }] = await Promise.all([
+      fetchRecipe(id),
+      getMe()
+    ])
+
+    categories = categories.map((c) => ({
+      value: c.id,
+      label: c.label
+    }))
+    categories.unshift({ value: '', label: 'Category' })
+
+    setMessage()
+    state.set('recipe-categories', categories)
+    state.set('main-documents', [recipe])
+    state.set('active-doc', id)
+    state.set('app-mode', 'main-panel')
+    state.set('user', user)
+    state.set('default-page', 'recipe')
+    window.state = state // avail to browser console
+  } catch (error) {
+    setMessage(error.message, { type: 'danger' })
+    console.trace(error)
+  }
+})
+
+async function build() {
+  document.title = 'Recipes | Everything App'
+  const body = document.body
+  body.classList.add('dark-mode')
+
+  const wrapperEl = createDiv({ className: 'wrapper' })
+  body.prepend(wrapperEl)
+  wrapperEl.appendChild(nav())
+  wrapperEl.appendChild(toolbar())
+
+  const columnsWrapperEl = createDiv({
+    className: 'columns-wrapper'
+  })
+  wrapperEl.appendChild(columnsWrapperEl)
+  columnsWrapperEl.appendChild(mainPanel())
+  columnsWrapperEl.appendChild(createRightDrawer({ active: 'recipes' }))
+  wrapperEl.appendChild(createFooter())
+}
+
+function react() {
+  state.on('icon-click:shop', 'recipes', handleCartRecipe)
+
+  state.on('button-click:modal-delete-btn', 'recipes', reactRecipeDelete)
+
+  state.on('recipe-categories', 'recipes', (options) =>
+    document.getElementById('recipe-category').setOptions(options)
+  )
+
+  state.on('app-mode', 'recipes', async (appMode) => {
+    if (appMode === 'main-panel') {
+      populateRelatedRecipes()
+      const id = state.get('active-doc')
+      if (id) {
+        const mediaMetadata = await fetchMediaMetadata(id)
+        state.set('media-metadata', mediaMetadata)
+
+        updateRecipeAccess(id)
+        const docs = state.get('main-documents')
+        const idx = docs.findIndex((d) => d.id === id)
+        if (idx !== -1) {
+          const [doc] = docs.splice(idx, 1)
+          const date = new Date()
+          doc.last_accessed_at = date.toISOString()
+          docs.unshift(doc)
+          state.set('main-documents', docs)
+        }
+      }
+    }
+  })
+
+  state.on('field-changed', 'recipes', handleFieldChange)
+
+  state.on('media-form-submit', 'recipes.js', async (formData) => {
+    // const compressionOptions = {
+    //   maxWidthOrHeight: 900,
+    //   useWebWorker: true,
+    //   fileType: 'image/jpeg',
+    //   exifOrientation: null
+    // }
+
+    const file = formData.get('file')
+    // const compressed = await imageCompression(file, compressionOptions)
+    const id = state.get('active-doc')
+
+    formData.set('file', file)
+    formData.set('parent_id', id)
+    const { message } = await addMedia(formData)
+
+    state.set('media-upload-response', message)
+    // refresh photo list
+    const mediaMetadata = await fetchMediaMetadata(id)
+    state.set('media-metadata', mediaMetadata)
+  })
+
+  state.on('media-delete-request', 'recipes.js', async (id) => {
+    const { error, message } = await deleteMedia(id)
+    state.set('media-delete-response', { error, message })
+    // refresh photo list
+    const recipeId = state.get('active-doc')
+    const mediaMetadata = await fetchMediaMetadata(recipeId)
+    state.set('media-metadata', mediaMetadata)
+  })
+
+  state.on('media-caption-change', 'recipes.js', async ({ id, value }) => {
+    const { error, message } = await updateMediaCaption({ id, value })
+    state.set('media-caption-response', { error, message })
+    // refresh photo list
+    const recipeId = state.get('active-doc')
+    const mediaMetadata = await fetchMediaMetadata(recipeId)
+    state.set('media-metadata', mediaMetadata)
+  })
+}
+
+function listen() {
+  // When recipe category switch is toggled
+  document.getElementById('related-switch').addEventListener('click', () => {
+    document.getElementById('recipe-related').classList.toggle('hidden')
+  })
+}
+
+async function reactRecipeDelete() {
+  const modalDelete = document.querySelector('#modal-delete')
+  const photoId = modalDelete.dataset.photo
+  modalDelete.message('')
+
+  if (photoId) {
+    // handle delete recipe photo
+    const parent = document.getElementById(photoId)
+    const trashEl = parent.querySelector('.fa-trash')
+    trashEl.disabled = true
+    state.set('media-delete-request', photoId)
+    modalDelete.dataset.photo = ''
+    modalDelete.close()
+  } else {
+    // handle delete recipe
+    const id = state.get('active-doc')
+    const password = modalDelete.getPassword()
+    const { error } = await deleteRecipe(id, password)
+
+    if (error) {
+      modalDelete.message(error)
+      return
+    }
+
+    modalDelete.setPassword('')
+    modalDelete.close()
+
+    const filteredDocs = state
+      .get('main-documents')
+      .filter((doc) => doc.id !== id)
+    state.set('main-documents', filteredDocs)
+    state.set('app-mode', 'left-panel')
+  }
+}
+
+async function handleFieldChange(el) {
+  let value = el.value
+  const name = el.name
+
+  const isFileUpload = name === 'file' || name === 'caption'
+
+  if (name === 'search-recipe' || name === 'related-switch' || isFileUpload)
+    return
+
+  if (name === 'category-filter') {
+    handleCategoryChange(value)
+    return
+  }
+
+  const id = state.get('active-doc')
+  const docs = state.get('main-documents')
+  const idx = docs.findIndex((d) => d.id === id)
+
+  docs[idx][name] = value
+  state.set('main-documents', docs)
+
+  try {
+    const { error } = await updateRecipe({ id, section: name, value })
+    if (error) {
+      throw new Error(error)
+    }
+    setMessage('Saved', { type: 'quiet' })
+  } catch (error) {
+    setMessage(error, { type: 'danger' })
+  }
+
+  if (name === 'related') {
+    populateRelatedRecipes()
+  }
+}
+
+/**
+ * Populate related recipes
+ */
+function populateRelatedRecipes() {
+  const relatedListEl = document.getElementById('related-list')
+  relatedListEl.deleteChildren()
+
+  const ids = document.getElementById('recipe-related').value
+  if (!ids) return
+
+  const splitRegEx = /,|\n|\s/
+  const idsArr = ids
+    .split(splitRegEx)
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0)
+
+  if (!idsArr.length) return
+
+  for (const id of idsArr) {
+    if (!id.trim().length || id === 'undefined') {
+      continue
+    }
+
+    const docs = state.get('main-documents')
+    const relatedDoc = docs.find((doc) => doc.id === id)
+    if (!relatedDoc) {
+      console.warn(`Related recipe with id "${id}" not found in main documents`)
+      return
+    }
+    const title = relatedDoc.title
+    relatedListEl.addChild(
+      createMainDocumentItem({
+        id,
+        html: title
+      })
+    )
+  }
+}
+
+/**
+ *
+ */
+async function handleCartRecipe() {
+  const id = state.get('active-doc')
+  if (!id) return
+
+  const { error } = await cartRecipe(id)
+  if (error) {
+    console.error(error)
+    setMessage(error, { type: 'danger' })
+    return
+  }
+  setMessage('Ingredients added to shopping list')
+}
+
+async function handleCategoryChange(id) {
+  let resp
+  if (!id) {
+    resp = await fetchRecentRecipes()
+  } else {
+    resp = await fetchRecipesByCategory(id)
+  }
+
+  const { recipes } = resp
+
+  state.set('main-documents', recipes)
+  state.set('app-mode', 'left-panel')
+}

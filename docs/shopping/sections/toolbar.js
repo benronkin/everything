@@ -7,8 +7,7 @@ import { state } from '../../assets/js/state.js'
 const css = `
 #view-select {
   border: 1px solid var(--gray4);
-  padding: 12px;
-  }
+}
 #view-select .custom-select{
   color: var(--gray4); 
 }

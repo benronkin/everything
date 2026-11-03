@@ -61,6 +61,14 @@ export async function fetchRecentRecipes() {
 /**
  *
  */
+export async function fetchRecipe(id) {
+  const resp = await getWebApp(`${url}/read-one?id=${id}`)
+  return resp
+}
+
+/**
+ *
+ */
 export async function fetchRecipesByCategory(id) {
   const resp = await getWebApp(`${url}/by-category?id=${id}`)
   const { recipes, error } = resp

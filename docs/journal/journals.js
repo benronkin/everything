@@ -13,7 +13,7 @@ import {
   createEntry,
   pageEntries,
   fetchAroundThisTime,
-  searchEntries,
+  searchEntries
 } from './journal.api.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -81,7 +81,7 @@ async function build() {
   wrapperEl.appendChild(toolbar())
 
   const columnsWrapperEl = createDiv({
-    className: 'columns-wrapper',
+    className: 'columns-wrapper'
   })
   wrapperEl.appendChild(columnsWrapperEl)
   columnsWrapperEl.appendChild(leftPanel())
@@ -104,6 +104,8 @@ function react() {
 async function reactEntryAdd({ id: btnId }) {
   const addBtn = document.getElementById(btnId)
   addBtn.disabled = true
+
+  setMessage('Creating a new journal entry...')
 
   const visit_date = getLocalDate()
 

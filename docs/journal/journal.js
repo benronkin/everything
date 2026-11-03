@@ -9,15 +9,15 @@ import { handleTokenQueryParam } from '../assets/js/io.js'
 import { getMe } from '../users/users.api.js'
 import { setMessage } from '../assets/js/ui.js'
 import {
-  addMedia,
   deleteEntry,
-  deleteMedia,
   fetchEntry,
   fetchDefaults,
   fetchMediaMetadata,
   fetchGeoIndex,
   updateEntry,
   updateJournalDefaults,
+  addMedia,
+  deleteMedia,
   updateMediaCaption
 } from './journal.api.js'
 

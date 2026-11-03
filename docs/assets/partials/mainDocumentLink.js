@@ -48,6 +48,10 @@ const css = `
 export function createMainDocumentLink({ id, html, url } = {}) {
   injectStyle(css)
 
+  if (!Array.isArray(html)) {
+    html = [html]
+  }
+
   const el = createAnchor({
     id,
     url,
