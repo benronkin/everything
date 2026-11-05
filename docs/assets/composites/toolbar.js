@@ -47,6 +47,9 @@ const css = `
   align-items: center;
   justify-content: center;
 }  
+#toolbar .select-wrapper {
+  padding: 7px 4px;
+}
 `
 
 // -------------------------------

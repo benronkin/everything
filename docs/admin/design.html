@@ -17,42 +17,82 @@
     <link rel="shortcut icon" href="../assets/img/favicon.ico" />
     <title>Developer | Everything App Ronkin</title>
     <style>
-      #main-panel {
-        width: 100%;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
+      #preview-edit {
+        margin: 10px;
+        background-color: purple;
+        padding: 5px;
       }
-      #main-panel.hidden {
-        display: none;
+      #test-editor {
+        padding: 20px;
+        border: 1px solid #333;
+        margin: 10px;
       }
-      #main-panel input.field,
-      #main-panel textarea.field {
-        padding: 0;
-        margin: 0;
-        border-bottom: 1px dotted var(--gray1);
+      #test-editor.edit-mode {
+        white-space: pre-wrap;
       }
     </style>
   </head>
   <body class="dark-mode">
+    <div id="test-editor">
+      This is plain text
+
+      <h3>This is html markup</h3>
+    </div>
+    <button id="preview-edit">EDIT</button>
+
     <script src="../assets/js/markdown-it.js"></script>
 
     <script type="module">
       import { state } from '../assets/js/state.js'
-      import { createMarkdown } from '../assets/composites/markdown.js'
 
-      const markDownWrapper = createMarkdown({ name: 'design-markdown' })
+      const previewEditBtn = document.getElementById('preview-edit')
+      const editor = document.getElementById('test-editor')
 
-      document.body.appendChild(markDownWrapper)
+      document.addEventListener('DOMContentLoaded', async () => {
+        state.set('editor-content', editor.innerHTML)
+        listen()
 
-      const markdown = `
-# Hello world!
-<a style="color: red;" href="https://wnba.com">Click here please</a>
-`
+        /**
+         *
+         */
+        function listen() {
+          previewEditBtn.addEventListener('click', handlePreviewEditClick)
+        }
 
-      markDownWrapper.updateEditor(markdown)
+        /**
+         *
+         */
+        function handlePreviewEditClick() {
+          if (previewEditBtn.innerHTML === 'PREVIEW') {
+            previewEditBtn.innerHTML = 'EDIT'
+            setPreviewMode()
+          } else {
+            previewEditBtn.innerHTML = 'PREVIEW'
+            setEditMode()
+          }
+        }
+
+        /**
+         *
+         */
+        function setPreviewMode() {
+          const source = editor.innerText
+          state.set('editor-content', source)
+
+          editor.classList.remove('edit-mode')
+          editor.contentEditable = 'false'
+          editor.innerHTML = source
+        }
+
+        /**
+         *
+         */
+        function setEditMode() {
+          editor.classList.add('edit-mode')
+          editor.contentEditable = 'plaintext-only'
+          editor.textContent = state.get('editor-content')
+        }
+      })
     </script>
   </body>
 </html>

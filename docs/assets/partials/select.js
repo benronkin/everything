@@ -4,7 +4,7 @@ import { state } from '../js/state.js'
 
 const css = `
 select {
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem 0.75rem;
 }
 select option {
   background-color: var(--gray2);
@@ -15,7 +15,6 @@ select option {
   position: relative;
   align-items: center;
   border-radius: var(--border-radius);
-  padding: 4px;
   cursor: pointer;
   background-color: var(--gray1);
 }
