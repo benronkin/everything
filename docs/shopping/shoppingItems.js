@@ -137,6 +137,8 @@ async function handleFormSubmit() {
       // Keep any items successfully added earlier in this submission
       state.set('main-documents', docs)
       setMessage(error, { type: 'danger' })
+      textArea.setValue(titles)
+      textArea.resize()
       return
     }
     const index = docs.findIndex((d) => d.id === data.item.id)
