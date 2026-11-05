@@ -118,6 +118,8 @@ async function handleFormSubmit() {
 
   const adding = titles.length === 1 ? titles[0] : 'items'
   setMessage(`Adding ${adding}...`)
+  textArea.setValue('')
+  textArea.resize()
 
   const view = document.getElementById('view-select').getSelected().value
   const docs = [...state.get('main-documents')]
@@ -145,9 +147,6 @@ async function handleFormSubmit() {
       docs[index] = data.item
     }
   }
-
-  textArea.setValue('')
-  textArea.resize()
   setMessage()
   state.set('main-documents', docs)
 }
