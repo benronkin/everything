@@ -1,6 +1,7 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { state } from '../../assets/js/state.js'
 import { createDiv } from '../../assets/partials/div.js'
+import { createIcon } from '../../assets/partials/icon.js'
 import { createMainDocumentsList } from '../../assets/partials/mainDocumentsList.js'
 import { createMainDocumentLink } from '../../assets/partials/mainDocumentLink.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -16,6 +17,9 @@ const css = `
   padding: 5px;
   border-radius: var(--border-radius);
   color: var(--gray0);
+}
+.fa-thumbtack {
+  transform: rotate(30deg);
 }
 `
 
@@ -58,17 +62,12 @@ function addChildren(el, docs) {
 
   if (!docs || !docs.length) return
 
-  // for (const doc of docs) {
-  //   if (!doc) {
-  //     console.warn('One of the docs is empty')
-  //     return
-  //   }
-  // }
-
   const children = docs.map((doc) => {
     const html = [createSpan({ html: doc.title })]
 
-    if (doc.assigned_project) {
+    if (doc.pinned) {
+      html.push(createIcon({ classes: { primary: 'fa-thumbtack' } }))
+    } else if (doc.assigned_project) {
       const project = doc.projects.find((p) => p.id === doc.assigned_project)
 
       if (!project) {

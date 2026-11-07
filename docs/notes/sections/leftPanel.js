@@ -9,6 +9,9 @@ import { mainDocumentsList } from './mainDocumentsList.js'
 // -------------------------------
 
 const css = `
+#left-panel {
+  width: 100% !important;
+}
 `
 
 export function leftPanel() {
@@ -27,8 +30,8 @@ function build(el) {
     search({
       id: 'left-panel-search',
       placeholder: 'Search notes...',
-      name: 'search-note',
-    }),
+      name: 'search-note'
+    })
   )
 
   el.appendChild(mainDocumentsList())
