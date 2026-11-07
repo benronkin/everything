@@ -39,9 +39,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.set('default-page', 'shopping')
     window.state = state // avail to browser console
 
-    requestAnimationFrame(() => {
-      document.querySelector('[name="new-item"]')?.focus()
-    })
+    // causes mobile to show the keyboard all the time
+    // requestAnimationFrame(() => {
+    //   document.querySelector('[name="new-item"]')?.focus()
+    // })
     setMessage()
   } catch (error) {
     console.trace(error)
