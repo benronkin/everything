@@ -4,10 +4,6 @@ import { mainDocumentsList } from './mainDocumentsList.js'
 import { addItemForm } from './addItemForm.js'
 import { suggestionsList } from './suggestionsList.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 #left-panel {
   width: 100%;

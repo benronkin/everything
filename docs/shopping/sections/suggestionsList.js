@@ -63,7 +63,11 @@ function refreshSuggestions(el, query) {
     }
   })
 
-  if (!docs.length) return
+  if (!docs.length) {
+    el.deleteChildren()
+    el.classList.add('hidden')
+    return
+  }
 
   el.deleteChildren()
 
