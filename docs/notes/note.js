@@ -18,6 +18,7 @@ import {
   deleteLabel,
   fetchLabels,
   fetchLabelsAssignments,
+  pinNote,
   shareNote,
   unassignLabel,
   updateLabel
@@ -126,6 +127,8 @@ function react() {
   })
 
   state.on('note-label-update', 'note', handleLabelUpdate)
+
+  state.on('icon-click:pin-note', 'note', handlePinNote)
 
   state.on('icon-click:labels', 'note', () => {
     handlRightDrawerState('labels')
@@ -256,4 +259,12 @@ async function handleLabelUpdate(payload) {
   // setMessage(message)
   document.getElementById('labels-dialog').close()
   document.getElementById('label-menu')?.classList.add('hidden')
+}
+
+/**
+ *
+ */
+async function handlePinNote(obj) {
+  const id = state.get('active-doc')
+  const { error, message } = await pinNote(id)
 }
