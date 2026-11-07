@@ -53,8 +53,13 @@ export async function shareNote({ id, peers }) {
   return { message }
 }
 
-export async function pinNote(id) {
-  const resp = await getWebApp(`${url}/pin?id=${id}`)
+export async function getPinNote(id) {
+  const resp = await getWebApp(`${url}/pin/read?id=${id}`)
+  return resp
+}
+
+export async function updatePinNote(id) {
+  const resp = await getWebApp(`${url}/pin/update?id=${id}`)
   return resp
 }
 

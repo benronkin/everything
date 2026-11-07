@@ -18,10 +18,11 @@ import {
   deleteLabel,
   fetchLabels,
   fetchLabelsAssignments,
-  pinNote,
   shareNote,
   unassignLabel,
-  updateLabel
+  updateLabel,
+  getPinNote,
+  updatePinNote
 } from './notes.api.js'
 import {
   attachProjectItem,
@@ -264,7 +265,18 @@ async function handleLabelUpdate(payload) {
 /**
  *
  */
-async function handlePinNote(obj) {
+async function handlePinNote() {
   const id = state.get('active-doc')
-  const { error, message } = await pinNote(id)
+  const { error, pinned } = await updatePinNote(id)
+
+  if (error) {
+    console.error('handlePinNote', error)
+    setMessage(error.message, { type: 'danger' })
+  }
+
+  const docs = state.get('main-documents')
+  docs[0].pinned = pinned
+  state.set('main-documents', [...docs])
+  // force refresh
+  state.set('active-doc', id)
 }

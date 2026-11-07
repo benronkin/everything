@@ -62,6 +62,8 @@ function react(el) {
     })
 
     el.querySelector('.icons').appendChild(avatarGroup)
+    el.querySelector('#pin-note').classList.toggle('bordered', !doc.pinned)
+    el.querySelector('#pin-note').classList.toggle('primary', doc.pinned)
   })
 
   state.on('app-mode', 'toolbar', (mode) => {
