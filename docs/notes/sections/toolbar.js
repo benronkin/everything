@@ -23,7 +23,7 @@ export function toolbar() {
         id: 'pin-note',
         classes: {
           primary: 'fa-thumbtack',
-          other: 'bordered'
+          other: ['bordered', 'hidden']
         }
       }),
       createIcon({
@@ -62,6 +62,7 @@ function react(el) {
     })
 
     el.querySelector('.icons').appendChild(avatarGroup)
+    el.querySelector('#pin-note').classList.remove('hidden')
     el.querySelector('#pin-note').classList.toggle('bordered', !doc.pinned)
     el.querySelector('#pin-note').classList.toggle('primary', doc.pinned)
   })
