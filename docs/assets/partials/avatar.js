@@ -28,7 +28,7 @@ export function createAvatar(doc) {
     ? createImage({ src: url, className: 'avatar' })
     : createDiv({
         className: 'avatar',
-        html: name ? name[0].toUpperCase() : 'U',
+        html: name ? name[0].toUpperCase() : 'U'
       })
 
   el.style.backgroundColor = doc.color
@@ -39,10 +39,7 @@ export function createAvatar(doc) {
     }
   }
 
-  if (id) {
-    el.id = id
-    el.dataset.avatar = id
-  }
+  id && (el.id = id)
 
   return el
 }

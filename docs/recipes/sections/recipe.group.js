@@ -1,5 +1,6 @@
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSelectGroup } from '../../assets/partials/selectGroup.js'
 import { createHeaderGroup } from '../../assets/partials/headerGroup.js'
@@ -17,14 +18,13 @@ export function createRecipeGroup() {
 
 async function build(el) {
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'recipe-title',
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
       classes: {
         group: '',
-        input: 'bigger border-bottom-on-hover w-100',
         icon: 'fa-utensils'
       }
     })

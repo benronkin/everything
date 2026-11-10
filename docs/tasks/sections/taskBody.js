@@ -5,8 +5,8 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createHeaderGroup } from '../../assets/partials/headerGroup.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createInputGroup } from '../../assets/partials/inputGroup.js'
 import { createTextareaGroup } from '../../assets/partials/textareaGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createStep } from './step.js'
 import { createDueDate } from './dueDate.js'
@@ -94,14 +94,13 @@ function build(el, doc) {
   }
 
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'title',
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
       classes: {
         group: '',
-        input: 'bigger border-bottom-on-hover w-100',
         icon: 'fa-square'
       },
       value: doc.title || ''

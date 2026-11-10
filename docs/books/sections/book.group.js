@@ -3,6 +3,7 @@ import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createInput } from '../../assets/partials/input.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createRating } from '../../assets/partials/rating.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
@@ -22,14 +23,13 @@ export function createBookGroup() {
 
 async function build(el) {
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'book-title',
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
       classes: {
         group: '',
-        input: 'bigger border-bottom-on-hover w-100',
         icon: 'fa-book'
       }
     })

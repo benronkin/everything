@@ -5,7 +5,6 @@ import { createIcon } from '../../assets/partials/icon.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createSelect } from '../../assets/partials/select.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
-import { createTextarea } from '../../assets/partials/textarea.js'
 import { createSpan } from '../../assets/partials/span.js'
 
 const css = `
@@ -30,10 +29,10 @@ async function build(el, sense, noFaMinus) {
     createSpanGroup({
       classes: {
         group: 'mt-20 mb-10',
-        icon: 'fa-layer-group',
+        icon: 'fa-layer-group'
       },
-      html: 'Part of speech',
-    }),
+      html: 'Part of speech'
+    })
   )
 
   const posWrapper = createDiv({ className: 'flex align-center' })
@@ -48,8 +47,8 @@ async function build(el, sense, noFaMinus) {
       { value: 'verb', label: 'Verb' },
       { value: 'adjective', label: 'Adjective' },
       { value: 'adverb', label: 'Adverb' },
-      { value: 'phrase', label: 'Phrase' },
-    ],
+      { value: 'phrase', label: 'Phrase' }
+    ]
   })
   posWrapper.appendChild(partSelect)
 
@@ -57,7 +56,7 @@ async function build(el, sense, noFaMinus) {
 
   if (!noFaMinus) {
     posWrapper.appendChild(
-      createIcon({ classes: { primary: 'fa-minus', other: 'primary' } }),
+      createIcon({ classes: { primary: 'fa-minus', other: 'primary' } })
     )
   }
 
@@ -65,10 +64,10 @@ async function build(el, sense, noFaMinus) {
     createSpanGroup({
       classes: {
         group: 'mt-20 mb-10',
-        icon: 'fa-magnifying-glass-arrow-right',
+        icon: 'fa-magnifying-glass-arrow-right'
       },
-      html: 'Definition',
-    }),
+      html: 'Definition'
+    })
   )
 
   let markdown = createMarkdown({ name: 'definition', toggleId: 'edit-toggle' })
@@ -83,10 +82,10 @@ async function build(el, sense, noFaMinus) {
     createSpanGroup({
       classes: {
         group: 'mt-20 mb-10',
-        icon: 'fa-feather-pointed',
+        icon: 'fa-feather-pointed'
       },
-      html: 'Example',
-    }),
+      html: 'Example'
+    })
   )
 
   markdown = createMarkdown({ name: 'example', toggleId: 'edit-toggle' })
@@ -101,10 +100,10 @@ async function build(el, sense, noFaMinus) {
     createSpanGroup({
       classes: {
         group: 'mb-10 mt-20',
-        icon: 'fa-water',
+        icon: 'fa-water'
       },
-      html: 'Synonyms',
-    }),
+      html: 'Synonyms'
+    })
   )
 
   markdown = createMarkdown({ name: 'synonyms', toggleId: 'edit-toggle' })
@@ -119,16 +118,16 @@ async function build(el, sense, noFaMinus) {
     createSpanGroup({
       classes: {
         group: 'mt-20 mb-10',
-        icon: 'fa-user',
+        icon: 'fa-user'
       },
-      html: 'Added by',
-    }),
+      html: 'Added by'
+    })
   )
 
   const date = new Date(sense.created_at)
   const html = `${sense.submitterName} (${date.toLocaleDateString('en-us', {
     month: 'short',
-    year: 'numeric',
+    year: 'numeric'
   })})`
 
   el.appendChild(createSpan({ html, className: 'submitter' }))
@@ -148,7 +147,7 @@ async function build(el, sense, noFaMinus) {
       modal.querySelector('.modal-body').insertHtml(partOfSpeech)
       modal.dataset.vitest = 'modal-open'
       modal.showModal()
-    }),
+    })
   )
 
   return el

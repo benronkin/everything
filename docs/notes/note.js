@@ -21,7 +21,6 @@ import {
   shareNote,
   unassignLabel,
   updateLabel,
-  getPinNote,
   updatePinNote
 } from './notes.api.js'
 import {

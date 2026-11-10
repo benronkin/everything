@@ -5,12 +5,12 @@ import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createUserSelect } from '../../assets/partials/userSelect.js'
 import { projectTasksList } from './projectTasksList.js'
 import { projectNotesList } from './projectNotesList.js'
-// import { projectJournalList } from './projectJournalList.js'
 
 const css = `
 #starts_at_wrapper {
@@ -41,15 +41,14 @@ export function createprojectGroup(doc) {
 
 function build(el, doc) {
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'title',
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
       classes: {
-        group: '',
-        input: 'bigger border-bottom-on-hover w-100',
-        icon: 'fa-square'
+        group: 'mb-40',
+        icon: 'fa-chart-gantt'
       },
       value: doc.title || ''
     })
@@ -67,7 +66,7 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'flex align-center gap-20 justify-start mt-20',
+      className: 'flex align-center gap-20 justify-start mt-20 mb-40',
       html: [
         createSpan({ html: 'End:&nbsp;&nbsp;' }),
         createDateTime({ name: 'ends_at', value: doc.ends_at })
@@ -143,7 +142,7 @@ function build(el, doc) {
 
   el.appendChild(
     createDiv({
-      className: 'header-with-icon',
+      className: 'header-with-icon mt-40',
       html: [
         createHeader({ html: 'Notes', type: 'h4' }),
         createIcon({
@@ -158,22 +157,4 @@ function build(el, doc) {
   )
 
   el.appendChild(projectNotesList(doc))
-
-  // el.appendChild(
-  //   createDiv({
-  //     className: 'header-with-icon',
-  //     html: [
-  //       createHeader({ html: 'Journal', type: 'h5', class: 'header-with-icon' }),
-  //       createIcon({
-  //         id: 'add-journal',
-  //         classes: {
-  //           primary: 'fa-plus',
-  //           other: ['primary'],
-  //         },
-  //       }),
-  //     ],
-  //   }),
-  // )
-
-  // el.appendChild(projectJournalList(doc))
 }

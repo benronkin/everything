@@ -3,7 +3,7 @@
 import { createMarkdown } from '../../assets/composites/markdown.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
-import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { dangerZone } from './dangerZone.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createSpan } from '../../assets/partials/span.js'
@@ -22,9 +22,6 @@ import { createButton } from '../../assets/partials/button.js'
 const css = `
 #main-panel form {
   gap: 0 !important;
-}
-#main-panel input {
-  border-bottom: 1px solid var(--gray0);
 }
 .input-group #note-title, .input-group .fa-note-sticky {
   font-size: 1.8rem;      /* big, h2-ish */
@@ -87,12 +84,12 @@ function build(el) {
   setMessage('Fetching note...')
 
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'note-title',
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
-      classes: { group: 'mb-20', input: 'field', icon: 'fa-note-sticky' }
+      classes: { group: 'mb-20', icon: 'fa-note-sticky' }
     })
   )
 

@@ -2,6 +2,7 @@ import { state } from '../../assets/js/state.js'
 import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createLexiconGroup } from './lexicon.sense.js'
 import { dangerZone } from './dangerZone.js'
 
@@ -55,17 +56,17 @@ function react(el) {
     if (!e) return
 
     const doc = {
-      ...state.get('main-documents').find((d) => d.title === e),
+      ...state.get('main-documents').find((d) => d.title === e)
     }
     el.classList.remove('hidden')
 
-    const titleInput = createInputGroup({
+    const titleInput = createTitleField({
       id: 'title',
       name: 'title',
       value: doc.title,
       placeholder: 'Entry',
       autocomplete: 'off',
-      classes: { group: 'mb-40', input: 'field w-100', icon: 'fa-cube' },
+      classes: { group: 'mb-40', icon: 'fa-cube' }
     })
     el.appendChild(titleInput)
 

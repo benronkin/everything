@@ -3,10 +3,6 @@ import { createDiv } from './div.js'
 import { createIcon } from './icon.js'
 import { createTextarea } from './textarea.js'
 
-// -------------------------------
-// Globals
-// -------------------------------
-
 const css = `
 .ta-group {
   display: grid;
@@ -33,7 +29,7 @@ export function createTextareaGroup({
   name,
   placeholder,
   value,
-  className = null,
+  className = null
 }) {
   injectStyle(css)
 
@@ -50,7 +46,7 @@ export function createTextareaGroup({
     id,
     name,
     placeholder,
-    value,
+    value
   })
 
   classes?.group && (el.className = classes.group)
@@ -81,7 +77,7 @@ function build({ el, id, name, placeholder, value }) {
       id,
       name,
       placeholder,
-      value,
+      value
     })
   )
 }

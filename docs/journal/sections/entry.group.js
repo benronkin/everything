@@ -6,6 +6,7 @@ import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
 import { createRating } from '../../assets/partials/rating.js'
 import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 
 const css = `
 #edit-note-toggle {
@@ -37,7 +38,7 @@ export function createEntryGroup() {
 
 function build(el) {
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'journal-location',
       name: 'location',
       placeholder: 'Attraction',
