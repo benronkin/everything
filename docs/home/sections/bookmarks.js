@@ -1,8 +1,8 @@
 import { injectStyle } from '../../assets/js/ui.js'
 import { createAnchor } from '../../assets/partials/anchor.js'
+import { createButton } from '../../assets/partials/button.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createSpanGroup } from '../../assets/partials/spanGroup.js'
-import { fetchNote, fetchNoteMetadata } from '../../notes/notes.api.js'
 import { state } from '../../assets/js/state.js'
 
 const css = `
@@ -31,6 +31,18 @@ const css = `
   cursor: pointer;
   width: 15px;
 }
+#home-bookmarks .group-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#home-bookmarks .open-all-links {
+  white-space: nowrap;
+  display: none;
+}
+#home-bookmarks .bookmarks-group:hover .open-all-links {
+  display: block;
+}   
 `
 
 export function bookmarks() {
@@ -62,7 +74,7 @@ function react(el) {
         const header = { label: line.replace('#', '').trim() }
         obj = {
           header,
-          items: [],
+          items: []
         }
         arr.push(obj)
         continue
@@ -96,19 +108,31 @@ function buildBookmarks(bookmarks, el) {
 
   for (const section of bookmarks) {
     const groupDiv = createDiv({
-      className: 'bookmarks-group outer-wrapper mb-20',
+      className: 'bookmarks-group outer-wrapper mb-20'
     })
     el.appendChild(groupDiv)
 
+    const openAllLinksBtn = createButton({
+      className: 'open-all-links primary',
+      html: 'Open All'
+    })
+    openAllLinksBtn.addEventListener('click', handleAllLinksBtnClick)
+
     groupDiv.appendChild(
-      createSpanGroup({
-        classes: {
-          icon: `expander ${
-            section.collapsed ? 'fa-chevron-right' : 'fa-chevron-down'
-          }`.trim(),
-        },
-        html: section.header.label,
-      }),
+      createDiv({
+        className: 'group-header-wrapper',
+        html: [
+          createSpanGroup({
+            classes: {
+              icon: `expander ${
+                section.collapsed ? 'fa-chevron-right' : 'fa-chevron-down'
+              }`.trim()
+            },
+            html: section.header.label
+          }),
+          openAllLinksBtn
+        ]
+      })
     )
 
     groupDiv.appendChild(
@@ -120,10 +144,10 @@ function buildBookmarks(bookmarks, el) {
           createAnchor({
             className: `bookmark`.trim(),
             url: item.url,
-            html: item.label,
-          }),
-        ),
-      }),
+            html: item.label
+          })
+        )
+      })
     )
   }
 
@@ -134,6 +158,20 @@ function buildBookmarks(bookmarks, el) {
       i.closest('.bookmarks-group')
         .querySelector('.bookmarks-holder')
         .classList.toggle('hidden', i.classList.contains('fa-chevron-right'))
-    }),
+    })
   )
+}
+
+/**
+ *
+ */
+function handleAllLinksBtnClick(e) {
+  const parent = e.target.closest('.bookmarks-group')
+  const bookmarksHolder = parent.querySelector('.bookmarks-holder')
+  const urls = [...bookmarksHolder.querySelectorAll('.bookmark')].map(
+    (el) => el.href
+  )
+  urls.forEach((url) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  })
 }
