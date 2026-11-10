@@ -3,17 +3,12 @@ import { injectStyle } from '../../assets/js/ui.js'
 import { createDiv } from '../../assets/partials/div.js'
 import { createHeader } from '../../assets/partials/header.js'
 import { createIcon } from '../../assets/partials/icon.js'
-import { createInputGroup } from '../../assets/partials/inputGroup.js'
+import { createTitleField } from '../../assets/partials/titleField.js'
 import { createSelect } from '../../assets/partials/select.js'
 import { createSpan } from '../../assets/partials/span.js'
 import { createSwitchGroup } from '../../assets/partials/switchGroup.js'
 
 const css = `
-#item-group .item-title {
-  background-color: var(--purple0);
-  padding: 10px 5px;
-  border-radius: var(--border-radius);
-}
 #item-group .item-title input {
   font-size: 1.2rem;
 }
@@ -59,10 +54,11 @@ export function createItemGroup() {
  */
 function build(el) {
   el.appendChild(
-    createInputGroup({
+    createTitleField({
       id: 'title',
       name: 'title',
       placeholder: 'Item',
+      fieldType: 'textarea',
       autocomplete: 'off',
       classes: { group: 'mb-40 item-title', icon: 'fa-basket-shopping' }
     })

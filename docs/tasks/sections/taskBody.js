@@ -99,9 +99,10 @@ function build(el, doc) {
       name: 'title',
       placeholder: 'Title',
       autocomplete: 'off',
+      fieldType: 'textarea',
       classes: {
         group: '',
-        icon: 'fa-square'
+        icon: 'fa-list'
       },
       value: doc.title || ''
     })
