@@ -38,11 +38,28 @@ const css = `
 }
 #home-bookmarks .open-all-links {
   white-space: nowrap;
+    /* 1. Default (Hidden) State */
   display: none;
+  opacity: 0;
+  transform: scale(0.5);
+  
+  /* Transition both visual and discrete properties */
+  transition: opacity 0.5s ease, transform 0.5s ease, display 0.5s ease;
+  /* Crucial: allows display to wait for the transition to finish */
+  transition-behavior: allow-discrete; 
 }
 #home-bookmarks .bookmarks-group:hover .open-all-links {
   display: block;
+  opacity: 1;
+  transform: scale(1);
 }   
+/* ⬇️ ADD THIS TO FIX THE "IN" ANIMATION ⬇️ */
+@starting-style {
+  #home-bookmarks .bookmarks-group:hover .open-all-links {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
 `
 
 export function bookmarks() {
