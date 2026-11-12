@@ -38,26 +38,19 @@ const css = `
 }
 #home-bookmarks .open-all-links {
   white-space: nowrap;
-    /* 1. Default (Hidden) State */
-  display: none;
-  opacity: 0;
-  transform: scale(0.5);
-  
-  /* Transition both visual and discrete properties */
-  transition: opacity 0.5s ease, transform 0.5s ease, display 0.5s ease;
-  /* Crucial: allows display to wait for the transition to finish */
-  transition-behavior: allow-discrete; 
 }
-#home-bookmarks .bookmarks-group:hover .open-all-links {
-  display: block;
-  opacity: 1;
-  transform: scale(1);
-}   
-/* ⬇️ ADD THIS TO FIX THE "IN" ANIMATION ⬇️ */
-@starting-style {
-  #home-bookmarks .bookmarks-group:hover .open-all-links {
+@media (hover: hover) and (pointer: fine) {
+  #home-bookmarks .open-all-links {
     opacity: 0;
+    pointer-events: none;
     transform: scale(0.5);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  #home-bookmarks .bookmarks-group:hover .open-all-links,
+  #home-bookmarks .bookmarks-group:focus-within .open-all-links {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
   }
 }
 `
@@ -188,7 +181,17 @@ function handleAllLinksBtnClick(e) {
   const urls = [...bookmarksHolder.querySelectorAll('.bookmark')].map(
     (el) => el.href
   )
-  urls.forEach((url) => {
-    window.open(url, '_blank', 'noopener,noreferrer')
+
+  let firstTab
+
+  urls.forEach((url, index) => {
+    const tab = window.open(url, '_blank')
+
+    if (tab) {
+      tab.opener = null
+      if (index === 0) firstTab = tab
+    }
   })
+
+  firstTab?.focus()
 }

@@ -160,9 +160,13 @@ async function handleFormSubmit() {
 async function handleCartsuggestion({ id, title }) {
   const view = document.getElementById('view-select').getSelected().value
 
+  const clickedSuggestion = document.getElementById(id)
+  clickedSuggestion.classList.add('hidden')
+
   const { data, error } = await addItem({ title, view, isTemp: 0 })
 
   if (error) {
+    clickedSuggestion.classList.remove('hidden')
     setMessage(error, { type: 'danger' })
     return
   }
